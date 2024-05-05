@@ -4,6 +4,8 @@ unit JD.TMDB.API;
   TMDB API Wrapper for Delphi
   Written by Jerry Dodge
 
+  Core API Wrapper using JSON via XSuperObject
+
   IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
 
   API Documentation:

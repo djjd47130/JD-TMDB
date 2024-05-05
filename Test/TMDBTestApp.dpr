@@ -2,7 +2,8 @@ program TMDBTestApp;
 
 uses
   Vcl.Forms,
-  uTMDBTestMain in 'uTMDBTestMain.pas' {frmTMDBTestMain};
+  uTMDBTestMain in 'uTMDBTestMain.pas' {frmTMDBTestMain},
+  JD.TMDB.API in '..\Source\JD.TMDB.API.pas';
 
 {$R *.res}
 

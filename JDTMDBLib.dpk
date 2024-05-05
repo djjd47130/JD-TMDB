@@ -38,6 +38,7 @@ requires
 contains
   JD.TMDB.API in 'Source\JD.TMDB.API.pas',
   XSuperJSON in '..\x-superobject\XSuperJSON.pas',
-  XSuperObject in '..\x-superobject\XSuperObject.pas';
+  XSuperObject in '..\x-superobject\XSuperObject.pas',
+  JD.TMDB.Intf in 'JD.TMDB.Intf.pas';
 
 end.
