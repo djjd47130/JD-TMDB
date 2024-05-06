@@ -19,7 +19,8 @@ uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   Winapi.Windows,
   XSuperObject,
-  IdHTTP;
+  IdHTTP, IdIOHandler, IdIOHandlerSocket,
+  IdIOHandlerStack, IdSSL, IdSSLOpenSSL;
 
 const
   TMDB_API_ROOT = 'https://api.themoviedb.org/3/';
@@ -410,6 +411,7 @@ type
   TTMDBAPI = class(TComponent)
   private
     FHTTP: TIdHTTP;
+    FReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
     FConfiguration: TTMDBConfiguration;
@@ -441,6 +443,7 @@ type
     FReviews: TTMDBReviews;
     FTVSeriesLists: TTMDBTVSeriesLists;
     FAppUserAgent: String;
+    FSecondsLimit: Single;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
@@ -450,14 +453,18 @@ type
       const Body: ISuperObject = nil): ISuperObject;
     function DeleteJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
+    procedure SetSecondsLimit(const Value: Single);
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    function GetLimitWaitMsec: Integer;
   published
     property APIKey: String read FAPIKey write SetAPIKey;
     property APIReadAccessToken: String read FAPIReadAccessToken write SetAPIReadAccessToken;
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
+    property SecondsLimit: Single read FSecondsLimit write SetSecondsLimit;
 
     property Account: TTMDBAccount read FAccount;
     property Authentication: TTMDBAuthentication read FAuthentication;
@@ -2183,12 +2190,22 @@ end;
 { TTMDBAPI }
 
 constructor TTMDBAPI.Create(AOwner: TComponent);
+var
+  SSEIO: TIdSSLIOHandlerSocketOpenSSL;
 begin
   inherited;
   FHTTP:= TIdHTTP.Create(nil);
   FAppUserAgent:= TMDB_API_USERAGENT;
 
+  FReqMsec:= GetTickCount;
+
   //TODO: HTTPS
+  SSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(FHTTP);
+  SSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
+  SSEIO.SSLOptions.Mode := sslmClient;
+  SSEIO.SSLOptions.VerifyMode := [];
+  SSEIO.SSLOptions.VerifyDepth := 0;
+  FHTTP.IOHandler := SSEIO;
 
   FAccount:= TTMDBAccount.Create(Self);
   FAuthentication:= TTMDBAuthentication.Create(Self);
@@ -2255,6 +2272,11 @@ begin
 
   FreeAndNil(FHTTP);
   inherited;
+end;
+
+function TTMDBAPI.GetLimitWaitMsec: Integer;
+begin
+
 end;
 
 procedure TTMDBAPI.PrepareJSONRequest;
@@ -2354,6 +2376,11 @@ end;
 procedure TTMDBAPI.SetAppUserAgent(const Value: String);
 begin
   FAppUserAgent:= Value;
+end;
+
+procedure TTMDBAPI.SetSecondsLimit(const Value: Single);
+begin
+  FSecondsLimit := Value;
 end;
 
 end.
