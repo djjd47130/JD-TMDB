@@ -20,7 +20,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Top = 0
     Width = 961
     Height = 473
-    ActivePage = tabSetup
+    ActivePage = tabCollections
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -33,12 +33,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     ParentFont = False
     TabHeight = 32
     TabOrder = 0
-    ExplicitWidth = 892
     object tabSetup: TTabSheet
-      Caption = 'SETUP'
+      Caption = 'Application Setup'
       ImageIndex = 27
-      ExplicitLeft = 0
-      ExplicitTop = 42
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -63,7 +60,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 321
             DesignSize = (
               353
               53)
@@ -76,12 +72,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             end
             object txtAPIKey: TEdit
               Left = 16
-              Top = 27
+              Top = 29
               Width = 313
               Height = 26
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 0
-              ExplicitWidth = 281
             end
           end
           object gbAPIAuthMethodAccessToken: TPanel
@@ -94,7 +89,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             BevelOuter = bvNone
             TabOrder = 1
             Visible = False
-            ExplicitWidth = 305
             DesignSize = (
               353
               60)
@@ -112,7 +106,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 26
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 0
-              ExplicitWidth = 265
             end
           end
           object Panel2: TPanel
@@ -123,7 +116,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 2
-            ExplicitWidth = 321
+            ExplicitLeft = 1
+            ExplicitTop = 22
             object RadioButton2: TRadioButton
               Tag = 1
               AlignWithMargins = True
@@ -166,9 +160,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               ParentFont = False
               TabOrder = 2
               OnClick = Button1Click
-              ExplicitLeft = 239
-              ExplicitTop = 0
-              ExplicitHeight = 28
             end
           end
         end
@@ -181,8 +172,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'User Authentication'
           TabOrder = 1
-          ExplicitLeft = 335
-          ExplicitHeight = 209
           object Panel3: TPanel
             Left = 2
             Top = 20
@@ -191,7 +180,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 318
             object RadioButton3: TRadioButton
               Tag = 1
               AlignWithMargins = True
@@ -228,8 +216,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Caption = 'Credentials'
               TabOrder = 2
               OnClick = UserAuthMethodClick
-              ExplicitLeft = 303
-              ExplicitTop = 0
             end
           end
           object pAuthUser: TPanel
@@ -241,9 +227,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             BevelOuter = bvNone
             TabOrder = 1
             Visible = False
-            ExplicitLeft = 0
-            ExplicitTop = 50
-            ExplicitWidth = 430
             DesignSize = (
               302
               53)
@@ -254,29 +237,29 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 18
               Caption = 'Username:'
             end
-            object Edit2: TEdit
+            object txtAuthUser: TEdit
               Left = 16
-              Top = 27
+              Top = 29
               Width = 265
               Height = 26
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 0
-              ExplicitWidth = 281
             end
           end
           object pAuthPass: TPanel
             Left = 2
             Top = 101
             Width = 302
-            Height = 53
+            Height = 60
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 2
             Visible = False
-            ExplicitWidth = 318
+            ExplicitLeft = 9
+            ExplicitTop = 114
             DesignSize = (
               302
-              53)
+              60)
             object Label4: TLabel
               Left = 16
               Top = 8
@@ -284,27 +267,29 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 18
               Caption = 'Password:'
             end
-            object Edit4: TEdit
+            object txtAuthPass: TEdit
               Left = 16
-              Top = 27
+              Top = 32
               Width = 265
               Height = 26
               Anchors = [akLeft, akTop, akRight]
               PasswordChar = '*'
               TabOrder = 0
-              ExplicitWidth = 281
             end
           end
         end
         object pLoginStatus: TGroupBox
-          Left = 676
-          Top = 1
+          AlignWithMargins = True
+          Left = 679
+          Top = 4
           Width = 269
-          Height = 183
+          Height = 177
           Align = alLeft
           Caption = 'User Login'
           TabOrder = 2
-          ExplicitLeft = 628
+          ExplicitLeft = 676
+          ExplicitTop = 1
+          ExplicitHeight = 183
           object btnLoginLogout: TButton
             AlignWithMargins = True
             Left = 5
@@ -315,15 +300,15 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             Caption = 'Login'
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitWidth = 191
+            OnClick = btnLoginLogoutClick
+            ExplicitLeft = 7
           end
           object pLoginUserInfo: TGroupBox
             AlignWithMargins = True
             Left = 5
             Top = 57
             Width = 259
-            Height = 121
+            Height = 115
             Align = alClient
             Caption = 'User Info'
             Font.Charset = DEFAULT_CHARSET
@@ -334,21 +319,16 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             ParentFont = False
             TabOrder = 1
             Visible = False
-            ExplicitLeft = 7
-            ExplicitTop = 59
-            ExplicitWidth = 191
+            ExplicitHeight = 121
             object Panel4: TPanel
               AlignWithMargins = True
               Left = 95
               Top = 23
               Width = 159
-              Height = 93
+              Height = 87
               Align = alClient
               TabOrder = 0
-              ExplicitLeft = 128
-              ExplicitTop = 20
-              ExplicitWidth = 113
-              ExplicitHeight = 131
+              ExplicitHeight = 93
               object Label5: TLabel
                 AlignWithMargins = True
                 Left = 4
@@ -394,16 +374,16 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 5
               Top = 23
               Width = 84
-              Height = 93
+              Height = 87
               Align = alLeft
               TabOrder = 1
-              ExplicitHeight = 85
+              ExplicitHeight = 93
               object Image1: TImage
                 AlignWithMargins = True
                 Left = 4
                 Top = 4
                 Width = 76
-                Height = 85
+                Height = 79
                 Align = alClient
                 ExplicitLeft = 8
                 ExplicitHeight = 77
@@ -415,8 +395,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     end
     object tabAccount: TTabSheet
       Caption = 'Account'
-      ExplicitWidth = 884
-      ExplicitHeight = 310
       object AccountPages: TPageControl
         Left = 0
         Top = 0
@@ -425,210 +403,191 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         ActivePage = tabAccountDetails
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 884
         object tabAccountDetails: TTabSheet
           Caption = 'Account Details'
-          ExplicitWidth = 876
         end
         object tabAccountFavorites: TTabSheet
           Caption = 'Favorites'
           ImageIndex = 1
-          ExplicitWidth = 876
         end
         object tabAccountWatchlists: TTabSheet
           Caption = 'Watchlists'
           ImageIndex = 2
-          ExplicitWidth = 876
         end
         object tabAccountLists: TTabSheet
           Caption = 'Lists'
           ImageIndex = 3
-          ExplicitLeft = 0
-          ExplicitWidth = 876
         end
         object Ratings: TTabSheet
           Caption = 'Ratings'
           ImageIndex = 4
-          ExplicitWidth = 876
         end
       end
     end
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 42
-      ExplicitWidth = 884
       object CertPages: TPageControl
         Left = 0
         Top = 0
         Width = 953
         Height = 249
-        ActivePage = tabCertsTV
+        ActivePage = tabCertsMovies
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 884
         object tabCertsMovies: TTabSheet
-          Caption = 'tabCertsMovies'
-          ExplicitWidth = 876
+          Caption = 'Movie Certifications'
         end
         object tabCertsTV: TTabSheet
-          Caption = 'tabCertsTV'
+          Caption = 'TV Certifications'
           ImageIndex = 1
-          ExplicitWidth = 876
         end
       end
     end
     object tabChanges: TTabSheet
       Caption = 'Changes'
       ImageIndex = 2
-      ExplicitWidth = 884
-      ExplicitHeight = 310
+      ExplicitLeft = 8
+      ExplicitTop = 42
+      object PageControl1: TPageControl
+        Left = 0
+        Top = 0
+        Width = 953
+        Height = 249
+        ActivePage = TabSheet1
+        Align = alTop
+        TabOrder = 0
+        object TabSheet1: TTabSheet
+          Caption = 'Movie Changes'
+          ExplicitLeft = 0
+        end
+        object TabSheet2: TTabSheet
+          Caption = 'Person Changes'
+          ImageIndex = 1
+        end
+        object TabSheet3: TTabSheet
+          Caption = 'TV Changes'
+          ImageIndex = 2
+        end
+      end
     end
     object tabCollections: TTabSheet
       Caption = 'Collections'
       ImageIndex = 3
-      ExplicitWidth = 884
-      ExplicitHeight = 310
+      ExplicitLeft = 8
+      ExplicitTop = 42
+      object PageControl2: TPageControl
+        Left = 0
+        Top = 0
+        Width = 953
+        Height = 249
+        ActivePage = TabSheet4
+        Align = alTop
+        TabOrder = 0
+        object TabSheet4: TTabSheet
+          Caption = 'Details'
+        end
+        object TabSheet5: TTabSheet
+          Caption = 'Images'
+          ImageIndex = 1
+        end
+        object TabSheet6: TTabSheet
+          Caption = 'Translations'
+          ImageIndex = 2
+        end
+      end
     end
     object tabCompanies: TTabSheet
       Caption = 'Companies'
       ImageIndex = 4
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabConfiguration: TTabSheet
       Caption = 'Configuration'
       ImageIndex = 5
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 6
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabDiscover: TTabSheet
       Caption = 'Discover'
       ImageIndex = 7
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabFind: TTabSheet
       Caption = 'Find'
       ImageIndex = 8
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabGenres: TTabSheet
       Caption = 'Genres'
       ImageIndex = 9
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabGuestSessions: TTabSheet
       Caption = 'Guest Sessions'
       ImageIndex = 10
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabKeywords: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 11
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabLists: TTabSheet
       Caption = 'Lists'
       ImageIndex = 12
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabMovieLists: TTabSheet
       Caption = 'Movie Lists'
       ImageIndex = 13
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabMovies: TTabSheet
       Caption = 'Movies'
       ImageIndex = 14
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabNetworks: TTabSheet
       Caption = 'Networks'
       ImageIndex = 15
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabPeopleLists: TTabSheet
       Caption = 'People Lists'
       ImageIndex = 16
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabPeople: TTabSheet
       Caption = 'People'
       ImageIndex = 17
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabReviews: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 18
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabSearch: TTabSheet
       Caption = 'Search'
       ImageIndex = 19
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabTrending: TTabSheet
       Caption = 'Trending'
       ImageIndex = 20
-      ExplicitTop = 30
-      ExplicitWidth = 884
-      ExplicitHeight = 318
     end
     object tabTVSeriesLists: TTabSheet
       Caption = 'TV Series Lists'
       ImageIndex = 21
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabTVSeries: TTabSheet
       Caption = 'TV Series'
       ImageIndex = 22
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabTVSeasons: TTabSheet
       Caption = 'TV Seasons'
       ImageIndex = 23
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabTVEpisodes: TTabSheet
       Caption = 'TV Episodes'
       ImageIndex = 24
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabTVEpisodeGroups: TTabSheet
       Caption = 'TV Episode Groups'
       ImageIndex = 25
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
     object tabWatchProviders: TTabSheet
       Caption = 'Watch Providers'
       ImageIndex = 26
-      ExplicitWidth = 884
-      ExplicitHeight = 310
     end
   end
   object TMDB: TTMDBAPI
@@ -647,8 +606,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     end
     object Setup1: TMenuItem
       Caption = 'Setup'
+      OnClick = Setup1Click
       object AppSetup1: TMenuItem
-        Caption = 'App Setup'
+        Caption = 'Application Setup'
+        RadioItem = True
         OnClick = AppSetup1Click
       end
     end

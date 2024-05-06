@@ -3,10 +3,11 @@ unit uTMDBTestMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
-  JD.TMDB.API, XSuperObject,
-  Vcl.Menus;
+  Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.Menus,
+  JD.TMDB.API, XSuperObject;
 
 type
   TfrmTMDBTestMain = class(TForm)
@@ -58,10 +59,10 @@ type
     RadioButton6: TRadioButton;
     pAuthUser: TPanel;
     Label2: TLabel;
-    Edit2: TEdit;
+    txtAuthUser: TEdit;
     pAuthPass: TPanel;
     Label4: TLabel;
-    Edit4: TEdit;
+    txtAuthPass: TEdit;
     MM: TMainMenu;
     Services1: TMenuItem;
     Setup1: TMenuItem;
@@ -85,13 +86,26 @@ type
     Panel5: TPanel;
     Image1: TImage;
     Button1: TButton;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    PageControl2: TPageControl;
+    TabSheet4: TTabSheet;
+    TabSheet5: TTabSheet;
+    TabSheet6: TTabSheet;
     procedure FormCreate(Sender: TObject);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
     procedure Services1Click(Sender: TObject);
     procedure UserAuthMethodClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Setup1Click(Sender: TObject);
+    procedure btnLoginLogoutClick(Sender: TObject);
   private
+    FAuthMethod: Integer;
+    FSessionID: String;
+    FSessionGuest: Boolean;
     procedure ServiceClicked(Sender: TObject);
     procedure PrepAPI;
   public
@@ -113,6 +127,7 @@ begin
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
   Pages.ActivePageIndex:= 0;
+  Services1Click(Services1);
 end;
 
 procedure TfrmTMDBTestMain.APIAuthMethodRadioClick(Sender: TObject);
@@ -134,7 +149,76 @@ end;
 
 procedure TfrmTMDBTestMain.AppSetup1Click(Sender: TObject);
 begin
-  Pages.ActivePage:= Self.tabSetup;
+  ServiceClicked(AppSetup1);
+end;
+
+procedure TfrmTMDBTestMain.btnLoginLogoutClick(Sender: TObject);
+var
+  Success: Boolean;
+  O, S: ISuperObject;
+  RT: String;
+begin
+  //TODO: Log in or out user depending on selected authentication method...
+  Self.PrepAPI;
+  if btnLoginLogout.Tag = 1 then begin
+    //User is logged in, log them out?
+    if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
+
+      FSessionGuest:= True;
+      btnLoginLogout.Caption:= 'Login';
+      btnLoginLogout.Tag:= 0;
+      if (FSessionID <> '') and (not FSessionGuest) then
+        TMDB.Authentication.DeleteSession(FSessionID);
+      FSessionID:= '';
+
+    end;
+  end else begin
+    //User is logged out, execute login...
+    Success:= False;
+    case FAuthMethod of
+      0: begin
+        //Guest...
+        S:= TMDB.Authentication.CreateGuestSession;
+        if S.B['success'] then begin
+          FSessionID:= S.S['guest_session_id'];
+          FSessionGuest:= True;
+          Success:= True;
+        end;
+      end;
+      1: begin
+        //Normal...
+        O:= TMDB.Authentication.CreateRequestToken;
+        if O.B['success'] then begin
+          RT:= O.S['request_token'];
+          S:= TMDB.Authentication.CreateSession(RT);
+          //TODO
+          if S.B['success'] then begin
+            FSessionID:= S.S['session_id'];
+            FSessionGuest:= False;
+            Success:= True;
+          end;
+        end;
+      end;
+      2: begin
+        //Credentials...
+        O:= TMDB.Authentication.CreateSessionLogin(txtAuthUser.Text, txtAuthPass.Text, RT);
+        if O.B['success'] then begin
+          RT:= O.S['request_token'];
+          S:= TMDB.Authentication.CreateSession(RT);
+          //TODO
+          if S.B['success'] then begin
+            FSessionID:= S.S['session_id'];
+            FSessionGuest:= False;
+            Success:= True;
+          end;
+        end;
+      end;
+    end;
+    if Success then begin
+      btnLoginLogout.Caption:= 'Logout';
+      btnLoginLogout.Tag:= 1;
+    end;
+  end;
 end;
 
 procedure TfrmTMDBTestMain.PrepAPI;
@@ -178,12 +262,21 @@ begin
   end;
 end;
 
+procedure TfrmTMDBTestMain.Setup1Click(Sender: TObject);
+var
+  X: Integer;
+begin
+  for X := 0 to Setup1.Count-1 do begin
+    Setup1[X].Checked:= Setup1[X].Tag = Pages.ActivePageIndex;
+  end;
+end;
+
 procedure TfrmTMDBTestMain.UserAuthMethodClick(Sender: TObject);
 var
   I: Integer;
 begin
-  //TODO
   I:= TComponent(Sender).Tag;
+  FAuthMethod:= I;
   case I of
     2: begin
       pAuthUser.Visible:= True;
