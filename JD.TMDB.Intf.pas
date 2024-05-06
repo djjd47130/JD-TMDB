@@ -9,6 +9,7 @@ unit JD.TMDB.Intf;
   IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
 
   API Documentation:
+  https://developer.themoviedb.org/docs/getting-started
   https://developer.themoviedb.org/reference/intro/getting-started
 
 *)

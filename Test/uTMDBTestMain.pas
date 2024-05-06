@@ -7,7 +7,7 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
-  JD.TMDB.API, XSuperObject;
+  JD.TMDB.API, XSuperObject, XSuperJSON;
 
 type
   TfrmTMDBTestMain = class(TForm)
@@ -94,6 +94,34 @@ type
     TabSheet4: TTabSheet;
     TabSheet5: TTabSheet;
     TabSheet6: TTabSheet;
+    btnRefreshCertsMovies: TButton;
+    btnRefreshCertsTV: TButton;
+    lstCertsMovies: TListView;
+    lstCertsTV: TListView;
+    GenrePages: TPageControl;
+    TabSheet7: TTabSheet;
+    Button2: TButton;
+    TabSheet8: TTabSheet;
+    Button3: TButton;
+    lstGenreTV: TListView;
+    lstGenreMovies: TListView;
+    SearchPages: TPageControl;
+    TabSheet9: TTabSheet;
+    TabSheet10: TTabSheet;
+    TabSheet11: TTabSheet;
+    TabSheet12: TTabSheet;
+    TabSheet13: TTabSheet;
+    TabSheet14: TTabSheet;
+    TabSheet15: TTabSheet;
+    lstSearchMovies: TListView;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    Label8: TLabel;
+    txtSearchMoviesQuery: TEdit;
+    Panel8: TPanel;
+    Label9: TLabel;
+    ComboBox1: TComboBox;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
@@ -102,12 +130,25 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
     procedure btnLoginLogoutClick(Sender: TObject);
+    procedure btnRefreshCertsMoviesClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnRefreshCertsTVClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     FAuthMethod: Integer;
     FSessionID: String;
     FSessionGuest: Boolean;
+    FAppSetup: ISuperObject;
+    FConfig: ISuperObject;
+    FConfigCountries: ISuperArray;
+    procedure LoadSetup;
+    procedure SaveSetup;
+    function SetupFilename: String;
     procedure ServiceClicked(Sender: TObject);
     procedure PrepAPI;
+    function CountryName(const Code: String): String;
   public
 
   end;
@@ -117,17 +158,58 @@ var
 
 implementation
 
+uses
+  System.IOUtils;
+
 {$R *.dfm}
+
+procedure TfrmTMDBTestMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  SaveSetup;
+end;
 
 procedure TfrmTMDBTestMain.FormCreate(Sender: TObject);
 var
   X: Integer;
 begin
   Pages.Align:= alClient;
+  CertPages.Align:= alClient;
+  GenrePages.Align:= alClient;
+
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
   Pages.ActivePageIndex:= 0;
   Services1Click(Services1);
+end;
+
+procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
+begin
+  LoadSetup;
+end;
+
+procedure TfrmTMDBTestMain.LoadSetup;
+begin
+  if FileExists(SetupFilename) then begin
+    FAppSetup:= TSuperObject.ParseFile(SetupFilename);
+  end else begin
+    FAppSetup:= SO;
+  end;
+
+  Self.txtAPIKey.Text:= FAppSetup.S['api_key'];
+  Self.txtAccessToken.Text:= FAppSetup.S['access_token'];
+  Self.Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
+
+  Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
+end;
+
+procedure TfrmTMDBTestMain.SaveSetup;
+begin
+  if Assigned(FAppSetup) then begin
+    FAppSetup.S['api_key']:= txtAPIKey.Text;
+    FAppSetup.S['access_token']:= txtAccessToken.Text;
+    FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
+    FAppSetup.SaveTo(SetupFilename);
+  end;
 end;
 
 procedure TfrmTMDBTestMain.APIAuthMethodRadioClick(Sender: TObject);
@@ -221,10 +303,35 @@ begin
   end;
 end;
 
+function TfrmTMDBTestMain.CountryName(const Code: String): String;
+var
+  X: Integer;
+  O: ISuperObject;
+begin
+  if FConfigCountries = nil then
+    FConfigCountries:= TMDB.Configuration.GetCountries;
+  for X := 0 to FConfigCountries.Length-1 do begin
+    O:= FConfigCountries.O[X];
+    if O.S['iso_3166_1'] = Code then begin
+      Result:= O.S['english_name'];
+      Break;
+    end;
+  end;
+end;
+
 procedure TfrmTMDBTestMain.PrepAPI;
 begin
   TMDB.APIKey:= Self.txtAPIKey.Text;
   TMDB.APIReadAccessToken:= Self.txtAccessToken.Text;
+  try
+    if FConfig = nil then
+      FConfig:= TMDB.Configuration.GetDetails;
+    if FConfigCountries = nil then
+      FConfigCountries:= TMDB.Configuration.GetCountries;
+
+  except
+    //TODO
+  end;
 
 end;
 
@@ -235,6 +342,150 @@ begin
   PrepAPI;
   O:= TMDB.Authentication.GetValidateKey;
   ShowMessage('API Key Validation Result: '+O.S['status_message']);
+end;
+
+procedure TfrmTMDBTestMain.Button2Click(Sender: TObject);
+var
+  O: ISuperObject;
+  C: ISuperArray;
+  M: IMember;
+  X: Integer;
+  I: TListItem;
+begin
+  Self.PrepAPI;
+  Screen.Cursor:= crHourglass;
+  try
+    lstGenreMovies.Items.BeginUpdate;
+    try
+      Self.lstGenreMovies.Items.Clear;
+      Self.lstGenreMovies.Groups.Clear;
+      C:= TMDB.Genres.GetMovieList;
+      for X := 0 to C.Length-1 do begin
+        O:= C.O[X];
+        I:= Self.lstGenreMovies.Items.Add;
+        I.Caption:= O.S['name'];
+        I.SubItems.Add(IntToStr(O.I['id']));
+      end;
+      lstGenreMovies.SortType:= TSortType.stText;
+      //TODO: Sort groups...
+    finally
+      lstGenreMovies.Items.EndUpdate;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+end;
+
+procedure TfrmTMDBTestMain.Button3Click(Sender: TObject);
+var
+  O: ISuperObject;
+  C: ISuperArray;
+  M: IMember;
+  X: Integer;
+  I: TListItem;
+begin
+  Self.PrepAPI;
+  Screen.Cursor:= crHourglass;
+  try
+    lstGenreTV.Items.BeginUpdate;
+    try
+      Self.lstGenreTV.Items.Clear;
+      Self.lstGenreTV.Groups.Clear;
+      C:= TMDB.Genres.GetTVList;
+      for X := 0 to C.Length-1 do begin
+        O:= C.O[X];
+        I:= Self.lstGenreTV.Items.Add;
+        I.Caption:= O.S['name'];
+        I.SubItems.Add(IntToStr(O.I['id']));
+      end;
+      lstGenreTV.SortType:= TSortType.stText;
+      //TODO: Sort groups...
+    finally
+      lstGenreTV.Items.EndUpdate;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+end;
+
+procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
+var
+  Res, O: ISuperObject;
+  C: ISuperArray;
+  M: IMember;
+  X: Integer;
+  I: TListItem;
+  G: TListGroup;
+begin
+  Self.PrepAPI;
+  Screen.Cursor:= crHourglass;
+  try
+    lstCertsMovies.Items.BeginUpdate;
+    try
+      Self.lstCertsMovies.Items.Clear;
+      Self.lstCertsMovies.Groups.Clear;
+      Res:= TMDB.Certifications.GetMovieCertifications;
+      for M in Res['certifications'].AsObject do begin
+        C:= M.AsArray;
+        G:= Self.lstCertsMovies.Groups.Add;
+        G.Header:= CountryName(M.Name) + ' ('+M.Name+')';
+        for X := 0 to C.Length-1 do begin
+          O:= C.O[X];
+          I:= Self.lstCertsMovies.Items.Add;
+          I.Caption:= IntToStr(O.I['order']);
+          I.SubItems.Add(O.S['certification']);
+          I.SubItems.Add(O.S['meaning']);
+          I.GroupID:= G.GroupID;
+        end;
+      end;
+      lstCertsMovies.SortType:= TSortType.stText;
+      //TODO: Sort groups...
+    finally
+      lstCertsMovies.Items.EndUpdate;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+end;
+
+procedure TfrmTMDBTestMain.btnRefreshCertsTVClick(Sender: TObject);
+var
+  Res, O: ISuperObject;
+  C: ISuperArray;
+  M: IMember;
+  X: Integer;
+  I: TListItem;
+  G: TListGroup;
+begin
+  Self.PrepAPI;
+  Screen.Cursor:= crHourglass;
+  try
+    lstCertsTV.Items.BeginUpdate;
+    try
+      Self.lstCertsTV.Items.Clear;
+      Self.lstCertsTV.Groups.Clear;
+      Res:= TMDB.Certifications.GetTVCertifications;
+      for M in Res['certifications'].AsObject do begin
+        C:= M.AsArray;
+        G:= Self.lstCertsTV.Groups.Add;
+        G.Header:= CountryName(M.Name) + ' ('+M.Name+')';
+        for X := 0 to C.Length-1 do begin
+          O:= C.O[X];
+          I:= Self.lstCertsTV.Items.Add;
+          I.Caption:= IntToStr(O.I['order']);
+          I.SubItems.Add(O.S['certification']);
+          I.SubItems.Add(O.S['meaning']);
+          I.GroupID:= G.GroupID;
+        end;
+      end;
+      lstCertsTV.SortType:= TSortType.stText;
+      //TODO: Sort groups...
+    finally
+      lstCertsTV.Items.EndUpdate;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
 end;
 
 procedure TfrmTMDBTestMain.Services1Click(Sender: TObject);
@@ -269,6 +520,12 @@ begin
   for X := 0 to Setup1.Count-1 do begin
     Setup1[X].Checked:= Setup1[X].Tag = Pages.ActivePageIndex;
   end;
+end;
+
+function TfrmTMDBTestMain.SetupFilename: String;
+begin
+  Result:= ExtractFilePath(ParamStr(0));
+  Result:= TPath.Combine(Result, 'AppConfig.json');
 end;
 
 procedure TfrmTMDBTestMain.UserAuthMethodClick(Sender: TObject);
