@@ -12,7 +12,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Glossy');
+  TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
   Application.Run;
 end.

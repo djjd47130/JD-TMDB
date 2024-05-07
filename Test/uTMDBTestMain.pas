@@ -113,15 +113,33 @@ type
     TabSheet13: TTabSheet;
     TabSheet14: TTabSheet;
     TabSheet15: TTabSheet;
-    lstSearchMovies: TListView;
     Panel6: TPanel;
     Panel7: TPanel;
     Label8: TLabel;
     txtSearchMoviesQuery: TEdit;
     Panel8: TPanel;
     Label9: TLabel;
-    ComboBox1: TComboBox;
+    cboSearchMoviesAdult: TComboBox;
     Button4: TButton;
+    Panel9: TPanel;
+    Label10: TLabel;
+    Panel10: TPanel;
+    Label11: TLabel;
+    cboSearchMoviesRegion: TComboBox;
+    cboSearchMoviesLanguage: TComboBox;
+    Panel11: TPanel;
+    lstSearchMovies: TListView;
+    Panel12: TPanel;
+    Label12: TLabel;
+    Button5: TButton;
+    Label13: TLabel;
+    Button6: TButton;
+    Panel13: TPanel;
+    Label14: TLabel;
+    txtSearchMoviesPrimaryReleaseYear: TEdit;
+    Panel14: TPanel;
+    Label15: TLabel;
+    txtSearchMoviesYear: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
@@ -136,6 +154,7 @@ type
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     FAuthMethod: Integer;
     FSessionID: String;
@@ -149,6 +168,8 @@ type
     procedure ServiceClicked(Sender: TObject);
     procedure PrepAPI;
     function CountryName(const Code: String): String;
+    function SearchMovies(const Page: Integer): ISuperObject;
+    procedure SearchMoviesAddToList(Obj: ISuperObject);
   public
 
   end;
@@ -175,6 +196,7 @@ begin
   Pages.Align:= alClient;
   CertPages.Align:= alClient;
   GenrePages.Align:= alClient;
+  SearchPages.Align:= alClient;
 
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
@@ -406,6 +428,45 @@ begin
   finally
     Screen.Cursor:= crDefault;
   end;
+end;
+
+function TfrmTMDBTestMain.SearchMovies(const Page: Integer): ISuperObject;
+begin
+  Result:= TMDB.Search.SearchMovies(txtSearchMoviesQuery.Text, cboSearchMoviesAdult.ItemIndex = 1,
+    cboSearchMoviesLanguage.Text, txtSearchMoviesPrimaryReleaseYear.Text, Page,
+    cboSearchMoviesRegion.Text, txtSearchMoviesYear.Text);
+end;
+
+procedure TfrmTMDBTestMain.SearchMoviesAddToList(Obj: ISuperObject);
+var
+  A: ISuperArray;
+  O: ISuperObject;
+  X: Integer;
+begin
+  A:= Obj.A['results'];
+
+end;
+
+procedure TfrmTMDBTestMain.Button4Click(Sender: TObject);
+var
+  Res: ISuperObject;
+begin
+  //TODO: Search movies...
+
+  //- Clear all results
+  lstSearchMovies.Items.Clear;
+
+  //- Reset page to #0
+  lstSearchMovies.Tag:= 0;
+
+  //- Fetch page 1 of search
+  Res:= SearchMovies(1);
+
+  //- Populate reuslts
+  SearchMoviesAddToList(Res);
+
+  //- Update footer
+
 end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
