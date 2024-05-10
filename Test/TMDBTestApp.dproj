@@ -106,6 +106,34 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Source\JD.TMDB.API.pas"/>
+        <DCCReference Include="uTabBase.pas">
+            <Form>frmTabBase</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uContentBase.pas">
+            <Form>frmContentBase</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Search\uTabSearch.pas">
+            <Form>frmTabSearch</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uContentPageBase.pas">
+            <Form>frmContentPageBase</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Search\uContentSearchMovies.pas">
+            <Form>frmContentSearchMovies</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Configuration\uTabConfiguration.pas">
+            <Form>frmTabConfiguration</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Search\uContentSearchCollections.pas">
+            <Form>frmContentSearchCollections</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

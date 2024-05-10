@@ -7,39 +7,18 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
-  JD.TMDB.API, XSuperObject, XSuperJSON;
+  JD.TMDB.API, XSuperObject, XSuperJSON,
+  uTabBase, uContentBase,
+  uTabConfiguration,
+  uTabSearch;
 
 type
   TfrmTMDBTestMain = class(TForm)
     TMDB: TTMDBAPI;
     Pages: TPageControl;
-    tabAccount: TTabSheet;
     tabCertifications: TTabSheet;
-    tabChanges: TTabSheet;
-    tabCollections: TTabSheet;
-    tabCompanies: TTabSheet;
-    tabConfiguration: TTabSheet;
-    tabCredits: TTabSheet;
-    tabDiscover: TTabSheet;
-    tabFind: TTabSheet;
     tabGenres: TTabSheet;
-    tabGuestSessions: TTabSheet;
-    tabKeywords: TTabSheet;
-    tabLists: TTabSheet;
-    tabMovieLists: TTabSheet;
-    tabMovies: TTabSheet;
-    tabNetworks: TTabSheet;
-    tabPeopleLists: TTabSheet;
-    tabPeople: TTabSheet;
-    tabReviews: TTabSheet;
     tabSearch: TTabSheet;
-    tabTrending: TTabSheet;
-    tabTVSeriesLists: TTabSheet;
-    tabTVSeries: TTabSheet;
-    tabTVSeasons: TTabSheet;
-    tabTVEpisodes: TTabSheet;
-    tabTVEpisodeGroups: TTabSheet;
-    tabWatchProviders: TTabSheet;
     tabSetup: TTabSheet;
     Panel1: TPanel;
     gbAPIAuthMethod: TGroupBox;
@@ -67,15 +46,9 @@ type
     Services1: TMenuItem;
     Setup1: TMenuItem;
     AppSetup1: TMenuItem;
-    AccountPages: TPageControl;
-    tabAccountDetails: TTabSheet;
     CertPages: TPageControl;
     tabCertsMovies: TTabSheet;
     tabCertsTV: TTabSheet;
-    tabAccountFavorites: TTabSheet;
-    tabAccountWatchlists: TTabSheet;
-    tabAccountLists: TTabSheet;
-    Ratings: TTabSheet;
     pLoginStatus: TGroupBox;
     btnLoginLogout: TButton;
     pLoginUserInfo: TGroupBox;
@@ -86,14 +59,6 @@ type
     Panel5: TPanel;
     Image1: TImage;
     Button1: TButton;
-    PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
-    PageControl2: TPageControl;
-    TabSheet4: TTabSheet;
-    TabSheet5: TTabSheet;
-    TabSheet6: TTabSheet;
     btnRefreshCertsMovies: TButton;
     btnRefreshCertsTV: TButton;
     lstCertsMovies: TListView;
@@ -120,7 +85,7 @@ type
     Panel8: TPanel;
     Label9: TLabel;
     cboSearchMoviesAdult: TComboBox;
-    Button4: TButton;
+    btnSearchMoviesApply: TButton;
     Panel9: TPanel;
     Label10: TLabel;
     Panel10: TPanel;
@@ -130,10 +95,10 @@ type
     Panel11: TPanel;
     lstSearchMovies: TListView;
     Panel12: TPanel;
-    Label12: TLabel;
-    Button5: TButton;
-    Label13: TLabel;
-    Button6: TButton;
+    lblSearchMoviesResults: TLabel;
+    btnSearchMoviesPagePrev: TButton;
+    lblSearchMoviesPage: TLabel;
+    btnSearchMoviesPageNext: TButton;
     Panel13: TPanel;
     Label14: TLabel;
     txtSearchMoviesPrimaryReleaseYear: TEdit;
@@ -154,7 +119,9 @@ type
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
+    procedure btnSearchMoviesApplyClick(Sender: TObject);
+    procedure btnSearchMoviesPagePrevClick(Sender: TObject);
+    procedure btnSearchMoviesPageNextClick(Sender: TObject);
   private
     FAuthMethod: Integer;
     FSessionID: String;
@@ -162,15 +129,25 @@ type
     FAppSetup: ISuperObject;
     FConfig: ISuperObject;
     FConfigCountries: ISuperArray;
+
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
+
     procedure ServiceClicked(Sender: TObject);
-    procedure PrepAPI;
     function CountryName(const Code: String): String;
+
+    function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
+
+
+
     function SearchMovies(const Page: Integer): ISuperObject;
     procedure SearchMoviesAddToList(Obj: ISuperObject);
+    procedure EmbedTabs;
+
+
   public
+    procedure PrepAPI;
 
   end;
 
@@ -194,6 +171,9 @@ var
   X: Integer;
 begin
   Pages.Align:= alClient;
+
+  EmbedTabs;
+
   CertPages.Align:= alClient;
   GenrePages.Align:= alClient;
   SearchPages.Align:= alClient;
@@ -341,6 +321,28 @@ begin
   end;
 end;
 
+procedure TfrmTMDBTestMain.EmbedTabs;
+begin
+  EmbedTab(TfrmTabConfiguration);
+  EmbedTab(TfrmTabSearch);
+
+end;
+
+function TfrmTMDBTestMain.EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
+var
+  T: TTabSheet;
+begin
+  T:= TTabSheet.Create(Pages);
+  T.PageControl:= Pages;
+  Result:= ATabClass.Create(T);
+  Result.Parent:= T;
+  Result.Align:= alClient;
+  Result.BorderStyle:= bsNone;
+  Result.Show;
+  T.Caption:= Result.Caption;
+  T.TabVisible:= False;
+end;
+
 procedure TfrmTMDBTestMain.PrepAPI;
 begin
   TMDB.APIKey:= Self.txtAPIKey.Text;
@@ -442,31 +444,77 @@ var
   A: ISuperArray;
   O: ISuperObject;
   X: Integer;
+  I: TListItem;
+  GenreID: Integer;
+  Genre: String;
 begin
+  lstSearchMovies.Items.Clear;
   A:= Obj.A['results'];
+  for X := 0 to A.Length-1 do begin
+    O:= A.O[X];
+    I:= lstSearchMovies.Items.Add;
+    I.Caption:= O.S['title'];
+    I.SubItems.Add(FormatFloat('0.000', O.F['popularity']));
+
+    GenreID:= O.A['genre_ids'].I[0];
+    //TODO: Fetch genre lists on startup, cache, and use them here...
+    //Genre:=
+
+    I.SubItems.Add(Genre);
+    I.SubItems.Add(O.S['release_date']);
+    I.SubItems.Add(O.S['overview']);
+  end;
+
+  //Update page footer
+  lblSearchMoviesResults.Caption:= IntToStr(Obj.I['total_results'])+' Results';
+  lblSearchMoviesPage.Caption:= 'Page '+IntToStr(lstSearchMovies.Tag)+
+    ' of '+IntToStr(Obj.I['total_pages']);
+  btnSearchMoviesPagePrev.Enabled:= lstSearchMovies.Tag > 1;
+  btnSearchMoviesPageNext.Enabled:= lstSearchMovies.Tag < Obj.I['total_pages'];
 
 end;
 
-procedure TfrmTMDBTestMain.Button4Click(Sender: TObject);
+procedure TfrmTMDBTestMain.btnSearchMoviesApplyClick(Sender: TObject);
 var
   Res: ISuperObject;
 begin
+  Self.PrepAPI;
   //TODO: Search movies...
 
-  //- Clear all results
+  //Clear all results
   lstSearchMovies.Items.Clear;
 
-  //- Reset page to #0
+  //Reset page to 0 - since list is empty, there is no page 1 yet
   lstSearchMovies.Tag:= 0;
 
-  //- Fetch page 1 of search
+  //Fetch page 1 of search
   Res:= SearchMovies(1);
+  if Res.I['total_pages'] > 0 then
+    lstSearchMovies.Tag:= 1;
 
-  //- Populate reuslts
+  //Populate reuslts
   SearchMoviesAddToList(Res);
 
-  //- Update footer
+end;
 
+procedure TfrmTMDBTestMain.btnSearchMoviesPageNextClick(Sender: TObject);
+var
+  Res: ISuperObject;
+begin
+  //TODO: Go to next page in movie search...
+  lstSearchMovies.Tag:= lstSearchMovies.Tag + 1;
+  Res:= SearchMovies(lstSearchMovies.Tag);
+  SearchMoviesAddToList(Res);
+end;
+
+procedure TfrmTMDBTestMain.btnSearchMoviesPagePrevClick(Sender: TObject);
+var
+  Res: ISuperObject;
+begin
+  //TODO: Go back a page in movie search...
+  lstSearchMovies.Tag:= lstSearchMovies.Tag - 1;
+  Res:= SearchMovies(lstSearchMovies.Tag);
+  SearchMoviesAddToList(Res);
 end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);

@@ -20,6 +20,7 @@ uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   Winapi.Windows,
   XSuperObject,
+  IdURI,
   IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL;
 
@@ -2286,6 +2287,7 @@ begin
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
   //TODO: API token header if applicable...
+  FHTTP.Request.RawHeaders.Values['Access-Token-Auth']:= FAPIReadAccessToken
 
 end;
 
@@ -2300,7 +2302,7 @@ begin
   R:= Req;
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
-  U:= TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params;
+  U:= TIdURI.URLEncode(TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params);
   S:= FHTTP.Get(U);
   Result:= SO(S);
 end;
