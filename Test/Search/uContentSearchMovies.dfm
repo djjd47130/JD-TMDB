@@ -4,12 +4,12 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
   ExplicitWidth = 990
   PixelsPerInch = 96
   TextHeight = 18
-  inherited Panel11: TPanel
+  inherited pMain: TPanel
     Width = 709
     ExplicitLeft = 265
     ExplicitWidth = 489
     ExplicitHeight = 473
-    inherited lstSearchMovies: TListView
+    inherited lstResults: TListView
       Width = 703
       Columns = <
         item
@@ -34,11 +34,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         end>
       ExplicitWidth = 703
     end
-    inherited Panel12: TPanel
+    inherited pFooter: TPanel
       Width = 709
     end
   end
-  inherited Panel6: TPanel
+  inherited pSearch: TPanel
     object Panel7: TPanel
       Left = 0
       Top = 0

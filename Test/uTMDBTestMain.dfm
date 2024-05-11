@@ -2,7 +2,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   Left = 0
   Top = 0
   Caption = 'TMDB API Test'
-  ClientHeight = 588
+  ClientHeight = 554
   ClientWidth = 991
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,8 +21,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Left = 0
     Top = 0
     Width = 991
-    Height = 541
-    ActivePage = tabSearch
+    Height = 507
+    ActivePage = tabSetup
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -407,7 +407,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Left = 0
         Top = 0
         Width = 983
-        Height = 453
+        Height = 419
         ActivePage = tabCertsTV
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -438,7 +438,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Left = 3
             Top = 37
             Width = 969
-            Height = 380
+            Height = 346
             Align = alClient
             Color = clSilver
             Columns = <
@@ -492,7 +492,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Left = 3
             Top = 37
             Width = 969
-            Height = 380
+            Height = 346
             Align = alClient
             Color = clSilver
             Columns = <
@@ -531,7 +531,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Left = 0
         Top = 0
         Width = 983
-        Height = 453
+        Height = 419
         ActivePage = TabSheet7
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -560,7 +560,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Left = 3
             Top = 37
             Width = 969
-            Height = 380
+            Height = 346
             Align = alClient
             Color = clSilver
             Columns = <
@@ -606,7 +606,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Left = 3
             Top = 37
             Width = 969
-            Height = 380
+            Height = 346
             Align = alClient
             Color = clSilver
             Columns = <
@@ -626,421 +626,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             ExplicitWidth = 939
             ExplicitHeight = 312
           end
-        end
-      end
-    end
-    object tabSearch: TTabSheet
-      Caption = 'Search'
-      ImageIndex = 19
-      ExplicitWidth = 953
-      ExplicitHeight = 447
-      object SearchPages: TPageControl
-        Left = 0
-        Top = 0
-        Width = 983
-        Height = 477
-        ActivePage = TabSheet12
-        Align = alTop
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 0
-        ExplicitWidth = 953
-        ExplicitHeight = 425
-        object TabSheet9: TTabSheet
-          Caption = 'Search Collections'
-          ExplicitWidth = 945
-          ExplicitHeight = 352
-        end
-        object TabSheet10: TTabSheet
-          Caption = 'Search Companies'
-          ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitWidth = 945
-          ExplicitHeight = 392
-        end
-        object TabSheet11: TTabSheet
-          Caption = 'Search Keywords'
-          ImageIndex = 2
-          ExplicitWidth = 945
-          ExplicitHeight = 352
-        end
-        object TabSheet12: TTabSheet
-          Caption = 'Search Movies'
-          ImageIndex = 3
-          ExplicitWidth = 945
-          ExplicitHeight = 352
-          object Panel6: TPanel
-            Left = 0
-            Top = 0
-            Width = 265
-            Height = 444
-            Align = alLeft
-            BevelOuter = bvNone
-            TabOrder = 0
-            ExplicitLeft = -2
-            ExplicitHeight = 396
-            object Panel7: TPanel
-              Left = 0
-              Top = 0
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 0
-              object Label8: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Search Query:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 107
-              end
-              object txtSearchMoviesQuery: TEdit
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 27
-                Align = alClient
-                TabOrder = 0
-                ExplicitLeft = 32
-                ExplicitTop = 40
-                ExplicitWidth = 121
-                ExplicitHeight = 26
-              end
-            end
-            object Panel8: TPanel
-              Left = 0
-              Top = 57
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 1
-              object Label9: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Include Adult:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 104
-              end
-              object cboSearchMoviesAdult: TComboBox
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 26
-                Cursor = crHandPoint
-                Align = alClient
-                Style = csDropDownList
-                ItemIndex = 0
-                TabOrder = 0
-                Text = 'False'
-                Items.Strings = (
-                  'False'
-                  'True')
-                ExplicitLeft = 5
-                ExplicitTop = 25
-                ExplicitWidth = 257
-              end
-            end
-            object btnSearchMoviesApply: TButton
-              AlignWithMargins = True
-              Left = 3
-              Top = 416
-              Width = 259
-              Height = 25
-              Cursor = crHandPoint
-              Align = alBottom
-              Caption = 'Apply Search -->'
-              TabOrder = 2
-              OnClick = btnSearchMoviesApplyClick
-              ExplicitLeft = 96
-              ExplicitTop = 264
-              ExplicitWidth = 75
-            end
-            object Panel9: TPanel
-              Left = 0
-              Top = 114
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 3
-              ExplicitLeft = 24
-              ExplicitTop = 216
-              object Label10: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Language:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 77
-              end
-              object cboSearchMoviesLanguage: TComboBox
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 26
-                Cursor = crHandPoint
-                Align = alClient
-                TabOrder = 0
-                ExplicitLeft = 8
-                ExplicitTop = 31
-                ExplicitWidth = 257
-              end
-            end
-            object Panel10: TPanel
-              Left = 0
-              Top = 171
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 4
-              ExplicitLeft = -3
-              ExplicitTop = 234
-              object Label11: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Region:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 57
-              end
-              object cboSearchMoviesRegion: TComboBox
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 26
-                Cursor = crHandPoint
-                Align = alClient
-                TabOrder = 0
-                ExplicitLeft = 5
-                ExplicitTop = 28
-                ExplicitWidth = 257
-              end
-            end
-            object Panel13: TPanel
-              Left = 0
-              Top = 228
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 5
-              ExplicitLeft = 16
-              ExplicitTop = 301
-              object Label14: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Primary Release Year:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 169
-              end
-              object txtSearchMoviesPrimaryReleaseYear: TEdit
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 27
-                Align = alClient
-                TabOrder = 0
-                ExplicitLeft = 4
-                ExplicitTop = 28
-                ExplicitWidth = 257
-                ExplicitHeight = 26
-              end
-            end
-            object Panel14: TPanel
-              Left = 0
-              Top = 285
-              Width = 265
-              Height = 57
-              Align = alTop
-              BevelOuter = bvNone
-              TabOrder = 6
-              ExplicitLeft = 24
-              ExplicitTop = 336
-              object Label15: TLabel
-                AlignWithMargins = True
-                Left = 3
-                Top = 3
-                Width = 259
-                Height = 18
-                Align = alTop
-                Caption = 'Year:'
-                ExplicitLeft = 4
-                ExplicitTop = 4
-                ExplicitWidth = 41
-              end
-              object txtSearchMoviesYear: TEdit
-                AlignWithMargins = True
-                Left = 3
-                Top = 27
-                Width = 259
-                Height = 27
-                Align = alClient
-                TabOrder = 0
-                ExplicitLeft = 4
-                ExplicitTop = 28
-                ExplicitWidth = 257
-                ExplicitHeight = 26
-              end
-            end
-          end
-          object Panel11: TPanel
-            Left = 265
-            Top = 0
-            Width = 710
-            Height = 444
-            Align = alClient
-            BevelOuter = bvNone
-            TabOrder = 1
-            ExplicitLeft = 488
-            ExplicitWidth = 457
-            ExplicitHeight = 392
-            object lstSearchMovies: TListView
-              AlignWithMargins = True
-              Left = 3
-              Top = 3
-              Width = 704
-              Height = 406
-              Align = alClient
-              Color = clSilver
-              Columns = <
-                item
-                  Caption = 'Movie'
-                  Width = 250
-                end
-                item
-                  Caption = 'Popularity'
-                  Width = 100
-                end
-                item
-                  Caption = 'Genre'
-                  Width = 180
-                end
-                item
-                  Caption = 'Released'
-                  Width = 120
-                end
-                item
-                  Caption = 'Description'
-                  Width = 400
-                end>
-              HideSelection = False
-              HotTrackStyles = [htHandPoint, htUnderlineHot]
-              ReadOnly = True
-              RowSelect = True
-              TabOrder = 0
-              ViewStyle = vsReport
-            end
-            object Panel12: TPanel
-              Left = 0
-              Top = 412
-              Width = 710
-              Height = 32
-              Align = alBottom
-              TabOrder = 1
-              ExplicitLeft = 3
-              ExplicitTop = 363
-              ExplicitWidth = 680
-              object lblSearchMoviesResults: TLabel
-                AlignWithMargins = True
-                Left = 4
-                Top = 4
-                Width = 165
-                Height = 24
-                Align = alLeft
-                AutoSize = False
-                Caption = '0 Results'
-                Layout = tlCenter
-                ExplicitTop = 3
-              end
-              object lblSearchMoviesPage: TLabel
-                AlignWithMargins = True
-                Left = 218
-                Top = 4
-                Width = 119
-                Height = 24
-                Align = alLeft
-                Alignment = taCenter
-                AutoSize = False
-                Caption = 'Page 1 of 1'
-                Layout = tlCenter
-                ExplicitTop = 3
-              end
-              object btnSearchMoviesPagePrev: TButton
-                AlignWithMargins = True
-                Left = 175
-                Top = 4
-                Width = 37
-                Height = 24
-                Cursor = crHandPoint
-                Align = alLeft
-                Caption = '<'
-                TabOrder = 0
-                OnClick = btnSearchMoviesPagePrevClick
-                ExplicitTop = 3
-              end
-              object btnSearchMoviesPageNext: TButton
-                AlignWithMargins = True
-                Left = 343
-                Top = 4
-                Width = 37
-                Height = 24
-                Cursor = crHandPoint
-                Align = alLeft
-                Caption = '>'
-                TabOrder = 1
-                OnClick = btnSearchMoviesPageNextClick
-                ExplicitLeft = 375
-                ExplicitTop = 3
-              end
-            end
-          end
-        end
-        object TabSheet13: TTabSheet
-          Caption = 'Search Multi'
-          ImageIndex = 4
-          ExplicitWidth = 945
-          ExplicitHeight = 352
-        end
-        object TabSheet14: TTabSheet
-          Caption = 'Search People'
-          ImageIndex = 5
-          ExplicitWidth = 945
-          ExplicitHeight = 352
-        end
-        object TabSheet15: TTabSheet
-          Caption = 'Search TV'
-          ImageIndex = 6
-          ExplicitWidth = 945
-          ExplicitHeight = 352
         end
       end
     end

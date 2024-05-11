@@ -1,28 +1,28 @@
 inherited frmContentPageBase: TfrmContentPageBase
   Caption = 'Content Page Base'
-  ClientHeight = 543
+  ClientHeight = 501
   ClientWidth = 910
   ExplicitWidth = 926
-  ExplicitHeight = 582
+  ExplicitHeight = 540
   PixelsPerInch = 96
   TextHeight = 18
-  object Panel11: TPanel
+  object pMain: TPanel
     Left = 265
     Top = 0
     Width = 645
-    Height = 543
+    Height = 501
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     ExplicitLeft = 44
     ExplicitWidth = 710
     ExplicitHeight = 444
-    object lstSearchMovies: TListView
+    object lstResults: TListView
       AlignWithMargins = True
       Left = 3
       Top = 3
       Width = 639
-      Height = 505
+      Height = 463
       Align = alClient
       Color = clSilver
       Columns = <
@@ -36,17 +36,22 @@ inherited frmContentPageBase: TfrmContentPageBase
       RowSelect = True
       TabOrder = 0
       ViewStyle = vsReport
+      OnClick = lstResultsClick
+      OnDblClick = lstResultsDblClick
+      ExplicitLeft = 6
+      ExplicitTop = 0
+      ExplicitHeight = 505
     end
-    object Panel12: TPanel
+    object pFooter: TPanel
       Left = 0
-      Top = 511
+      Top = 469
       Width = 645
       Height = 32
       Align = alBottom
       TabOrder = 1
       ExplicitTop = 441
       ExplicitWidth = 489
-      object lblSearchMoviesResults: TLabel
+      object lblResults: TLabel
         AlignWithMargins = True
         Left = 4
         Top = 4
@@ -58,7 +63,7 @@ inherited frmContentPageBase: TfrmContentPageBase
         Layout = tlCenter
         ExplicitTop = 3
       end
-      object lblSearchMoviesPage: TLabel
+      object lblPage: TLabel
         AlignWithMargins = True
         Left = 218
         Top = 4
@@ -71,7 +76,7 @@ inherited frmContentPageBase: TfrmContentPageBase
         Layout = tlCenter
         ExplicitTop = 3
       end
-      object btnSearchMoviesPagePrev: TButton
+      object btnPagePrev: TButton
         AlignWithMargins = True
         Left = 175
         Top = 4
@@ -82,8 +87,9 @@ inherited frmContentPageBase: TfrmContentPageBase
         Caption = '<'
         Enabled = False
         TabOrder = 0
+        OnClick = btnPagePrevClick
       end
-      object btnSearchMoviesPageNext: TButton
+      object btnPageNext: TButton
         AlignWithMargins = True
         Left = 343
         Top = 4
@@ -94,29 +100,32 @@ inherited frmContentPageBase: TfrmContentPageBase
         Caption = '>'
         Enabled = False
         TabOrder = 1
+        OnClick = btnPageNextClick
+        ExplicitTop = 3
       end
     end
   end
-  object Panel6: TPanel
+  object pSearch: TPanel
     Left = 0
     Top = 0
     Width = 265
-    Height = 543
+    Height = 501
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
     ExplicitLeft = -2
     ExplicitHeight = 396
-    object btnSearchMoviesApply: TButton
+    object btnApply: TButton
       AlignWithMargins = True
       Left = 3
-      Top = 515
+      Top = 473
       Width = 259
       Height = 25
       Cursor = crHandPoint
       Align = alBottom
       Caption = 'Apply Search -->'
       TabOrder = 0
+      OnClick = btnApplyClick
       ExplicitTop = 445
     end
   end

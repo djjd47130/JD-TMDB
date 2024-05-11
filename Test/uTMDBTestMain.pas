@@ -18,7 +18,6 @@ type
     Pages: TPageControl;
     tabCertifications: TTabSheet;
     tabGenres: TTabSheet;
-    tabSearch: TTabSheet;
     tabSetup: TTabSheet;
     Panel1: TPanel;
     gbAPIAuthMethod: TGroupBox;
@@ -70,41 +69,6 @@ type
     Button3: TButton;
     lstGenreTV: TListView;
     lstGenreMovies: TListView;
-    SearchPages: TPageControl;
-    TabSheet9: TTabSheet;
-    TabSheet10: TTabSheet;
-    TabSheet11: TTabSheet;
-    TabSheet12: TTabSheet;
-    TabSheet13: TTabSheet;
-    TabSheet14: TTabSheet;
-    TabSheet15: TTabSheet;
-    Panel6: TPanel;
-    Panel7: TPanel;
-    Label8: TLabel;
-    txtSearchMoviesQuery: TEdit;
-    Panel8: TPanel;
-    Label9: TLabel;
-    cboSearchMoviesAdult: TComboBox;
-    btnSearchMoviesApply: TButton;
-    Panel9: TPanel;
-    Label10: TLabel;
-    Panel10: TPanel;
-    Label11: TLabel;
-    cboSearchMoviesRegion: TComboBox;
-    cboSearchMoviesLanguage: TComboBox;
-    Panel11: TPanel;
-    lstSearchMovies: TListView;
-    Panel12: TPanel;
-    lblSearchMoviesResults: TLabel;
-    btnSearchMoviesPagePrev: TButton;
-    lblSearchMoviesPage: TLabel;
-    btnSearchMoviesPageNext: TButton;
-    Panel13: TPanel;
-    Label14: TLabel;
-    txtSearchMoviesPrimaryReleaseYear: TEdit;
-    Panel14: TPanel;
-    Label15: TLabel;
-    txtSearchMoviesYear: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
@@ -119,36 +83,37 @@ type
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure btnSearchMoviesApplyClick(Sender: TObject);
-    procedure btnSearchMoviesPagePrevClick(Sender: TObject);
-    procedure btnSearchMoviesPageNextClick(Sender: TObject);
   private
     FAuthMethod: Integer;
     FSessionID: String;
     FSessionGuest: Boolean;
     FAppSetup: ISuperObject;
+
     FConfig: ISuperObject;
     FConfigCountries: ISuperArray;
+    FConfigJobs: ISuperArray;
+    FConfigLanguages: ISuperArray;
+    FConfigPrimaryTranslations: ISuperArray;
+    FConfigTimezones: ISuperArray;
+    FConfigMovieGenres: ISuperArray;
+    FConfigTVGenres: ISuperArray;
+    FConfigMovieCerts: ISuperObject;
+    FConfigTVCerts: ISuperObject;
 
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
 
     procedure ServiceClicked(Sender: TObject);
-    function CountryName(const Code: String): String;
 
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
-
-
-
-    function SearchMovies(const Page: Integer): ISuperObject;
-    procedure SearchMoviesAddToList(Obj: ISuperObject);
     procedure EmbedTabs;
-
 
   public
     procedure PrepAPI;
-
+    function CountryName(const Code: String): String;
+    function MovieGenreName(const ID: Integer): String;
+    function TVGenreName(const ID: Integer): String;
   end;
 
 var
@@ -176,7 +141,6 @@ begin
 
   CertPages.Align:= alClient;
   GenrePages.Align:= alClient;
-  SearchPages.Align:= alClient;
 
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
@@ -187,6 +151,28 @@ end;
 procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
 begin
   LoadSetup;
+  //TODO: Fetch and cache all configuration-level data...
+
+  //Details
+
+  //Countries
+
+  //Jobs
+
+  //Languages
+
+  //Primary Translations
+
+  //Timezones
+
+  //Movie Genres
+
+  //TV Genres
+
+  //Movie Certifications
+
+  //TV Certifications
+
 end;
 
 procedure TfrmTMDBTestMain.LoadSetup;
@@ -200,8 +186,22 @@ begin
   Self.txtAPIKey.Text:= FAppSetup.S['api_key'];
   Self.txtAccessToken.Text:= FAppSetup.S['access_token'];
   Self.Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
+  //TODO: current_sub_tab
 
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
+end;
+
+function TfrmTMDBTestMain.MovieGenreName(const ID: Integer): String;
+var
+  X: Integer;
+begin
+  Result:= '';
+  for X := 0 to FConfigMovieGenres.Length-1 do begin
+    if FConfigMovieGenres.O[X].I['id'] = ID then begin
+      Result:= FConfigMovieGenres.O[X].S['name'];
+      Break;
+    end;
+  end;
 end;
 
 procedure TfrmTMDBTestMain.SaveSetup;
@@ -210,6 +210,7 @@ begin
     FAppSetup.S['api_key']:= txtAPIKey.Text;
     FAppSetup.S['access_token']:= txtAccessToken.Text;
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
+    //TODO: current_sub_tab
     FAppSetup.SaveTo(SetupFilename);
   end;
 end;
@@ -352,7 +353,22 @@ begin
       FConfig:= TMDB.Configuration.GetDetails;
     if FConfigCountries = nil then
       FConfigCountries:= TMDB.Configuration.GetCountries;
-
+    if FConfigJobs = nil then
+      FConfigJobs:= TMDB.Configuration.GetJobs;
+    if FConfigLanguages = nil then
+      FConfigLanguages:= TMDB.Configuration.GetLanguages;
+    if FConfigPrimaryTranslations = nil then
+      FConfigPrimaryTranslations:= TMDB.Configuration.GetPrimaryTranslations;
+    if FConfigTimezones = nil then
+      FConfigTimezones:= TMDB.Configuration.GetTimeZones;
+    if FConfigMovieGenres = nil then
+      FConfigMovieGenres:= TMDB.Genres.GetMovieList('');
+    if FConfigTVGenres = nil then
+      FConfigTVGenres:= TMDB.Genres.GetTVList('');
+    if FConfigMovieCerts = nil then
+      FConfigMovieCerts:= TMDB.Certifications.GetMovieCertifications;
+    if FConfigTVCerts = nil then
+      FConfigTVCerts:= TMDB.Certifications.GetTVCertifications;
   except
     //TODO
   end;
@@ -430,91 +446,6 @@ begin
   finally
     Screen.Cursor:= crDefault;
   end;
-end;
-
-function TfrmTMDBTestMain.SearchMovies(const Page: Integer): ISuperObject;
-begin
-  Result:= TMDB.Search.SearchMovies(txtSearchMoviesQuery.Text, cboSearchMoviesAdult.ItemIndex = 1,
-    cboSearchMoviesLanguage.Text, txtSearchMoviesPrimaryReleaseYear.Text, Page,
-    cboSearchMoviesRegion.Text, txtSearchMoviesYear.Text);
-end;
-
-procedure TfrmTMDBTestMain.SearchMoviesAddToList(Obj: ISuperObject);
-var
-  A: ISuperArray;
-  O: ISuperObject;
-  X: Integer;
-  I: TListItem;
-  GenreID: Integer;
-  Genre: String;
-begin
-  lstSearchMovies.Items.Clear;
-  A:= Obj.A['results'];
-  for X := 0 to A.Length-1 do begin
-    O:= A.O[X];
-    I:= lstSearchMovies.Items.Add;
-    I.Caption:= O.S['title'];
-    I.SubItems.Add(FormatFloat('0.000', O.F['popularity']));
-
-    GenreID:= O.A['genre_ids'].I[0];
-    //TODO: Fetch genre lists on startup, cache, and use them here...
-    //Genre:=
-
-    I.SubItems.Add(Genre);
-    I.SubItems.Add(O.S['release_date']);
-    I.SubItems.Add(O.S['overview']);
-  end;
-
-  //Update page footer
-  lblSearchMoviesResults.Caption:= IntToStr(Obj.I['total_results'])+' Results';
-  lblSearchMoviesPage.Caption:= 'Page '+IntToStr(lstSearchMovies.Tag)+
-    ' of '+IntToStr(Obj.I['total_pages']);
-  btnSearchMoviesPagePrev.Enabled:= lstSearchMovies.Tag > 1;
-  btnSearchMoviesPageNext.Enabled:= lstSearchMovies.Tag < Obj.I['total_pages'];
-
-end;
-
-procedure TfrmTMDBTestMain.btnSearchMoviesApplyClick(Sender: TObject);
-var
-  Res: ISuperObject;
-begin
-  Self.PrepAPI;
-  //TODO: Search movies...
-
-  //Clear all results
-  lstSearchMovies.Items.Clear;
-
-  //Reset page to 0 - since list is empty, there is no page 1 yet
-  lstSearchMovies.Tag:= 0;
-
-  //Fetch page 1 of search
-  Res:= SearchMovies(1);
-  if Res.I['total_pages'] > 0 then
-    lstSearchMovies.Tag:= 1;
-
-  //Populate reuslts
-  SearchMoviesAddToList(Res);
-
-end;
-
-procedure TfrmTMDBTestMain.btnSearchMoviesPageNextClick(Sender: TObject);
-var
-  Res: ISuperObject;
-begin
-  //TODO: Go to next page in movie search...
-  lstSearchMovies.Tag:= lstSearchMovies.Tag + 1;
-  Res:= SearchMovies(lstSearchMovies.Tag);
-  SearchMoviesAddToList(Res);
-end;
-
-procedure TfrmTMDBTestMain.btnSearchMoviesPagePrevClick(Sender: TObject);
-var
-  Res: ISuperObject;
-begin
-  //TODO: Go back a page in movie search...
-  lstSearchMovies.Tag:= lstSearchMovies.Tag - 1;
-  Res:= SearchMovies(lstSearchMovies.Tag);
-  SearchMoviesAddToList(Res);
 end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
@@ -635,6 +566,11 @@ function TfrmTMDBTestMain.SetupFilename: String;
 begin
   Result:= ExtractFilePath(ParamStr(0));
   Result:= TPath.Combine(Result, 'AppConfig.json');
+end;
+
+function TfrmTMDBTestMain.TVGenreName(const ID: Integer): String;
+begin
+
 end;
 
 procedure TfrmTMDBTestMain.UserAuthMethodClick(Sender: TObject);
