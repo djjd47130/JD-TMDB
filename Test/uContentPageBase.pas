@@ -19,11 +19,14 @@ type
     btnPageNext: TButton;
     pSearch: TPanel;
     btnApply: TButton;
+    pDetail: TPanel;
     procedure btnApplyClick(Sender: TObject);
     procedure btnPagePrevClick(Sender: TObject);
     procedure btnPageNextClick(Sender: TObject);
     procedure lstResultsClick(Sender: TObject);
     procedure lstResultsDblClick(Sender: TObject);
+    procedure lstResultsSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     FObj: ISuperObject;
     procedure PopulateResults;
@@ -36,6 +39,8 @@ type
     procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ISuperObject); virtual;
     procedure ItemClick(const Index: Integer; Item: TListItem; Obj: ISuperObject); virtual;
     procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ISuperObject); virtual;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ISuperObject); virtual;
+    procedure HideDetail; virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -106,6 +111,7 @@ begin
   FObj:= GetData(APageNum);
   PopulateResults;
   UpdateFooter;
+  HideDetail;
   Result:= True;
 end;
 
@@ -116,6 +122,7 @@ var
   O: ISuperObject;
 begin
   inherited;
+  if lstResults.Selected = nil then Exit;
   I:= lstResults.Selected;
   X:= I.Index;
   O:= FObj.A['results'].O[X];
@@ -129,10 +136,29 @@ var
   O: ISuperObject;
 begin
   inherited;
+  if lstResults.Selected = nil then Exit;
   I:= lstResults.Selected;
   X:= I.Index;
   O:= FObj.A['results'].O[X];
   ItemDblClick(X, I, O);
+end;
+
+procedure TfrmContentPageBase.lstResultsSelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+var
+  I: TListItem;
+  X: Integer;
+  O: ISuperObject;
+begin
+  inherited;
+  if not Selected then
+    HideDetail
+  else begin
+    I:= lstResults.Selected;
+    X:= I.Index;
+    O:= FObj.A['results'].O[X];
+    ShowDetail(X, I, O);
+  end;
 end;
 
 function TfrmContentPageBase.PageCount: Integer;
@@ -212,9 +238,22 @@ begin
   //Override required
 end;
 
+procedure TfrmContentPageBase.ShowDetail(const Index: Integer; Item: TListItem;
+  Obj: ISuperObject);
+begin
+  pDetail.Visible:= True;
+  pDetail.Top:= 1;
+  //Override expected
+end;
+
 function TfrmContentPageBase.GetData(const APageNum: Integer): ISuperObject;
 begin
   //Override required
+end;
+
+procedure TfrmContentPageBase.HideDetail;
+begin
+  pDetail.Visible:= False;
 end;
 
 procedure TfrmContentPageBase.ItemClick(const Index: Integer; Item: TListItem;

@@ -44,19 +44,19 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Left = 0
         Top = 0
         Width = 983
-        Height = 185
+        Height = 193
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 953
         object gbAPIAuthMethod: TGroupBox
           AlignWithMargins = True
           Left = 4
           Top = 4
           Width = 357
-          Height = 177
+          Height = 185
           Align = alLeft
           Caption = 'API Authentication'
           TabOrder = 0
+          ExplicitHeight = 177
           object gbAPIAuthMethodAPIKey: TPanel
             Left = 2
             Top = 48
@@ -173,10 +173,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Left = 367
           Top = 4
           Width = 306
-          Height = 177
+          Height = 185
           Align = alLeft
           Caption = 'User Authentication'
           TabOrder = 1
+          ExplicitHeight = 177
           object Panel3: TPanel
             Left = 2
             Top = 20
@@ -260,8 +261,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             BevelOuter = bvNone
             TabOrder = 2
             Visible = False
-            ExplicitLeft = 9
-            ExplicitTop = 114
+            ExplicitLeft = -2
+            ExplicitTop = 149
             DesignSize = (
               302
               60)
@@ -288,7 +289,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Left = 679
           Top = 4
           Width = 269
-          Height = 177
+          Height = 185
           Align = alLeft
           Caption = 'User Login'
           TabOrder = 2
@@ -313,7 +314,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Left = 5
             Top = 57
             Width = 259
-            Height = 115
+            Height = 123
             Align = alClient
             Caption = 'User Info'
             Font.Charset = DEFAULT_CHARSET
@@ -330,7 +331,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 95
               Top = 23
               Width = 159
-              Height = 87
+              Height = 95
               Align = alClient
               TabOrder = 0
               ExplicitHeight = 93
@@ -379,7 +380,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 5
               Top = 23
               Width = 84
-              Height = 87
+              Height = 95
               Align = alLeft
               TabOrder = 1
               ExplicitHeight = 93
@@ -388,7 +389,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 Left = 4
                 Top = 4
                 Width = 76
-                Height = 79
+                Height = 87
                 Align = alClient
                 ExplicitLeft = 8
                 ExplicitHeight = 77

@@ -28,12 +28,21 @@ type
     Panel14: TPanel;
     Label15: TLabel;
     txtSearchMoviesYear: TEdit;
+    lblTitle: TLabel;
+    lblReleaseDate: TLabel;
+    lblGenres: TLabel;
+    lblTagline: TLabel;
+    txtOverview: TMemo;
+  private
+    FDetail: ISuperObject;
   protected
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ISuperObject; override;
     procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
     procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
+    procedure HideDetail; override;
   end;
 
 var
@@ -72,6 +81,45 @@ begin
   AddCol('Genre', 150);
   AddCol('Released', 160);
   AddCol('Description', 700);
+end;
+
+function GetGenres(O: ISuperObject): String;
+var
+  X: Integer;
+  A: ISuperArray;
+begin
+  Result:= '';
+  A:= O.A['genres'];
+  for X := 0 to A.Length-1 do begin
+    if Result <> '' then
+      Result:= Result + ', ';
+    Result:= Result + A.O[X].S['name'];
+  end;
+end;
+
+procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
+  Item: TListItem; Obj: ISuperObject);
+var
+  ID: Integer;
+  Genres: String;
+begin
+  inherited;
+  PrepAPI;
+  ID:= Obj.I['id'];
+  FDetail:= Self.API.Movies.GetDetails(ID);
+
+  lblTitle.Caption:= FDetail.S['title'];
+  lblReleaseDate.Caption:= 'Release Date: '+FDetail.S['release_date'];
+  lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
+  txtOverview.Lines.Text:= FDetail.S['overview'];
+  lblTagline.Caption:= FDetail.S['tagline'];
+
+end;
+
+procedure TfrmContentSearchMovies.HideDetail;
+begin
+  inherited;
+  FDetail:= nil;
 end;
 
 procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;

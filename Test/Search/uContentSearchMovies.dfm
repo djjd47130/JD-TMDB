@@ -11,6 +11,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
     ExplicitHeight = 473
     inherited lstResults: TListView
       Width = 703
+      Height = 217
       Columns = <
         item
           Caption = 'Movie'
@@ -35,7 +36,90 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
       ExplicitWidth = 703
     end
     inherited pFooter: TPanel
+      Top = 223
       Width = 709
+    end
+    inherited pDetail: TPanel
+      Top = 255
+      Width = 709
+      Height = 246
+      ExplicitLeft = 0
+      ExplicitTop = 255
+      ExplicitWidth = 709
+      ExplicitHeight = 246
+      object lblTitle: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 701
+        Height = 29
+        Align = alTop
+        AutoSize = False
+        Caption = 'Movie Title'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -21
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblReleaseDate: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 63
+        Width = 701
+        Height = 18
+        Align = alTop
+        AutoSize = False
+        Caption = 'Release Date'
+        ExplicitLeft = 16
+        ExplicitTop = 64
+        ExplicitWidth = 99
+      end
+      object lblGenres: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 87
+        Width = 701
+        Height = 18
+        Align = alTop
+        AutoSize = False
+        Caption = 'Genres'
+        ExplicitLeft = 16
+        ExplicitTop = 88
+        ExplicitWidth = 53
+      end
+      object lblTagline: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 39
+        Width = 701
+        Height = 18
+        Align = alTop
+        AutoSize = False
+        Caption = 'Tagline'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object txtOverview: TMemo
+        AlignWithMargins = True
+        Left = 4
+        Top = 111
+        Width = 701
+        Height = 105
+        Align = alTop
+        BorderStyle = bsNone
+        Color = clBtnFace
+        Lines.Strings = (
+          'txtOverview')
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
     end
   end
   inherited pSearch: TPanel

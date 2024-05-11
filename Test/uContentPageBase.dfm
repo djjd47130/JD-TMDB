@@ -22,7 +22,7 @@ inherited frmContentPageBase: TfrmContentPageBase
       Left = 3
       Top = 3
       Width = 639
-      Height = 463
+      Height = 266
       Align = alClient
       Color = clSilver
       Columns = <
@@ -38,9 +38,10 @@ inherited frmContentPageBase: TfrmContentPageBase
       ViewStyle = vsReport
       OnClick = lstResultsClick
       OnDblClick = lstResultsDblClick
+      OnSelectItem = lstResultsSelectItem
       ExplicitLeft = 6
       ExplicitTop = 0
-      ExplicitHeight = 505
+      ExplicitHeight = 330
     end
     object pFooter: TPanel
       Left = 0
@@ -49,8 +50,8 @@ inherited frmContentPageBase: TfrmContentPageBase
       Height = 32
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 441
-      ExplicitWidth = 489
+      ExplicitLeft = 40
+      ExplicitTop = 480
       object lblResults: TLabel
         AlignWithMargins = True
         Left = 4
@@ -104,6 +105,16 @@ inherited frmContentPageBase: TfrmContentPageBase
         ExplicitTop = 3
       end
     end
+    object pDetail: TPanel
+      Left = 0
+      Top = 272
+      Width = 645
+      Height = 197
+      Align = alBottom
+      TabOrder = 2
+      Visible = False
+      ExplicitTop = 176
+    end
   end
   object pSearch: TPanel
     Left = 0
@@ -118,15 +129,15 @@ inherited frmContentPageBase: TfrmContentPageBase
     object btnApply: TButton
       AlignWithMargins = True
       Left = 3
-      Top = 473
+      Top = 472
       Width = 259
-      Height = 25
+      Height = 26
       Cursor = crHandPoint
       Align = alBottom
       Caption = 'Apply Search -->'
+      Default = True
       TabOrder = 0
       OnClick = btnApplyClick
-      ExplicitTop = 445
     end
   end
 end
