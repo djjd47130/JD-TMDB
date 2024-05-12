@@ -15,7 +15,11 @@ You are required to obtain your own [API key from TMDB](https://www.themoviedb.o
 
 ## Delphi Wrapper
 
-At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component, which can be installed into your IDE.
+At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component, which can be installed into your IDE. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the `X-SuperObject` JSON library for Delphi. 
+
+A second-level wrapper is being written which further adds an abstract layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. 
+
+A final third-level wrapper is planned which will be a component you can install into the Delphi IDE. It will be reponsible for everything necessary, including pre-fetching configuration data, API authentication, user authentication, language and locale options, etc.  This will ultimately be the main component to integrate your Delphi project with the TMDB API. 
 
 ## Test Application
 
