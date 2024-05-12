@@ -23,5 +23,5 @@ There is a test application to demonstrage the usage of the TMDB API. Note that 
 
 ## Watch Providers Attribution
 
-**IMPORTANT**: In order to use any of the "Watch Providers" features, you must attrivute "**JustWatch**" in your solution.
+**IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute "**JustWatch**" in your solution.
 
