@@ -6,6 +6,10 @@ TMDB API Wrapper for Delphi - Written by Jerry Dodge
 
 This library is currently in active develoment, and not guaranteed for use at this time. 
 
+## Delphi Version
+
+This library is written in Delphi 10.4. While it should work fine on other version of Delphi, there are no guarantees. The older the Delphi version, the less likely this library will be compatible.
+
 ## TMDB API Documentation
 
 https://developer.themoviedb.org/reference/intro/getting-started
