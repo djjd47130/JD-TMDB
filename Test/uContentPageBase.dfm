@@ -2,6 +2,7 @@ inherited frmContentPageBase: TfrmContentPageBase
   Caption = 'Content Page Base'
   ClientHeight = 501
   ClientWidth = 910
+  OnShow = FormShow
   ExplicitWidth = 926
   ExplicitHeight = 540
   PixelsPerInch = 96

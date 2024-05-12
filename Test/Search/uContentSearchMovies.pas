@@ -67,7 +67,9 @@ end;
 procedure TfrmContentSearchMovies.PrepSearch;
 begin
   inherited;
-  //TODO: Populate languages
+  //TODO: This should rather be fetching "Primary Translations"...
+  frmTMDBTestMain.ListLanguages(cboSearchMoviesLanguage.Items);
+
 
   //TODO: Populate regions
 
@@ -125,7 +127,7 @@ procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ISuperObject);
 begin
   inherited;
-  //TODO: Open movie details...
+  //TODO: Navigate to movie details tab...
 
 end;
 

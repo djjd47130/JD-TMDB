@@ -114,6 +114,8 @@ type
     function CountryName(const Code: String): String;
     function MovieGenreName(const ID: Integer): String;
     function TVGenreName(const ID: Integer): String;
+    procedure ListLanguages(AList: TStrings);
+    procedure ListRegions(AList: TStrings);
   end;
 
 var
@@ -382,6 +384,26 @@ begin
   PrepAPI;
   O:= TMDB.Authentication.GetValidateKey;
   ShowMessage('API Key Validation Result: '+O.S['status_message']);
+end;
+
+procedure TfrmTMDBTestMain.ListLanguages(AList: TStrings);
+var
+  X: Integer;
+  O: ISuperObject;
+begin
+  PrepAPI;
+  AList.Clear;
+  for X := 0 to Self.FConfigLanguages.Length-1 do begin
+    O:= FConfigLanguages.O[X];
+    AList.Append(O.S['iso_639_1']);
+    //AList.Append(O.S['english_name']+' ('+O.S['iso_639_1']+')');
+  end;
+end;
+
+procedure TfrmTMDBTestMain.ListRegions(AList: TStrings);
+begin
+  AList.Clear;
+
 end;
 
 procedure TfrmTMDBTestMain.Button2Click(Sender: TObject);

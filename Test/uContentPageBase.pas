@@ -27,6 +27,7 @@ type
     procedure lstResultsDblClick(Sender: TObject);
     procedure lstResultsSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
+    procedure FormShow(Sender: TObject);
   private
     FObj: ISuperObject;
     procedure PopulateResults;
@@ -75,6 +76,13 @@ destructor TfrmContentPageBase.Destroy;
 begin
 
   inherited;
+end;
+
+procedure TfrmContentPageBase.FormShow(Sender: TObject);
+begin
+  inherited;
+
+  PrepSearch;
 end;
 
 function TfrmContentPageBase.AddCol(const ACaption: String;

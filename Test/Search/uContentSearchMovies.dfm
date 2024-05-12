@@ -43,7 +43,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
       Top = 255
       Width = 709
       Height = 246
-      ExplicitLeft = 0
       ExplicitTop = 255
       ExplicitWidth = 709
       ExplicitHeight = 246
