@@ -485,6 +485,7 @@ begin
       Self.lstCertsMovies.Items.Clear;
       Self.lstCertsMovies.Groups.Clear;
       Res:= TMDB.Certifications.GetMovieCertifications;
+
       for M in Res['certifications'].AsObject do begin
         C:= M.AsArray;
         G:= Self.lstCertsMovies.Groups.Add;
@@ -498,6 +499,7 @@ begin
           I.GroupID:= G.GroupID;
         end;
       end;
+
       lstCertsMovies.SortType:= TSortType.stText;
       //TODO: Sort groups...
     finally

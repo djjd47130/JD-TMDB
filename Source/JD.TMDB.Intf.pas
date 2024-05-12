@@ -54,7 +54,7 @@ type
   TTMDBReleaseType = (rtUnknown = 0, rtPremiere = 1, rtTheatricalLimited = 2,
     rtTheatrical = 3, rtDigital = 4, rtPhysical = 5, rtTV = 6);
 
-  { Pagination }
+  { Pagination Related }
 
   ITMDBPageItem = interface;
 
@@ -88,7 +88,7 @@ type
     property Index: Integer read GetIndex;
   end;
 
-  { Account Service }
+  { Account Related }
 
   /// <summary>
   /// The details of a given user account.
@@ -103,39 +103,18 @@ type
     function GetLanguageCode: WideString; stdcall;
     function GetGravatarHash: WideString; stdcall;
     function GetTMDBAvatarPath: WideString; stdcall;
+
+    property ID: Integer read GetID;
+    property UserName: WideString read GetUserName;
+    property Name: WideString read GetName;
+    property IncludeAdult: Boolean read GetIncludeAdult;
+    property CountryCode: WideString read GetCountryCode;
+    property LanguageCode: WideString read GetLanguageCode;
+    property GravatarHash: WideString read GetGravatarHash;
+    property TMDBAvatarPath: WideString read GetTMDBAvatarPath;
   end;
 
-  //TODO: Is this really necessary? Can't these just be parameters in the request?
-
-  ITMDBAccountFavoriteReq = interface
-    ['{2D83FD85-53BE-4ADF-BE46-19516A64AB36}']
-    function GetMediaType: TTMDBMediaType; stdcall;
-    procedure SetMediaType(const Value: TTMDBMediaType); stdcall;
-    function GetMediaID: Integer; stdcall;
-    procedure SetMediaID(const Value: Integer); stdcall;
-    function GetFavorite: Boolean; stdcall;
-    procedure SetFavorite(const Value: Boolean); stdcall;
-
-    property MediaType: TTMDBMediaType read GetMediaType write SetMediaType;
-    property MediaID: Integer read GetMediaID write SetMediaID;
-    property Favorite: Boolean read GetFavorite write SetFavorite;
-  end;
-
-  ITMDBAccountWatchlistReq = interface
-    ['{A2EE35A2-AF92-46AA-A366-78A84E03B250}']
-    function GetMediaType: TTMDBMediaType; stdcall;
-    procedure SetMediaType(const Value: TTMDBMediaType); stdcall;
-    function GetMediaID: Integer; stdcall;
-    procedure SetMediaID(const Value: Integer); stdcall;
-    function GetWatchlist: Boolean; stdcall;
-    procedure SetWatchlist(const Value: Boolean); stdcall;
-
-    property MediaType: TTMDBMediaType read GetMediaType write SetMediaType;
-    property MediaID: Integer read GetMediaID write SetMediaID;
-    property Watchlist: Boolean read GetWatchlist write SetWatchlist;
-  end;
-
-  { Authentication Service }
+  { Authentication Related }
 
   /// <summary>
   /// The result of creating a new guest session.
@@ -200,9 +179,45 @@ type
     function GetStatusMessage: WideString;
   end;
 
-  { Certifications }
+  { Certifications Related }
 
-  { Configuration }
+  ITMDBCertificationItem = interface;
+  ITMDBCertificationCountry = interface;
+
+  ITMDBCertificationItem = interface
+    ['{02B6525F-7A01-4FDC-B39F-2F276D999827}']
+    function GetCertification: WideString;
+    function GetMeaning: WideString;
+    function GetOrder: Integer;
+
+    property Certification: WideString read GetCertification;
+    property Meaning: WideString read GetMeaning;
+    property Order: Integer read GetOrder;
+  end;
+
+  ITMDBCertificationCountry = interface
+    ['{4BE1C674-3BFE-464D-8595-67567687A7E3}']
+    function GetCountryCode: WideString;
+    function GetCountryName: WideString;
+    function GetCount: Integer;
+    function GetItem(const Index: Integer): ITMDBCertificationItem;
+
+    property CountryCode: WideString read GetCountryCode;
+    property CountryName: WideString read GetCountryName;
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBCertificationItem read GetItem; default;
+  end;
+
+  ITMDBCertificationCountries = interface
+    ['{F907A3E0-B9A4-45B8-A7BC-B10FEC984CEF}']
+    function GetCount: Integer;
+    function GetItem(const Index: Integer): ITMDBCertificationCountry;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBCertificationCountry read GetItem; default;
+  end;
+
+  { Configuration Related }
 
   /// <summary>
   /// The "Images" section of system configuration.
@@ -238,7 +253,7 @@ type
     property ChangeKeys: TTMDBStrArray read GetChangeKeys;
   end;
 
-  { Countries }
+  { Countries Related }
 
   ITMDBCountryItem = interface;
 
@@ -268,7 +283,7 @@ type
     property NativeName: WideString read GetNativeName;
   end;
 
-  { Jobs / Departments }
+  { Jobs / Departments Related }
 
   ITMDBJobDepartmentItem = interface;
 
@@ -279,6 +294,9 @@ type
     ['{2B9A1DF6-2CA9-48E2-886C-179F7F92383C}']
     function GetCount: Integer;
     function GetItem(const Index: Integer): ITMDBJobDepartmentItem;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBJobDepartmentItem read GetItem; default;
   end;
 
   /// <summary>
@@ -288,9 +306,12 @@ type
     ['{847352D6-4054-4E62-897C-258305FBEDE2}']
     function GetDepartment: WideString;
     function GetJobs: TTMDBStrArray;
+
+    property Department: WideString read GetDepartment;
+    property Jobs: TTMDBStrArray read GetJobs;
   end;
 
-  { Languages }
+  { Languages Related }
 
   ITMDBLanguageItem = interface;
 
@@ -301,6 +322,9 @@ type
     ['{B08908B7-3C02-4BF9-8B94-AECF0EEC8D49}']
     function GetCount: Integer;
     function GetItem(const Index: Integer): ITMDBLanguageItem;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBLanguageItem read GetItem; default;
   end;
 
   /// <summary>
@@ -311,9 +335,13 @@ type
     function GetISO639_1: WideString;
     function GetEnglishName: WideString;
     function GetName: WideString;
+
+    property ISO639_1: WideString read GetISO639_1;
+    property EnglishName: WideString read GetEnglishName;
+    property Name: WideString read GetName;
   end;
 
-  { Timezones}
+  { Timezones Related }
 
   ITMDBTimezoneItem = interface;
 
@@ -324,6 +352,9 @@ type
     ['{E120B06B-06AC-4591-9469-1173DA85C199}']
     function GetCount: Integer;
     function GetItem(const Index: Integer): ITMDBTimezoneItem;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBTimezoneItem read GetItem; default;
   end;
 
   /// <summary>
@@ -331,11 +362,14 @@ type
   /// </summary>
   ITMDBTimezoneItem = interface
     ['{58364B5B-DC6E-4A66-B3A5-7D812382C720}']
-    function GetISO_3166_1: WideString;
+    function GetISO3166_1: WideString;
     function GetZones: TTMDBStrArray;
+
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Zones: TTMDBStrArray read GetZones;
   end;
 
-  { Genres }
+  { Genres Related }
 
   ITMDBGenreItem = interface;
 
@@ -363,7 +397,7 @@ type
     property Name: WideString read GetName;
   end;
 
-  { Movies }
+  { Movies Related }
 
   ITMDBMovieItem = interface;
 
@@ -444,8 +478,6 @@ type
 
 
 
-
-
 type
 
   { Forward Definitions }
@@ -464,22 +496,38 @@ type
 
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
-    function GetDetails: ITMDBAccountDetail; stdcall;
-    function SetFavorite(Favorite: ITMDBAccountFavoriteReq): Integer; stdcall;
-    function SetWatchlist(Watchlist: ITMDBAccountWatchlistReq): Integer; stdcall;
+    function GetDetails(AAccountID: Integer;
+      ASessionID: WideString = ''): ITMDBAccountDetail; stdcall;
+    function SetFavorite(const MediaType: TTMDBMediaType; const MediaID: Integer;
+      const Favorite: Boolean): Integer; stdcall;
+    function SetWatchlist(const MediaType: TTMDBMediaType; const MediaID: Integer;
+      const Watchlist: Boolean): Integer; stdcall;
     function GetFavoriteMovies(const Page: Integer = 1; const Language: WideString = '';
       const SessionID: WideString = ''; const SortBy: WideString = ''): ITMDBMoviePage; stdcall;
-
+    //GetFavoriteTV
+    //GetLists
+    //GetRatedMovies
+    //GetRatedTV
+    //GetRatedTVEpisodes
+    //GetWatchlistMovies
+    //GetWatchlistTV
   end;
 
   ITMDBServiceAuthentication = interface(ITMDBService)
     ['{2144056B-54A4-49C4-AE3E-E0701B10E218}']
-
+    function CreateGuestSession: ITMDBAuthGuestSessionResult;
+    function CreateRequestToken: ITMDBAuthRequestTokenResult;
+    function CreateSession(const ARequestToken: WideString): ITMDBAuthSessionResult;
+    function CreateSessionV4(const AAccessToken: WideString): ITMDBAuthSessionResult;
+    function CreateSessionLogin(const AUsername, APassword, ARequestToken: WideString): ITMDBAuthSessionResultLogin;
+    //DeleteSession
+    //ValidateKey
   end;
 
   ITMDBServiceCertifications = interface(ITMDBService)
     ['{C6FCB00E-CDCA-46EA-B44B-A3CA2570774B}']
-
+    function GetMovieCertifications: ITMDBCertificationCountries;
+    function GetTVCertifications: ITMDBCertificationCountries;
   end;
 
   ITMDBServiceChanges = interface(ITMDBService)
@@ -638,7 +686,7 @@ type
 
     { Services }
 
-    //function Account: ITMDBServiceAccount; stdcall;
+    function Account: ITMDBServiceAccount; stdcall;
     function Authentication: ITMDBServiceAuthentication; stdcall;
     //function Certifications: ITMDBServiceCertifications; stdcall;
     //function Changes: ITMDBServiceChanges; stdcall;

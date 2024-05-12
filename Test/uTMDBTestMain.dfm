@@ -22,7 +22,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Top = 0
     Width = 991
     Height = 507
-    ActivePage = tabSetup
+    ActivePage = tabCertifications
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -409,7 +409,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Top = 0
         Width = 983
         Height = 419
-        ActivePage = tabCertsTV
+        ActivePage = tabCertsMovies
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
