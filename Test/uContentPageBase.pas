@@ -105,7 +105,6 @@ end;
 
 function TfrmContentPageBase.LoadPage(const APageNum: Integer): Boolean;
 begin
-  Result:= False;
   PrepAPI;
   lstResults.Tag:= APageNum;
   FObj:= GetData(APageNum);

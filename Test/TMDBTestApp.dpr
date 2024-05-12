@@ -12,7 +12,9 @@ uses
   uContentPageBase in 'uContentPageBase.pas' {frmContentPageBase},
   uContentSearchMovies in 'Search\uContentSearchMovies.pas' {frmContentSearchMovies},
   uTabConfiguration in 'Configuration\uTabConfiguration.pas' {frmTabConfiguration},
-  uContentSearchCollections in 'Search\uContentSearchCollections.pas' {frmContentSearchCollections};
+  uContentSearchCollections in 'Search\uContentSearchCollections.pas' {frmContentSearchCollections},
+  JD.TMDB.Intf in '..\Source\JD.TMDB.Intf.pas',
+  JD.TMDB.Impl in '..\Source\JD.TMDB.Impl.pas';
 
 {$R *.res}
 

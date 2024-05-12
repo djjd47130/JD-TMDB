@@ -388,7 +388,6 @@ procedure TfrmTMDBTestMain.Button2Click(Sender: TObject);
 var
   O: ISuperObject;
   C: ISuperArray;
-  M: IMember;
   X: Integer;
   I: TListItem;
 begin
@@ -420,7 +419,6 @@ procedure TfrmTMDBTestMain.Button3Click(Sender: TObject);
 var
   O: ISuperObject;
   C: ISuperArray;
-  M: IMember;
   X: Integer;
   I: TListItem;
 begin

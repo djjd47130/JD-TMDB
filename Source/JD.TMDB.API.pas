@@ -24,14 +24,29 @@ uses
   IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL;
 
+
+{ TMDB API HTTP Constants }
+
 const
   TMDB_API_ROOT = 'https://api.themoviedb.org/3/';
   TMDB_API_USERAGENT = 'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-TMDB)';
 
+
+
+{ TMDB Error Code Constants }
+
+const
+  TMDB_ERR_SUCCESS = 1;
+  TMDB_ERR_INVALID_SERVICE = 2;
+  TMDB_ERR_AUTH_FAILED = 3;
+  TMDB_ERR_INVALID_FORMAT = 4;
+  //TODO All the way to code 47...
+
+
 type
   TTMDBAPI = class;
 
-  TTMDBService = class(TPersistent)
+  TTMDBAPIService = class(TPersistent)
   private
     FOwner: TTMDBAPI;
     procedure AddParam(var S: String; const N, V: String);
@@ -40,7 +55,7 @@ type
     destructor Destroy; override;
   end;
 
-  TTMDBAccount = class(TTMDBService)
+  TTMDBAPIAccount = class(TTMDBAPIService)
   public
     function GetDetails(const AccountID: Integer; const SessionID: String = ''): ISuperObject;
     function AddFavorite(const AccountID: Integer;
@@ -74,7 +89,7 @@ type
       const SortBy: String = ''): ISuperObject;
   end;
 
-  TTMDBAuthentication = class(TTMDBService)
+  TTMDBAPIAuthentication = class(TTMDBAPIService)
   public
     function CreateGuestSession: ISuperObject;
     function CreateRequestToken: ISuperObject;
@@ -86,13 +101,13 @@ type
     function GetValidateKey: ISuperObject;
   end;
 
-  TTMDBCertifications = class(TTMDBService)
+  TTMDBAPICertifications = class(TTMDBAPIService)
   public
     function GetMovieCertifications: ISuperObject;
     function GetTVCertifications: ISuperObject;
   end;
 
-  TTMDBChanges = class(TTMDBService)
+  TTMDBAPIChanges = class(TTMDBAPIService)
   public
     function GetMovieList(const StartDate: TDateTime = 0; const EndDate: TDateTime = 0;
       const Page: Integer = 1): ISuperObject;
@@ -102,7 +117,7 @@ type
       const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBCollections = class(TTMDBService)
+  TTMDBAPICollections = class(TTMDBAPIService)
   public
     function GetDetails(const CollectionID: Integer; const Language: String = ''): ISuperObject;
     function GetImages(const CollectionID: Integer; const IncludeImageLanguage: String = '';
@@ -110,14 +125,14 @@ type
     function GetTranslations(const CollectionID: Integer): ISuperObject;
   end;
 
-  TTMDBCompanies = class(TTMDBService)
+  TTMDBAPICompanies = class(TTMDBAPIService)
   public
     function GetDetails(const CompanyID: Integer): ISuperObject;
     function GetAlternativeNames(const CompanyID: Integer): ISuperObject;
     function GetImages(const CompanyID: Integer): ISuperObject;
   end;
 
-  TTMDBConfiguration = class(TTMDBService)
+  TTMDBAPIConfiguration = class(TTMDBAPIService)
   public
     function GetDetails: ISuperObject;
     function GetCountries: ISuperArray;
@@ -127,12 +142,12 @@ type
     function GetTimeZones: ISuperArray;
   end;
 
-  TTMDBCredits = class(TTMDBService)
+  TTMDBAPICredits = class(TTMDBAPIService)
   public
     function GetDetails(const CreditID: Integer): ISuperObject;
   end;
 
-  TTMDBDiscover = class(TTMDBService)
+  TTMDBAPIDiscover = class(TTMDBAPIService)
   public
     //TODO: HUGE - COME BACK TO THIS LATER!!!
     //  Probably better to pass an object containing parameters instead of
@@ -142,19 +157,19 @@ type
     //TV
   end;
 
-  TTMDBFind = class(TTMDBService)
+  TTMDBAPIFind = class(TTMDBAPIService)
   public
     function GetFindByID(const ExternalID: String; const ExternalSource: String;
       const Language: String = ''): ISuperObject;
   end;
 
-  TTMDBGenres = class(TTMDBService)
+  TTMDBAPIGenres = class(TTMDBAPIService)
   public
     function GetMovieList(const Language: String = ''): ISuperArray;
     function GetTVList(const Language: String = ''): ISuperArray;
   end;
 
-  TTMDBGuestSessions = class(TTMDBService)
+  TTMDBAPIGuestSessions = class(TTMDBAPIService)
   public
     function GetRatedMovies(const GuestSessionID: String; const Language: String = '';
       const Page: Integer = 1; const SortBy: String = ''): ISuperObject;
@@ -164,13 +179,13 @@ type
       const Page: Integer = 1; const SortBy: String = ''): ISuperObject;
   end;
 
-  TTMDBKeywords = class(TTMDBService)
+  TTMDBAPIKeywords = class(TTMDBAPIService)
   public
     function GetDetails(const KeywordID: Integer): ISuperObject;
     //DEPRECATED: GetMovies
   end;
 
-  TTMDBLists = class(TTMDBService)
+  TTMDBAPILists = class(TTMDBAPIService)
   public
     function AddMovie(const ListID: Integer; const SessionID: String;
       const MediaID: Integer): ISuperObject;
@@ -186,7 +201,7 @@ type
       const MediaID: Integer): ISuperObject;
   end;
 
-  TTMDBMovieLists = class(TTMDBService)
+  TTMDBAPIMovieLists = class(TTMDBAPIService)
   public
     function GetNowPlaying(const Language: String = ''; const Page: Integer = 1;
       const Region: String = ''): ISuperObject;
@@ -198,7 +213,7 @@ type
       const Region: String = ''): ISuperObject;
   end;
 
-  TTMDBMovies = class(TTMDBService)
+  TTMDBAPIMovies = class(TTMDBAPIService)
   public
     function GetDetails(const MovieID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
@@ -232,21 +247,21 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBNetworks = class(TTMDBService)
+  TTMDBAPINetworks = class(TTMDBAPIService)
   public
     function GetDetails(const NetworkID: Integer): ISuperObject;
     function GetAlternativeNames(const NetworkID: Integer): ISuperArray;
     function GetImages(const NetworkID: Integer): ISuperArray;
   end;
 
-  TTMDBPeopleLists = class(TTMDBService)
+  TTMDBAPIPeopleLists = class(TTMDBAPIService)
   public
     function GetPopular(const Language: String = ''; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBGender = (gNotSpecified = 0, gFemale = 1, gMale = 2, gNonBinary = 3);
+  TTMDBAPIGender = (gNotSpecified = 0, gFemale = 1, gMale = 2, gNonBinary = 3);
 
-  TTMDBPeople = class(TTMDBService)
+  TTMDBAPIPeople = class(TTMDBAPIService)
   public
     function GetDetails(const PersonID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
@@ -262,12 +277,12 @@ type
     function GetTranslations(const PersonID: Integer): ISuperArray;
   end;
 
-  TTMDBReviews = class(TTMDBService)
+  TTMDBAPIReviews = class(TTMDBAPIService)
   public
     function GetDetails(const ReviewID: Integer): ISuperObject;
   end;
 
-  TTMDBSearch = class(TTMDBService)
+  TTMDBAPISearch = class(TTMDBAPIService)
   public
     function SearchCollections(const Query: String; const IncludeAdult: Boolean = False;
       const Language: String = ''; const Page: Integer = 1; const Region: String = ''): ISuperObject;
@@ -285,7 +300,7 @@ type
       const Page: Integer = 1; const Year: String = ''): ISuperObject;
   end;
 
-  TTMDBTrending = class(TTMDBService)
+  TTMDBAPITrending = class(TTMDBAPIService)
   public
     function GetAll(const TimeWindow: String = 'day'; const Language: String = '';
       const Page: Integer = 1): ISuperObject;
@@ -297,7 +312,7 @@ type
       const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBTVSeriesLists = class(TTMDBService)
+  TTMDBAPITVSeriesLists = class(TTMDBAPIService)
   public
     function GetAiringToday(const Language: String = ''; const Page: Integer = 1;
       const Timezone: String = ''): ISuperObject;
@@ -307,7 +322,7 @@ type
     function GetTopRated(const Language: String = ''; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBTVSeries = class(TTMDBService)
+  TTMDBAPITVSeries = class(TTMDBAPIService)
   public
     function GetDetails(const SeriesID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
@@ -344,7 +359,7 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBTVSeasons = class(TTMDBService)
+  TTMDBAPITVSeasons = class(TTMDBAPIService)
   public
     function GetDetails(const SeriesID: Integer; const SeasonNumber: Integer;
       const AppendToResponse: String = ''; const Language: String = ''): ISuperObject;
@@ -366,7 +381,7 @@ type
       const Language: String = ''): ISuperObject;
   end;
 
-  TTMDBTVEpisodes = class(TTMDBService)
+  TTMDBAPITVEpisodes = class(TTMDBAPIService)
   public
     function GetDetails(const SeriesID: Integer; const SeasonNumber: Integer;
       const EpisodeNumber: Integer; const AppendToResponse: String = '';
@@ -393,15 +408,15 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBEpisodeGroupType = (gtOrigAirDate = 1, gtAbsolute = 2, gtDVD = 3, gtDigital = 4,
+  TTMDBAPIEpisodeGroupType = (gtOrigAirDate = 1, gtAbsolute = 2, gtDVD = 3, gtDigital = 4,
     gtStoryArc = 5, gtProduction = 6, gtTV = 7);
 
-  TTMDBTVEpisodeGroups = class(TTMDBService)
+  TTMDBAPITVEpisodeGroups = class(TTMDBAPIService)
   public
     function GetEpisodeGroups(const TVEpisodeGroupID: String): ISuperObject;
   end;
 
-  TTMDBWatchProviders = class(TTMDBService)
+  TTMDBAPIWatchProviders = class(TTMDBAPIService)
   public
     function GetAvailableRegions(const Language: String = ''): ISuperArray;
     function GetMovieProviders(const Language: String = '';
@@ -416,34 +431,34 @@ type
     FReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
-    FConfiguration: TTMDBConfiguration;
-    FGenres: TTMDBGenres;
-    FMovies: TTMDBMovies;
-    FPeople: TTMDBPeople;
-    FNetworks: TTMDBNetworks;
-    FSearch: TTMDBSearch;
-    FTVSeries: TTMDBTVSeries;
-    FTVSeasons: TTMDBTVSeasons;
-    FWatchProviders: TTMDBWatchProviders;
-    FTVEpisodes: TTMDBTVEpisodes;
-    FCompanies: TTMDBCompanies;
-    FCertifications: TTMDBCertifications;
-    FCollections: TTMDBCollections;
-    FAuthentication: TTMDBAuthentication;
-    FChanges: TTMDBChanges;
-    FCredits: TTMDBCredits;
-    FAccount: TTMDBAccount;
-    FTVEpisodeGroups: TTMDBTVEpisodeGroups;
-    FDiscover: TTMDBDiscover;
-    FFind: TTMDBFind;
-    FGuestSessions: TTMDBGuestSessions;
-    FKeywords: TTMDBKeywords;
-    FLists: TTMDBLists;
-    FMovieLists: TTMDBMovieLists;
-    FPeopleLists: TTMDBPeopleLists;
-    FTrending: TTMDBTrending;
-    FReviews: TTMDBReviews;
-    FTVSeriesLists: TTMDBTVSeriesLists;
+    FConfiguration: TTMDBAPIConfiguration;
+    FGenres: TTMDBAPIGenres;
+    FMovies: TTMDBAPIMovies;
+    FPeople: TTMDBAPIPeople;
+    FNetworks: TTMDBAPINetworks;
+    FSearch: TTMDBAPISearch;
+    FTVSeries: TTMDBAPITVSeries;
+    FTVSeasons: TTMDBAPITVSeasons;
+    FWatchProviders: TTMDBAPIWatchProviders;
+    FTVEpisodes: TTMDBAPITVEpisodes;
+    FCompanies: TTMDBAPICompanies;
+    FCertifications: TTMDBAPICertifications;
+    FCollections: TTMDBAPICollections;
+    FAuthentication: TTMDBAPIAuthentication;
+    FChanges: TTMDBAPIChanges;
+    FCredits: TTMDBAPICredits;
+    FAccount: TTMDBAPIAccount;
+    FTVEpisodeGroups: TTMDBAPITVEpisodeGroups;
+    FDiscover: TTMDBAPIDiscover;
+    FFind: TTMDBAPIFind;
+    FGuestSessions: TTMDBAPIGuestSessions;
+    FKeywords: TTMDBAPIKeywords;
+    FLists: TTMDBAPILists;
+    FMovieLists: TTMDBAPIMovieLists;
+    FPeopleLists: TTMDBAPIPeopleLists;
+    FTrending: TTMDBAPITrending;
+    FReviews: TTMDBAPIReviews;
+    FTVSeriesLists: TTMDBAPITVSeriesLists;
     FAppUserAgent: String;
     FSecondsLimit: Single;
     procedure SetAPIKey(const Value: String);
@@ -468,34 +483,34 @@ type
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
     property SecondsLimit: Single read FSecondsLimit write SetSecondsLimit;
 
-    property Account: TTMDBAccount read FAccount;
-    property Authentication: TTMDBAuthentication read FAuthentication;
-    property Certifications: TTMDBCertifications read FCertifications;
-    property Changes: TTMDBChanges read FChanges;
-    property Collections: TTMDBCollections read FCollections;
-    property Companies: TTMDBCompanies read FCompanies;
-    property Configuration: TTMDBConfiguration read FConfiguration;
-    property Credits: TTMDBCredits read FCredits;
-    property Discover: TTMDBDiscover read FDiscover;
-    property Find: TTMDBFind read FFind;
-    property Genres: TTMDBGenres read FGenres;
-    property GuestSessions: TTMDBGuestSessions read FGuestSessions;
-    property Keywords: TTMDBKeywords read FKeywords;
-    property Lists: TTMDBLists read FLists;
-    property MovieLists: TTMDBMovieLists read FMovieLists;
-    property Movies: TTMDBMovies read FMovies;
-    property Networks: TTMDBNetworks read FNetworks;
-    property PeopleLists: TTMDBPeopleLists read FPeopleLists;
-    property People: TTMDBPeople read FPeople;
-    property Reviews: TTMDBReviews read FReviews;
-    property Search: TTMDBSearch read FSearch;
-    property Trending: TTMDBTrending read FTrending;
-    property TVSeriesLists: TTMDBTVSeriesLists read FTVSeriesLists;
-    property TVSeries: TTMDBTVSeries read FTVSeries;
-    property TVSeasons: TTMDBTVSeasons read FTVSeasons;
-    property TVEpisodes: TTMDBTVEpisodes read FTVEpisodes;
-    property TVEpisodeGroups: TTMDBTVEpisodeGroups read FTVEpisodeGroups;
-    property WatchProviders: TTMDBWatchProviders read FWatchProviders;
+    property Account: TTMDBAPIAccount read FAccount;
+    property Authentication: TTMDBAPIAuthentication read FAuthentication;
+    property Certifications: TTMDBAPICertifications read FCertifications;
+    property Changes: TTMDBAPIChanges read FChanges;
+    property Collections: TTMDBAPICollections read FCollections;
+    property Companies: TTMDBAPICompanies read FCompanies;
+    property Configuration: TTMDBAPIConfiguration read FConfiguration;
+    property Credits: TTMDBAPICredits read FCredits;
+    property Discover: TTMDBAPIDiscover read FDiscover;
+    property Find: TTMDBAPIFind read FFind;
+    property Genres: TTMDBAPIGenres read FGenres;
+    property GuestSessions: TTMDBAPIGuestSessions read FGuestSessions;
+    property Keywords: TTMDBAPIKeywords read FKeywords;
+    property Lists: TTMDBAPILists read FLists;
+    property MovieLists: TTMDBAPIMovieLists read FMovieLists;
+    property Movies: TTMDBAPIMovies read FMovies;
+    property Networks: TTMDBAPINetworks read FNetworks;
+    property PeopleLists: TTMDBAPIPeopleLists read FPeopleLists;
+    property People: TTMDBAPIPeople read FPeople;
+    property Reviews: TTMDBAPIReviews read FReviews;
+    property Search: TTMDBAPISearch read FSearch;
+    property Trending: TTMDBAPITrending read FTrending;
+    property TVSeriesLists: TTMDBAPITVSeriesLists read FTVSeriesLists;
+    property TVSeries: TTMDBAPITVSeries read FTVSeries;
+    property TVSeasons: TTMDBAPITVSeasons read FTVSeasons;
+    property TVEpisodes: TTMDBAPITVEpisodes read FTVEpisodes;
+    property TVEpisodeGroups: TTMDBAPITVEpisodeGroups read FTVEpisodeGroups;
+    property WatchProviders: TTMDBAPIWatchProviders read FWatchProviders;
 
   end;
 
@@ -505,28 +520,28 @@ type
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
-{ TTMDBService }
+{ TTMDBAPIService }
 
-procedure TTMDBService.AddParam(var S: String; const N, V: String);
+procedure TTMDBAPIService.AddParam(var S: String; const N, V: String);
 begin
   if V <> '' then
     S:= S + '&'+N+'='+V;
 end;
 
-constructor TTMDBService.Create(AOwner: TTMDBAPI);
+constructor TTMDBAPIService.Create(AOwner: TTMDBAPI);
 begin
   FOwner:= AOwner;
 end;
 
-destructor TTMDBService.Destroy;
+destructor TTMDBAPIService.Destroy;
 begin
 
   inherited;
 end;
 
-{ TTMDBAccount }
+{ TTMDBAPIAccount }
 
-function TTMDBAccount.GetDetails(const AccountID: Integer;
+function TTMDBAPIAccount.GetDetails(const AccountID: Integer;
   const SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -536,7 +551,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.AddFavorite(const AccountID: Integer;
+function TTMDBAPIAccount.AddFavorite(const AccountID: Integer;
   const MediaType: String; const MediaID: Integer; const Favorite: Boolean;
   const SessionID: String): ISuperObject;
 var
@@ -552,7 +567,7 @@ begin
   Result:= Fowner.PostJSON(U, P, O);
 end;
 
-function TTMDBAccount.AddToWatchlist(const AccountID: Integer;
+function TTMDBAPIAccount.AddToWatchlist(const AccountID: Integer;
   const MediaType: String; const MediaID: Integer; const Watchlist: Boolean;
   const SessionID: String): ISuperObject;
 var
@@ -568,7 +583,7 @@ begin
   Result:= Fowner.PostJSON(U, P, O);
 end;
 
-function TTMDBAccount.GetFavoriteMovies(const AccountID: Integer;
+function TTMDBAPIAccount.GetFavoriteMovies(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -582,7 +597,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetFavoriteTV(const AccountID: Integer;
+function TTMDBAPIAccount.GetFavoriteTV(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -596,7 +611,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetLists(const AccountID, Page: Integer;
+function TTMDBAPIAccount.GetLists(const AccountID, Page: Integer;
   const SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -607,7 +622,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetRatedMovies(const AccountID: Integer;
+function TTMDBAPIAccount.GetRatedMovies(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -621,7 +636,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetRatedTV(const AccountID: Integer;
+function TTMDBAPIAccount.GetRatedTV(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -635,7 +650,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetRatedTVEpisodes(const AccountID: Integer;
+function TTMDBAPIAccount.GetRatedTVEpisodes(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -649,7 +664,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetWatchlistMovies(const AccountID: Integer;
+function TTMDBAPIAccount.GetWatchlistMovies(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -663,7 +678,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAccount.GetWatchlistTV(const AccountID: Integer;
+function TTMDBAPIAccount.GetWatchlistTV(const AccountID: Integer;
   const Language: String; const Page: Integer; const SessionID,
   SortBy: String): ISuperObject;
 var
@@ -677,19 +692,19 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBAuthentication }
+{ TTMDBAPIAuthentication }
 
-function TTMDBAuthentication.CreateGuestSession: ISuperObject;
+function TTMDBAPIAuthentication.CreateGuestSession: ISuperObject;
 begin
   Result:= FOwner.GetJSON('authentication/guest_session/new');
 end;
 
-function TTMDBAuthentication.CreateRequestToken: ISuperObject;
+function TTMDBAPIAuthentication.CreateRequestToken: ISuperObject;
 begin
   Result:= FOwner.GetJSON('authentication/token/new');
 end;
 
-function TTMDBAuthentication.CreateSession(
+function TTMDBAPIAuthentication.CreateSession(
   const RequestToken: String): ISuperObject;
 var
   O: ISuperObject;
@@ -699,7 +714,7 @@ begin
   Result:= Fowner.PostJSON('authentication/session/new', '', O);
 end;
 
-function TTMDBAuthentication.CreateSessionV4(
+function TTMDBAPIAuthentication.CreateSessionV4(
   const AccessToken: String): ISuperObject;
 var
   O: ISuperObject;
@@ -709,7 +724,7 @@ begin
   Result:= Fowner.PostJSON('authentication/session/convert/4', '', O);
 end;
 
-function TTMDBAuthentication.CreateSessionLogin(const Username, Password,
+function TTMDBAPIAuthentication.CreateSessionLogin(const Username, Password,
   RequestToken: String): ISuperObject;
 var
   O: ISuperObject;
@@ -721,7 +736,7 @@ begin
   Result:= Fowner.PostJSON('authentication/token/validate_with_login', '', O);
 end;
 
-function TTMDBAuthentication.DeleteSession(const SessionID: String): ISuperObject;
+function TTMDBAPIAuthentication.DeleteSession(const SessionID: String): ISuperObject;
 var
   O: ISuperObject;
 begin
@@ -730,26 +745,26 @@ begin
   Result:= Fowner.DeleteJSON('authentication/session', '', O);
 end;
 
-function TTMDBAuthentication.GetValidateKey: ISuperObject;
+function TTMDBAPIAuthentication.GetValidateKey: ISuperObject;
 begin
   Result:= FOwner.GetJSON('authentication');
 end;
 
-{ TTMDBCertifications }
+{ TTMDBAPICertifications }
 
-function TTMDBCertifications.GetMovieCertifications: ISuperObject;
+function TTMDBAPICertifications.GetMovieCertifications: ISuperObject;
 begin
   Result:= FOwner.GetJSON('certification/movie/list');
 end;
 
-function TTMDBCertifications.GetTVCertifications: ISuperObject;
+function TTMDBAPICertifications.GetTVCertifications: ISuperObject;
 begin
   Result:= FOwner.GetJSON('certification/tv/list');
 end;
 
-{ TTMDBChanges }
+{ TTMDBAPIChanges }
 
-function TTMDBChanges.GetMovieList(const StartDate, EndDate: TDateTime;
+function TTMDBAPIChanges.GetMovieList(const StartDate, EndDate: TDateTime;
   const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -764,7 +779,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBChanges.GetPeopleList(const StartDate, EndDate: TDateTime;
+function TTMDBAPIChanges.GetPeopleList(const StartDate, EndDate: TDateTime;
   const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -779,7 +794,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBChanges.GetTVList(const StartDate, EndDate: TDateTime;
+function TTMDBAPIChanges.GetTVList(const StartDate, EndDate: TDateTime;
   const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -794,9 +809,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBCollections }
+{ TTMDBAPICollections }
 
-function TTMDBCollections.GetDetails(const CollectionID: Integer;
+function TTMDBAPICollections.GetDetails(const CollectionID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -806,7 +821,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBCollections.GetImages(const CollectionID: Integer;
+function TTMDBAPICollections.GetImages(const CollectionID: Integer;
   const IncludeImageLanguage, Language: String): ISuperObject;
 var
   U, P: String;
@@ -817,7 +832,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBCollections.GetTranslations(
+function TTMDBAPICollections.GetTranslations(
   const CollectionID: Integer): ISuperObject;
 var
   U: String;
@@ -826,9 +841,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBCompanies }
+{ TTMDBAPICompanies }
 
-function TTMDBCompanies.GetDetails(const CompanyID: Integer): ISuperObject;
+function TTMDBAPICompanies.GetDetails(const CompanyID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -836,7 +851,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBCompanies.GetAlternativeNames(
+function TTMDBAPICompanies.GetAlternativeNames(
   const CompanyID: Integer): ISuperObject;
 var
   U: String;
@@ -845,7 +860,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBCompanies.GetImages(const CompanyID: Integer): ISuperObject;
+function TTMDBAPICompanies.GetImages(const CompanyID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -853,41 +868,41 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBConfiguration }
+{ TTMDBAPIConfiguration }
 
-function TTMDBConfiguration.GetDetails: ISuperObject;
+function TTMDBAPIConfiguration.GetDetails: ISuperObject;
 begin
   Result:= FOwner.GetJSON('configuration');
 end;
 
-function TTMDBConfiguration.GetCountries: ISuperArray;
+function TTMDBAPIConfiguration.GetCountries: ISuperArray;
 begin
   Result:= FOwner.GetJSON('configuration/countries').AsArray;
 end;
 
-function TTMDBConfiguration.GetJobs: ISuperArray;
+function TTMDBAPIConfiguration.GetJobs: ISuperArray;
 begin
   Result:= FOwner.GetJSON('configuration/jobs').AsArray;
 end;
 
-function TTMDBConfiguration.GetLanguages: ISuperArray;
+function TTMDBAPIConfiguration.GetLanguages: ISuperArray;
 begin
   Result:= FOwner.GetJSON('configuration/languages').AsArray;
 end;
 
-function TTMDBConfiguration.GetPrimaryTranslations: ISuperArray;
+function TTMDBAPIConfiguration.GetPrimaryTranslations: ISuperArray;
 begin
   Result:= FOwner.GetJSON('configuration/primary_translations').AsArray;
 end;
 
-function TTMDBConfiguration.GetTimeZones: ISuperArray;
+function TTMDBAPIConfiguration.GetTimeZones: ISuperArray;
 begin
   Result:= FOwner.GetJSON('configuration/timezones').AsArray;
 end;
 
-{ TTMDBCredits }
+{ TTMDBAPICredits }
 
-function TTMDBCredits.GetDetails(const CreditID: Integer): ISuperObject;
+function TTMDBAPICredits.GetDetails(const CreditID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -895,9 +910,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBFind }
+{ TTMDBAPIFind }
 
-function TTMDBFind.GetFindByID(const ExternalID, ExternalSource,
+function TTMDBAPIFind.GetFindByID(const ExternalID, ExternalSource,
   Language: String): ISuperObject;
 var
   U, P: String;
@@ -908,9 +923,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBGenres }
+{ TTMDBAPIGenres }
 
-function TTMDBGenres.GetMovieList(const Language: String): ISuperArray;
+function TTMDBAPIGenres.GetMovieList(const Language: String): ISuperArray;
 var
   U, P: String;
 begin
@@ -919,7 +934,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['genres'];
 end;
 
-function TTMDBGenres.GetTVList(const Language: String): ISuperArray;
+function TTMDBAPIGenres.GetTVList(const Language: String): ISuperArray;
 var
   U, P: String;
 begin
@@ -928,9 +943,9 @@ begin
   Result:= FOwner.GetJSON(U, P).A['genres'];
 end;
 
-{ TTMDBGuestSessions }
+{ TTMDBAPIGuestSessions }
 
-function TTMDBGuestSessions.GetRatedMovies(const GuestSessionID,
+function TTMDBAPIGuestSessions.GetRatedMovies(const GuestSessionID,
   Language: String; const Page: Integer; const SortBy: String): ISuperObject;
 var
   U, P: String;
@@ -942,7 +957,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBGuestSessions.GetRatedTV(const GuestSessionID, Language: String;
+function TTMDBAPIGuestSessions.GetRatedTV(const GuestSessionID, Language: String;
   const Page: Integer; const SortBy: String): ISuperObject;
 var
   U, P: String;
@@ -954,7 +969,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBGuestSessions.GetRatedTVEpisodes(const GuestSessionID,
+function TTMDBAPIGuestSessions.GetRatedTVEpisodes(const GuestSessionID,
   Language: String; const Page: Integer; const SortBy: String): ISuperObject;
 var
   U, P: String;
@@ -966,9 +981,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBKeywords }
+{ TTMDBAPIKeywords }
 
-function TTMDBKeywords.GetDetails(const KeywordID: Integer): ISuperObject;
+function TTMDBAPIKeywords.GetDetails(const KeywordID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -976,9 +991,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBLists }
+{ TTMDBAPILists }
 
-function TTMDBLists.AddMovie(const ListID: Integer; const SessionID: String;
+function TTMDBAPILists.AddMovie(const ListID: Integer; const SessionID: String;
   const MediaID: Integer): ISuperObject;
 var
   U, P: String;
@@ -993,7 +1008,7 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-function TTMDBLists.GetCheckItemStatus(const ListID: Integer;
+function TTMDBAPILists.GetCheckItemStatus(const ListID: Integer;
   const Language: String; const MovieID: Integer): ISuperObject;
 var
   U, P: String;
@@ -1004,7 +1019,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBLists.Clear(const ListID: Integer; const SessionID: String;
+function TTMDBAPILists.Clear(const ListID: Integer; const SessionID: String;
   const Confirm: Boolean): ISuperObject;
 var
   U, P: String;
@@ -1020,7 +1035,7 @@ begin
   Result:= FOwner.PostJSON(U, P, nil);
 end;
 
-function TTMDBLists.CreateList(const SessionID, Name, Description,
+function TTMDBAPILists.CreateList(const SessionID, Name, Description,
   Language: String): ISuperObject;
 var
   U, P: String;
@@ -1038,7 +1053,7 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-function TTMDBLists.Delete(const ListID: Integer;
+function TTMDBAPILists.Delete(const ListID: Integer;
   const SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1050,7 +1065,7 @@ begin
   Result:= FOwner.DeleteJSON(U, P, nil);
 end;
 
-function TTMDBLists.GetDetails(const ListID: Integer; const Language: String;
+function TTMDBAPILists.GetDetails(const ListID: Integer; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1061,7 +1076,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBLists.RemoveMovie(const ListID: Integer; const SessionID: String;
+function TTMDBAPILists.RemoveMovie(const ListID: Integer; const SessionID: String;
   const MediaID: Integer): ISuperObject;
 var
   U, P: String;
@@ -1077,9 +1092,9 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-{ TTMDBMovieLists }
+{ TTMDBAPIMovieLists }
 
-function TTMDBMovieLists.GetNowPlaying(const Language: String;
+function TTMDBAPIMovieLists.GetNowPlaying(const Language: String;
   const Page: Integer; const Region: String): ISuperObject;
 var
   U, P: String;
@@ -1091,7 +1106,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovieLists.GetPopular(const Language: String; const Page: Integer;
+function TTMDBAPIMovieLists.GetPopular(const Language: String; const Page: Integer;
   const Region: String): ISuperObject;
 var
   U, P: String;
@@ -1103,7 +1118,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovieLists.GetTopRated(const Language: String;
+function TTMDBAPIMovieLists.GetTopRated(const Language: String;
   const Page: Integer; const Region: String): ISuperObject;
 var
   U, P: String;
@@ -1115,7 +1130,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovieLists.GetUpcoming(const Language: String;
+function TTMDBAPIMovieLists.GetUpcoming(const Language: String;
   const Page: Integer; const Region: String): ISuperObject;
 var
   U, P: String;
@@ -1127,9 +1142,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBMovies }
+{ TTMDBAPIMovies }
 
-function TTMDBMovies.GetDetails(const MovieID: Integer; const AppendToResponse,
+function TTMDBAPIMovies.GetDetails(const MovieID: Integer; const AppendToResponse,
   Language: String): ISuperObject;
 var
   U, P: String;
@@ -1140,7 +1155,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetAccountStates(const MovieID: Integer; const SessionID,
+function TTMDBAPIMovies.GetAccountStates(const MovieID: Integer; const SessionID,
   GuestSessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1151,7 +1166,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetAlternativeTitles(const MovieID: Integer;
+function TTMDBAPIMovies.GetAlternativeTitles(const MovieID: Integer;
   const Country: String): ISuperArray;
 var
   U, P: String;
@@ -1161,7 +1176,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['titles'];
 end;
 
-function TTMDBMovies.GetChanges(const MovieID: Integer; const StartDate,
+function TTMDBAPIMovies.GetChanges(const MovieID: Integer; const StartDate,
   EndDate: TDateTime; const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -1176,7 +1191,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetCredits(const MovieID: Integer;
+function TTMDBAPIMovies.GetCredits(const MovieID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1186,7 +1201,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetExternalIDs(const MovieID: Integer): ISuperObject;
+function TTMDBAPIMovies.GetExternalIDs(const MovieID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1194,7 +1209,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBMovies.GetImages(const MovieID: Integer;
+function TTMDBAPIMovies.GetImages(const MovieID: Integer;
   const IncludeImageLanguage, Language: String): ISuperObject;
 var
   U, P: String;
@@ -1205,7 +1220,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetKeywords(const MovieID: Integer): ISuperArray;
+function TTMDBAPIMovies.GetKeywords(const MovieID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1213,7 +1228,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['keywords'];
 end;
 
-function TTMDBMovies.GetLatest: ISuperObject;
+function TTMDBAPIMovies.GetLatest: ISuperObject;
 var
   U: String;
 begin
@@ -1221,7 +1236,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBMovies.GetLists(const MovieID: Integer; const Language: String;
+function TTMDBAPIMovies.GetLists(const MovieID: Integer; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1232,7 +1247,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetRecommendations(const MovieID: Integer;
+function TTMDBAPIMovies.GetRecommendations(const MovieID: Integer;
   const Language: String; const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1243,7 +1258,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetReleaseDates(const MovieID: Integer): ISuperArray;
+function TTMDBAPIMovies.GetReleaseDates(const MovieID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1251,7 +1266,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBMovies.GetReviews(const MovieID: Integer; const Language: String;
+function TTMDBAPIMovies.GetReviews(const MovieID: Integer; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1262,7 +1277,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetSimilar(const MovieID: Integer; const Language: String;
+function TTMDBAPIMovies.GetSimilar(const MovieID: Integer; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1273,7 +1288,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBMovies.GetTranslations(const MovieID: Integer): ISuperArray;
+function TTMDBAPIMovies.GetTranslations(const MovieID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1281,7 +1296,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['translations'];
 end;
 
-function TTMDBMovies.GetVideos(const MovieID: Integer;
+function TTMDBAPIMovies.GetVideos(const MovieID: Integer;
   const Language: String): ISuperArray;
 var
   U, P: String;
@@ -1291,7 +1306,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
-function TTMDBMovies.GetWatchProviders(const MovieID: Integer): ISuperObject;
+function TTMDBAPIMovies.GetWatchProviders(const MovieID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1299,7 +1314,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBMovies.AddRating(const MovieID: Integer; const Rating: Single;
+function TTMDBAPIMovies.AddRating(const MovieID: Integer; const Rating: Single;
   const GuestSessionID, SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1316,7 +1331,7 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-function TTMDBMovies.DeleteRating(const MovieID: Integer; const GuestSessionID,
+function TTMDBAPIMovies.DeleteRating(const MovieID: Integer; const GuestSessionID,
   SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1329,9 +1344,9 @@ begin
   Result:= FOwner.DeleteJSON(U, P, nil);
 end;
 
-{ TTMDBNetworks }
+{ TTMDBAPINetworks }
 
-function TTMDBNetworks.GetDetails(const NetworkID: Integer): ISuperObject;
+function TTMDBAPINetworks.GetDetails(const NetworkID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1339,7 +1354,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBNetworks.GetAlternativeNames(const NetworkID: Integer): ISuperArray;
+function TTMDBAPINetworks.GetAlternativeNames(const NetworkID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1347,7 +1362,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBNetworks.GetImages(const NetworkID: Integer): ISuperArray;
+function TTMDBAPINetworks.GetImages(const NetworkID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1355,9 +1370,9 @@ begin
   Result:= FOwner.GetJSON(U, '').A['logos'];
 end;
 
-{ TTMDBPeopleLists }
+{ TTMDBAPIPeopleLists }
 
-function TTMDBPeopleLists.GetPopular(const Language: String;
+function TTMDBAPIPeopleLists.GetPopular(const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1368,9 +1383,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBPeople }
+{ TTMDBAPIPeople }
 
-function TTMDBPeople.GetDetails(const PersonID: Integer; const AppendToResponse,
+function TTMDBAPIPeople.GetDetails(const PersonID: Integer; const AppendToResponse,
   Language: String): ISuperObject;
 var
   U, P: String;
@@ -1381,7 +1396,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBPeople.GetChanges(const PersonID: Integer; const StartDate,
+function TTMDBAPIPeople.GetChanges(const PersonID: Integer; const StartDate,
   EndDate: TDateTime; const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -1396,7 +1411,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBPeople.GetCombinedCredits(const PersonID: Integer;
+function TTMDBAPIPeople.GetCombinedCredits(const PersonID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1406,7 +1421,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBPeople.GetExternalIDs(const PersonID: Integer): ISuperObject;
+function TTMDBAPIPeople.GetExternalIDs(const PersonID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1414,7 +1429,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBPeople.GetImages(const PersonID: Integer): ISuperArray;
+function TTMDBAPIPeople.GetImages(const PersonID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1422,12 +1437,12 @@ begin
   Result:= FOwner.GetJSON(U, '').A['profiles'];
 end;
 
-function TTMDBPeople.GetLatest: ISuperObject;
+function TTMDBAPIPeople.GetLatest: ISuperObject;
 begin
   Result:= FOwner.GetJSON('person/latest');
 end;
 
-function TTMDBPeople.GetMovieCredits(const PersonID: Integer;
+function TTMDBAPIPeople.GetMovieCredits(const PersonID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1437,7 +1452,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBPeople.GetTVCredits(const PersonID: Integer;
+function TTMDBAPIPeople.GetTVCredits(const PersonID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1447,7 +1462,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBPeople.GetTranslations(const PersonID: Integer): ISuperArray;
+function TTMDBAPIPeople.GetTranslations(const PersonID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1455,9 +1470,9 @@ begin
   Result:= FOwner.GetJSON(U, '').A['translations'];
 end;
 
-{ TTMDBReviews }
+{ TTMDBAPIReviews }
 
-function TTMDBReviews.GetDetails(const ReviewID: Integer): ISuperObject;
+function TTMDBAPIReviews.GetDetails(const ReviewID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1465,9 +1480,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBSearch }
+{ TTMDBAPISearch }
 
-function TTMDBSearch.SearchCollections(const Query: String;
+function TTMDBAPISearch.SearchCollections(const Query: String;
   const IncludeAdult: Boolean; const Language: String; const Page: Integer;
   const Region: String): ISuperObject;
 var
@@ -1485,7 +1500,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchCompanies(const Query: String;
+function TTMDBAPISearch.SearchCompanies(const Query: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1496,7 +1511,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchKeywords(const Query: String;
+function TTMDBAPISearch.SearchKeywords(const Query: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1507,7 +1522,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchMovies(const Query: String;
+function TTMDBAPISearch.SearchMovies(const Query: String;
   const IncludeAdult: Boolean; const Language, PrimaryReleaseYear: String;
   const Page: Integer; const Region, Year: String): ISuperObject;
 var
@@ -1527,7 +1542,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchMulti(const Query: String;
+function TTMDBAPISearch.SearchMulti(const Query: String;
   const IncludeAdult: Boolean; const Language: String;
   const Page: Integer): ISuperObject;
 var
@@ -1544,7 +1559,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchPerson(const Query: String;
+function TTMDBAPISearch.SearchPerson(const Query: String;
   const IncludeAdult: Boolean; const Language: String;
   const Page: Integer): ISuperObject;
 var
@@ -1561,7 +1576,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBSearch.SearchTV(const Query, FirstAirDateYear: String;
+function TTMDBAPISearch.SearchTV(const Query, FirstAirDateYear: String;
   const IncludeAdult: Boolean; const Language: String; const Page: Integer;
   const Year: String): ISuperObject;
 var
@@ -1579,9 +1594,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBTrending }
+{ TTMDBAPITrending }
 
-function TTMDBTrending.GetAll(const TimeWindow, Language: String;
+function TTMDBAPITrending.GetAll(const TimeWindow, Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1592,7 +1607,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTrending.GetMovies(const TimeWindow, Language: String;
+function TTMDBAPITrending.GetMovies(const TimeWindow, Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1603,7 +1618,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTrending.GetPeople(const TimeWindow, Language: String;
+function TTMDBAPITrending.GetPeople(const TimeWindow, Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1614,7 +1629,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTrending.GetTV(const TimeWindow, Language: String;
+function TTMDBAPITrending.GetTV(const TimeWindow, Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1625,9 +1640,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBTVSeriesLists }
+{ TTMDBAPITVSeriesLists }
 
-function TTMDBTVSeriesLists.GetAiringToday(const Language: String;
+function TTMDBAPITVSeriesLists.GetAiringToday(const Language: String;
   const Page: Integer; const Timezone: String): ISuperObject;
 var
   U, P: String;
@@ -1639,7 +1654,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeriesLists.GetOnTheAir(const Language: String;
+function TTMDBAPITVSeriesLists.GetOnTheAir(const Language: String;
   const Page: Integer; const Timezone: String): ISuperObject;
 var
   U, P: String;
@@ -1651,7 +1666,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeriesLists.GetPopular(const Language: String;
+function TTMDBAPITVSeriesLists.GetPopular(const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1662,7 +1677,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeriesLists.GetTopRated(const Language: String;
+function TTMDBAPITVSeriesLists.GetTopRated(const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1673,9 +1688,9 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-{ TTMDBTVSeries }
+{ TTMDBAPITVSeries }
 
-function TTMDBTVSeries.GetDetails(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetDetails(const SeriesID: Integer;
   const AppendToResponse, Language: String): ISuperObject;
 var
   U, P: String;
@@ -1686,7 +1701,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetAccountStates(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetAccountStates(const SeriesID: Integer;
   const SessionID, GuestSessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1697,7 +1712,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetAggregateCredits(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetAggregateCredits(const SeriesID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1707,7 +1722,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetAlternativeTitles(
+function TTMDBAPITVSeries.GetAlternativeTitles(
   const SeriesID: Integer): ISuperArray;
 var
   U: String;
@@ -1716,7 +1731,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBTVSeries.GetChanges(const SeriesID: Integer; const StartDate,
+function TTMDBAPITVSeries.GetChanges(const SeriesID: Integer; const StartDate,
   EndDate: TDateTime; const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -1731,7 +1746,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetContentRatings(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetContentRatings(const SeriesID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1739,7 +1754,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBTVSeries.GetCredits(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetCredits(const SeriesID: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1749,7 +1764,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetEpisodeGroups(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetEpisodeGroups(const SeriesID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1757,7 +1772,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBTVSeries.GetExternalIDs(const SeriesID: Integer): ISuperObject;
+function TTMDBAPITVSeries.GetExternalIDs(const SeriesID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1765,7 +1780,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBTVSeries.GetImages(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetImages(const SeriesID: Integer;
   const IncludeImageLanguage, Language: String): ISuperObject;
 var
   U, P: String;
@@ -1776,7 +1791,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetKeywords(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetKeywords(const SeriesID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1784,7 +1799,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBTVSeries.GetLatest: ISuperObject;
+function TTMDBAPITVSeries.GetLatest: ISuperObject;
 var
   U: String;
 begin
@@ -1792,7 +1807,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBTVSeries.GetLists(const SeriesID: Integer; const Language: String;
+function TTMDBAPITVSeries.GetLists(const SeriesID: Integer; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1803,7 +1818,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetRecommendations(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetRecommendations(const SeriesID: Integer;
   const Language: String; const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1814,7 +1829,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetReviews(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetReviews(const SeriesID: Integer;
   const Language: String; const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1825,7 +1840,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetScreenedTheatrically(
+function TTMDBAPITVSeries.GetScreenedTheatrically(
   const SeriesID: Integer): ISuperArray;
 var
   U: String;
@@ -1834,7 +1849,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBTVSeries.GetSimilar(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetSimilar(const SeriesID: Integer;
   const Language: String; const Page: Integer): ISuperObject;
 var
   U, P: String;
@@ -1845,7 +1860,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeries.GetTranslations(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetTranslations(const SeriesID: Integer): ISuperArray;
 var
   U: String;
 begin
@@ -1853,7 +1868,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['translations'];
 end;
 
-function TTMDBTVSeries.GetVideos(const SeriesID: Integer;
+function TTMDBAPITVSeries.GetVideos(const SeriesID: Integer;
   const IncludeVideoLanguage, Language: String): ISuperArray;
 var
   U, P: String;
@@ -1864,7 +1879,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
-function TTMDBTVSeries.GetWatchProviders(const SeriesID: Integer): ISuperObject;
+function TTMDBAPITVSeries.GetWatchProviders(const SeriesID: Integer): ISuperObject;
 var
   U: String;
 begin
@@ -1872,7 +1887,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBTVSeries.AddRating(const SeriesID: Integer; const Rating: Single;
+function TTMDBAPITVSeries.AddRating(const SeriesID: Integer; const Rating: Single;
   const GuestSessionID, SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1889,7 +1904,7 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-function TTMDBTVSeries.DeleteRating(const SeriesID: Integer;
+function TTMDBAPITVSeries.DeleteRating(const SeriesID: Integer;
   const GuestSessionID, SessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1902,9 +1917,9 @@ begin
   Result:= FOwner.DeleteJSON(U, P, nil);
 end;
 
-{ TTMDBTVSeasons }
+{ TTMDBAPITVSeasons }
 
-function TTMDBTVSeasons.GetDetails(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetDetails(const SeriesID, SeasonNumber: Integer;
   const AppendToResponse, Language: String): ISuperObject;
 var
   U, P: String;
@@ -1915,7 +1930,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetAccountStates(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetAccountStates(const SeriesID, SeasonNumber: Integer;
   const SessionID, GuestSessionID: String): ISuperObject;
 var
   U, P: String;
@@ -1926,7 +1941,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetAggregateCredits(const SeriesID,
+function TTMDBAPITVSeasons.GetAggregateCredits(const SeriesID,
   SeasonNumber: Integer; const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1936,7 +1951,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetChanges(const SeasonID: Integer; const StartDate,
+function TTMDBAPITVSeasons.GetChanges(const SeasonID: Integer; const StartDate,
   EndDate: TDateTime; const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -1951,7 +1966,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetCredits(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetCredits(const SeriesID, SeasonNumber: Integer;
   const Language: String): ISuperObject;
 var
   U, P: String;
@@ -1961,7 +1976,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetExternalIDs(const SeriesID,
+function TTMDBAPITVSeasons.GetExternalIDs(const SeriesID,
   SeasonNumber: Integer): ISuperObject;
 var
   U: String;
@@ -1970,7 +1985,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBTVSeasons.GetImages(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetImages(const SeriesID, SeasonNumber: Integer;
   const IncludeImageLanguage, Language: String): ISuperObject;
 var
   U, P: String;
@@ -1981,7 +1996,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetTranslations(const SeriesID,
+function TTMDBAPITVSeasons.GetTranslations(const SeriesID,
   SeasonNumber: Integer): ISuperArray;
 var
   U: String;
@@ -1990,7 +2005,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['translations'];
 end;
 
-function TTMDBTVSeasons.GetVideos(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetVideos(const SeriesID, SeasonNumber: Integer;
   const IncludeVideoLanguage, Language: String): ISuperObject;
 var
   U, P: String;
@@ -2001,7 +2016,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVSeasons.GetWatchProviders(const SeriesID, SeasonNumber: Integer;
+function TTMDBAPITVSeasons.GetWatchProviders(const SeriesID, SeasonNumber: Integer;
   const Language: String): ISuperObject;
 var
   U: String;
@@ -2010,9 +2025,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBTVEpisodes }
+{ TTMDBAPITVEpisodes }
 
-function TTMDBTVEpisodes.GetDetails(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetDetails(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const AppendToResponse,
   Language: String): ISuperObject;
 var
@@ -2025,7 +2040,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVEpisodes.GetAccountStates(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetAccountStates(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const SessionID,
   GuestSessionID: String): ISuperObject;
 var
@@ -2038,7 +2053,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVEpisodes.GetChanges(const EpisodeID: Integer; const StartDate,
+function TTMDBAPITVEpisodes.GetChanges(const EpisodeID: Integer; const StartDate,
   EndDate: TDateTime; const Page: Integer): ISuperObject;
 var
   S, E: String;
@@ -2053,7 +2068,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVEpisodes.GetCredits(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetCredits(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const Language: String): ISuperObject;
 var
   U, P: String;
@@ -2064,7 +2079,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVEpisodes.GetExternalIDs(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetExternalIDs(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer): ISuperObject;
 var
   U: String;
@@ -2074,7 +2089,7 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBTVEpisodes.GetImages(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetImages(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const IncludeImageLanguage,
   Language: String): ISuperObject;
 var
@@ -2087,7 +2102,7 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBTVEpisodes.GetTranslations(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetTranslations(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer): ISuperArray;
 var
   U: String;
@@ -2097,7 +2112,7 @@ begin
   Result:= FOwner.GetJSON(U, '').A['translations'];
 end;
 
-function TTMDBTVEpisodes.GetVideos(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.GetVideos(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const IncludeVideoLanguage,
   Language: String): ISuperArray;
 var
@@ -2110,7 +2125,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
-function TTMDBTVEpisodes.AddRating(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.AddRating(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const Rating: Single; const GuestSessionID,
   SessionID: String): ISuperObject;
 var
@@ -2129,7 +2144,7 @@ begin
   Result:= FOwner.PostJSON(U, P, O);
 end;
 
-function TTMDBTVEpisodes.DeleteRating(const SeriesID, SeasonNumber,
+function TTMDBAPITVEpisodes.DeleteRating(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const GuestSessionID,
   SessionID: String): ISuperObject;
 var
@@ -2144,9 +2159,9 @@ begin
   Result:= FOwner.DeleteJSON(U, P, nil);
 end;
 
-{ TTMDBTVEpisodeGroups }
+{ TTMDBAPITVEpisodeGroups }
 
-function TTMDBTVEpisodeGroups.GetEpisodeGroups(
+function TTMDBAPITVEpisodeGroups.GetEpisodeGroups(
   const TVEpisodeGroupID: String): ISuperObject;
 var
   U: String;
@@ -2155,9 +2170,9 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-{ TTMDBWatchProviders }
+{ TTMDBAPIWatchProviders }
 
-function TTMDBWatchProviders.GetAvailableRegions(
+function TTMDBAPIWatchProviders.GetAvailableRegions(
   const Language: String): ISuperArray;
 var
   U, P: String;
@@ -2167,7 +2182,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
-function TTMDBWatchProviders.GetMovieProviders(const Language,
+function TTMDBAPIWatchProviders.GetMovieProviders(const Language,
   WatchRegion: String): ISuperArray;
 var
   U, P: String;
@@ -2178,7 +2193,7 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
-function TTMDBWatchProviders.GetTVProviders(const Language,
+function TTMDBAPIWatchProviders.GetTVProviders(const Language,
   WatchRegion: String): ISuperArray;
 var
   U, P: String;
@@ -2209,34 +2224,34 @@ begin
   SSEIO.SSLOptions.VerifyDepth := 0;
   FHTTP.IOHandler := SSEIO;
 
-  FAccount:= TTMDBAccount.Create(Self);
-  FAuthentication:= TTMDBAuthentication.Create(Self);
-  FCertifications:= TTMDBCertifications.Create(Self);
-  FChanges:= TTMDBChanges.Create(Self);
-  FCollections:= TTMDBCollections.Create(Self);
-  FCompanies:= TTMDBCompanies.Create(Self);
-  FConfiguration:= TTMDBConfiguration.Create(Self);
-  FCredits:= TTMDBCredits.Create(Self);
-  FDiscover:= TTMDBDiscover.Create(Self);
-  FFind:= TTMDBFind.Create(Self);
-  FGenres:= TTMDBGenres.Create(Self);
-  FGuestSessions:= TTMDBGuestSessions.Create(Self);
-  FKeywords:= TTMDBKeywords.Create(Self);
-  FLists:= TTMDBLists.Create(Self);
-  FMovieLists:= TTMDBMovieLists.Create(Self);
-  FMovies:= TTMDBMovies.Create(Self);
-  FNetworks:= TTMDBNetworks.Create(Self);
-  FPeopleLists:= TTMDBPeopleLists.Create(Self);
-  FPeople:= TTMDBPeople.Create(Self);
-  FReviews:= TTMDBReviews.Create(Self);
-  FSearch:= TTMDBSearch.Create(Self);
-  FTrending:= TTMDBTrending.Create(Self);
-  FTVSeriesLists:= TTMDBTVSeriesLists.Create(Self);
-  FTVSeries:= TTMDBTVSeries.Create(Self);
-  FTVSeasons:= TTMDBTVSeasons.Create(Self);
-  FTVEpisodes:= TTMDBTVEpisodes.Create(Self);
-  FTVEpisodeGroups:= TTMDBTVEpisodeGroups.Create(Self);
-  FWatchProviders:= TTMDBWatchProviders.Create(Self);
+  FAccount:= TTMDBAPIAccount.Create(Self);
+  FAuthentication:= TTMDBAPIAuthentication.Create(Self);
+  FCertifications:= TTMDBAPICertifications.Create(Self);
+  FChanges:= TTMDBAPIChanges.Create(Self);
+  FCollections:= TTMDBAPICollections.Create(Self);
+  FCompanies:= TTMDBAPICompanies.Create(Self);
+  FConfiguration:= TTMDBAPIConfiguration.Create(Self);
+  FCredits:= TTMDBAPICredits.Create(Self);
+  FDiscover:= TTMDBAPIDiscover.Create(Self);
+  FFind:= TTMDBAPIFind.Create(Self);
+  FGenres:= TTMDBAPIGenres.Create(Self);
+  FGuestSessions:= TTMDBAPIGuestSessions.Create(Self);
+  FKeywords:= TTMDBAPIKeywords.Create(Self);
+  FLists:= TTMDBAPILists.Create(Self);
+  FMovieLists:= TTMDBAPIMovieLists.Create(Self);
+  FMovies:= TTMDBAPIMovies.Create(Self);
+  FNetworks:= TTMDBAPINetworks.Create(Self);
+  FPeopleLists:= TTMDBAPIPeopleLists.Create(Self);
+  FPeople:= TTMDBAPIPeople.Create(Self);
+  FReviews:= TTMDBAPIReviews.Create(Self);
+  FSearch:= TTMDBAPISearch.Create(Self);
+  FTrending:= TTMDBAPITrending.Create(Self);
+  FTVSeriesLists:= TTMDBAPITVSeriesLists.Create(Self);
+  FTVSeries:= TTMDBAPITVSeries.Create(Self);
+  FTVSeasons:= TTMDBAPITVSeasons.Create(Self);
+  FTVEpisodes:= TTMDBAPITVEpisodes.Create(Self);
+  FTVEpisodeGroups:= TTMDBAPITVEpisodeGroups.Create(Self);
+  FWatchProviders:= TTMDBAPIWatchProviders.Create(Self);
 
 end;
 
@@ -2278,7 +2293,8 @@ end;
 
 function TTMDBAPI.GetLimitWaitMsec: Integer;
 begin
-
+  //TODO: Implement wait time...
+  Result:= 10;
 end;
 
 procedure TTMDBAPI.PrepareJSONRequest;
@@ -2287,7 +2303,8 @@ begin
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
   //TODO: API token header if applicable...
-  FHTTP.Request.RawHeaders.Values['Access-Token-Auth']:= FAPIReadAccessToken
+  //FHTTP.Request.RawHeaders.Values['Access-Token-Auth']:= FAPIReadAccessToken;
+  FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
 
 end;
 

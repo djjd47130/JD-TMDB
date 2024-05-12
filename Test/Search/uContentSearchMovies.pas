@@ -101,7 +101,6 @@ procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ISuperObject);
 var
   ID: Integer;
-  Genres: String;
 begin
   inherited;
   PrepAPI;
