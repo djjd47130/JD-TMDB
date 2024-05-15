@@ -1,5 +1,19 @@
 unit JD.TMDB.Impl;
 
+(*
+  TMDB API Wrapper for Delphi
+  Written by Jerry Dodge
+
+  TMDB Object Interface Implementation
+
+  IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
+
+  API Documentation:
+  https://developer.themoviedb.org/docs/getting-started
+  https://developer.themoviedb.org/reference/intro/getting-started
+
+*)
+
 interface
 
 uses
@@ -13,6 +27,7 @@ type
 
   TTMDBPageItem = class;
 
+  //[DONE]
   TTMDBPage = class(TInterfacedObject, ITMDBPage)
   private
     FObj: ISuperObject;
@@ -24,7 +39,7 @@ type
     function GetCount: Integer; stdcall;
     function GetTotalPages: Integer; stdcall;
     function GetTotalResults: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBPageItem;
+    function GetItem(const Index: Integer): ITMDBPageItem; stdcall;
   public
     constructor Create(AObj: ISuperObject); virtual;
     destructor Destroy; override;
@@ -36,6 +51,7 @@ type
     property Items[const Index: Integer]: ITMDBPageItem read GetItem;
   end;
 
+  //[DONE]
   TTMDBPageItem = class(TInterfacedObject, ITMDBPageItem)
   private
     FOwner: ITMDBPage;
@@ -57,6 +73,7 @@ type
 
   { Account Related }
 
+  //[DONE]
   TTMDBAccountDetail = class(TInterfacedObject, ITMDBAccountDetail)
   private
     FObj: ISuperObject;
@@ -82,12 +99,13 @@ type
     property TMDBAvatarPath: WideString read GetTMDBAvatarPath;
   end;
 
+  //[DONE]
   TTMDBAccountAddFavoriteResult = class(TInterfacedObject, ITMDBAccountAddFavoriteResult)
   private
     FObj: ISuperObject;
   protected
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -95,12 +113,13 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
+  //[DONE]
   TTMDBAccountAddWatchlistResult = class(TInterfacedObject, ITMDBAccountAddWatchlistResult)
   private
     FObj: ISuperObject;
   protected
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -112,13 +131,14 @@ type
 
   { Authentication Related }
 
+  //[DONE]
   TTMDBAuthGuestSessionResult = class(TInterfacedObject, ITMDBAuthGuestSessionResult)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetGuestSessionID: WideString;
-    function GetExpiresAt: TDateTime;
+    function GetSuccess: Boolean; stdcall;
+    function GetGuestSessionID: WideString; stdcall;
+    function GetExpiresAt: TDateTime; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -127,13 +147,14 @@ type
     property ExpiresAt: TDateTime read GetExpiresAt;
   end;
 
+  //[DONE]
   TTMDBAuthRequestTokenResult = class(TInterfacedObject, ITMDBAuthRequestTokenResult)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetRequestToken: WideString;
-    function GetExpiresAt: TDateTime;
+    function GetSuccess: Boolean; stdcall;
+    function GetRequestToken: WideString; stdcall;
+    function GetExpiresAt: TDateTime; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -142,14 +163,15 @@ type
     property ExpiresAt: TDateTime read GetExpiresAt;
   end;
 
+  //[DONE]
   TTMDBAuthSessionResult = class(TInterfacedObject, ITMDBAuthSessionResult)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetSessionID: WideString;
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetSuccess: Boolean; stdcall;
+    function GetSessionID: WideString; stdcall;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -159,15 +181,16 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
+  //[DONE]
   TTMDBAuthSessionResultLogin = class(TInterfacedObject, ITMDBAuthSessionResultLogin)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetExpiresAt: TDateTime;
-    function GetRequestToken: WideString;
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetSuccess: Boolean; stdcall;
+    function GetExpiresAt: TDateTime; stdcall;
+    function GetRequestToken: WideString; stdcall;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -178,13 +201,14 @@ type
     property StatusMessag: WideString read GetStatusMessage;
   end;
 
+  //[DONE]
   TTMDBAuthDeleteSessionResult = class(TInterfacedObject, ITMDBAuthDeleteSessionResult)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetSuccess: Boolean; stdcall;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -193,13 +217,14 @@ type
     property StatusMessag: WideString read GetStatusMessage;
   end;
 
+  //[DONE]
   TTMDBAuthValidateKeyResult = class(TInterfacedObject, ITMDBAuthValidateKeyResult)
   private
     FObj: ISuperObject;
   protected
-    function GetSuccess: Boolean;
-    function GetStatusCode: Integer;
-    function GetStatusMessage: WideString;
+    function GetSuccess: Boolean; stdcall;
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
 
@@ -212,14 +237,15 @@ type
 
   { Certification Related }
 
+  //[DONE]
   TTMDBCertificationItem = class(TInterfacedObject, ITMDBCertificationItem)
   private
     FObj: ISuperObject;
     FOwner: ITMDBCertificationCountry;
   protected
-    function GetCertification: WideString;
-    function GetMeaning: WideString;
-    function GetOrder: Integer;
+    function GetCertification: WideString; stdcall;
+    function GetMeaning: WideString; stdcall;
+    function GetOrder: Integer; stdcall;
   public
     constructor Create(AObj: ISuperObject; AOwner: ITMDBCertificationCountry); virtual;
     destructor Destroy; override;
@@ -229,6 +255,7 @@ type
     property Order: Integer read GetOrder;
   end;
 
+  //[DONE]
   TTMDBCertificationCountry = class(TInterfacedObject, ITMDBCertificationCountry)
   private
     FObj: ISuperArray;
@@ -238,10 +265,10 @@ type
     procedure PopulateItems;
     procedure Clear;
   protected
-    function GetCountryCode: WideString;
-    function GetCountryName: WideString;
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBCertificationItem;
+    function GetCountryCode: WideString; stdcall;
+    function GetCountryName: WideString; stdcall;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBCertificationItem; stdcall;
   public
     constructor Create(AObj: ISuperArray; AOwner: ITMDBCertificationCountries;
       const CountryCode: WideString); virtual;
@@ -253,6 +280,7 @@ type
     property Items[const Index: Integer]: ITMDBCertificationItem read GetItem;
   end;
 
+  //[DONE]
   TTMDBCertificationCountries = class(TInterfacedObject, ITMDBCertificationCountries)
   private
     FObj: ISuperObject;
@@ -260,8 +288,8 @@ type
     procedure PopulateItems;
     procedure Clear;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBCertificationCountry;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBCertificationCountry; stdcall;
   public
     constructor Create(AObj: ISuperObject); virtual;
     destructor Destroy; override;
@@ -286,18 +314,19 @@ type
 
   { Configuration Related }
 
+  //[DONE]
   TTMDBConfigurationImages = class(TInterfacedObject, ITMDBConfigurationImages)
   private
     FOwner: ITMDBConfiguration;
     FObj: ISuperObject;
   protected
-    function GetBaseURL: WideString;
-    function GetSecureBaseURL: WideString;
-    function GetBackdropSizes: TTMDBStrArray;
-    function GetLogoSizes: TTMDBStrArray;
-    function GetPosterSizes: TTMDBStrArray;
-    function GetProfileSizes: TTMDBStrArray;
-    function GetStillSizes: TTMDBStrArray;
+    function GetBaseURL: WideString; stdcall;
+    function GetSecureBaseURL: WideString; stdcall;
+    function GetBackdropSizes: TTMDBStrArray; stdcall;
+    function GetLogoSizes: TTMDBStrArray; stdcall;
+    function GetPosterSizes: TTMDBStrArray; stdcall;
+    function GetProfileSizes: TTMDBStrArray; stdcall;
+    function GetStillSizes: TTMDBStrArray; stdcall;
   public
     constructor Create(AOwner: ITMDBConfiguration; AObj: ISuperObject);
 
@@ -310,13 +339,14 @@ type
     property StillSizes: TTMDBStrArray read GetStillSizes;
   end;
 
+  //[DONE]
   TTMDBConfiguration = class(TInterfacedObject, ITMDBConfiguration)
   private
     FObj: ISuperObject;
     FImages: ITMDBConfigurationImages;
   protected
-    function GetImages: ITMDBConfigurationImages;
-    function GetChangeKeys: TTMDBStrArray;
+    function GetImages: ITMDBConfigurationImages; stdcall;
+    function GetChangeKeys: TTMDBStrArray; stdcall;
   public
     constructor Create(AObj: ISuperObject);
     destructor Destroy; override;
@@ -328,6 +358,7 @@ type
 
   { Countries Related }
 
+  //[DONE]
   TTMDBCountryList = class(TInterfacedObject, ITMDBCountryList)
   private
     FObj: ISuperArray;
@@ -335,8 +366,8 @@ type
     procedure PopulateItems;
     procedure ClearItems;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBCountryItem;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBCountryItem; stdcall;
   public
     constructor Create(AObj: ISuperArray);
     destructor Destroy; override;
@@ -345,13 +376,14 @@ type
     property Items[const Index: Integer]: ITMDBCountryItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBCountryItem = class(TInterfacedObject, ITMDBCountryItem)
   private
     FObj: ISuperObject;
   protected
-    function GetISO3166_1: WideString;
-    function GetEnglishName: WideString;
-    function GetNativeName: WideString;
+    function GetISO3166_1: WideString; stdcall;
+    function GetEnglishName: WideString; stdcall;
+    function GetNativeName: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
     destructor Destroy; override;
@@ -365,6 +397,7 @@ type
 
   { Jobs / Departments Related }
 
+  //[DONE]
   TTMDBJobDepartmentList = class(TInterfacedObject, ITMDBJobDepartmentList)
   private
     FObj: ISuperArray;
@@ -372,8 +405,8 @@ type
     procedure PopulateItems;
     procedure ClearItems;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBJobDepartmentItem;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBJobDepartmentItem; stdcall;
   public
     constructor Create(AObj: ISuperArray);
     destructor Destroy; override;
@@ -382,12 +415,13 @@ type
     property Items[const Index: Integer]: ITMDBJobDepartmentItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBJobDepartmentItem = class(TInterfacedObject, ITMDBJobDepartmentItem)
   private
     FObj: ISuperObject;
   protected
-    function GetDepartment: WideString;
-    function GetJobs: TTMDBStrArray;
+    function GetDepartment: WideString; stdcall;
+    function GetJobs: TTMDBStrArray; stdcall;
   public
     constructor Create(AObj: ISuperObject);
     destructor Destroy; override;
@@ -400,6 +434,7 @@ type
 
   { Languages Related }
 
+  //[DONE]
   TTMDBLanguageList = class(TInterfacedObject, ITMDBLanguageList)
   private
     FObj: ISuperArray;
@@ -407,8 +442,8 @@ type
     procedure PopulateItems;
     procedure ClearItems;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBLanguageItem;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBLanguageItem; stdcall;
   public
     constructor Create(AObj: ISuperArray);
     destructor Destroy; override;
@@ -417,13 +452,14 @@ type
     property Items[const Index: Integer]: ITMDBLanguageItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBLanguageItem = class(TInterfacedObject, ITMDBLanguageItem)
   private
     FObj: ISuperObject;
   protected
-    function GetISO639_1: WideString;
-    function GetEnglishName: WideString;
-    function GetName: WideString;
+    function GetISO639_1: WideString; stdcall;
+    function GetEnglishName: WideString; stdcall;
+    function GetName: WideString; stdcall;
   public
     constructor Create(AObj: ISuperObject);
     destructor Destroy; override;
@@ -437,6 +473,7 @@ type
 
   { Timezones Related }
 
+  //[DONE]
   TTMDBTimezoneList = class(TInterfacedObject, ITMDBTimezoneList)
   private
     FObj: ISuperArray;
@@ -444,8 +481,8 @@ type
     procedure PopulateItems;
     procedure ClearItems;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBTimezoneItem;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBTimezoneItem; stdcall;
   public
     constructor Create(AObj: ISuperArray);
     destructor Destroy; override;
@@ -454,12 +491,13 @@ type
     property Items[const Index: Integer]: ITMDBTimezoneItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBTimezoneItem = class(TInterfacedObject, ITMDBTimezoneItem)
   private
     FObj: ISuperObject;
   protected
-    function GetISO3166_1: WideString;
-    function GetZones: TTMDBStrArray;
+    function GetISO3166_1: WideString; stdcall;
+    function GetZones: TTMDBStrArray; stdcall;
   public
     constructor Create(AObj: ISuperObject);
     destructor Destroy; override;
@@ -472,6 +510,7 @@ type
 
   { Genres Related }
 
+  //[DONE]
   TTMDBGenreList = class(TInterfacedObject, ITMDBGenreList)
   private
     FObj: ISuperArray;
@@ -479,8 +518,8 @@ type
     procedure PopulateItems;
     procedure Clear;
   protected
-    function GetCount: Integer;
-    function GetItem(const Index: Integer): ITMDBGenreItem;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBGenreItem; stdcall;
   public
     constructor Create(AObj: ISuperArray); virtual;
     destructor Destroy; override;
@@ -489,6 +528,7 @@ type
     property Items[const Index: Integer]: ITMDBGenreItem read GetItem;
   end;
 
+  //[DONE]
   TTMDBGenreItem = class(TInterfacedObject, ITMDBGenreItem)
   private
     FObj: ISuperObject;
@@ -508,11 +548,15 @@ type
 
   { Movie Related }
 
+  //[DONE]
   TTMDBMoviePage = class(TTMDBPage, ITMDBMoviePage)
   protected
     function GetItem(const Index: Integer): ITMDBMovieItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBMovieItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBMovieItem = class(TTMDBPageItem, ITMDBMovieItem)
   private
     FGenres: ITMDBGenreList;
@@ -531,16 +575,37 @@ type
     function GetVideo: Boolean; stdcall;
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
+  public
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property Genres: ITMDBGenreList read GetGenres;
+    property ID: Integer read GetID;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property OriginalTitle: WideString read GetOriginalTitle;
+    property Overview: WideString read GetOverview;
+    property Popularity: Single read GetPopularity;
+    property PosterPath: WideString read GetPosterPath;
+    property ReleaseDate: TDateTime read GetReleaseDate;
+    property Title: WideString read GetTitle;
+    property Video: Boolean read GetVideo;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
   end;
 
+  //[DONE]
   TTMDBRatedMoviePage = class(TTMDBMoviePage, ITMDBRatedMoviePage)
   protected
     function GetItem(const Index: Integer): ITMDBRatedMovieItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBRatedMovieItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBRatedMovieItem = class(TTMDBMovieItem, ITMDBRatedMovieItem)
   protected
     function GetRating: Single; stdcall;
+  public
+    property Rating: Single read GetRating;
   end;
 
 
@@ -549,11 +614,15 @@ type
 
   TTMDBTVItem = class;
 
+  //[DONE]
   TTMDBTVPage = class(TTMDBPage, ITMDBTVPage)
   protected
     function GetItem(const Index: Integer): ITMDBTVItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBTVItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBTVItem = class(TTMDBPageItem, ITMDBTVItem)
   protected
     function GetAdult: Boolean; stdcall;
@@ -570,22 +639,44 @@ type
     function GetName: WideString; stdcall;
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
+  public
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property Genres: ITMDBGenreList read GetGenres;
+    property ID: Integer read GetID;
+    property OriginCountry: TTMDBStrArray read GetOriginCountry;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property OriginalName: WideString read GetOriginalName;
+    property Overview: WideString read GetOverview;
+    property Popularity: Single read GetPopularity;
+    property PosterPath: WideString read GetPosterPath;
+    property FirstAirDate: TDateTime read GetFirstAirDate;
+    property Name: WideString read GetName;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
   end;
 
+  //[DONE]
   TTMDBRatedTVPage = class(TTMDBTVPage, ITMDBRatedTVPage)
   protected
     function GetItem(const Index: Integer): ITMDBRatedTVItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBRatedTVItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBRatedTVItem = class(TTMDBTVItem, ITMDBRatedTVItem)
   protected
     function GetRating: Single; stdcall;
+  public
+    property Rating: Single read GetRating;
   end;
 
 
 
-  { List Related }
+  { Pagination Related }
 
+  //[DONE]
   TTMDBListPage = class(TTMDBPage, ITMDBListPage)
   protected
     function GetItem(const Index: Integer): ITMDBListPageItem;
@@ -593,6 +684,7 @@ type
     property Items[const Index: Integer]: ITMDBListPageItem read GetItem; default;
   end;
 
+  //[DONE]
   TTMDBListPageItem = class(TTMDBPageItem, ITMDBListPageItem)
   protected
     function GetDescription: WideString;
@@ -748,7 +840,7 @@ type
 
   TTMDBServiceMovies = class(TTMDBService, ITMDBServiceMovies)
   protected
-    function GetDetails(const MovieID: Integer; const AppendToResponse: WideString = '';
+    function GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieDetails = [];
       const Language: WideString = ''): ITMDBMovieDetail; stdcall;
 
   end;
@@ -821,6 +913,7 @@ type
 
 
 
+////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -2321,9 +2414,15 @@ end;
 
 { TTMDBServiceMovies }
 
-function TTMDBServiceMovies.GetDetails(const MovieID: Integer;
-  const AppendToResponse, Language: WideString): ITMDBMovieDetail;
+function TTMDBServiceMovies.GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieDetails = [];
+  const Language: WideString = ''): ITMDBMovieDetail;
+var
+  O: ISuperObject;
+  ATR: String;
 begin
+  ATR:= '';
+  //TODO: Popular ATR with comma separated string based on AppendToResposne...
+  O:= Owner.FAPI.Movies.GetDetails(MovieID, ATR, Language);
 
 end;
 
