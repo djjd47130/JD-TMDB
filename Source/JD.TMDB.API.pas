@@ -40,7 +40,7 @@ const
   TMDB_ERR_INVALID_SERVICE = 2;
   TMDB_ERR_AUTH_FAILED = 3;
   TMDB_ERR_INVALID_FORMAT = 4;
-  //TODO All the way to code 47...
+  //TODO: All the way to code 47...
 
 
 type
@@ -259,8 +259,6 @@ type
     function GetPopular(const Language: String = ''; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPIGender = (gNotSpecified = 0, gFemale = 1, gMale = 2, gNonBinary = 3);
-
   TTMDBAPIPeople = class(TTMDBAPIService)
   public
     function GetDetails(const PersonID: Integer; const AppendToResponse: String = '';
@@ -407,9 +405,6 @@ type
     function DeleteRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
-
-  TTMDBAPIEpisodeGroupType = (gtOrigAirDate = 1, gtAbsolute = 2, gtDVD = 3, gtDigital = 4,
-    gtStoryArc = 5, gtProduction = 6, gtTV = 7);
 
   TTMDBAPITVEpisodeGroups = class(TTMDBAPIService)
   public
