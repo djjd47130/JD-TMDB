@@ -2526,7 +2526,7 @@ function TTMDBServiceAccount.SetFavorite(const AccountID: Integer;
 var
   O: ISuperObject;
 begin
-  O:= FOwner.FAPI.Account.AddFavorite(AccountID, MediaTypeStr(MediaType), MediaID, Favorite, SessionID);
+  O:= FOwner.FAPI.Account.AddFavorite(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Favorite, SessionID);
   Result:= TTMDBAccountAddFavoriteResult.Create(O);
 end;
 
@@ -2536,7 +2536,7 @@ function TTMDBServiceAccount.SetWatchlist(const AccountID: Integer;
 var
   O: ISuperObject;
 begin
-  O:= FOwner.FAPI.Account.AddToWatchlist(AccountID, MediaTypeStr(MediaType), MediaID, Watchlist, SessionID);
+  O:= FOwner.FAPI.Account.AddToWatchlist(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Watchlist, SessionID);
   Result:= TTMDBAccountAddWatchlistResult.Create(O);
 end;
 
