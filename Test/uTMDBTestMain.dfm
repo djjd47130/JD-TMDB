@@ -38,6 +38,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -387,6 +391,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object CertPages: TPageControl
         Left = 0
         Top = 0
@@ -398,6 +406,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         TabOrder = 0
         object tabCertsMovies: TTabSheet
           Caption = 'Movie Certifications'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object btnRefreshCertsMovies: TButton
             AlignWithMargins = True
             Left = 3
@@ -442,6 +454,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         object tabCertsTV: TTabSheet
           Caption = 'TV Certifications'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object btnRefreshCertsTV: TButton
             AlignWithMargins = True
             Left = 3
@@ -488,6 +504,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabGenres: TTabSheet
       Caption = 'Genres'
       ImageIndex = 9
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GenrePages: TPageControl
         Left = 0
         Top = 0
@@ -499,6 +519,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         TabOrder = 0
         object TabSheet7: TTabSheet
           Caption = 'Movie Genres'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Button2: TButton
             AlignWithMargins = True
             Left = 3
@@ -538,6 +562,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         object TabSheet8: TTabSheet
           Caption = 'TV Genres'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Button3: TButton
             AlignWithMargins = True
             Left = 3

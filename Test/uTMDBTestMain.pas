@@ -118,10 +118,10 @@ type
 
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     procedure EmbedTabs;
-    procedure ResetAPI;
 
   public
     procedure PrepAPI;
+    procedure ResetAPI;
     function CountryName(const Code: String): String;
     function MovieGenreName(const ID: Integer): String;
     function TVGenreName(const ID: Integer): String;
