@@ -22,7 +22,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Top = 0
     Width = 991
     Height = 507
-    ActivePage = tabCertifications
+    ActivePage = tabSetup
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -38,8 +38,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
-      ExplicitWidth = 953
-      ExplicitHeight = 431
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -56,7 +54,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'API Authentication'
           TabOrder = 0
-          ExplicitHeight = 177
           object gbAPIAuthMethodAPIKey: TPanel
             Left = 2
             Top = 48
@@ -121,8 +118,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 2
-            ExplicitLeft = 1
-            ExplicitTop = 22
             object RadioButton2: TRadioButton
               Tag = 1
               AlignWithMargins = True
@@ -177,7 +172,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'User Authentication'
           TabOrder = 1
-          ExplicitHeight = 177
           object Panel3: TPanel
             Left = 2
             Top = 20
@@ -261,8 +255,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             BevelOuter = bvNone
             TabOrder = 2
             Visible = False
-            ExplicitLeft = -2
-            ExplicitTop = 149
             DesignSize = (
               302
               60)
@@ -293,9 +285,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'User Login'
           TabOrder = 2
-          ExplicitLeft = 676
-          ExplicitTop = 1
-          ExplicitHeight = 183
           object btnLoginLogout: TButton
             AlignWithMargins = True
             Left = 5
@@ -307,7 +296,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Login'
             TabOrder = 0
             OnClick = btnLoginLogoutClick
-            ExplicitLeft = 7
           end
           object pLoginUserInfo: TGroupBox
             AlignWithMargins = True
@@ -325,7 +313,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             ParentFont = False
             TabOrder = 1
             Visible = False
-            ExplicitHeight = 121
             object Panel4: TPanel
               AlignWithMargins = True
               Left = 95
@@ -334,7 +321,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 95
               Align = alClient
               TabOrder = 0
-              ExplicitHeight = 93
               object Label5: TLabel
                 AlignWithMargins = True
                 Left = 4
@@ -383,7 +369,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 95
               Align = alLeft
               TabOrder = 1
-              ExplicitHeight = 93
               object Image1: TImage
                 AlignWithMargins = True
                 Left = 4
@@ -402,23 +387,17 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
-      ExplicitWidth = 953
-      ExplicitHeight = 431
       object CertPages: TPageControl
         Left = 0
         Top = 0
         Width = 983
         Height = 419
-        ActivePage = tabCertsMovies
+        ActivePage = tabCertsTV
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
-        ExplicitWidth = 953
-        ExplicitHeight = 385
         object tabCertsMovies: TTabSheet
           Caption = 'Movie Certifications'
-          ExplicitWidth = 945
-          ExplicitHeight = 216
           object btnRefreshCertsMovies: TButton
             AlignWithMargins = True
             Left = 3
@@ -430,9 +409,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsMoviesClick
-            ExplicitLeft = 6
-            ExplicitTop = 11
-            ExplicitWidth = 939
           end
           object lstCertsMovies: TListView
             AlignWithMargins = True
@@ -461,18 +437,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitLeft = 51
-            ExplicitTop = 157
-            ExplicitWidth = 939
-            ExplicitHeight = 312
           end
         end
         object tabCertsTV: TTabSheet
           Caption = 'TV Certifications'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitWidth = 945
-          ExplicitHeight = 352
           object btnRefreshCertsTV: TButton
             AlignWithMargins = True
             Left = 3
@@ -484,9 +453,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsTVClick
-            ExplicitLeft = 6
-            ExplicitTop = 11
-            ExplicitWidth = 939
           end
           object lstCertsTV: TListView
             AlignWithMargins = True
@@ -515,10 +481,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitLeft = 6
-            ExplicitTop = 40
-            ExplicitWidth = 939
-            ExplicitHeight = 312
           end
         end
       end
@@ -526,8 +488,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabGenres: TTabSheet
       Caption = 'Genres'
       ImageIndex = 9
-      ExplicitWidth = 953
-      ExplicitHeight = 431
       object GenrePages: TPageControl
         Left = 0
         Top = 0
@@ -537,12 +497,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
-        ExplicitWidth = 953
-        ExplicitHeight = 385
         object TabSheet7: TTabSheet
           Caption = 'Movie Genres'
-          ExplicitWidth = 945
-          ExplicitHeight = 352
           object Button2: TButton
             AlignWithMargins = True
             Left = 3
@@ -554,7 +510,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = Button2Click
-            ExplicitWidth = 939
           end
           object lstGenreMovies: TListView
             AlignWithMargins = True
@@ -578,17 +533,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitLeft = 6
-            ExplicitTop = 40
-            ExplicitWidth = 939
-            ExplicitHeight = 312
           end
         end
         object TabSheet8: TTabSheet
           Caption = 'TV Genres'
           ImageIndex = 1
-          ExplicitWidth = 945
-          ExplicitHeight = 352
           object Button3: TButton
             AlignWithMargins = True
             Left = 3
@@ -600,7 +549,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = Button3Click
-            ExplicitWidth = 939
           end
           object lstGenreTV: TListView
             AlignWithMargins = True
@@ -624,8 +572,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitWidth = 939
-            ExplicitHeight = 312
           end
         end
       end

@@ -7,7 +7,13 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
-  JD.TMDB.API, XSuperObject, XSuperJSON,
+  {$IFDEF USE_INTF}
+  JD.TMDB.Intf,
+  JD.TMDB.Impl,
+  {$ELSE}
+  JD.TMDB.API,
+  {$ENDIF}
+  XSuperObject, XSuperJSON,
   uTabBase, uContentBase,
   uTabConfiguration,
   uTabSearch;
@@ -70,6 +76,8 @@ type
     lstGenreTV: TListView;
     lstGenreMovies: TListView;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
     procedure Services1Click(Sender: TObject);
@@ -78,8 +86,6 @@ type
     procedure Setup1Click(Sender: TObject);
     procedure btnLoginLogoutClick(Sender: TObject);
     procedure btnRefreshCertsMoviesClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -89,6 +95,9 @@ type
     FSessionGuest: Boolean;
     FAppSetup: ISuperObject;
 
+    {$IFDEF USE_INTF}
+
+    {$ELSE}
     FConfig: ISuperObject;
     FConfigCountries: ISuperArray;
     FConfigJobs: ISuperArray;
@@ -99,6 +108,7 @@ type
     FConfigTVGenres: ISuperArray;
     FConfigMovieCerts: ISuperObject;
     FConfigTVCerts: ISuperObject;
+    {$ENDIF}
 
     procedure LoadSetup;
     procedure SaveSetup;
@@ -108,6 +118,7 @@ type
 
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     procedure EmbedTabs;
+    procedure ResetAPI;
 
   public
     procedure PrepAPI;
@@ -153,27 +164,6 @@ end;
 procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
 begin
   LoadSetup;
-  //TODO: Fetch and cache all configuration-level data...
-
-  //Details
-
-  //Countries
-
-  //Jobs
-
-  //Languages
-
-  //Primary Translations
-
-  //Timezones
-
-  //Movie Genres
-
-  //TV Genres
-
-  //Movie Certifications
-
-  //TV Certifications
 
 end;
 
@@ -193,19 +183,6 @@ begin
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
 end;
 
-function TfrmTMDBTestMain.MovieGenreName(const ID: Integer): String;
-var
-  X: Integer;
-begin
-  Result:= '';
-  for X := 0 to FConfigMovieGenres.Length-1 do begin
-    if FConfigMovieGenres.O[X].I['id'] = ID then begin
-      Result:= FConfigMovieGenres.O[X].S['name'];
-      Break;
-    end;
-  end;
-end;
-
 procedure TfrmTMDBTestMain.SaveSetup;
 begin
   if Assigned(FAppSetup) then begin
@@ -215,6 +192,23 @@ begin
     //TODO: current_sub_tab
     FAppSetup.SaveTo(SetupFilename);
   end;
+end;
+
+function TfrmTMDBTestMain.MovieGenreName(const ID: Integer): String;
+var
+  X: Integer;
+begin
+  Result:= '';
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
+  for X := 0 to FConfigMovieGenres.Length-1 do begin
+    if FConfigMovieGenres.O[X].I['id'] = ID then begin
+      Result:= FConfigMovieGenres.O[X].S['name'];
+      Break;
+    end;
+  end;
+  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.APIAuthMethodRadioClick(Sender: TObject);
@@ -242,9 +236,16 @@ end;
 procedure TfrmTMDBTestMain.btnLoginLogoutClick(Sender: TObject);
 var
   Success: Boolean;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O, S: ISuperObject;
+  {$ENDIF}
   RT: String;
 begin
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   //TODO: Log in or out user depending on selected authentication method...
   Self.PrepAPI;
   if btnLoginLogout.Tag = 1 then begin
@@ -306,13 +307,21 @@ begin
       btnLoginLogout.Tag:= 1;
     end;
   end;
+  {$ENDIF}
 end;
 
 function TfrmTMDBTestMain.CountryName(const Code: String): String;
 var
   X: Integer;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O: ISuperObject;
+  {$ENDIF}
 begin
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   if FConfigCountries = nil then
     FConfigCountries:= TMDB.Configuration.GetCountries;
   for X := 0 to FConfigCountries.Length-1 do begin
@@ -322,6 +331,7 @@ begin
       Break;
     end;
   end;
+  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.EmbedTabs;
@@ -348,8 +358,12 @@ end;
 
 procedure TfrmTMDBTestMain.PrepAPI;
 begin
-  TMDB.APIKey:= Self.txtAPIKey.Text;
-  TMDB.APIReadAccessToken:= Self.txtAccessToken.Text;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
+  TMDB.APIKey:= txtAPIKey.Text;
+  TMDB.APIReadAccessToken:= txtAccessToken.Text;
+  //TODO: Test connection and authentication...
   try
     if FConfig = nil then
       FConfig:= TMDB.Configuration.GetDetails;
@@ -374,30 +388,64 @@ begin
   except
     //TODO
   end;
+  {$ENDIF}
+end;
 
+procedure TfrmTMDBTestMain.ResetAPI;
+begin
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
+  FConfig:= nil;
+  FConfigCountries:= nil;
+  FConfigJobs:= nil;
+  FConfigLanguages:= nil;
+  FConfigPrimaryTranslations:= nil;
+  FConfigTimezones:= nil;
+  FConfigMovieGenres:= nil;
+  FConfigTVGenres:= nil;
+  FConfigMovieCerts:= nil;
+  FConfigTVCerts:= nil;
+  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.Button1Click(Sender: TObject);
+{$IFDEF USE_INTF}
+
+{$ELSE}
 var
   O: ISuperObject;
+{$ENDIF}
 begin
   PrepAPI;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O:= TMDB.Authentication.GetValidateKey;
   ShowMessage('API Key Validation Result: '+O.S['status_message']);
+  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.ListLanguages(AList: TStrings);
 var
   X: Integer;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O: ISuperObject;
+  {$ENDIF}
 begin
   PrepAPI;
   AList.Clear;
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   for X := 0 to Self.FConfigLanguages.Length-1 do begin
     O:= FConfigLanguages.O[X];
     AList.Append(O.S['iso_639_1']);
     //AList.Append(O.S['english_name']+' ('+O.S['iso_639_1']+')');
   end;
+  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.ListRegions(AList: TStrings);
@@ -408,8 +456,12 @@ end;
 
 procedure TfrmTMDBTestMain.Button2Click(Sender: TObject);
 var
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O: ISuperObject;
   C: ISuperArray;
+  {$ENDIF}
   X: Integer;
   I: TListItem;
 begin
@@ -420,6 +472,9 @@ begin
     try
       Self.lstGenreMovies.Items.Clear;
       Self.lstGenreMovies.Groups.Clear;
+      {$IFDEF USE_INTF}
+
+      {$ELSE}
       C:= TMDB.Genres.GetMovieList;
       for X := 0 to C.Length-1 do begin
         O:= C.O[X];
@@ -427,6 +482,7 @@ begin
         I.Caption:= O.S['name'];
         I.SubItems.Add(IntToStr(O.I['id']));
       end;
+      {$ENDIF}
       lstGenreMovies.SortType:= TSortType.stText;
       //TODO: Sort groups...
     finally
@@ -439,8 +495,12 @@ end;
 
 procedure TfrmTMDBTestMain.Button3Click(Sender: TObject);
 var
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   O: ISuperObject;
   C: ISuperArray;
+  {$ENDIF}
   X: Integer;
   I: TListItem;
 begin
@@ -451,6 +511,9 @@ begin
     try
       Self.lstGenreTV.Items.Clear;
       Self.lstGenreTV.Groups.Clear;
+      {$IFDEF USE_INTF}
+
+      {$ELSE}
       C:= TMDB.Genres.GetTVList;
       for X := 0 to C.Length-1 do begin
         O:= C.O[X];
@@ -458,6 +521,7 @@ begin
         I.Caption:= O.S['name'];
         I.SubItems.Add(IntToStr(O.I['id']));
       end;
+      {$ENDIF}
       lstGenreTV.SortType:= TSortType.stText;
       //TODO: Sort groups...
     finally
@@ -470,9 +534,13 @@ end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
 var
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   Res, O: ISuperObject;
   C: ISuperArray;
   M: IMember;
+  {$ENDIF}
   X: Integer;
   I: TListItem;
   G: TListGroup;
@@ -484,8 +552,12 @@ begin
     try
       Self.lstCertsMovies.Items.Clear;
       Self.lstCertsMovies.Groups.Clear;
-      Res:= TMDB.Certifications.GetMovieCertifications;
 
+      {$IFDEF USE_INTF}
+      //TODO: Change to use new interface structure...
+
+      {$ELSE}
+      Res:= TMDB.Certifications.GetMovieCertifications;
       for M in Res['certifications'].AsObject do begin
         C:= M.AsArray;
         G:= Self.lstCertsMovies.Groups.Add;
@@ -499,6 +571,7 @@ begin
           I.GroupID:= G.GroupID;
         end;
       end;
+      {$ENDIF}
 
       lstCertsMovies.SortType:= TSortType.stText;
       //TODO: Sort groups...
@@ -512,9 +585,13 @@ end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsTVClick(Sender: TObject);
 var
+  {$IFDEF USE_INTF}
+
+  {$ELSE}
   Res, O: ISuperObject;
   C: ISuperArray;
   M: IMember;
+  {$ENDIF}
   X: Integer;
   I: TListItem;
   G: TListGroup;
@@ -526,6 +603,9 @@ begin
     try
       Self.lstCertsTV.Items.Clear;
       Self.lstCertsTV.Groups.Clear;
+      {$IFDEF USE_INTF}
+
+      {$ELSE}
       Res:= TMDB.Certifications.GetTVCertifications;
       for M in Res['certifications'].AsObject do begin
         C:= M.AsArray;
@@ -540,6 +620,7 @@ begin
           I.GroupID:= G.GroupID;
         end;
       end;
+      {$ENDIF}
       lstCertsTV.SortType:= TSortType.stText;
       //TODO: Sort groups...
     finally
