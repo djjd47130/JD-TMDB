@@ -14,6 +14,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -22,7 +23,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Top = 0
     Width = 991
     Height = 507
-    ActivePage = tabSetup
+    ActivePage = tabCertifications
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -38,10 +39,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -284,7 +281,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           AlignWithMargins = True
           Left = 679
           Top = 4
-          Width = 269
+          Width = 282
           Height = 185
           Align = alLeft
           Caption = 'User Login'
@@ -293,19 +290,20 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             AlignWithMargins = True
             Left = 5
             Top = 23
-            Width = 259
+            Width = 272
             Height = 28
             Cursor = crHandPoint
             Align = alTop
             Caption = 'Login'
             TabOrder = 0
             OnClick = btnLoginLogoutClick
+            ExplicitWidth = 259
           end
           object pLoginUserInfo: TGroupBox
             AlignWithMargins = True
             Left = 5
             Top = 57
-            Width = 259
+            Width = 272
             Height = 123
             Align = alClient
             Caption = 'User Info'
@@ -321,15 +319,16 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               AlignWithMargins = True
               Left = 95
               Top = 23
-              Width = 159
-              Height = 95
+              Width = 172
+              Height = 84
               Align = alClient
               TabOrder = 0
+              ExplicitHeight = 95
               object Label5: TLabel
                 AlignWithMargins = True
                 Left = 4
                 Top = 4
-                Width = 151
+                Width = 164
                 Height = 18
                 Align = alTop
                 AutoSize = False
@@ -342,7 +341,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 AlignWithMargins = True
                 Left = 4
                 Top = 28
-                Width = 151
+                Width = 164
                 Height = 18
                 Align = alTop
                 AutoSize = False
@@ -355,7 +354,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 AlignWithMargins = True
                 Left = 4
                 Top = 52
-                Width = 151
+                Width = 164
                 Height = 18
                 Align = alTop
                 AutoSize = False
@@ -370,15 +369,16 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 5
               Top = 23
               Width = 84
-              Height = 95
+              Height = 84
               Align = alLeft
               TabOrder = 1
-              object Image1: TImage
+              ExplicitHeight = 95
+              object imgUserAvatar: TImage
                 AlignWithMargins = True
                 Left = 4
                 Top = 4
                 Width = 76
-                Height = 87
+                Height = 76
                 Align = alClient
                 ExplicitLeft = 8
                 ExplicitHeight = 77
@@ -391,25 +391,17 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object CertPages: TPageControl
         Left = 0
         Top = 0
         Width = 983
         Height = 419
-        ActivePage = tabCertsTV
+        ActivePage = tabCertsMovies
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
         object tabCertsMovies: TTabSheet
           Caption = 'Movie Certifications'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object btnRefreshCertsMovies: TButton
             AlignWithMargins = True
             Left = 3
@@ -454,10 +446,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         object tabCertsTV: TTabSheet
           Caption = 'TV Certifications'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object btnRefreshCertsTV: TButton
             AlignWithMargins = True
             Left = 3
@@ -504,10 +492,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabGenres: TTabSheet
       Caption = 'Genres'
       ImageIndex = 9
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GenrePages: TPageControl
         Left = 0
         Top = 0
@@ -519,10 +503,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         TabOrder = 0
         object TabSheet7: TTabSheet
           Caption = 'Movie Genres'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Button2: TButton
             AlignWithMargins = True
             Left = 3
@@ -562,10 +542,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         object TabSheet8: TTabSheet
           Caption = 'TV Genres'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Button3: TButton
             AlignWithMargins = True
             Left = 3
@@ -605,16 +581,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       end
     end
   end
-  object TMDB: TTMDBAPI
-    AppUserAgent = 
-      'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
-      'TMDB)'
-    Left = 72
-    Top = 440
-  end
   object MM: TMainMenu
-    Left = 8
-    Top = 440
+    Left = 16
+    Top = 400
     object Services1: TMenuItem
       Caption = 'Services'
       OnClick = Services1Click

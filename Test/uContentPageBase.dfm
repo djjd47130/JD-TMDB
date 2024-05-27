@@ -3,6 +3,7 @@ inherited frmContentPageBase: TfrmContentPageBase
   ClientHeight = 501
   ClientWidth = 910
   OnShow = FormShow
+  ExplicitTop = -6
   ExplicitWidth = 926
   ExplicitHeight = 540
   PixelsPerInch = 96
@@ -15,9 +16,6 @@ inherited frmContentPageBase: TfrmContentPageBase
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 44
-    ExplicitWidth = 710
-    ExplicitHeight = 444
     object lstResults: TListView
       AlignWithMargins = True
       Left = 3
@@ -40,9 +38,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       OnClick = lstResultsClick
       OnDblClick = lstResultsDblClick
       OnSelectItem = lstResultsSelectItem
-      ExplicitLeft = 6
-      ExplicitTop = 0
-      ExplicitHeight = 330
     end
     object pFooter: TPanel
       Left = 0
@@ -51,8 +46,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       Height = 32
       Align = alBottom
       TabOrder = 1
-      ExplicitLeft = 40
-      ExplicitTop = 480
       object lblResults: TLabel
         AlignWithMargins = True
         Left = 4
@@ -103,7 +96,6 @@ inherited frmContentPageBase: TfrmContentPageBase
         Enabled = False
         TabOrder = 1
         OnClick = btnPageNextClick
-        ExplicitTop = 3
       end
     end
     object pDetail: TPanel
@@ -114,7 +106,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       Align = alBottom
       TabOrder = 2
       Visible = False
-      ExplicitTop = 176
     end
   end
   object pSearch: TPanel
@@ -125,8 +116,6 @@ inherited frmContentPageBase: TfrmContentPageBase
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = -2
-    ExplicitHeight = 396
     object btnApply: TButton
       AlignWithMargins = True
       Left = 3
@@ -139,6 +128,8 @@ inherited frmContentPageBase: TfrmContentPageBase
       Default = True
       TabOrder = 0
       OnClick = btnApplyClick
+      ExplicitLeft = 4
+      ExplicitTop = 475
     end
   end
 end

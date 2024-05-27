@@ -335,8 +335,6 @@ type
   { Changes Related }
 
   TTMDBChangeItem = class(TTMDBPageItem, ITMDBChangeItem)
-  private
-    FObj: ISuperObject;
   protected
     function GetKey: WideString; stdcall;
     function GetItem(const Index: Integer): ITMDBChangeRecord; stdcall;
@@ -675,13 +673,14 @@ type
   TTMDBCredits = class(TInterfacedObject, ITMDBCredits)
   private
     FObj: ISuperObject;
+    FTMDB: ITMDB;
     FCast: ITMDBCastList;
     FCrew: ITMDBCrewList;
   protected
     function GetCast: ITMDBCastList; stdcall;
     function GetCrew: ITMDBCrewList; stdcall;
   public
-    constructor Create(AObj: ISuperObject); virtual;
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDB); virtual;
     destructor Destroy; override;
 
     property Cast: ITMDBCastList read GetCast;
@@ -1993,6 +1992,7 @@ begin
   FObj:= AObj;
   FOwner:= AOwner;
   FItems:= TList<ITMDBCertificationItem>.Create;
+  FCountryCode:= CountryCode;
   PopulateItems;
 end;
 
@@ -2004,7 +2004,12 @@ begin
 end;
 
 procedure TTMDBCertificationCountry.Clear;
+var
+  X: Integer;
 begin
+  for X := 0 to FItems.Count-1 do begin
+    ITMDBCertificationItem(FItems[X])._Release;
+  end;
   FItems.Clear;
 end;
 
@@ -2040,6 +2045,7 @@ begin
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
     I:= TTMDBCertificationItem.Create(O, Self);
+    I._AddRef;
     FItems.Add(I);
   end;
 end;
@@ -2061,12 +2067,12 @@ end;
 
 function TTMDBChangeItem.GetItem(const Index: Integer): ITMDBChangeRecord;
 begin
-
+  //Result:= ITMDBChangeRecord(inherited GetItem(Index));
 end;
 
 function TTMDBChangeItem.GetKey: WideString;
 begin
-
+  Result:= FObj.S['key'];
 end;
 
 { TTMDBChangePage }
@@ -2541,7 +2547,6 @@ end;
 function TTMDBMovieItem.GetGenres: ITMDBGenreList;
 var
   A: ISuperArray;
-  X, I: Integer;
 begin
   //One-time lookup and cache...
   if FGenres = nil then begin
@@ -2680,7 +2685,7 @@ begin
   Result:= nil;
   O:= FObj.O['credits'];
   if O <> nil then begin
-    Result:= TTMDBCredits.Create(O);
+    Result:= TTMDBCredits.Create(O, FTMDB);
     //TODO: Cache Result...
   end;
 end;
@@ -3515,7 +3520,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Movies.GetCredits(MovieID, Language);
-  Result:= TTMDBCredits.Create(O);
+  Result:= TTMDBCredits.Create(O, Owner);
 end;
 
 function TTMDBServiceMovies.GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieRequests = [];
@@ -3925,11 +3930,12 @@ end;
 
 { TTMDBCredits }
 
-constructor TTMDBCredits.Create(AObj: ISuperObject);
+constructor TTMDBCredits.Create(AObj: ISuperObject; ATMDB: ITMDB);
 begin
   FObj:= AObj;
-  FCast:= TTMDBCastList.Create(FObj.A['cast']);
-  FCrew:= TTMDBCrewList.Create(FObj.A['crew']);
+  FTMDB:= ATMDB;
+  FCast:= TTMDBCastList.Create(FObj.A['cast'], TTMDBCastItem);
+  FCrew:= TTMDBCrewList.Create(FObj.A['crew'], TTMDBCrewItem);
 end;
 
 destructor TTMDBCredits.Destroy;

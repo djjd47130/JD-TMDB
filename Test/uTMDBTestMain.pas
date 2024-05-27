@@ -20,7 +20,6 @@ uses
 
 type
   TfrmTMDBTestMain = class(TForm)
-    TMDB: TTMDBAPI;
     Pages: TPageControl;
     tabCertifications: TTabSheet;
     tabGenres: TTabSheet;
@@ -62,7 +61,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Panel5: TPanel;
-    Image1: TImage;
+    imgUserAvatar: TImage;
     Button1: TButton;
     btnRefreshCertsMovies: TButton;
     btnRefreshCertsTV: TButton;
@@ -76,7 +75,6 @@ type
     lstGenreTV: TListView;
     lstGenreMovies: TListView;
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
@@ -89,6 +87,8 @@ type
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     FAuthMethod: Integer;
     FSessionID: String;
@@ -96,8 +96,19 @@ type
     FAppSetup: ISuperObject;
 
     {$IFDEF USE_INTF}
-
+    FTMDB: ITMDB;
+    FConfig: ITMDBConfiguration;
+    FConfigCountries: ITMDBCountryList;
+    //FConfigJobs: ITMDBJobList;
+    FConfigLanguages: ITMDBLanguageList;
+    //FConfigPrimaryTranslations: ITMDBPrimaryTranslations;
+    FConfigTimezones: ITMDBTimezoneList;
+    FConfigMovieGenres: ITMDBGenreList;
+    FConfigTVGenres: ITMDBGenreList;
+    FConfigMovieCerts: ITMDBCertificationCountries;
+    FConfigTVCerts: ITMDBCertificationCountries;
     {$ELSE}
+    FTMDB: TTMDBAPI;
     FConfig: ISuperObject;
     FConfigCountries: ISuperArray;
     FConfigJobs: ISuperArray;
@@ -122,6 +133,11 @@ type
   public
     procedure PrepAPI;
     procedure ResetAPI;
+    {$IFDEF USE_INTF}
+    function TMDB: ITMDB;
+    {$ELSE}
+    function TMDB: TTMDBAPI;
+    {$ENDIF}
     function CountryName(const Code: String): String;
     function MovieGenreName(const ID: Integer): String;
     function TVGenreName(const ID: Integer): String;
@@ -148,7 +164,19 @@ procedure TfrmTMDBTestMain.FormCreate(Sender: TObject);
 var
   X: Integer;
 begin
+  {$IFDEF DEBUG}
+  ReportMemoryLeaksOnShutdown:= True;
+  {$ENDIF}
+
+
   Pages.Align:= alClient;
+
+  {$IFDEF USE_INTF}
+  FTMDB:= TTMDB.Create;
+  {$ELSE}
+  FTMDB:= TTMDBAPI.Create(nil);
+
+  {$ENDIF}
 
   EmbedTabs;
 
@@ -161,10 +189,28 @@ begin
   Services1Click(Services1);
 end;
 
+procedure TfrmTMDBTestMain.FormDestroy(Sender: TObject);
+begin
+  FConfig:= nil;
+  FConfigCountries:= nil;
+  //FConfigJobs:= nil;
+  FConfigLanguages:= nil;
+  //FConfigPrimaryTranslations:= nil;
+  FConfigTimezones:= nil;
+  FConfigMovieGenres:= nil;
+  FConfigTVGenres:= nil;
+  FConfigMovieCerts:= nil;
+  FConfigTVCerts:= nil;
+  {$IFDEF USE_INTF}
+  FTMDB:= nil;
+  {$ELSE}
+  FreeAndNil(FTMDB);
+  {$ENDIF}
+end;
+
 procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
 begin
   LoadSetup;
-
 end;
 
 procedure TfrmTMDBTestMain.LoadSetup;
@@ -175,9 +221,9 @@ begin
     FAppSetup:= SO;
   end;
 
-  Self.txtAPIKey.Text:= FAppSetup.S['api_key'];
-  Self.txtAccessToken.Text:= FAppSetup.S['access_token'];
-  Self.Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
+  txtAPIKey.Text:= FAppSetup.S['api_key'];
+  txtAccessToken.Text:= FAppSetup.S['access_token'];
+  Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
   //TODO: current_sub_tab
 
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
@@ -256,7 +302,7 @@ begin
       btnLoginLogout.Caption:= 'Login';
       btnLoginLogout.Tag:= 0;
       if (FSessionID <> '') and (not FSessionGuest) then
-        TMDB.Authentication.DeleteSession(FSessionID);
+        FTMDB.Authentication.DeleteSession(FSessionID);
       FSessionID:= '';
 
     end;
@@ -266,7 +312,7 @@ begin
     case FAuthMethod of
       0: begin
         //Guest...
-        S:= TMDB.Authentication.CreateGuestSession;
+        S:= FTMDB.Authentication.CreateGuestSession;
         if S.B['success'] then begin
           FSessionID:= S.S['guest_session_id'];
           FSessionGuest:= True;
@@ -275,10 +321,10 @@ begin
       end;
       1: begin
         //Normal...
-        O:= TMDB.Authentication.CreateRequestToken;
+        O:= FTMDB.Authentication.CreateRequestToken;
         if O.B['success'] then begin
           RT:= O.S['request_token'];
-          S:= TMDB.Authentication.CreateSession(RT);
+          S:= FTMDB.Authentication.CreateSession(RT);
           //TODO
           if S.B['success'] then begin
             FSessionID:= S.S['session_id'];
@@ -289,10 +335,10 @@ begin
       end;
       2: begin
         //Credentials...
-        O:= TMDB.Authentication.CreateSessionLogin(txtAuthUser.Text, txtAuthPass.Text, RT);
+        O:= FTMDB.Authentication.CreateSessionLogin(txtAuthUser.Text, txtAuthPass.Text, RT);
         if O.B['success'] then begin
           RT:= O.S['request_token'];
-          S:= TMDB.Authentication.CreateSession(RT);
+          S:= FTMDB.Authentication.CreateSession(RT);
           //TODO
           if S.B['success'] then begin
             FSessionID:= S.S['session_id'];
@@ -314,16 +360,24 @@ function TfrmTMDBTestMain.CountryName(const Code: String): String;
 var
   X: Integer;
   {$IFDEF USE_INTF}
-
+  O: ITMDBCountryItem;
   {$ELSE}
   O: ISuperObject;
   {$ENDIF}
 begin
   {$IFDEF USE_INTF}
-
+  if FConfigCountries = nil then
+    FConfigCountries:= FTMDB.Configuration.GetCountries;
+  for X := 0 to FConfigCountries.Count-1 do begin
+    O:= FConfigCountries[X];
+    if O.ISO3166_1 = Code then begin
+      Result:= O.EnglishName;
+      Break;
+    end;
+  end;
   {$ELSE}
   if FConfigCountries = nil then
-    FConfigCountries:= TMDB.Configuration.GetCountries;
+    FConfigCountries:= FTMDB.Configuration.GetCountries;
   for X := 0 to FConfigCountries.Length-1 do begin
     O:= FConfigCountries.O[X];
     if O.S['iso_3166_1'] = Code then begin
@@ -359,32 +413,56 @@ end;
 procedure TfrmTMDBTestMain.PrepAPI;
 begin
   {$IFDEF USE_INTF}
-
-  {$ELSE}
-  TMDB.APIKey:= txtAPIKey.Text;
-  TMDB.APIReadAccessToken:= txtAccessToken.Text;
+  FTMDB.APIKey:= txtAPIKey.Text;
+  FTMDB.AccessToken:= txtAccessToken.Text;
   //TODO: Test connection and authentication...
   try
     if FConfig = nil then
-      FConfig:= TMDB.Configuration.GetDetails;
+      FConfig:= FTMDB.Configuration.GetDetails;
     if FConfigCountries = nil then
-      FConfigCountries:= TMDB.Configuration.GetCountries;
-    if FConfigJobs = nil then
-      FConfigJobs:= TMDB.Configuration.GetJobs;
+      FConfigCountries:= FTMDB.Configuration.GetCountries;
+    //FConfigJobs
     if FConfigLanguages = nil then
-      FConfigLanguages:= TMDB.Configuration.GetLanguages;
-    if FConfigPrimaryTranslations = nil then
-      FConfigPrimaryTranslations:= TMDB.Configuration.GetPrimaryTranslations;
+      FConfigLanguages:= FTMDB.Configuration.GetLanguages;
+    //FConfigPrimaryTranslations
     if FConfigTimezones = nil then
-      FConfigTimezones:= TMDB.Configuration.GetTimeZones;
+      FConfigTimezones:= FTMDB.Configuration.GetTimezones;
     if FConfigMovieGenres = nil then
-      FConfigMovieGenres:= TMDB.Genres.GetMovieList('');
+      FConfigMovieGenres:= FTMDB.Genres.GetMovieList;
     if FConfigTVGenres = nil then
-      FConfigTVGenres:= TMDB.Genres.GetTVList('');
+      FConfigTVGenres:= FTMDB.Genres.GetTVList;
     if FConfigMovieCerts = nil then
-      FConfigMovieCerts:= TMDB.Certifications.GetMovieCertifications;
+      FConfigMovieCerts:= FTMDB.Certifications.GetMovieCertifications;
     if FConfigTVCerts = nil then
-      FConfigTVCerts:= TMDB.Certifications.GetTVCertifications;
+      FConfigTVCerts:= FTMDB.Certifications.GetTVCertifications;
+  except
+    //TODO
+  end;
+  {$ELSE}
+  FTMDB.APIKey:= txtAPIKey.Text;
+  FTMDB.APIAccessToken:= txtAccessToken.Text;
+  //TODO: Test connection and authentication...
+  try
+    if FConfig = nil then
+      FConfig:= FTMDB.Configuration.GetDetails;
+    if FConfigCountries = nil then
+      FConfigCountries:= FTMDB.Configuration.GetCountries;
+    if FConfigJobs = nil then
+      FConfigJobs:= FTMDB.Configuration.GetJobs;
+    if FConfigLanguages = nil then
+      FConfigLanguages:= FTMDB.Configuration.GetLanguages;
+    if FConfigPrimaryTranslations = nil then
+      FConfigPrimaryTranslations:= FTMDB.Configuration.GetPrimaryTranslations;
+    if FConfigTimezones = nil then
+      FConfigTimezones:= FTMDB.Configuration.GetTimeZones;
+    if FConfigMovieGenres = nil then
+      FConfigMovieGenres:= FTMDB.Genres.GetMovieList('');
+    if FConfigTVGenres = nil then
+      FConfigTVGenres:= FTMDB.Genres.GetTVList('');
+    if FConfigMovieCerts = nil then
+      FConfigMovieCerts:= FTMDB.Certifications.GetMovieCertifications;
+    if FConfigTVCerts = nil then
+      FConfigTVCerts:= FTMDB.Certifications.GetTVCertifications;
   except
     //TODO
   end;
@@ -421,7 +499,7 @@ begin
   {$IFDEF USE_INTF}
 
   {$ELSE}
-  O:= TMDB.Authentication.GetValidateKey;
+  O:= FTMDB.Authentication.GetValidateKey;
   ShowMessage('API Key Validation Result: '+O.S['status_message']);
   {$ENDIF}
 end;
@@ -440,7 +518,7 @@ begin
   {$IFDEF USE_INTF}
 
   {$ELSE}
-  for X := 0 to Self.FConfigLanguages.Length-1 do begin
+  for X := 0 to FConfigLanguages.Length-1 do begin
     O:= FConfigLanguages.O[X];
     AList.Append(O.S['iso_639_1']);
     //AList.Append(O.S['english_name']+' ('+O.S['iso_639_1']+')');
@@ -475,7 +553,7 @@ begin
       {$IFDEF USE_INTF}
 
       {$ELSE}
-      C:= TMDB.Genres.GetMovieList;
+      C:= FTMDB.Genres.GetMovieList;
       for X := 0 to C.Length-1 do begin
         O:= C.O[X];
         I:= Self.lstGenreMovies.Items.Add;
@@ -514,7 +592,7 @@ begin
       {$IFDEF USE_INTF}
 
       {$ELSE}
-      C:= TMDB.Genres.GetTVList;
+      C:= FTMDB.Genres.GetTVList;
       for X := 0 to C.Length-1 do begin
         O:= C.O[X];
         I:= Self.lstGenreTV.Items.Add;
@@ -535,13 +613,14 @@ end;
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
 var
   {$IFDEF USE_INTF}
-
+  C: ITMDBCertificationCountry;
+  O: ITMDBCertificationItem;
   {$ELSE}
   Res, O: ISuperObject;
   C: ISuperArray;
   M: IMember;
   {$ENDIF}
-  X: Integer;
+  X, Y: Integer;
   I: TListItem;
   G: TListGroup;
 begin
@@ -554,10 +633,21 @@ begin
       Self.lstCertsMovies.Groups.Clear;
 
       {$IFDEF USE_INTF}
-      //TODO: Change to use new interface structure...
-
+      for X := 0 to FConfigMovieCerts.Count-1 do begin
+        C:= FConfigMovieCerts[X];
+        G:= lstCertsMovies.Groups.Add;
+        G.Header:= CountryName(C.CountryCode);
+        for Y := 0 to C.Count-1 do begin
+          O:= C[Y];
+          I:= Self.lstCertsMovies.Items.Add;
+          I.Caption:= IntToStr(O.Order);
+          I.SubItems.Add(O.Certification);
+          I.SubItems.Add(O.Meaning);
+          I.GroupID:= G.GroupID;
+        end;
+      end;
       {$ELSE}
-      Res:= TMDB.Certifications.GetMovieCertifications;
+      Res:= FTMDB.Certifications.GetMovieCertifications;
       for M in Res['certifications'].AsObject do begin
         C:= M.AsArray;
         G:= Self.lstCertsMovies.Groups.Add;
@@ -606,7 +696,7 @@ begin
       {$IFDEF USE_INTF}
 
       {$ELSE}
-      Res:= TMDB.Certifications.GetTVCertifications;
+      Res:= FTMDB.Certifications.GetTVCertifications;
       for M in Res['certifications'].AsObject do begin
         C:= M.AsArray;
         G:= Self.lstCertsTV.Groups.Add;
@@ -670,6 +760,18 @@ begin
   Result:= ExtractFilePath(ParamStr(0));
   Result:= TPath.Combine(Result, 'AppConfig.json');
 end;
+
+{$IFDEF USE_INTF}
+function TfrmTMDBTestMain.TMDB: ITMDB;
+begin
+  Result:= FTMDB;
+end;
+{$ELSE}
+function TfrmTMDBTestMain.TMDB: TTMDBAPI;
+begin
+  Result:= FTMDB;
+end;
+{$ENDIF}
 
 function TfrmTMDBTestMain.TVGenreName(const ID: Integer): String;
 begin

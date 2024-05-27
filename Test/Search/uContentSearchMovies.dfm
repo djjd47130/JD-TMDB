@@ -6,9 +6,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
   TextHeight = 18
   inherited pMain: TPanel
     Width = 709
-    ExplicitLeft = 265
-    ExplicitWidth = 489
-    ExplicitHeight = 473
+    ExplicitWidth = 709
     inherited lstResults: TListView
       Width = 703
       Height = 217
@@ -34,10 +32,13 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
           Width = 400
         end>
       ExplicitWidth = 703
+      ExplicitHeight = 217
     end
     inherited pFooter: TPanel
       Top = 223
       Width = 709
+      ExplicitTop = 223
+      ExplicitWidth = 709
     end
     inherited pDetail: TPanel
       Top = 255
@@ -130,7 +131,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 8
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3
