@@ -23,7 +23,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Top = 0
     Width = 991
     Height = 507
-    ActivePage = tabCertifications
+    ActivePage = tabSetup
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     DoubleBuffered = False
@@ -297,7 +297,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Login'
             TabOrder = 0
             OnClick = btnLoginLogoutClick
-            ExplicitWidth = 259
           end
           object pLoginUserInfo: TGroupBox
             AlignWithMargins = True
@@ -320,10 +319,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 95
               Top = 23
               Width = 172
-              Height = 84
+              Height = 95
               Align = alClient
               TabOrder = 0
-              ExplicitHeight = 95
               object Label5: TLabel
                 AlignWithMargins = True
                 Left = 4
@@ -369,16 +367,15 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Left = 5
               Top = 23
               Width = 84
-              Height = 84
+              Height = 95
               Align = alLeft
               TabOrder = 1
-              ExplicitHeight = 95
               object imgUserAvatar: TImage
                 AlignWithMargins = True
                 Left = 4
                 Top = 4
                 Width = 76
-                Height = 76
+                Height = 87
                 Align = alClient
                 ExplicitLeft = 8
                 ExplicitHeight = 77
@@ -582,8 +579,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     end
   end
   object MM: TMainMenu
-    Left = 16
-    Top = 400
+    Left = 24
+    Top = 496
     object Services1: TMenuItem
       Caption = 'Services'
       OnClick = Services1Click

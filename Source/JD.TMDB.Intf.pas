@@ -692,7 +692,6 @@ type
 
 
 
-
   { Configuration Related }
 
   /// <summary>
@@ -903,6 +902,230 @@ type
 
     property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBKeywordItem read GetItem; default;
+  end;
+
+
+
+
+  { Discover Related }
+
+  ITMDBDiscoverMoviesParams = interface
+    ['{700EDC98-83A5-41FB-AB34-4326179EE37B}']
+    function GetCertification: WideString;
+    function GetCertificationGTE: WideString;
+    function GetCertificationLTE: WideString;
+    function GetCertificationCountry: WideString;
+    function GetIncludeAdult: Boolean;
+    function GetIncludeVideo: Boolean;
+    function GetLanguage: WideString;
+    function GetPrimaryReleaseYear: Integer;
+    function GetPrimaryReleaseDateGTE: TDateTime;
+    function GetPrimaryReleaseYearLTE: TDateTime;
+    function GetRegion: WideString;
+    function GetReleaseDateGTE: TDateTime;
+    function GetReleaseDateLTE: TDateTime;
+    function GetSortBy: WideString;
+    function GetVoteAverageGTE: Single;
+    function GetVoteAverageLTE: Single;
+    function GetVoteCountGTE: Single;
+    function GetVoteCountLTE: Single;
+    function GetWatchRegion: WideString;
+    function GetWithCast: WideString;
+    function GetWithCompanies: WideString;
+    function GetWithCrew: WideString;
+    function GetWithGenres: WideString;
+    function GetWithKeywords: WideString;
+    function GetWithOriginCountry: WideString;
+    function GetWithOriginalLanguage: WideString;
+    function GetWithPeople: WideString;
+    function GetWithReleaseType: WideString;
+    function GetWithRuntimeGTE: Integer;
+    function GetWithRuntimeLTE: Integer;
+    function GetWithWatchMonetizationTypes: WideString;
+    function GetWithWatchProviders: WideString;
+    function GetWithoutCompanies: WideString;
+    function GetWithoutGenres: WideString;
+    function GetWithoutKeywords: WideString;
+    function GetWithoutWatchProviders: WideString;
+    function GetYear: Integer;
+
+    procedure SetCertification(const AValue: WideString);
+    procedure SetCertificationGTE(const AValue: WideString);
+    procedure SetCertificationLTE(const AValue: WideString);
+    procedure SetCertificationCountry(const AValue: WideString);
+    procedure SetIncludeAdult(const AValue: Boolean);
+    procedure SetIncludeVideo(const AValue: Boolean);
+    procedure SetLanguage(const AValue: WideString);
+    procedure SetPrimaryReleaseYear(const AValue: Integer);
+    procedure SetPrimaryReleaseDateGTE(const AValue: TDateTime);
+    procedure SetPrimaryReleaseYearLTE(const AValue: TDateTime);
+    procedure SetRegion(const AValue: WideString);
+    procedure SetReleaseDateGTE(const AValue: TDateTime);
+    procedure SetReleaseDateLTE(const AValue: TDateTime);
+    procedure SetSortBy(const AValue: WideString);
+    procedure SetVoteAverageGTE(const AValue: Single);
+    procedure SetVoteAverageLTE(const AValue: Single);
+    procedure SetVoteCountGTE(const AValue: Single);
+    procedure SetVoteCountLTE(const AValue: Single);
+    procedure SetWatchRegion(const AValue: WideString);
+    procedure SetWithCast(const AValue: WideString);
+    procedure SetWithCompanies(const AValue: WideString);
+    procedure SetWithCrew(const AValue: WideString);
+    procedure SetWithGenres(const AValue: WideString);
+    procedure SetWithKeywords(const AValue: WideString);
+    procedure SetWithOriginCountry(const AValue: WideString);
+    procedure SetWithOriginalLanguage(const AValue: WideString);
+    procedure SetWithPeople(const AValue: WideString);
+    procedure SetWithReleaseType(const AValue: WideString);
+    procedure SetWithRuntimeGTE(const AValue: Integer);
+    procedure SetWithRuntimeLTE(const AValue: Integer);
+    procedure SetWithWatchMonetizationTypes(const AValue: WideString);
+    procedure SetWithWatchProviders(const AValue: WideString);
+    procedure SetWithoutCompanies(const AValue: WideString);
+    procedure SetWithoutGenres(const AValue: WideString);
+    procedure SetWithoutKeywords(const AValue: WideString);
+    procedure SetWithoutWatchProviders(const AValue: WideString);
+    procedure SetYear(const AValue: Integer);
+
+    property Certification: WideString read GetCertification write SetCertification;
+    property CertificationGTE: WideString read GetCertificationGTE write SetCertificationGTE;
+    property CertificationLTE: WideString read GetCertificationLTE write SetCertificationLTE;
+    property CertificationCountry: WideString read GetCertificationCountry write SetCertificationCountry;
+    property IncludeAdult: Boolean read GetIncludeAdult write SetIncludeAdult;
+    property IncludeVideo: Boolean read GetIncludeVideo write SetIncludeVideo;
+    property Language: WideString read GetLanguage write SetLanguage;
+    property PrimaryReleaseYear: Integer read GetPrimaryReleaseYear write SetPrimaryReleaseYear;
+    property PrimaryReleaseDateGTE: TDateTime read GetPrimaryReleaseDateGTE write SetPrimaryReleaseDateGTE;
+    property PrimaryReleaseYearLTE: TDateTime read GetPrimaryReleaseYearLTE write SetPrimaryReleaseYearLTE;
+    property Region: WideString read GetRegion write SetRegion;
+    property ReleaseDateGTE: TDateTime read GetReleaseDateGTE write SetReleaseDateGTE;
+    property ReleaseDateLTE: TDateTime read GetReleaseDateLTE write SetReleaseDateLTE;
+    property SortBy: WideString read GetSortBy write SetSortBy;
+    property VoteAverageGTE: Single read GetVoteAverageGTE write SetVoteAverageGTE;
+    property VoteAverageLTE: Single read GetVoteAverageLTE write SetVoteAverageLTE;
+    property VoteCountGTE: Single read GetVoteCountGTE write SetVoteCountGTE;
+    property VoteCountLTE: Single read GetVoteCountLTE write SetVoteCountLTE;
+    property WatchRegion: WideString read GetWatchRegion write SetWatchRegion;
+    property WithCast: WideString read GetWithCast write SetWithCast;
+    property WithCompanies: WideString read GetWithCompanies write SetWithCompanies;
+    property WithCrew: WideString read GetWithCrew write SetWithCrew;
+    property WithGenres: WideString read GetWithGenres write SetWithGenres;
+    property WithKeywords: WideString read GetWithKeywords write SetWithKeywords;
+    property WithOriginCountry: WideString read GetWithOriginCountry write SetWithOriginCountry;
+    property WithOriginalLanguage: WideString read GetWithOriginalLanguage write SetWithOriginalLanguage;
+    property WithPeople: WideString read GetWithPeople write SetWithPeople;
+    property WithReleaseType: WideString read GetWithReleaseType write SetWithReleaseType;
+    property WithRuntimeGTE: Integer read GetWithRuntimeGTE write SetWithRuntimeGTE;
+    property WithRuntimeLTE: Integer read GetWithRuntimeLTE write SetWithRuntimeLTE;
+    property WithWatchMonetizationTypes: WideString read GetWithWatchMonetizationTypes write SetWithWatchMonetizationTypes;
+    property WithWatchProviders: WideString read GetWithWatchProviders write SetWithWatchProviders;
+    property WithoutCompanies: WideString read GetWithoutCompanies write SetWithoutCompanies;
+    property WithoutGenres: WideString read GetWithoutGenres write SetWithoutGenres;
+    property WithoutKeywords: WideString read GetWithoutKeywords write SetWithoutKeywords;
+    property WithoutWatchProviders: WideString read GetWithoutWatchProviders write SetWithoutWatchProviders;
+    property Year: Integer read GetYear write SetYear;
+  end;
+
+  ITMDBDiscoverTVParams = interface
+    ['{C2E7A309-1E14-4D62-BC23-505525F3D9D4}']
+    function GetAirDateGTE: TDateTime;
+    function GetAirDateLTE: TDateTime;
+    function GetFirstAirDateYear: Integer;
+    function GetFirstAirDateGTE: TDateTime;
+    function GetFirstAirDateLTE: TDAteTime;
+    function GetIncludeAdult: Boolean;
+    function GetIncludeNullFirstAirDates: Boolean;
+    function GetLanguage: WideString;
+    function GetScreenedTheatrically: Boolean;
+    function GetSortBy: WideString;
+    function GetTimezone: WideString;
+    function GetVoteAverageGTE: Single;
+    function GetVoteAverageLTE: Single;
+    function GetVoteCountGTE: Single;
+    function GetVoteCountLTE: Single;
+    function GetWatchRegion: WideString;
+    function GetWithCompanies: WideString;
+    function GetWithGenres: WideString;
+    function GetWithKeywords: WideString;
+    function GetWithNetworks: Integer;
+    function GetWithOriginCountry: WideString;
+    function GetWithOriginalLanguage: WideString;
+    function GetWithRuntimeGTE: Integer;
+    function GetWithRuntimeLTE: Integer;
+    function GetWithStatus: WideString;
+    function GetWithWatchMonetizationTypes: WideString;
+    function GetWithWatchProviders: WideString;
+    function GetWithoutCompoanies: WideString;
+    function GetWithoutGenres: WideString;
+    function GetWithoutKeywords: WideString;
+    function GetWithoutWatchProviders: WideString;
+    function GetWithType: WideString;
+
+    procedure SetAirDateGTE(const AValue: TDateTime);
+    procedure SetAirDateLTE(const AValue: TDateTime);
+    procedure SetFirstAirDateYear(const AValue: Integer);
+    procedure SetFirstAirDateGTE(const AValue: TDateTime);
+    procedure SetFirstAirDateLTE(const AValue: TDAteTime);
+    procedure SetIncludeAdult(const AValue: Boolean);
+    procedure SetIncludeNullFirstAirDates(const AValue: Boolean);
+    procedure SetLanguage(const AValue: WideString);
+    procedure SetScreenedTheatrically(const AValue: Boolean);
+    procedure SetSortBy(const AValue: WideString);
+    procedure SetTimezone(const AValue: WideString);
+    procedure SetVoteAverageGTE(const AValue: Single);
+    procedure SetVoteAverageLTE(const AValue: Single);
+    procedure SetVoteCountGTE(const AValue: Single);
+    procedure SetVoteCountLTE(const AValue: Single);
+    procedure SetWatchRegion(const AValue: WideString);
+    procedure SetWithCompanies(const AValue: WideString);
+    procedure SetWithGenres(const AValue: WideString);
+    procedure SetWithKeywords(const AValue: WideString);
+    procedure SetWithNetworks(const AValue: Integer);
+    procedure SetWithOriginCountry(const AValue: WideString);
+    procedure SetWithOriginalLanguage(const AValue: WideString);
+    procedure SetWithRuntimeGTE(const AValue: Integer);
+    procedure SetWithRuntimeLTE(const AValue: Integer);
+    procedure SetWithStatus(const AValue: WideString);
+    procedure SetWithWatchMonetizationTypes(const AValue: WideString);
+    procedure SetWithWatchProviders(const AValue: WideString);
+    procedure SetWithoutCompoanies(const AValue: WideString);
+    procedure SetWithoutGenres(const AValue: WideString);
+    procedure SetWithoutKeywords(const AValue: WideString);
+    procedure SetWithoutWatchProviders(const AValue: WideString);
+    procedure SetWithType(const AValue: WideString);
+
+    property AirDateGTE: TDateTime read GetAirDateGTE write SetAirDateGTE;
+    property AirDateLTE: TDateTime read GetAirDateLTE write SetAirDateLTE;
+    property FirstAirDateYear: Integer read GetFirstAirDateYear write SetFirstAirDateYear;
+    property FirstAirDateGTE: TDateTime read GetFirstAirDateGTE write SetFirstAirDateGTE;
+    property FirstAirDateLTE: TDAteTime read GetFirstAirDateLTE write SetFirstAirDateLTE;
+    property IncludeAdult: Boolean read GetIncludeAdult write SetIncludeAdult;
+    property IncludeNullFirstAirDates: Boolean read GetIncludeNullFirstAirDates write SetIncludeNullFirstAirDates;
+    property Language: WideString read GetLanguage write SetLanguage;
+    property ScreenedTheatrically: Boolean read GetScreenedTheatrically write SetScreenedTheatrically;
+    property SortBy: WideString read GetSortBy write SetSortBy;
+    property Timezone: WideString read GetTimezone write SetTimezone;
+    property VoteAverageGTE: Single read GetVoteAverageGTE write SetVoteAverageGTE;
+    property VoteAverageLTE: Single read GetVoteAverageLTE write SetVoteAverageLTE;
+    property VoteCountGTE: Single read GetVoteCountGTE write SetVoteCountGTE;
+    property VoteCountLTE: Single read GetVoteCountLTE write SetVoteCountLTE;
+    property WatchRegion: WideString read GetWatchRegion write SetWatchRegion;
+    property WithCompanies: WideString read GetWithCompanies write SetWithCompanies;
+    property WithGenres: WideString read GetWithGenres write SetWithGenres;
+    property WithKeywords: WideString read GetWithKeywords write SetWithKeywords;
+    property WithNetworks: Integer read GetWithNetworks write SetWithNetworks;
+    property WithOriginCountry: WideString read GetWithOriginCountry write SetWithOriginCountry;
+    property WithOriginalLanguage: WideString read GetWithOriginalLanguage write SetWithOriginalLanguage;
+    property WithRuntimeGTE: Integer read GetWithRuntimeGTE write SetWithRuntimeGTE;
+    property WithRuntimeLTE: Integer read GetWithRuntimeLTE write SetWithRuntimeLTE;
+    property WithStatus: WideString read GetWithStatus write SetWithStatus;
+    property WithWatchMonetizationTypes: WideString read GetWithWatchMonetizationTypes write SetWithWatchMonetizationTypes;
+    property WithWatchProviders: WideString read GetWithWatchProviders write SetWithWatchProviders;
+    property WithoutCompoanies: WideString read GetWithoutCompoanies write SetWithoutCompoanies;
+    property WithoutGenres: WideString read GetWithoutGenres write SetWithoutGenres;
+    property WithoutKeywords: WideString read GetWithoutKeywords write SetWithoutKeywords;
+    property WithoutWatchProviders: WideString read GetWithoutWatchProviders write SetWithoutWatchProviders;
+    property WithType: WideString read GetWithType write SetWithType;
   end;
 
 
@@ -1751,6 +1974,8 @@ type
 
   ITMDBServiceWatchProviders = interface;
 
+  ITMDBServiceImages = interface;
+
   ITMDB = interface;
 
 
@@ -2065,6 +2290,22 @@ type
     //GetDetails
   end;
 
+  /// [DONE]
+  ITMDBServiceImages = interface(ITMDBService)
+    ['{AF0467B9-AF78-4007-A521-EC9F362E7380}']
+    function GetBackdrop(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetLogo(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetPoster(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetProfile(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetStill(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+  end;
+
+  /// [DONE]
   //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
   ITMDBServiceWatchProviders = interface(ITMDBService)
     ['{FDB079FA-C25C-4337-BDD7-C4E4A9186A36}']
@@ -2131,6 +2372,7 @@ type
     function TVEpisodeGroups: ITMDBServiceTVEpisodeGroups; stdcall;
     //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
     function WatchProviders: ITMDBServiceWatchProviders; stdcall;
+    function Images: ITMDBServiceImages; stdcall;
 
     property APIKey: WideString read GetAPIKey write SetAPIKey;
     property AccessToken: WideString read GetAccessToken write SetAccessToken;

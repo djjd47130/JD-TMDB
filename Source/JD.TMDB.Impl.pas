@@ -1483,6 +1483,24 @@ type
       const WatchRegion: WideString = ''): ITMDBWatchProviderList; stdcall;
   end;
 
+  /// [DONE]
+  TTMDBServiceImages = class(TTMDBService, ITMDBServiceImages)
+  private
+    function GetImage(var Base64: WideString; const Path: WideString;
+      const Size: WideString): Boolean;
+  protected
+    function GetBackdrop(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetLogo(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetPoster(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetProfile(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+    function GetStill(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean; stdcall;
+  end;
+
 
 
 
@@ -1526,6 +1544,7 @@ type
     FTVEpisodes: ITMDBServiceTVEpisodes;
     FTVEpisodeGroups: ITMDBServiceTVEpisodeGroups;
     FWatchProviders: ITMDBServiceWatchProviders;
+    FImages: ITMDBServiceImages;
   protected
     function GetAPIKey: WideString; stdcall;
     procedure SetAPIKey(const Value: WideString); stdcall;
@@ -1573,6 +1592,7 @@ type
     function TVEpisodes: ITMDBServiceTVEpisodes; stdcall;
     function TVEpisodeGroups: ITMDBServiceTVEpisodeGroups; stdcall;
     function WatchProviders: ITMDBServiceWatchProviders; stdcall;
+    function Images: ITMDBServiceImages; stdcall;
   end;
 
 
@@ -3594,6 +3614,44 @@ begin
   //Result:= TTMDBWatchProviderList.Create(A);
 end;
 
+{ TTMDBServiceImages }
+
+function TTMDBServiceImages.GetImage(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= FOwner.FAPI.Images.GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetBackdrop(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetLogo(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetPoster(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetProfile(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetStill(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
 { TTMDB }
 
 constructor TTMDB.Create;
@@ -3630,6 +3688,7 @@ begin
   FTVEpisodes:= TTMDBServiceTVEpisodes.Create(Self);
   FTVEpisodeGroups:= TTMDBServiceTVEpisodeGroups.Create(Self);
   FWatchProviders:= TTMDBServiceWatchProviders.Create(Self);
+  FImages:= TTMDBServiceImages.Create(Self);
 end;
 
 destructor TTMDB.Destroy;
@@ -3739,6 +3798,11 @@ end;
 function TTMDB.GuestSessions: ITMDBServiceGuestSessions;
 begin
   Result:= FGuestSessions;
+end;
+
+function TTMDB.Images: ITMDBServiceImages;
+begin
+  Result:= FImages;
 end;
 
 function TTMDB.Keywords: ITMDBServiceKeywords;

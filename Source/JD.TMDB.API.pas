@@ -12,6 +12,18 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/docs/getting-started
   https://developer.themoviedb.org/reference/intro/getting-started
 
+  TODO:
+  - Discover requests - very huge concept
+  - Change requests - very dynamic and complex concept
+  - Fetching images using standard image sizes
+  - Access Token authentication method
+  - User authentication
+  - Rate limiting
+
+  REMARKS
+  - This unit *SHOULD* be fully functional at this point, with the exception
+    of a few specific services and capabilities missing.
+
 *)
 
 interface
@@ -20,9 +32,9 @@ uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   Winapi.Windows,
   XSuperObject,
-  IdURI,
-  IdHTTP, IdIOHandler, IdIOHandlerSocket,
-  IdIOHandlerStack, IdSSL, IdSSLOpenSSL;
+  IdURI, IdHTTP, IdIOHandler, IdIOHandlerSocket,
+  IdIOHandlerStack, IdSSL, IdSSLOpenSSL,
+  System.NetEncoding;
 
 
 { TMDB API HTTP Constants }
@@ -57,6 +69,7 @@ type
 
   TTMDBAPIAccount = class(TTMDBAPIService)
   public
+    function GetAccountInfo(): ISuperObject;
     function GetDetails(const AccountID: Integer; const SessionID: String = ''): ISuperObject;
     function AddFavorite(const AccountID: Integer;
       const MediaType: String; const MediaID: Integer; const Favorite: Boolean;
@@ -147,14 +160,85 @@ type
     function GetDetails(const CreditID: Integer): ISuperObject;
   end;
 
+  TTMDBAPIDiscoverMovieReq = record
+    Certification: WideString;
+    CertificationGTE: WideString;
+    CertificationLTE: WideString;
+    CertificationCountry: WideString;
+    IncludeAdult: Boolean;
+    IncludeVideo: Boolean;
+    Language: WideString;
+    PrimaryReleaseYear: Integer;
+    PrimaryReleaseDateGTE: TDateTime;
+    PrimaryReleaseYearLTE: TDateTime;
+    Region: WideString;
+    ReleaseDateGTE: TDateTime;
+    ReleaseDateLTE: TDateTime;
+    SortBy: WideString;
+    VoteAverageGTE: Single;
+    VoteAverageLTE: Single;
+    VoteCountGTE: Single;
+    VoteCountLTE: Single;
+    WatchRegion: WideString;
+    WithCast: WideString;
+    WithCompanies: WideString;
+    WithCrew: WideString;
+    WithGenres: WideString;
+    WithKeywords: WideString;
+    WithOriginCountry: WideString;
+    WithOriginalLanguage: WideString;
+    WithPeople: WideString;
+    WithReleaseType: WideString;
+    WithRuntimeGTE: Integer;
+    WithRuntimeLTE: Integer;
+    WithWatchMonetizationTypes: WideString;
+    WithWatchProviders: WideString;
+    WithoutCompanies: WideString;
+    WithoutGenres: WideString;
+    WithoutKeywords: WideString;
+    WithoutWatchProviders: WideString;
+    Year: Integer;
+  end;
+
+  TTMDBAPIDiscoverTVReq = record
+    AirDateGTE: TDateTime;
+    AirDateLTE: TDateTime;
+    FirstAirDateYear: Integer;
+    FirstAirDateGTE: TDateTime;
+    FirstAirDateLTE: TDAteTime;
+    IncludeAdult: Boolean;
+    IncludeNullFirstAirDates: Boolean;
+    Language: WideString;
+    ScreenedTheatrically: Boolean;
+    SortBy: WideString;
+    Timezone: WideString;
+    VoteAverageGTE: Single;
+    VoteAverageLTE: Single;
+    VoteCountGTE: Single;
+    VoteCountLTE: Single;
+    WatchRegion: WideString;
+    WithCompanies: WideString;
+    WithGenres: WideString;
+    WithKeywords: WideString;
+    WithNetworks: Integer;
+    WithOriginCountry: WideString;
+    WithOriginalLanguage: WideString;
+    WithRuntimeGTE: Integer;
+    WithRuntimeLTE: Integer;
+    WithStatus: WideString;
+    WithWatchMonetizationTypes: WideString;
+    WithWatchProviders: WideString;
+    WithoutCompoanies: WideString;
+    WithoutGenres: WideString;
+    WithoutKeywords: WideString;
+    WithoutWatchProviders: WideString;
+    WithType: WideString;
+  end;
+
   TTMDBAPIDiscover = class(TTMDBAPIService)
   public
-    //TODO: HUGE - COME BACK TO THIS LATER!!!
-    //  Probably better to pass an object containing parameters instead of
-    //  listing each and every one individually...
-
-    //Movie
-    //TV
+    function GetMovie(Params: TTMDBAPIDiscoverMovieReq; const Page: Integer = 1): ISuperObject;
+    function GetTV(Params: TTMDBAPIDiscoverTVReq; const Page: Integer = 1): ISuperObject;
   end;
 
   TTMDBAPIFind = class(TTMDBAPIService)
@@ -182,7 +266,7 @@ type
   TTMDBAPIKeywords = class(TTMDBAPIService)
   public
     function GetDetails(const KeywordID: Integer): ISuperObject;
-    //DEPRECATED: GetMovies
+    //DEPRECATED function GetMovies(): ISuperObject;
   end;
 
   TTMDBAPILists = class(TTMDBAPIService)
@@ -271,7 +355,7 @@ type
     function GetLatest: ISuperObject;
     function GetMovieCredits(const PersonID: Integer; const Language: String = ''): ISuperObject;
     function GetTVCredits(const PersonID: Integer; const Language: String = ''): ISuperObject;
-    //DEPRECATED: GetTaggedImages
+    //DEPRECATED function GetTaggedImages(): ISuperObject;
     function GetTranslations(const PersonID: Integer): ISuperArray;
   end;
 
@@ -408,9 +492,10 @@ type
 
   TTMDBAPITVEpisodeGroups = class(TTMDBAPIService)
   public
-    function GetEpisodeGroups(const TVEpisodeGroupID: String): ISuperObject;
+    function GetDetail(const TVEpisodeGroupID: String): ISuperObject;
   end;
 
+  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
   TTMDBAPIWatchProviders = class(TTMDBAPIService)
   public
     function GetAvailableRegions(const Language: String = ''): ISuperArray;
@@ -418,6 +503,12 @@ type
       const WatchRegion: String = ''): ISuperArray;
     function GetTVProviders(const Language: String = '';
       const WatchRegion: String = ''): ISuperArray;
+  end;
+
+  TTMDBAPIImages = class(TTMDBAPIService)
+  public
+    function GetImage(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean;
   end;
 
   TTMDBAPI = class(TComponent)
@@ -454,6 +545,7 @@ type
     FTrending: TTMDBAPITrending;
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
+    FImages: TTMDBAPIImages;
     FAppUserAgent: String;
     FSecondsLimit: Single;
     procedure SetAPIKey(const Value: String);
@@ -466,7 +558,7 @@ type
     function DeleteJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
     procedure SetSecondsLimit(const Value: Single);
-
+    function GetWatchProviders: TTMDBAPIWatchProviders;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -505,15 +597,52 @@ type
     property TVSeasons: TTMDBAPITVSeasons read FTVSeasons;
     property TVEpisodes: TTMDBAPITVEpisodes read FTVEpisodes;
     property TVEpisodeGroups: TTMDBAPITVEpisodeGroups read FTVEpisodeGroups;
-    property WatchProviders: TTMDBAPIWatchProviders read FWatchProviders;
-
+    //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
+    property WatchProviders: TTMDBAPIWatchProviders read GetWatchProviders;
+    property Images: TTMDBAPIImages read FImages;
   end;
+
+function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
+function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
+function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String; overload;
+function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String; overload;
 
 implementation
 
 type
   TIdHTTPAccess = class(TIdHTTP)
   end;
+
+function URLCombine(P1, P2: String; const Delim: String = '/'): String;
+var
+  T: String;
+begin
+  //Last char of P1 - no delimiter
+  T:= Copy(P1, Length(P1), 1);
+  if T = Delim then
+    Delete(P1, Length(P1), 1);
+  //First char of P2 - with delimiter
+  T:= Copy(P2, 1, 1);
+  if T <> Delim then
+    P2:= Delim + P2;
+  //Combine both strings
+  Result:= Concat(P1, P2);
+end;
+
+function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String;
+begin
+  Result:= URLCombine(P1, IntToStr(P2));
+end;
+
+function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String;
+begin
+  Result:= URLCombine(IntToStr(P1), P2);
+end;
+
+function URLCombine(P1, P2: Integer; const Delim: String = '/'): String;
+begin
+  Result:= URLCombine(IntToStr(P1), P2);
+end;
 
 { TTMDBAPIService }
 
@@ -536,12 +665,23 @@ end;
 
 { TTMDBAPIAccount }
 
+function TTMDBAPIAccount.GetAccountInfo: ISuperObject;
+var
+  U: String;
+begin
+  //NOTE: This is an UNDOCUMENTED API call which appears to be the ONLY place
+  //  where you can obtain your "account_id" to use in further account requests.
+  //https://www.themoviedb.org/talk/5f5a5b82ec0c580035a457fd    (Bottom of page)
+  U:= 'account';
+  Result:= FOwner.GetJSON(U);
+end;
+
 function TTMDBAPIAccount.GetDetails(const AccountID: Integer;
   const SessionID: String): ISuperObject;
 var
   U, P: String;
 begin
-  U:= 'account/'+IntToStr(AccountID);
+  U:= URLCombine('account', AccountID);
   AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
 end;
@@ -557,9 +697,10 @@ begin
   O.S['media_type']:= MediaType;
   O.I['media_id']:= MediaID;
   O.B['favorite']:= Favorite;
-  U:= 'account/'+IntToStr(AccountID)+'/favorite';
+  U:= URLCombine('account', AccountID);
+  U:= URLCombine(U, 'favorite');
   AddParam(P, 'session_id', SessionID);
-  Result:= Fowner.PostJSON(U, P, O);
+  Result:= FOwner.PostJSON(U, P, O);
 end;
 
 function TTMDBAPIAccount.AddToWatchlist(const AccountID: Integer;
@@ -573,9 +714,10 @@ begin
   O.S['media_type']:= MediaType;
   O.I['media_id']:= MediaID;
   O.B['watchlist']:= Watchlist;
-  U:= 'account/'+IntToStr(AccountID)+'/watchlist';
+  U:= URLCombine('account', AccountID);
+  U:= URLCombine(U, '');
   AddParam(P, 'session_id', SessionID);
-  Result:= Fowner.PostJSON(U, P, O);
+  Result:= FOwner.PostJSON(U, P, O);
 end;
 
 function TTMDBAPIAccount.GetFavoriteMovies(const AccountID: Integer;
@@ -903,6 +1045,22 @@ var
 begin
   U:= 'credit/'+IntToStr(CreditID);
   Result:= FOwner.GetJSON(U, '');
+end;
+
+{ TTMDBAPIDiscover }
+
+function TTMDBAPIDiscover.GetMovie(Params: TTMDBAPIDiscoverMovieReq;
+  const Page: Integer): ISuperObject;
+begin
+    //TODO: HUGE - COME BACK TO THIS LATER!!!
+
+end;
+
+function TTMDBAPIDiscover.GetTV(Params: TTMDBAPIDiscoverTVReq;
+  const Page: Integer): ISuperObject;
+begin
+    //TODO: HUGE - COME BACK TO THIS LATER!!!
+
 end;
 
 { TTMDBAPIFind }
@@ -2156,7 +2314,7 @@ end;
 
 { TTMDBAPITVEpisodeGroups }
 
-function TTMDBAPITVEpisodeGroups.GetEpisodeGroups(
+function TTMDBAPITVEpisodeGroups.GetDetail(
   const TVEpisodeGroupID: String): ISuperObject;
 var
   U: String;
@@ -2199,6 +2357,37 @@ begin
   Result:= FOwner.GetJSON(U, P).A['results'];
 end;
 
+{ TTMDBAPIImages }
+
+function TTMDBAPIImages.GetImage(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+var
+  U: String;
+  S: TStringStream;
+  Enc: TBase64Encoding;
+begin
+  //UNTESTED
+  //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
+  Result:= False;
+  U:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
+  U:= URLCombine(U, Size);
+  U:= URLCombine(U, Path);
+  S:= TStringStream.Create;
+  try
+    FOwner.FHTTP.Get(U, S);
+    S.Position:= 0;
+    Enc:= TBase64Encoding.Create(0);
+    try
+      Base64:= Enc.Encode(S.DataString);
+      Result:= True;
+    finally
+      Enc.Free;
+    end;
+  finally
+    S.Free;
+  end;
+end;
+
 { TTMDBAPI }
 
 constructor TTMDBAPI.Create(AOwner: TComponent);
@@ -2211,7 +2400,6 @@ begin
 
   FReqMsec:= GetTickCount;
 
-  //TODO: HTTPS
   SSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(FHTTP);
   SSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
   SSEIO.SSLOptions.Mode := sslmClient;
@@ -2247,12 +2435,12 @@ begin
   FTVEpisodes:= TTMDBAPITVEpisodes.Create(Self);
   FTVEpisodeGroups:= TTMDBAPITVEpisodeGroups.Create(Self);
   FWatchProviders:= TTMDBAPIWatchProviders.Create(Self);
-
+  FImages:= TTMDBAPIImages.Create(Self);
 end;
 
 destructor TTMDBAPI.Destroy;
 begin
-
+  FreeAndNil(FImages);
   FreeAndNil(FWatchProviders);
   FreeAndNil(FTVEpisodeGroups);
   FreeAndNil(FTVEpisodes);
@@ -2292,15 +2480,25 @@ begin
   Result:= 10;
 end;
 
+function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
+begin
+  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
+
+  //TODO: Raise a special exception here which forces developers to
+  //  explicitly handle / hide the exception in order to access features.
+
+
+
+  Result:= FWatchProviders;
+end;
+
 procedure TTMDBAPI.PrepareJSONRequest;
 begin
   FHTTP.Request.Accept:= 'application/json';
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
-  //TODO: API token header if applicable...
-  //FHTTP.Request.RawHeaders.Values['Access-Token-Auth']:= FAPIReadAccessToken;
+  //TODO: Conditionally include access token depending on API auth method...
   FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
-
 end;
 
 function TTMDBAPI.GetJSON(const Req, Params: String): ISuperObject;
@@ -2314,6 +2512,7 @@ begin
   R:= Req;
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
+  //TODO: Conditionally include API key depending on API auth method...
   U:= TIdURI.URLEncode(TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params);
   S:= FHTTP.Get(U);
   Result:= SO(S);
@@ -2332,6 +2531,7 @@ begin
   R:= Req;
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
+  //TODO: Conditionally include API key depending on API auth method...
   U:= TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params;
   B:= TStringStream.Create;
   try
@@ -2359,6 +2559,7 @@ begin
   R:= Req;
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
+  //TODO: Conditionally include API key depending on API auth method...
   U:= TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params;
   B:= TStringStream.Create;
   Res:= TStringStream.Create;
@@ -2366,7 +2567,8 @@ begin
     Body.SaveTo(B, True);
     B.Position:= 0;
 
-    //NOTE: TIdHTTP.Delete does not support request body...
+    //NOTE: TIdHTTP.Delete does not support request body, so we
+    //  take a shortcut and directly call DoRequest to include a body...
     TIdHTTPAccess(FHTTP).DoRequest('DELETE', U, B, Res, []);
     Res.Position:= 0;
     S:= Res.DataString;
