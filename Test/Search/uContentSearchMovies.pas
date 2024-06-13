@@ -6,10 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls,
-  {$IFDEF USE_INTF}
   JD.TMDB.Intf,
-  {$ENDIF}
-  XSuperObject;
+  JD.TMDB.Common;
 
 type
   TfrmContentSearchMovies = class(TfrmContentPageBase)
@@ -31,34 +29,52 @@ type
     Panel14: TPanel;
     Label15: TLabel;
     txtSearchMoviesYear: TEdit;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
     lblTitle: TLabel;
     lblReleaseDate: TLabel;
     lblGenres: TLabel;
     lblTagline: TLabel;
     txtOverview: TMemo;
+    TabSheet2: TTabSheet;
+    lblFavorite: TLabel;
+    lblWatchlist: TLabel;
+    lblRating: TLabel;
+    TabSheet3: TTabSheet;
+    TabSheet4: TTabSheet;
+    TabSheet5: TTabSheet;
+    TabSheet6: TTabSheet;
+    TabSheet7: TTabSheet;
+    lblIMDB: TLabel;
+    lblWikidata: TLabel;
+    lblFacebook: TLabel;
+    lblInstagram: TLabel;
+    lblTwitter: TLabel;
+    TabSheet8: TTabSheet;
+    lstKeywords: TListBox;
+    TabSheet9: TTabSheet;
+    TabSheet10: TTabSheet;
+    TabSheet11: TTabSheet;
+    TabSheet12: TTabSheet;
+    TabSheet13: TTabSheet;
+    TabSheet14: TTabSheet;
+    TabSheet15: TTabSheet;
+    lstCredits: TListView;
+    ListView1: TListView;
+    ListView2: TListView;
+    procedure FormDestroy(Sender: TObject);
   private
-    {$IFDEF USE_INTF}
     FDetail: ITMDBMovieDetail;
-    {$ELSE}
-    FDetail: ISuperObject;
-    {$ENDIF}
   protected
+    function Page: ITMDBPage; override;
     procedure SetupCols; override;
     procedure PrepSearch; override;
-    {$IFDEF USE_INTF}
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetPage: ITMDBPage; override;
     function GetItem(const Index: Integer): ITMDBPageItem; override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    {$ELSE}
-    function GetData(const APageNum: Integer): ISuperObject; override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ISuperObject); override;
-    {$ENDIF}
     procedure HideDetail; override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
   end;
 
 var
@@ -76,11 +92,11 @@ uses
 procedure TfrmContentSearchMovies.PrepSearch;
 begin
   inherited;
+
   //TODO: This should rather be fetching "Primary Translations"...
   frmTMDBTestMain.ListLanguages(cboSearchMoviesLanguage.Items);
 
-
-  //TODO: Populate regions
+  frmTMDBTestMain.ListRegions(cboSearchMoviesRegion.Items);
 
 end;
 
@@ -94,7 +110,6 @@ begin
   AddCol('Description', 700);
 end;
 
-{$IFDEF USE_INTF}
 function GetGenres(O: ITMDBMovieDetail): String;
 var
   X: Integer;
@@ -106,38 +121,26 @@ begin
     Result:= Result + O.Genres[X].Name;
   end;
 end;
-{$ELSE}
-function GetGenres(O: ISuperObject): String;
-var
-  X: Integer;
-  A: ISuperArray;
-begin
-  Result:= '';
-  A:= O.A['genres'];
-  for X := 0 to A.Length-1 do begin
-    if Result <> '' then
-      Result:= Result + ', ';
-    Result:= Result + A.O[X].S['name'];
-  end;
-end;
-{$ENDIF}
 
-{$IFDEF USE_INTF}
+procedure TfrmContentSearchMovies.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FDetail:= nil;
+end;
+
 function TfrmContentSearchMovies.GetData(const APageNum: Integer): ITMDBPage;
+var
+  Q, L, R, PRY, Y: String;
+  A: Boolean;
 begin
-  Result:= API.Search.SearchMovies(txtSearchMoviesQuery.Text, cboSearchMoviesAdult.ItemIndex = 1,
-    cboSearchMoviesLanguage.Text, cboSearchMoviesRegion.Text, txtSearchMoviesPrimaryReleaseYear.Text,
-    txtSearchMoviesYear.Text, APageNum);
-end;
-
-function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBPageItem;
-begin
-  Result:= ITMDBMovieItem(inherited GetItem(Index));
-end;
-
-function TfrmContentSearchMovies.GetPage: ITMDBPage;
-begin
-  Result:= ITMDBMoviePage(inherited GetPage);
+  inherited;
+  Q:= txtSearchMoviesQuery.Text;
+  A:= cboSearchMoviesAdult.ItemIndex = 1;
+  L:= cboSearchMoviesLanguage.Text;
+  R:= cboSearchMoviesRegion.Text;
+  PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
+  Y:= txtSearchMoviesYear.Text;
+  Result:= API.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
 end;
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
@@ -145,107 +148,116 @@ procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
 var
   ID: Integer;
   O: ITMDBMovieItem;
+  Inc: TTMDBMovieRequests;
+  X: Integer;
+  K: ITMDBKeywordItem;
+  //I: TListItem;
+  //C: ITMDBCreditItem;
 begin
   inherited;
+  FDetail:= nil;
+  pDetail.Visible:= True;
+  pDetail.Top:= 1;
   PrepAPI;
   O:= ITMDBMovieItem(Obj);
   ID:= O.ID;
-  FDetail:= API.Movies.GetDetails(ID);
+  Inc:= [mrKeywords];
+  FDetail:= API.Movies.GetDetails(ID, Inc);
 
+  //Details
   lblTitle.Caption:= FDetail.Title;
   lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate);
   lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
   txtOverview.Lines.Text:= FDetail.Overview;
   lblTagline.Caption:= FDetail.Tagline;
 
+  //Account States
+  if FDetail.AppendedAccountStates.Favorite then
+    lblFavorite.Caption:= 'Favorite: TRUE'
+  else
+    lblFavorite.Caption:= 'Favorite: FALSE';
+  if FDetail.AppendedAccountStates.Watchlist then
+    lblWatchlist.Caption:= 'Watchlist: TRUE'
+  else
+    lblWatchlist.Caption:= 'Watchlist: FALSE';
+  lblRating.Caption:= 'Rating: '+FormatFloat('0.0', FDetail.AppendedAccountStates.RatedValue);
+
+  //Alternative Titles
+
+  //Changes
+
+  //Credits
+  lstCredits.Items.Clear;
+
+  //External IDs
+
+  //Images
+
+  //Keywords
+  lstKeywords.Items.Clear;
+  for X := 0 to FDetail.AppendedKeywords.Count-1 do begin
+    K:= FDetail.AppendedKeywords[X];
+    lstKeywords.Items.Add(K.Name);
+  end;
+
+  //Lists
+
+  //Recommendations
+
+  //Release Dates
+
+  //Reviews
+
+  //Similar
+
+  //Translations
+
+  //Videos
+
 end;
 
-procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
-begin
-  inherited;
-  //TODO: Navigate to movie details tab...
-
-end;
-
-procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBPageItem;
 var
-  GenreID: Integer;
-  Genre: String;
-  O: ITMDBMovieItem;
+  P: ITMDBMoviePage;
 begin
-  inherited;
-  O:= ITMDBMovieItem(Obj);
-  Item.Caption:= O.Title;
-  Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
-
-  GenreID:= O.Genres[0].ID;
-  Genre:= frmTMDBTestMain.MovieGenreName(GenreID);
-  Item.SubItems.Add(Genre);
-
-  Item.SubItems.Add(FormatDateTime('yyyy-mm-dd', O.ReleaseDate));
-  Item.SubItems.Add(O.Overview);
+  P:= ITMDBMoviePage(Page);
+  Result:= P.GetItem(Index);
 end;
-
-{$ELSE}
-function TfrmContentSearchMovies.GetData(const APageNum: Integer): ISuperObject;
-begin
-  Result:= API.Search.SearchMovies(txtSearchMoviesQuery.Text, cboSearchMoviesAdult.ItemIndex = 1,
-    cboSearchMoviesLanguage.Text, txtSearchMoviesPrimaryReleaseYear.Text, PageNum,
-    cboSearchMoviesRegion.Text, txtSearchMoviesYear.Text);
-end;
-
-procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ISuperObject);
-var
-  ID: Integer;
-begin
-  inherited;
-  PrepAPI;
-  ID:= Obj.I['id'];
-  FDetail:= Self.API.Movies.GetDetails(ID);
-
-  lblTitle.Caption:= FDetail.S['title'];
-  lblReleaseDate.Caption:= 'Release Date: '+FDetail.S['release_date'];
-  lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
-  txtOverview.Lines.Text:= FDetail.S['overview'];
-  lblTagline.Caption:= FDetail.S['tagline'];
-
-end;
-
-procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ISuperObject);
-begin
-  inherited;
-  //TODO: Navigate to movie details tab...
-
-end;
-
-procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ISuperObject);
-var
-  GenreID: Integer;
-  Genre: String;
-begin
-  inherited;
-  Item.Caption:= Obj.S['title'];
-  Item.SubItems.Add(FormatFloat('0.000', Obj.F['popularity']));
-
-  GenreID:= Obj.A['genre_ids'].I[0];
-  Genre:= frmTMDBTestMain.MovieGenreName(GenreID);
-
-  Item.SubItems.Add(Genre);
-  Item.SubItems.Add(Obj.S['release_date']);
-  Item.SubItems.Add(Obj.S['overview']);
-end;
-
-{$ENDIF}
 
 procedure TfrmContentSearchMovies.HideDetail;
 begin
   inherited;
   FDetail:= nil;
+end;
+
+procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
+  Item: TListItem; Obj: ITMDBPageItem);
+begin
+  inherited;
+  //TODO: Navigate to movie details tab...
+
+end;
+
+function TfrmContentSearchMovies.Page: ITMDBPage;
+begin
+  Result:= ITMDBMoviePage(inherited Page);
+end;
+
+procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;
+  Item: TListItem; Obj: ITMDBPageItem);
+var
+  O: ITMDBMovieItem;
+begin
+  inherited;
+  O:= Obj as ITMDBMovieItem; // ITMDBMovieItem(Obj); //TODO: Can we not cast interface as its ancestor?
+  Item.Caption:= O.Title; //TODO: ACCESS VIOLATION
+  Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
+  if O.Genres.Count > 0 then
+    Item.SubItems.Add(O.Genres[0].Name)
+  else
+    Item.SubItems.Add('(Unknown)');
+  Item.SubItems.Add(FormatDateTime('yyyy-mm-dd', O.ReleaseDate));
+  Item.SubItems.Add(O.Overview);
 end;
 
 end.

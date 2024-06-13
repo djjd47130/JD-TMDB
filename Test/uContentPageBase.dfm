@@ -2,8 +2,9 @@ inherited frmContentPageBase: TfrmContentPageBase
   Caption = 'Content Page Base'
   ClientHeight = 501
   ClientWidth = 910
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitTop = -6
   ExplicitWidth = 926
   ExplicitHeight = 540
   PixelsPerInch = 96
@@ -128,8 +129,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       Default = True
       TabOrder = 0
       OnClick = btnApplyClick
-      ExplicitLeft = 4
-      ExplicitTop = 475
     end
   end
 end

@@ -13,14 +13,16 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/reference/intro/getting-started
 
   TODO:
+  - Rename "Service" to "Namespace" in respect to TMDB's docs
+  - Access Token authentication method (Already working?)
+  - User authentication - Requests implemented, but requires more design
+  - Fetching images using standard image sizes
   - Discover requests - very huge concept
   - Change requests - very dynamic and complex concept
-  - Fetching images using standard image sizes
-  - Access Token authentication method
-  - User authentication
-  - Rate limiting
+  - Rate limiting - enforce time delays between requests
+  - Watch Providers - enforce attribution to "JustWatch"
 
-  REMARKS
+  REMARKS:
   - This unit *SHOULD* be fully functional at this point, with the exception
     of a few specific services and capabilities missing.
 
@@ -32,9 +34,11 @@ uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   Winapi.Windows,
   XSuperObject,
+  JD.TMDB.Common,
   IdURI, IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL,
-  System.NetEncoding;
+  System.NetEncoding,
+  Clipbrd;
 
 
 { TMDB API HTTP Constants }
@@ -42,17 +46,6 @@ uses
 const
   TMDB_API_ROOT = 'https://api.themoviedb.org/3/';
   TMDB_API_USERAGENT = 'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-TMDB)';
-
-
-
-{ TMDB Error Code Constants }
-
-const
-  TMDB_ERR_SUCCESS = 1;
-  TMDB_ERR_INVALID_SERVICE = 2;
-  TMDB_ERR_AUTH_FAILED = 3;
-  TMDB_ERR_INVALID_FORMAT = 4;
-  //TODO: All the way to code 47...
 
 
 type
@@ -71,6 +64,7 @@ type
   public
     function GetAccountInfo(): ISuperObject;
     function GetDetails(const AccountID: Integer; const SessionID: String = ''): ISuperObject;
+    function GetDetailsBySession(const SessionID: String): ISuperObject;
     function AddFavorite(const AccountID: Integer;
       const MediaType: String; const MediaID: Integer; const Favorite: Boolean;
       const SessionID: String = ''): ISuperObject;
@@ -507,6 +501,7 @@ type
 
   TTMDBAPIImages = class(TTMDBAPIService)
   public
+    //TODO
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean;
   end;
@@ -514,6 +509,7 @@ type
   TTMDBAPI = class(TComponent)
   private
     FHTTP: TIdHTTP;
+    FSSEIO: TIdSSLIOHandlerSocketOpenSSL;
     FReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
@@ -682,6 +678,16 @@ var
   U, P: String;
 begin
   U:= URLCombine('account', AccountID);
+  AddParam(P, 'session_id', SessionID);
+  Result:= FOwner.GetJSON(U, P);
+end;
+
+function TTMDBAPIAccount.GetDetailsBySession(
+  const SessionID: String): ISuperObject;
+var
+  U, P: String;
+begin
+  U:='account';
   AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
 end;
@@ -1301,11 +1307,16 @@ function TTMDBAPIMovies.GetDetails(const MovieID: Integer; const AppendToRespons
   Language: String): ISuperObject;
 var
   U, P: String;
+  S: String;
 begin
   U:= 'movie/'+IntToStr(MovieID);
   AddParam(P, 'append_to_response', AppendToResponse);
   AddParam(P, 'language', Language);
   Result:= FOwner.GetJSON(U, P);
+  S:= Result.AsJSON(True);
+  Clipboard.AsText:= S;
+  //TODO: When using append_to_response, why does response NOT include data?!
+
 end;
 
 function TTMDBAPIMovies.GetAccountStates(const MovieID: Integer; const SessionID,
@@ -2368,7 +2379,7 @@ var
 begin
   //UNTESTED
   //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
-  Result:= False;
+  //Result:= False;
   U:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
   U:= URLCombine(U, Size);
   U:= URLCombine(U, Path);
@@ -2391,8 +2402,6 @@ end;
 { TTMDBAPI }
 
 constructor TTMDBAPI.Create(AOwner: TComponent);
-var
-  SSEIO: TIdSSLIOHandlerSocketOpenSSL;
 begin
   inherited;
   FHTTP:= TIdHTTP.Create(nil);
@@ -2400,12 +2409,12 @@ begin
 
   FReqMsec:= GetTickCount;
 
-  SSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(FHTTP);
-  SSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
-  SSEIO.SSLOptions.Mode := sslmClient;
-  SSEIO.SSLOptions.VerifyMode := [];
-  SSEIO.SSLOptions.VerifyDepth := 0;
-  FHTTP.IOHandler := SSEIO;
+  FSSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  FSSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
+  FSSEIO.SSLOptions.Mode := sslmClient;
+  FSSEIO.SSLOptions.VerifyMode := [];
+  FSSEIO.SSLOptions.VerifyDepth := 0;
+  FHTTP.IOHandler := FSSEIO;
 
   FAccount:= TTMDBAPIAccount.Create(Self);
   FAuthentication:= TTMDBAPIAuthentication.Create(Self);
@@ -2470,6 +2479,7 @@ begin
   FreeAndNil(FAuthentication);
   FreeAndNil(FAccount);
 
+  FreeAndNil(FSSEIO);
   FreeAndNil(FHTTP);
   inherited;
 end;

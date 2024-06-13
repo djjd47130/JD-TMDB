@@ -322,7 +322,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Height = 95
               Align = alClient
               TabOrder = 0
-              object Label5: TLabel
+              object lblUserName: TLabel
                 AlignWithMargins = True
                 Left = 4
                 Top = 4
@@ -331,11 +331,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 Align = alTop
                 AutoSize = False
                 Caption = 'Username'
-                ExplicitLeft = 8
-                ExplicitTop = 12
-                ExplicitWidth = 201
+                ExplicitLeft = 0
               end
-              object Label6: TLabel
+              object lblUserFullName: TLabel
                 AlignWithMargins = True
                 Left = 4
                 Top = 28
@@ -348,7 +346,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 ExplicitTop = 71
                 ExplicitWidth = 181
               end
-              object Label7: TLabel
+              object lblUserSessionID: TLabel
                 AlignWithMargins = True
                 Left = 4
                 Top = 52
@@ -357,6 +355,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 Align = alTop
                 AutoSize = False
                 Caption = 'Session ID'
+                OnDblClick = lblUserSessionIDDblClick
                 ExplicitLeft = 3
                 ExplicitTop = 95
                 ExplicitWidth = 181
@@ -377,8 +376,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
                 Width = 76
                 Height = 87
                 Align = alClient
+                OnClick = imgUserAvatarClick
                 ExplicitLeft = 8
-                ExplicitHeight = 77
               end
             end
           end

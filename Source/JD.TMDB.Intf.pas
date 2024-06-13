@@ -18,130 +18,8 @@ interface
 
 uses
   System.Classes, System.SysUtils,
-  XSuperObject;
-
-type
-
-  { Common Types }
-
-  /// <summary>
-  /// Array of String, as used across TMDB library.
-  /// </summary>
-  TTMDBStrArray = TArray<WideString>;
-
-  /// <summary>
-  /// Array of Integer, as used across TMDB library.
-  /// </summary>
-  TTMDBIntArray = TArray<Integer>;
-
-  /// <summary>
-  /// Application / API Authentication Method
-  /// </summary>
-  TTMDBAuthMethod = (amAPIKey, amAccessToken);
-
-  /// <summary>
-  /// TMDB user Account Authentication
-  /// </summary>
-  TTMDBUserAuth = (uaUnauthorized, uaGuest, uaNormal, uaCredentials);
-
-  /// <summary>
-  /// Type of media content found in TMDB
-  /// </summary>
-  TTMDBMediaType = (mtMovie, mtTV, mtPerson);
-
-  /// <summary>
-  /// Type of list content found in TMDB
-  /// </summary>
-  TTMDBListType = (ltMovie, ltTVSeries, ltTVSeason, ltTVEpisode, ltPerson);
-
-  /// <summary>
-  /// Type of media release.
-  /// </summary>
-  TTMDBReleaseType = (rtUnknown = 0, rtPremiere = 1, rtTheatricalLimited = 2,
-    rtTheatrical = 3, rtDigital = 4, rtPhysical = 5, rtTV = 6);
-
-  TTMDBGender = (gNotSpecified = 0, gFemale = 1, gMale = 2, gNonBinary = 3);
-
-  TTMDBAPIEpisodeGroupType = (gtOrigAirDate = 1, gtAbsolute = 2, gtDVD = 3, gtDigital = 4,
-    gtStoryArc = 5, gtProduction = 6, gtTV = 7);
-
-
-
-type
-
-  /// <summary>
-  /// Type of movie details that can be returned with AppendToResponse
-  /// TODO: Some use pagination...
-  /// </summary>
-  TTMDBMovieRequest = (mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
-    mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
-    mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos);
-
-  /// <summary>
-  /// Set of TTMDBMovieRequest to define what to return with AppendToResponse
-  /// </summary>
-  TTMDBMovieRequests = set of TTMDBMovieRequest;
-
-const
-
-  TMDB_MOVIE_REQUEST: Array of WideString = ['account_states', 'alternative_titles',
-    'changes', 'credits', 'external_ids', 'images', 'keywords', 'lists',
-    'recommendations', 'release_dates', 'reviews', 'similar', 'translations',
-    'videos'];
-
-
-
-type
-
-  TTMDBTVRequest = (trAccountStates, trAggregateCredits, trAlternativeTitles,
-    trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
-    trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
-    trSimilar, trTranslations, trVideos);
-
-  TTMDBTVRequests = set of TTMDBTVRequest;
-
-const
-
-  TMDB_TV_REQUEST: Array of WideString = ['account_states', 'aggregate_credits',
-    'alternative_titles', 'changes', 'content_ratings', 'credits', 'episode_groups',
-    'external_ids', 'images', 'keywords', 'lists', 'recommendations', 'reviews',
-    'screened_theatrically', 'similar', 'translations', 'videos'];
-
-
-
-type
-
-  TTMDBPersonRequest = (pr);
-
-  TTMDBPersonRequests = set of TTMDBPersonRequest;
-
-
-
-type
-
-  /// <summary>
-  /// Type of episode group
-  /// </summary>
-  TTMDBTVEpisodeGroupType = (egtUnknown = 0, egtOriginalAirDate = 1,
-    egtAbsolute = 2, egtDVD = 3, egtDigital = 4, egtStoryArc = 5,
-    egtProduction = 6, egtTV = 7);
-
-  /// <summary>
-  /// Set of TTMDBEpisodeGroupType to define the type of episode group object.
-  /// </summary>
-  TTMDBTVEpisodeGroupTypes = set of TTMDBTVEpisodeGroupType;
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-
+  XSuperObject,
+  JD.TMDB.Common;
 
 
 
@@ -325,13 +203,13 @@ type
     function GetCount: Integer; stdcall;
     function GetTotalPages: Integer; stdcall;
     function GetTotalResults: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBPageItem; stdcall;
+    function GetPageItem(const Index: Integer): ITMDBPageItem; stdcall;
 
     property Page: Integer read GetPage;
     property Count: Integer read GetCount;
     property TotalPages: Integer read GetTotalPages;
     property TotalResults: Integer read GetTotalResults;
-    property Items[const Index: Integer]: ITMDBPageItem read GetItem; default;
+    property PageItems[const Index: Integer]: ITMDBPageItem read GetPageItem; default;
   end;
 
   /// <summary>
@@ -858,9 +736,11 @@ type
     ['{8C26B769-0488-47B8-BFBA-DA1D8DAA05E4}']
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBGenreItem; stdcall;
+    function GetMediaType: TTMDBMediaType; stdcall;
 
     property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBGenreItem read GetItem; default;
+    property MediaType: TTMDBMediaType read GetMediaType;
   end;
 
   /// <summary>
@@ -1130,10 +1010,9 @@ type
 
 
 
-
   { Lists Related }
 
-  //TODO: Terminology will be awkward referencing a list within a list...
+  //TODO: Terminology will be awkward referencing a list of Lists...
 
 
 
@@ -1750,7 +1629,6 @@ type
     function GetDescription: WideString;
     function GetFavoriteCount: Integer;
     function GetID: Integer;
-    function GetItemCount: Integer;
     function GetISO639_1: WideString;
     function GetListType: TTMDBListType;
     function GetName: WideString;
@@ -1759,12 +1637,12 @@ type
     property Description: WideString read GetDescription;
     property FavoriteCount: Integer read GetFavoriteCount;
     property ID: Integer read GetID;
-    property ItemCount: Integer read GetItemCount;
     property ISO639_1: WideString read GetISO639_1;
     property ListType: TTMDBListType read GetListType;
     property Name: WideString read GetName;
     property PosterPath: WideString read GetPosterPath;
   end;
+
 
 
 
@@ -1996,8 +1874,11 @@ type
   /// [DONE]
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
+    function GetAccountInfo: ISuperObject; stdcall; //TODO
+
     function GetDetails(AAccountID: Integer;
       ASessionID: WideString = ''): ITMDBAccountDetail; stdcall;
+    function GetDetailsBySession(const ASessionID: WideString): ITMDBAccountDetail; stdcall;
     function SetFavorite(const AccountID: Integer;
       const MediaType: TTMDBMediaType; const MediaID: Integer;
       const Favorite: Boolean; const SessionID: WideString = ''): ITMDBAccountAddFavoriteResult; stdcall;
@@ -2323,6 +2204,37 @@ type
 
 
 
+  { Cached Data }
+
+  ITMDBCache = interface
+    ['{7D0D9646-6136-48D8-8FC1-03A6950B670F}']
+    function GetConfig: ITMDBConfiguration; stdcall;
+    function GetCountries: ITMDBCountryList; stdcall;
+    //function GetJobs: ITMDBJobList; stdcall;
+    function GetLanguages: ITMDBLanguageList; stdcall;
+    //function GetPrimaryTranslations: ITMDBPrimaryTranslations; stdcall;
+    function GetTimezones: ITMDBTimezoneList; stdcall;
+    function GetMovieCerts: ITMDBCertificationCountries; stdcall;
+    function GetTVCerts: ITMDBCertificationCountries; stdcall;
+    function GetMovieGenres: ITMDBGenreList; stdcall;
+    function GetTVGenres: ITMDBGenreList; stdcall;
+
+    procedure RefreshAll; stdcall;
+    function MovieGenre(const ID: Integer): WideString; stdcall;
+    function TVGenre(const ID: Integer): WideString; stdcall;
+
+    property Config: ITMDBConfiguration read GetConfig;
+    property Countries: ITMDBCountryList read GetCountries;
+    //property Jobs: ITMDBJobList read GetJobs;
+    property Languages: ITMDBLanguageList read GetLanguages;
+    //property PrimaryTranslations: ITMDBPrimaryTranslations read GetPrimaryTranslations;
+    property Timezones: ITMDBTimezoneList read GetTimezones;
+    property MovieCerts: ITMDBCertificationCountries read GetMovieCerts;
+    property TVCerts: ITMDBCertificationCountries read GetTVCerts;
+    property MovieGenres: ITMDBGenreList read GetMovieGenres;
+    property TVGenres: ITMDBGenreList read GetTVGenres;
+  end;
+
 
 
   { Core Access }
@@ -2340,6 +2252,7 @@ type
     procedure SetAuthMethod(const Value: TTMDBAuthMethod); stdcall;
     function GetUserAuth: TTMDBUserAuth; stdcall;
     procedure SetUserAuth(const Value: TTMDBUserAuth); stdcall;
+    function GetCache: ITMDBCache; stdcall;
 
     { Services }
 
@@ -2378,6 +2291,7 @@ type
     property AccessToken: WideString read GetAccessToken write SetAccessToken;
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property UserAuth: TTMDBUserAuth read GetUserAuth write SetUserAuth;
+    property Cache: ITMDBCache read GetCache;
 
   end;
 

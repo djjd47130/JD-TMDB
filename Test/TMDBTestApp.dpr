@@ -14,7 +14,10 @@ uses
   uTabConfiguration in 'Configuration\uTabConfiguration.pas' {frmTabConfiguration},
   uContentSearchCollections in 'Search\uContentSearchCollections.pas' {frmContentSearchCollections},
   JD.TMDB.Intf in '..\Source\JD.TMDB.Intf.pas',
-  JD.TMDB.Impl in '..\Source\JD.TMDB.Impl.pas';
+  JD.TMDB.Impl in '..\Source\JD.TMDB.Impl.pas',
+  JD.TMDB.Common in '..\Source\JD.TMDB.Common.pas',
+  uTabGenres in 'Genres\uTabGenres.pas' {frmTabBase1},
+  uContentListBase in 'uContentListBase.pas' {frmContentBase1};
 
 {$R *.res}
 
@@ -23,5 +26,7 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
+  Application.CreateForm(TfrmTabBase1, frmTabBase1);
+  Application.CreateForm(TfrmContentBase1, frmContentBase1);
   Application.Run;
 end.
