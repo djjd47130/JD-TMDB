@@ -23,8 +23,7 @@ uses
   JD.TMDB.API, JD.TMDB.Intf,
   XSuperObject,
   XSuperJSON,
-  JD.TMDB.Common,
-  Clipbrd;
+  JD.TMDB.Common;
 
 type
 
@@ -1708,6 +1707,8 @@ type
     function LoginAsUser: ITMDBAuthSessionResult; stdcall;
     function LoginAsCreds(const Username, Password: WideString): ITMDBAuthSessionResult; stdcall;
     function Logout: Boolean; stdcall;
+
+    function RestoreSession(const SessionID: WideString): Boolean; stdcall;
 
     property AuthMethod: TTMDBUserAuth read GetAuthMethod write SetAuthMethod;
     property IsAuthenticated: Boolean read GetIsAuthenticated;
@@ -3880,12 +3881,9 @@ function TTMDBServiceMovies.GetDetails(const MovieID: Integer; const AppendToRes
 var
   O: ISuperObject;
   ATR: String;
-  S: String;
 begin
   ATR:= TMDBMovieRequestsToStr(AppendToResponse);
   O:= FOwner.FAPI.Movies.GetDetails(MovieID, ATR, Language, SessionID);
-  S:= O.AsJSON(True);
-  Clipboard.AsText:= S;
   Result:= TTMDBMovieDetail.Create(O, FOwner);
 end;
 
@@ -4833,8 +4831,10 @@ end;
 
 function TTMDBCache.GetCountries: ITMDBCountryList;
 begin
-  if FCountries = nil then
+  if FCountries = nil then begin
+
     FCountries:= FOwner.Configuration.GetCountries;
+  end;
   Result:= FCountries;
 end;
 
@@ -5095,6 +5095,23 @@ begin
   FSessionID:= '';
   FAccountDetail:= nil;
   Result:= True;
+end;
+
+function TTMDBLoginState.RestoreSession(const SessionID: WideString): Boolean;
+var
+  A: ITMDBAccountDetail;
+begin
+  Result:= False;
+  A:= FOwner.Account.GetDetails(0, SessionID);
+  if A <> nil then begin
+    Result:= A.ID > 0;
+    if Result then begin
+      FIsAuthenticated:= True;
+      FIsGuest:= False;
+      FSessionID:= SessionID;
+      FAccountDetail:= A;
+    end;
+  end;
 end;
 
 procedure TTMDBLoginState.SetAuthMethod(const Value: TTMDBUserAuth);

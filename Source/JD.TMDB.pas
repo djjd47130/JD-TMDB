@@ -1,5 +1,21 @@
 unit JD.TMDB;
 
+(*
+  TMDB API Wrapper for Delphi
+  Written by Jerry Dodge
+
+  ----------------------------------------------------------------------------
+  Core Component to install and use in Delphi projects
+  ----------------------------------------------------------------------------
+
+  IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
+
+  API Documentation:
+  https://developer.themoviedb.org/docs/getting-started
+  https://developer.themoviedb.org/reference/intro/getting-started
+
+*)
+
 interface
 
 uses
@@ -19,12 +35,19 @@ type
     procedure SetAPIKey(const Value: String);
     procedure SetAuthMethod(const Value: TTMDBAuthMethod);
     function GetCache: ITMDBCache;
+    function GetLoginState: ITMDBLoginState;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
     property Client: ITMDBClient read FTMDB;
     property Cache: ITMDBCache read GetCache;
+    property LoginState: ITMDBLoginState read GetLoginState;
+
+    function CountryName(const Code: String): String;
+    function LanguageName(const Code: String): String;
+    procedure ListLanguages(AList: TStrings);
+    procedure ListCountries(AList: TStrings);
   published
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
@@ -69,6 +92,11 @@ begin
   Result:= FTMDB.Cache;
 end;
 
+function TTMDB.GetLoginState: ITMDBLoginState;
+begin
+  Result:= FTMDB.LoginState;
+end;
+
 procedure TTMDB.SetAccessToken(const Value: String);
 begin
   FTMDB.AccessToken:= Value;
@@ -82,6 +110,50 @@ end;
 procedure TTMDB.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FTMDB.AuthMethod:= Value;
+end;
+
+function TTMDB.CountryName(const Code: String): String;
+var
+  C: ITMDBCountryItem;
+begin
+  Result:= Code;
+  C:= Cache.Countries.GetByCode(Code);
+  if C <> nil then
+    Result:= C.EnglishName;
+end;
+
+function TTMDB.LanguageName(const Code: String): String;
+var
+  L: ITMDBLanguageItem;
+begin
+  Result:= Code;
+  L:= Cache.Languages.GetByCode(Code);
+  if L <> nil then
+    Result:= L.EnglishName;
+end;
+
+procedure TTMDB.ListCountries(AList: TStrings);
+var
+  X: Integer;
+  O: ITMDBCountryItem;
+begin
+  AList.Clear;
+  for X := 0 to FTMDB.Cache.Countries.Count-1 do begin
+    O:= FTMDB.Cache.Countries[X];
+    AList.Append(O.ISO3166_1);
+  end;
+end;
+
+procedure TTMDB.ListLanguages(AList: TStrings);
+var
+  X: Integer;
+  O: ITMDBLanguageItem;
+begin
+  AList.Clear;
+  for X := 0 to FTMDB.Cache.Languages.Count-1 do begin
+    O:= FTMDB.Cache.Languages[X];
+    AList.Append(O.ISO639_1);
+  end;
 end;
 
 end.

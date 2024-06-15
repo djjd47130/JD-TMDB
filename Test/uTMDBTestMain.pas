@@ -15,7 +15,7 @@ uses
   uTabConfiguration,
   uTabSearch,
   uTabGenres,
-  Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu;
+  Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB;
 
 type
   TfrmTMDBTestMain = class(TForm)
@@ -69,6 +69,7 @@ type
     Panel5: TPanel;
     imgUserAvatar: TImage;
     btnLogout: TButton;
+    TMDB: TTMDB;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
@@ -81,7 +82,6 @@ type
     procedure btnRefreshCertsMoviesClick(Sender: TObject);
     procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure lblUserSessionIDDblClick(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -89,7 +89,6 @@ type
       Shift: TShiftState);
   private
     FAppSetup: ISuperObject;
-    FTMDB: ITMDBClient;
     FAuthMethod: Integer;
 
     procedure LoadSetup;
@@ -102,12 +101,10 @@ type
     procedure EmbedTabs;
     function GetAPIAuth: TTMDBAuthMethod;
     procedure SetAPIAuth(const Value: TTMDBAuthMethod);
+    procedure ShowUserInfo;
 
   public
     procedure PrepAPI;
-    function TMDB: ITMDBClient;
-    procedure ListLanguages(AList: TStrings);
-    procedure ListRegions(AList: TStrings);
 
     property APIAuth: TTMDBAuthMethod read GetAPIAuth write SetAPIAuth;
   end;
@@ -123,8 +120,6 @@ uses
 {$R *.dfm}
 
 procedure TfrmTMDBTestMain.FormCreate(Sender: TObject);
-var
-  X: Integer;
 begin
   {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown:= True;
@@ -135,16 +130,12 @@ begin
   gbUserLogin.Align:= alClient;
   CertPages.Align:= alClient;
 
-  FTMDB:= TTMDBClient.Create;
-  FTMDB.AuthMethod:= TTMDBAuthMethod.amAccessToken;
   FAuthMethod:= 2;
 
   EmbedTabs;
+  LoadSetup;
 
-  for X := 0 to Pages.PageCount-1 do
-    Pages.Pages[X].TabVisible:= False;
-  Pages.ActivePageIndex:= 0;
-  Services1Click(Services1);
+  Services1.Click;
 
   Width:= 1200;
   Height:= 800;
@@ -153,13 +144,7 @@ end;
 
 procedure TfrmTMDBTestMain.FormDestroy(Sender: TObject);
 begin
-  FTMDB:= nil;
   FAppSetup:= nil;
-end;
-
-procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
-begin
-  LoadSetup;
 end;
 
 procedure TfrmTMDBTestMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -185,6 +170,9 @@ begin
   txtAPIKey.Text:= FAppSetup.S['api_key'];
   txtAccessToken.Text:= FAppSetup.S['access_token'];
   APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
+
+  PrepAPI;
+
   Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
   C:= Pages.ActivePage.Controls[0];
   if C is TfrmTabBase then begin
@@ -192,6 +180,13 @@ begin
   end;
 
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
+
+  if (FAppSetup.S['session_id'] <> '') and (FAppSetup.B['session_guest'] = False) then begin
+    if TMDB.LoginState.RestoreSession(FAppSetup.S['session_id']) then begin
+      ShowUserInfo;
+    end;
+  end;
+
 end;
 
 procedure TfrmTMDBTestMain.SaveSetup;
@@ -202,6 +197,8 @@ begin
     FAppSetup.S['api_key']:= txtAPIKey.Text;
     FAppSetup.S['access_token']:= txtAccessToken.Text;
     FAppSetup.I['api_auth']:= Integer(APIAuth);
+    FAppSetup.S['session_id']:= TMDB.LoginState.SessionID;
+    FAppSetup.B['session_guest']:= TMDB.LoginState.IsGuest;
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
     C:= Pages.ActivePage.Controls[0];
     if C is TfrmTabBase then begin
@@ -234,47 +231,23 @@ begin
   ServiceClicked(AppSetup1);
 end;
 
-procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
+procedure TfrmTMDBTestMain.ShowUserInfo;
 var
-  Success: Boolean;
-  GS: ITMDBAuthGuestSessionResult;
-  US: ITMDBAuthSessionResult;
   D: ITMDBAccountDetail;
 begin
-  PrepAPI;
-  Success:= False;
-
-  case FAuthMethod of
-    0: begin
-      //Guest...
-      GS:= FTMDB.LoginState.LoginAsGuest;
-      Success:= GS.Success;
-    end;
-    1: begin
-      //Normal...
-      US:= FTMDB.LoginState.LoginAsUser;
-      Success:= US.Success;
-    end;
-    2: begin
-      //Credentials...
-      US:= FTMDB.LoginState.LoginAsCreds(txtAuthUser.Text, txtAuthPass.Text);
-      Success:= US.Success;
-    end;
-  end;
-  if Success then begin
-    pUser.Visible:= False;
+  if TMDB.LoginState.IsAuthenticated then begin
     btnLogin.Tag:= 1;
     gbUserInfo.Visible:= True;
     gbUserLogin.Visible:= False;
     gbUserInfo.Align:= alClient;
-    lblUserSessionID.Caption:= FTMDB.LoginState.SessionID;
-    if FTMDB.LoginState.IsGuest then begin
+    lblUserSessionID.Caption:= TMDB.LoginState.SessionID;
+    if TMDB.LoginState.IsGuest then begin
       lblUserName.Caption:= 'GUEST';
       lblUserFullName.Caption:= 'GUEST USER';
       lblUserAccountID.Caption:= '';
       btnUser.Text:= 'GUEST';
     end else begin
-      D:= FTMDB.LoginState.AccountDetail;
+      D:= TMDB.LoginState.AccountDetail;
       lblUserName.Caption:= D.UserName;
       lblUserFullName.Caption:= D.Name;
       lblUserAccountID.Caption:= IntToStr(D.ID);
@@ -285,17 +258,64 @@ begin
       //TODO: Gravatar...
     end;
   end else begin
+    btnLogin.Tag:= 0;
+    gbUserInfo.Visible:= False;
+    gbUserLogin.Visible:= True;
+    txtAuthUser.Text:= '';
+    txtAuthPass.Text:= '';
+    btnUser.Text:= 'User Login';
+  end;
+
+end;
+
+procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
+var
+  Success: Boolean;
+  GS: ITMDBAuthGuestSessionResult;
+  US: ITMDBAuthSessionResult;
+begin
+  PrepAPI;
+  Success:= False;
+
+  case FAuthMethod of
+    0: begin
+      //Guest...
+      GS:= TMDB.LoginState.LoginAsGuest;
+      Success:= GS.Success;
+    end;
+    1: begin
+      //Normal...
+      US:= TMDB.LoginState.LoginAsUser;
+      Success:= US.Success;
+    end;
+    2: begin
+      //Credentials...
+      US:= TMDB.LoginState.LoginAsCreds(txtAuthUser.Text, txtAuthPass.Text);
+      Success:= US.Success;
+    end;
+  end;
+  if Success then begin
+    pUser.Visible:= False;
+
+    ShowUserInfo;
+
+  end else begin
     //TODO: Login failed...
   end;
 
 end;
 
 procedure TfrmTMDBTestMain.EmbedTabs;
+var
+  X: Integer;
 begin
   EmbedTab(TfrmTabConfiguration);
-  EmbedTab(TfrmTabSearch);
   EmbedTab(TfrmTabGenres);
+  EmbedTab(TfrmTabSearch);
 
+  for X := 0 to Pages.PageCount-1 do
+    Pages.Pages[X].TabVisible:= False;
+  Pages.ActivePageIndex:= 0;
 end;
 
 function TfrmTMDBTestMain.EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
@@ -335,9 +355,9 @@ end;
 
 procedure TfrmTMDBTestMain.PrepAPI;
 begin
-  FTMDB.APIKey:= txtAPIKey.Text;
-  FTMDB.AccessToken:= txtAccessToken.Text;
-  FTMDB.AuthMethod:= GetAPIAuth;
+  TMDB.APIKey:= txtAPIKey.Text;
+  TMDB.AccessToken:= txtAccessToken.Text;
+  TMDB.AuthMethod:= GetAPIAuth;
   //TODO: Test connection and authentication...
 
 end;
@@ -347,36 +367,8 @@ var
   O: ITMDBAuthValidateKeyResult;
 begin
   PrepAPI;
-  O:= FTMDB.Authentication.ValidateKey;
+  O:= TMDB.Client.Authentication.ValidateKey;
   ShowMessage('API Key Validation Result: '+O.StatusMessage);
-end;
-
-procedure TfrmTMDBTestMain.ListLanguages(AList: TStrings);
-var
-  X: Integer;
-  O: ITMDBLanguageItem;
-begin
-  //TODO: Move within component once implemented...
-  PrepAPI;
-  AList.Clear;
-  for X := 0 to FTMDB.Cache.Languages.Count-1 do begin
-    O:= FTMDB.Cache.Languages[X];
-    AList.Append(O.ISO639_1);
-  end;
-end;
-
-procedure TfrmTMDBTestMain.ListRegions(AList: TStrings);
-var
-  X: Integer;
-  O: ITMDBCountryItem;
-begin
-  //TODO: Move within component once implemented...
-  PrepAPI;
-  AList.Clear;
-  for X := 0 to FTMDB.Cache.Countries.Count-1 do begin
-    O:= FTMDB.Cache.Countries[X];
-    AList.Append(O.ISO3166_1);
-  end;
 end;
 
 procedure TfrmTMDBTestMain.btnLogoutClick(Sender: TObject);
@@ -384,13 +376,8 @@ begin
   pUser.Visible:= False;
   if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
     PrepAPI;
-    if FTMDB.GetLoginState.Logout then begin
-      btnLogin.Tag:= 0;
-      gbUserInfo.Visible:= False;
-      gbUserLogin.Visible:= True;
-      txtAuthUser.Text:= '';
-      txtAuthPass.Text:= '';
-      btnUser.Text:= 'User Login';
+    if TMDB.LoginState.Logout then begin
+      ShowUserInfo;
     end;
   end;
 end;
@@ -402,7 +389,6 @@ var
   X, Y: Integer;
   I: TListItem;
   G: TListGroup;
-  Country: ITMDBCountryItem;
 begin
   PrepAPI;
   Screen.Cursor:= crHourglass;
@@ -412,14 +398,10 @@ begin
       lstCertsMovies.Items.Clear;
       lstCertsMovies.Groups.Clear;
 
-      for X := 0 to FTMDB.Cache.MovieCerts.Count-1 do begin
-        C:= FTMDB.Cache.MovieCerts[X];
+      for X := 0 to TMDB.Cache.MovieCerts.Count-1 do begin
+        C:= TMDB.Cache.MovieCerts[X];
         G:= lstCertsMovies.Groups.Add;
-        Country:= FTMDB.Cache.Countries.GetByCode(C.CountryCode);
-        if Country <> nil then
-          G.Header:= Country.EnglishName
-        else
-          G.Header:= C.CountryCode;
+        G.Header:= TMDB.CountryName(C.CountryCode);
         for Y := 0 to C.Count-1 do begin
           O:= C[Y];
           I:= lstCertsMovies.Items.Add;
@@ -449,7 +431,6 @@ var
   X: Integer;
   I: TListItem;
   G: TListGroup;
-  Country: ITMDBCountryItem;
 begin
   Self.PrepAPI;
   Screen.Cursor:= crHourglass;
@@ -458,14 +439,10 @@ begin
     try
       Self.lstCertsTV.Items.Clear;
       Self.lstCertsTV.Groups.Clear;
-      for X := 0 to FTMDB.Cache.TVCerts.Count-1 do begin
-        C:= FTMDB.Cache.TVCerts[X];
+      for X := 0 to TMDB.Cache.TVCerts.Count-1 do begin
+        C:= TMDB.Cache.TVCerts[X];
         G:= lstCertsTV.Groups.Add;
-        Country:= FTMDB.Cache.Countries.GetByCode(C.CountryCode);
-        if Country <> nil then
-          G.Header:= Country.EnglishName
-        else
-          G.Header:= C.CountryCode;
+        G.Header:= TMDB.CountryName(C.CountryCode);
         for Y := 0 to C.Count-1 do begin
           O:= C[Y];
           I:= Self.lstCertsTV.Items.Add;
@@ -542,11 +519,6 @@ function TfrmTMDBTestMain.SetupFilename: String;
 begin
   Result:= ExtractFilePath(ParamStr(0));
   Result:= TPath.Combine(Result, 'AppConfig.json');
-end;
-
-function TfrmTMDBTestMain.TMDB: ITMDBClient;
-begin
-  Result:= FTMDB;
 end;
 
 procedure TfrmTMDBTestMain.txtAuthPassKeyUp(Sender: TObject; var Key: Word;

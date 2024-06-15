@@ -40,8 +40,8 @@ begin
     try
       lstGenreMovies.Items.Clear;
       lstGenreMovies.Groups.Clear;
-      for X := 0 to API.Cache.MovieGenres.Count-1 do begin
-        G:= API.Cache.MovieGenres[X];
+      for X := 0 to TMDB.Cache.MovieGenres.Count-1 do begin
+        G:= TMDB.Cache.MovieGenres[X];
         I:= lstGenreMovies.Items.Add;
         I.Caption:= G.Name;
         I.SubItems.Add(IntToStr(G.ID));

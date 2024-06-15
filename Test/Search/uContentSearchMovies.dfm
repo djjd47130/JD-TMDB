@@ -2,7 +2,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
   Caption = 'Search Movies'
   ClientHeight = 561
   ClientWidth = 1034
-  OnCreate = nil
   ExplicitWidth = 1050
   ExplicitHeight = 600
   PixelsPerInch = 96
@@ -44,7 +43,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         end>
       ExplicitTop = 35
       ExplicitWidth = 763
-      ExplicitHeight = 215
+      ExplicitHeight = 213
     end
     inherited pTop: TPanel
       Width = 769
@@ -63,7 +62,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         Top = 0
         Width = 769
         Height = 303
-        ActivePage = TabSheet11
+        ActivePage = TabSheet10
         Align = alClient
         MultiLine = True
         TabOrder = 0
@@ -153,6 +152,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet2: TTabSheet
           Caption = 'Account States'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lblFavorite: TLabel
             AlignWithMargins = True
             Left = 3
@@ -194,6 +197,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet3: TTabSheet
           Caption = 'Alternative Titles'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lstAltTitles: TListView
             AlignWithMargins = True
             Left = 3
@@ -220,10 +227,18 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet4: TTabSheet
           Caption = 'Changes'
           ImageIndex = 3
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TabSheet5: TTabSheet
           Caption = 'Credits'
           ImageIndex = 4
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lstCredits: TListView
             AlignWithMargins = True
             Left = 3
@@ -269,6 +284,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet6: TTabSheet
           Caption = 'External IDs'
           ImageIndex = 5
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lblIMDB: TLabel
             AlignWithMargins = True
             Left = 3
@@ -338,6 +357,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet7: TTabSheet
           Caption = 'Images'
           ImageIndex = 6
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object ListView2: TListView
             AlignWithMargins = True
             Left = 3
@@ -386,6 +409,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet9: TTabSheet
           Caption = 'Lists'
           ImageIndex = 8
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TabSheet10: TTabSheet
           Caption = 'Recommendations'
@@ -395,6 +422,9 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
           Caption = 'Release Dates'
           ImageIndex = 10
           ExplicitLeft = 6
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lstReleaseDates: TListView
             AlignWithMargins = True
             Left = 3
@@ -439,18 +469,34 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet12: TTabSheet
           Caption = 'Reviews'
           ImageIndex = 11
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TabSheet13: TTabSheet
           Caption = 'Similar'
           ImageIndex = 12
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TabSheet14: TTabSheet
           Caption = 'Translations'
           ImageIndex = 13
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TabSheet15: TTabSheet
           Caption = 'Videos'
           ImageIndex = 14
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
     end

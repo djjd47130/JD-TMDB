@@ -38,8 +38,7 @@ uses
   JD.TMDB.Common,
   IdURI, IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL,
-  System.NetEncoding,
-  Clipbrd;
+  System.NetEncoding;
 
 type
   TTMDBAPI = class;
@@ -1305,9 +1304,6 @@ begin
   AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
   S:= Result.AsJSON(True);
-  Clipboard.AsText:= S;
-  //TODO: When using append_to_response, why does response NOT include data?!
-
 end;
 
 function TTMDBAPIMovies.GetAccountStates(const MovieID: Integer; const SessionID,

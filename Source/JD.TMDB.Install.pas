@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes, System.SysUtils,
-  JD.TMDB.API;
+  JD.TMDB;
 
 procedure Register;
 
@@ -12,7 +12,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('TMDB', [TTMDBAPI]);
+  RegisterComponents('TMDB', [TTMDB]);
 end;
 
 end.

@@ -28,6 +28,8 @@ package dclJDTMDBLib;
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
+{$WARN DUPLICATE_CTOR_DTOR OFF}
+
 requires
   rtl,
   JDTMDBLib;

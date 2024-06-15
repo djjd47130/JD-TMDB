@@ -65,6 +65,7 @@ type
     lstReleaseDates: TListView;
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
     procedure LoadAccountStates;
@@ -102,9 +103,9 @@ begin
   inherited;
 
   //TODO: This should rather be fetching "Primary Translations"...
-  frmTMDBTestMain.ListLanguages(cboSearchMoviesLanguage.Items);
+  TMDB.ListLanguages(cboSearchMoviesLanguage.Items);
 
-  frmTMDBTestMain.ListRegions(cboSearchMoviesRegion.Items);
+  TMDB.ListCountries(cboSearchMoviesRegion.Items);
 
 end;
 
@@ -130,6 +131,12 @@ begin
   end;
 end;
 
+procedure TfrmContentSearchMovies.FormCreate(Sender: TObject);
+begin
+  inherited;
+  Pages.ActivePageIndex:= 0;
+end;
+
 procedure TfrmContentSearchMovies.FormDestroy(Sender: TObject);
 begin
   inherited;
@@ -148,7 +155,7 @@ begin
   R:= cboSearchMoviesRegion.Text;
   PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
   Y:= txtSearchMoviesYear.Text;
-  Result:= API.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
+  Result:= TMDB.Client.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
 end;
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
@@ -166,7 +173,7 @@ begin
     O:= ITMDBMovieItem(Obj);
     ID:= O.ID;
     Inc:= [mrKeywords, mrCredits, mrAlternativeTitles, mrAccountStates, mrReleaseDates];
-    FDetail:= API.Movies.GetDetails(ID, Inc, '', API.LoginState.SessionID);
+    FDetail:= TMDB.Client.Movies.GetDetails(ID, Inc, '', TMDB.LoginState.SessionID);
   finally
     Screen.Cursor:= crDefault;
   end;
@@ -217,7 +224,10 @@ end;
 procedure TfrmContentSearchMovies.LoadDetails;
 begin
   lblTitle.Caption:= FDetail.Title;
-  lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate);
+  if FDetail.ReleaseDate <> 0 then
+    lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate)
+  else
+    lblReleaseDate.Caption:= 'Release Date: (NONE)';
   lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
   txtOverview.Lines.Text:= FDetail.Overview;
   lblTagline.Caption:= FDetail.Tagline;
@@ -255,7 +265,7 @@ begin
       T:= AT[X];
       I:= lstAltTitles.Items.Add;
       I.Caption:= T.Title;
-      Country:= API.Cache.Countries.GetByCode(T.ISO3166_1);
+      Country:= TMDB.Cache.Countries.GetByCode(T.ISO3166_1);
       if Country <> nil then
         I.SubItems.Add(Country.EnglishName)
       else
@@ -337,7 +347,7 @@ begin
     for X := 0 to RD.Count-1 do begin
       RC:= RD[X];
       G:= lstReleaseDates.Groups.Add;
-      Country:= API.Cache.Countries.GetByCode(RC.CountryCode);
+      Country:= TMDB.Cache.Countries.GetByCode(RC.CountryCode);
       if Country = nil then
         G.Header:= RC.CountryCode
       else
@@ -429,7 +439,10 @@ begin
     Item.SubItems.Add(O.Genres[0].Name)
   else
     Item.SubItems.Add('(Unknown)');
-  Item.SubItems.Add(FormatDateTime('yyyy-mm-dd', O.ReleaseDate));
+  if O.ReleaseDate <> 0 then
+    Item.SubItems.Add(FormatDateTime('yyyy-mm-dd', O.ReleaseDate))
+  else
+    Item.SubItems.Add('');
   Item.SubItems.Add(O.Overview);
 end;
 

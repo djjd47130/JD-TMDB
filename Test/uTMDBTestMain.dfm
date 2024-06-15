@@ -15,7 +15,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Pages: TPageControl
@@ -36,14 +35,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     ParentFont = False
     TabHeight = 32
     TabOrder = 0
-    ExplicitWidth = 991
-    ExplicitHeight = 507
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
-      ExplicitLeft = 5
-      ExplicitWidth = 983
-      ExplicitHeight = 465
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -51,7 +45,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Height = 201
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 983
         object gbAPIAuthMethod: TGroupBox
           AlignWithMargins = True
           Left = 4
@@ -61,7 +54,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'API Authentication'
           TabOrder = 0
-          ExplicitHeight = 185
           object gbAPIAuthMethodAPIKey: TPanel
             Left = 2
             Top = 48
@@ -176,8 +168,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
-      ExplicitWidth = 983
-      ExplicitHeight = 465
       object CertPages: TPageControl
         Left = 0
         Top = 0
@@ -187,12 +177,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
-        ExplicitWidth = 983
-        ExplicitHeight = 419
         object tabCertsMovies: TTabSheet
           Caption = 'Movie Certifications'
-          ExplicitWidth = 975
-          ExplicitHeight = 386
           object btnRefreshCertsMovies: TButton
             AlignWithMargins = True
             Left = 3
@@ -204,7 +190,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsMoviesClick
-            ExplicitWidth = 969
           end
           object lstCertsMovies: TListView
             AlignWithMargins = True
@@ -233,15 +218,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitWidth = 969
-            ExplicitHeight = 346
           end
         end
         object tabCertsTV: TTabSheet
           Caption = 'TV Certifications'
           ImageIndex = 1
-          ExplicitWidth = 975
-          ExplicitHeight = 386
           object btnRefreshCertsTV: TButton
             AlignWithMargins = True
             Left = 3
@@ -253,7 +234,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsTVClick
-            ExplicitWidth = 969
           end
           object lstCertsTV: TListView
             AlignWithMargins = True
@@ -282,8 +262,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-            ExplicitWidth = 969
-            ExplicitHeight = 346
           end
         end
       end
@@ -297,8 +275,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = -6
-    ExplicitWidth = 991
     object btnUser: TJDFontButton
       AlignWithMargins = True
       Left = 797
@@ -342,8 +318,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 816
-      ExplicitTop = 0
     end
   end
   object pUser: TPanel
@@ -368,7 +342,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 302
       object Panel3: TPanel
         Left = 2
         Top = 18
@@ -377,8 +350,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = 1
-        ExplicitTop = 20
         object RadioButton3: TRadioButton
           Tag = 1
           AlignWithMargins = True
@@ -402,8 +373,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Caption = 'Guest'
           TabOrder = 1
           OnClick = UserAuthMethodClick
-          ExplicitLeft = 243
-          ExplicitTop = 0
         end
         object rbCreds: TRadioButton
           Tag = 2
@@ -428,8 +397,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 1
-        ExplicitTop = 26
         DesignSize = (
           289
           53)
@@ -458,8 +425,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 4
-        ExplicitTop = 101
         DesignSize = (
           289
           60)
@@ -495,9 +460,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Caption = 'Login'
         TabOrder = 3
         OnClick = btnLoginClick
-        ExplicitLeft = 7
-        ExplicitTop = 157
-        ExplicitWidth = 283
       end
     end
     object gbUserInfo: TGroupBox
@@ -516,8 +478,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       ParentFont = False
       TabOrder = 1
       Visible = False
-      ExplicitLeft = 460
-      ExplicitTop = 20
       object Panel4: TPanel
         AlignWithMargins = True
         Left = 143
@@ -527,10 +487,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = 95
-        ExplicitTop = 23
-        ExplicitWidth = 301
-        ExplicitHeight = 163
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
@@ -592,7 +548,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 165
         object imgUserAvatar: TImage
           AlignWithMargins = True
           Left = 3
@@ -619,9 +574,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Caption = 'Logout'
         TabOrder = 2
         OnClick = btnLogoutClick
-        ExplicitLeft = 21
-        ExplicitTop = 181
-        ExplicitWidth = 339
       end
     end
   end
@@ -641,5 +593,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         OnClick = AppSetup1Click
       end
     end
+  end
+  object TMDB: TTMDB
+    AuthMethod = amAccessToken
+    Left = 92
+    Top = 343
   end
 end

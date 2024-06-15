@@ -40,8 +40,8 @@ begin
     try
       lstGenreTV.Items.Clear;
       lstGenreTV.Groups.Clear;
-      for X := 0 to API.Cache.TVGenres.Count-1 do begin
-        G:= API.Cache.TVGenres[X];
+      for X := 0 to TMDB.Cache.TVGenres.Count-1 do begin
+        G:= TMDB.Cache.TVGenres[X];
         I:= lstGenreTV.Items.Add;
         I.Caption:= G.Name;
         I.SubItems.Add(IntToStr(G.ID));

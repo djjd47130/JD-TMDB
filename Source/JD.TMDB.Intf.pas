@@ -289,7 +289,8 @@ type
     property Index: Integer read GetIndex;
   end;
 
-  //TODO: Change all list/item related things to inherit from this base...
+
+  //TODO: Change all list/item related things to inherit from this new base...
 
   /// <summary>
   /// Base for each list of items
@@ -2308,6 +2309,8 @@ type
     function LoginAsUser: ITMDBAuthSessionResult; stdcall;
     function LoginAsCreds(const Username, Password: WideString): ITMDBAuthSessionResult; stdcall;
     function Logout: Boolean; stdcall;
+
+    function RestoreSession(const SessionID: WideString): Boolean; stdcall;
 
     property AuthMethod: TTMDBUserAuth read GetAuthMethod write SetAuthMethod;
     property IsAuthenticated: Boolean read GetIsAuthenticated;

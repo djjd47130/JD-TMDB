@@ -4,9 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs
-  , JD.TMDB.Intf
-  ;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JD.TMDB.Intf, JD.TMDB;
 
 type
   TfrmContentBase = class;
@@ -19,7 +17,7 @@ type
   private
     { Private declarations }
   protected
-    function API: ITMDBClient;
+    function TMDB: TTMDB;
     procedure PrepAPI;
   public
     constructor Create(AOwner: TComponent); override;
@@ -50,14 +48,14 @@ begin
   inherited;
 end;
 
-function TfrmContentBase.API: ITMDBClient;
-begin
-  Result:= frmTMDBTestMain.TMDB;
-end;
-
 procedure TfrmContentBase.PrepAPI;
 begin
   frmTMDBTestMain.PrepAPI;
+end;
+
+function TfrmContentBase.TMDB: TTMDB;
+begin
+  Result:= frmTMDBTestMain.TMDB;
 end;
 
 end.
