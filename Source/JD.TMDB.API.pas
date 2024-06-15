@@ -4,7 +4,9 @@ unit JD.TMDB.API;
   TMDB API Wrapper for Delphi
   Written by Jerry Dodge
 
+  ----------------------------------------------------------------------------
   Core API Wrapper using JSON via XSuperObject
+  ----------------------------------------------------------------------------
 
   IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
 
@@ -14,7 +16,6 @@ unit JD.TMDB.API;
 
   TODO:
   - Rename "Service" to "Namespace" in respect to TMDB's docs
-  - Access Token authentication method (Already working?)
   - User authentication - Requests implemented, but requires more design
   - Fetching images using standard image sizes
   - Discover requests - very huge concept
@@ -24,7 +25,7 @@ unit JD.TMDB.API;
 
   REMARKS:
   - This unit *SHOULD* be fully functional at this point, with the exception
-    of a few specific services and capabilities missing.
+    of a few specific services and capabilities missing such as images and discover.
 
 *)
 
@@ -40,14 +41,6 @@ uses
   System.NetEncoding,
   Clipbrd;
 
-
-{ TMDB API HTTP Constants }
-
-const
-  TMDB_API_ROOT = 'https://api.themoviedb.org/3/';
-  TMDB_API_USERAGENT = 'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-TMDB)';
-
-
 type
   TTMDBAPI = class;
 
@@ -62,7 +55,6 @@ type
 
   TTMDBAPIAccount = class(TTMDBAPIService)
   public
-    function GetAccountInfo(): ISuperObject;
     function GetDetails(const AccountID: Integer; const SessionID: String = ''): ISuperObject;
     function GetDetailsBySession(const SessionID: String): ISuperObject;
     function AddFavorite(const AccountID: Integer;
@@ -294,7 +286,7 @@ type
   TTMDBAPIMovies = class(TTMDBAPIService)
   public
     function GetDetails(const MovieID: Integer; const AppendToResponse: String = '';
-      const Language: String = ''): ISuperObject;
+      const Language: String = ''; const SessionID: String = ''): ISuperObject;
     function GetAccountStates(const MovieID: Integer; const SessionID: String = '';
       const GuestSessionID: String = ''): ISuperObject;
     function GetAlternativeTitles(const MovieID: Integer;
@@ -513,7 +505,12 @@ type
     FReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
+    FAPIAuth: TTMDBAuthMethod;
+    FAppUserAgent: String;
+    FMsecLimit: Integer; //TODO: Number of milliseconds allowed between requests
+
     FConfiguration: TTMDBAPIConfiguration;
+
     FGenres: TTMDBAPIGenres;
     FMovies: TTMDBAPIMovies;
     FPeople: TTMDBAPIPeople;
@@ -542,29 +539,31 @@ type
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
     FImages: TTMDBAPIImages;
-    FAppUserAgent: String;
-    FSecondsLimit: Single;
+    FAuthMethod: TTMDBAuthMethod;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
+    procedure SetMsecLimit(const Value: Integer);
     procedure PrepareJSONRequest;
     function GetJSON(const Req: String; const Params: String = ''): ISuperObject;
     function PostJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
     function DeleteJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
-    procedure SetSecondsLimit(const Value: Single);
     function GetWatchProviders: TTMDBAPIWatchProviders;
+    procedure SetAuthMethod(const Value: TTMDBAuthMethod);
+    function GetURL(const Req, Params: String): String;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
     function GetLimitWaitMsec: Integer;
   published
+    property AuthMethod: TTMDBAuthMethod read FAuthMethod write SetAuthMethod;
     property APIKey: String read FAPIKey write SetAPIKey;
     property APIReadAccessToken: String read FAPIReadAccessToken write SetAPIReadAccessToken;
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
-    property SecondsLimit: Single read FSecondsLimit write SetSecondsLimit;
+    property MsecLimit: Integer read FMsecLimit write SetMsecLimit;
 
     property Account: TTMDBAPIAccount read FAccount;
     property Authentication: TTMDBAPIAuthentication read FAuthentication;
@@ -598,47 +597,34 @@ type
     property Images: TTMDBAPIImages read FImages;
   end;
 
-function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
-function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
-function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String; overload;
-function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String; overload;
-
 implementation
 
 type
+  //Hack to be able to call "Delete" via "DoRequest" and provide a body.
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
-function URLCombine(P1, P2: String; const Delim: String = '/'): String;
-var
-  T: String;
-begin
-  //Last char of P1 - no delimiter
-  T:= Copy(P1, Length(P1), 1);
-  if T = Delim then
-    Delete(P1, Length(P1), 1);
-  //First char of P2 - with delimiter
-  T:= Copy(P2, 1, 1);
-  if T <> Delim then
-    P2:= Delim + P2;
-  //Combine both strings
-  Result:= Concat(P1, P2);
-end;
+  //TODO: A record which contains functionality necessary for a TMDB request URL...
+  //  This will be passed with each possible API request instead of URLs and raw data.
+  TTMDBRequestRec = record
+  private
+    FProtocol: String;
+    FRoot: String;
+    FRequest: String;
+    FParams: String;
+    FBody: String;
+  public
+    constructor Create(const ARequest: String);
+    property Protocol: String read FProtocol write FProtocol;
+    property Root: String read FRoot write FRoot;
+    property Request: String read FRequest write FRequest;
+    property Params: String read FParams write FParams;
+    property Body: String read FBody write FBody;
 
-function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String;
-begin
-  Result:= URLCombine(P1, IntToStr(P2));
-end;
+    procedure AddParam(const Name: String; const Value: String);
 
-function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String;
-begin
-  Result:= URLCombine(IntToStr(P1), P2);
-end;
-
-function URLCombine(P1, P2: Integer; const Delim: String = '/'): String;
-begin
-  Result:= URLCombine(IntToStr(P1), P2);
-end;
+    function GetURL: String;
+  end;
 
 { TTMDBAPIService }
 
@@ -661,6 +647,7 @@ end;
 
 { TTMDBAPIAccount }
 
+{
 function TTMDBAPIAccount.GetAccountInfo: ISuperObject;
 var
   U: String;
@@ -671,13 +658,16 @@ begin
   U:= 'account';
   Result:= FOwner.GetJSON(U);
 end;
+}
 
 function TTMDBAPIAccount.GetDetails(const AccountID: Integer;
   const SessionID: String): ISuperObject;
 var
   U, P: String;
 begin
-  U:= URLCombine('account', AccountID);
+  U:= 'account';
+  if AccountID >= 0 then
+    U:= URLCombine(U, AccountID);
   AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
 end;
@@ -1304,7 +1294,7 @@ end;
 { TTMDBAPIMovies }
 
 function TTMDBAPIMovies.GetDetails(const MovieID: Integer; const AppendToResponse,
-  Language: String): ISuperObject;
+  Language: String; const SessionID: String): ISuperObject;
 var
   U, P: String;
   S: String;
@@ -1312,6 +1302,7 @@ begin
   U:= 'movie/'+IntToStr(MovieID);
   AddParam(P, 'append_to_response', AppendToResponse);
   AddParam(P, 'language', Language);
+  AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
   S:= Result.AsJSON(True);
   Clipboard.AsText:= S;
@@ -2508,22 +2499,35 @@ begin
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
   //TODO: Conditionally include access token depending on API auth method...
-  FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
+  if FAPIAuth = amAccessToken then
+    FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
+end;
+
+function TTMDBAPI.GetURL(const Req, Params: String): String;
+var
+  R: String;
+begin
+  R:= Req;
+  if Copy(R, 1, 1) = '/' then
+    Delete(R, 1, 1);
+  Result:= TMDB_API_ROOT + R;
+  if FAPIAuth = amAPIKey then begin
+    Result:= Result + '?api_key=' + FAPIKey + Params;
+  end else begin
+    if Params <> '' then
+      Result:= Result + '?' + Params;
+  end;
+  Result:= TIdURI.URLEncode(Result);
 end;
 
 function TTMDBAPI.GetJSON(const Req, Params: String): ISuperObject;
 var
-  R: String;
   U: String;
   S: String;
 begin
   Result:= nil;
   PrepareJSONRequest;
-  R:= Req;
-  if Copy(R, 1, 1) = '/' then
-    Delete(R, 1, 1);
-  //TODO: Conditionally include API key depending on API auth method...
-  U:= TIdURI.URLEncode(TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params);
+  U:= GetURL(Req, Params);
   S:= FHTTP.Get(U);
   Result:= SO(S);
 end;
@@ -2531,18 +2535,13 @@ end;
 function TTMDBAPI.PostJSON(const Req, Params: String;
   const Body: ISuperObject): ISuperObject;
 var
-  R: String;
   U: String;
   S: String;
   B: TStringStream;
 begin
   Result:= nil;
   PrepareJSONRequest;
-  R:= Req;
-  if Copy(R, 1, 1) = '/' then
-    Delete(R, 1, 1);
-  //TODO: Conditionally include API key depending on API auth method...
-  U:= TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params;
+  U:= GetURL(Req, Params);
   B:= TStringStream.Create;
   try
     Body.SaveTo(B, True);
@@ -2559,18 +2558,13 @@ end;
 function TTMDBAPI.DeleteJSON(const Req, Params: String;
   const Body: ISuperObject): ISuperObject;
 var
-  R: String;
   U: String;
   S: String;
   B, Res: TStringStream;
 begin
   Result:= nil;
   PrepareJSONRequest;
-  R:= Req;
-  if Copy(R, 1, 1) = '/' then
-    Delete(R, 1, 1);
-  //TODO: Conditionally include API key depending on API auth method...
-  U:= TMDB_API_ROOT + R + '?api_key=' + FAPIKey + Params;
+  U:= GetURL(Req, Params);
   B:= TStringStream.Create;
   Res:= TStringStream.Create;
   try
@@ -2605,9 +2599,38 @@ begin
   FAppUserAgent:= Value;
 end;
 
-procedure TTMDBAPI.SetSecondsLimit(const Value: Single);
+procedure TTMDBAPI.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
-  FSecondsLimit := Value;
+  FAuthMethod := Value;
+end;
+
+procedure TTMDBAPI.SetMsecLimit(const Value: Integer);
+begin
+  FMsecLimit := Value;
+end;
+
+{ TTMDBRequestRec }
+
+constructor TTMDBRequestRec.Create(const ARequest: String);
+begin
+  FProtocol:= 'https';
+  FRoot:= 'api.themoviedb.org/3';
+  FRequest:= ARequest;
+end;
+
+procedure TTMDBRequestRec.AddParam(const Name, Value: String);
+begin
+  if FParams <> '' then
+    FParams:= FParams + '&';
+  FParams:= FParams + Name + '=' + Value;
+end;
+
+function TTMDBRequestRec.GetURL: String;
+begin
+  Result:= FProtocol + '://';
+  Result:= Result + URLCombine(FRoot, FRequest);
+  if FParams <> '' then
+    Result:= Result + '?' + FParams;
 end;
 
 end.

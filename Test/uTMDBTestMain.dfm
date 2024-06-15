@@ -2,8 +2,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   Left = 0
   Top = 0
   Caption = 'TMDB API Test'
-  ClientHeight = 554
-  ClientWidth = 991
+  ClientHeight = 484
+  ClientWidth = 971
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,9 +20,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   TextHeight = 13
   object Pages: TPageControl
     Left = 0
-    Top = 0
-    Width = 991
-    Height = 507
+    Top = 41
+    Width = 971
+    Height = 437
     ActivePage = tabSetup
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -36,25 +36,32 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     ParentFont = False
     TabHeight = 32
     TabOrder = 0
+    ExplicitWidth = 991
+    ExplicitHeight = 507
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
+      ExplicitLeft = 5
+      ExplicitWidth = 983
+      ExplicitHeight = 465
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 983
-        Height = 193
+        Width = 963
+        Height = 201
         Align = alTop
         TabOrder = 0
+        ExplicitWidth = 983
         object gbAPIAuthMethod: TGroupBox
           AlignWithMargins = True
           Left = 4
           Top = 4
           Width = 357
-          Height = 185
+          Height = 193
           Align = alLeft
           Caption = 'API Authentication'
           TabOrder = 0
+          ExplicitHeight = 185
           object gbAPIAuthMethodAPIKey: TPanel
             Left = 2
             Top = 48
@@ -119,7 +126,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 2
-            object RadioButton2: TRadioButton
+            object rAuthToken: TRadioButton
               Tag = 1
               AlignWithMargins = True
               Left = 103
@@ -131,7 +138,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               TabOrder = 0
               OnClick = APIAuthMethodRadioClick
             end
-            object RadioButton1: TRadioButton
+            object rAuthKey: TRadioButton
               AlignWithMargins = True
               Left = 3
               Top = 3
@@ -164,258 +171,47 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             end
           end
         end
-        object GroupBox1: TGroupBox
-          AlignWithMargins = True
-          Left = 367
-          Top = 4
-          Width = 306
-          Height = 185
-          Align = alLeft
-          Caption = 'User Authentication'
-          TabOrder = 1
-          object Panel3: TPanel
-            Left = 2
-            Top = 20
-            Width = 302
-            Height = 28
-            Align = alTop
-            BevelOuter = bvNone
-            TabOrder = 0
-            object RadioButton3: TRadioButton
-              Tag = 1
-              AlignWithMargins = True
-              Left = 79
-              Top = 3
-              Width = 90
-              Height = 22
-              Align = alLeft
-              Caption = 'Normal'
-              TabOrder = 0
-              OnClick = UserAuthMethodClick
-            end
-            object RadioButton4: TRadioButton
-              AlignWithMargins = True
-              Left = 3
-              Top = 3
-              Width = 70
-              Height = 22
-              Align = alLeft
-              Caption = 'Guest'
-              Checked = True
-              TabOrder = 1
-              TabStop = True
-              OnClick = UserAuthMethodClick
-            end
-            object RadioButton6: TRadioButton
-              Tag = 2
-              AlignWithMargins = True
-              Left = 175
-              Top = 3
-              Width = 114
-              Height = 22
-              Align = alLeft
-              Caption = 'Credentials'
-              TabOrder = 2
-              OnClick = UserAuthMethodClick
-            end
-          end
-          object pAuthUser: TPanel
-            Left = 2
-            Top = 48
-            Width = 302
-            Height = 53
-            Align = alTop
-            BevelOuter = bvNone
-            TabOrder = 1
-            Visible = False
-            DesignSize = (
-              302
-              53)
-            object Label2: TLabel
-              Left = 16
-              Top = 8
-              Width = 80
-              Height = 18
-              Caption = 'Username:'
-            end
-            object txtAuthUser: TEdit
-              Left = 16
-              Top = 29
-              Width = 265
-              Height = 26
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 0
-            end
-          end
-          object pAuthPass: TPanel
-            Left = 2
-            Top = 101
-            Width = 302
-            Height = 60
-            Align = alTop
-            BevelOuter = bvNone
-            TabOrder = 2
-            Visible = False
-            DesignSize = (
-              302
-              60)
-            object Label4: TLabel
-              Left = 16
-              Top = 8
-              Width = 78
-              Height = 18
-              Caption = 'Password:'
-            end
-            object txtAuthPass: TEdit
-              Left = 16
-              Top = 32
-              Width = 265
-              Height = 26
-              Anchors = [akLeft, akTop, akRight]
-              PasswordChar = '*'
-              TabOrder = 0
-            end
-          end
-        end
-        object pLoginStatus: TGroupBox
-          AlignWithMargins = True
-          Left = 679
-          Top = 4
-          Width = 282
-          Height = 185
-          Align = alLeft
-          Caption = 'User Login'
-          TabOrder = 2
-          object btnLoginLogout: TButton
-            AlignWithMargins = True
-            Left = 5
-            Top = 23
-            Width = 272
-            Height = 28
-            Cursor = crHandPoint
-            Align = alTop
-            Caption = 'Login'
-            TabOrder = 0
-            OnClick = btnLoginLogoutClick
-          end
-          object pLoginUserInfo: TGroupBox
-            AlignWithMargins = True
-            Left = 5
-            Top = 57
-            Width = 272
-            Height = 123
-            Align = alClient
-            Caption = 'User Info'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -15
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 1
-            Visible = False
-            object Panel4: TPanel
-              AlignWithMargins = True
-              Left = 95
-              Top = 23
-              Width = 172
-              Height = 95
-              Align = alClient
-              TabOrder = 0
-              object lblUserName: TLabel
-                AlignWithMargins = True
-                Left = 4
-                Top = 4
-                Width = 164
-                Height = 18
-                Align = alTop
-                AutoSize = False
-                Caption = 'Username'
-                ExplicitLeft = 0
-              end
-              object lblUserFullName: TLabel
-                AlignWithMargins = True
-                Left = 4
-                Top = 28
-                Width = 164
-                Height = 18
-                Align = alTop
-                AutoSize = False
-                Caption = 'Full Name'
-                ExplicitLeft = 3
-                ExplicitTop = 71
-                ExplicitWidth = 181
-              end
-              object lblUserSessionID: TLabel
-                AlignWithMargins = True
-                Left = 4
-                Top = 52
-                Width = 164
-                Height = 18
-                Align = alTop
-                AutoSize = False
-                Caption = 'Session ID'
-                OnDblClick = lblUserSessionIDDblClick
-                ExplicitLeft = 3
-                ExplicitTop = 95
-                ExplicitWidth = 181
-              end
-            end
-            object Panel5: TPanel
-              AlignWithMargins = True
-              Left = 5
-              Top = 23
-              Width = 84
-              Height = 95
-              Align = alLeft
-              TabOrder = 1
-              object imgUserAvatar: TImage
-                AlignWithMargins = True
-                Left = 4
-                Top = 4
-                Width = 76
-                Height = 87
-                Align = alClient
-                OnClick = imgUserAvatarClick
-                ExplicitLeft = 8
-              end
-            end
-          end
-        end
       end
     end
     object tabCertifications: TTabSheet
       Caption = 'Certifications'
       ImageIndex = 1
+      ExplicitWidth = 983
+      ExplicitHeight = 465
       object CertPages: TPageControl
         Left = 0
         Top = 0
-        Width = 983
-        Height = 419
+        Width = 963
+        Height = 349
         ActivePage = tabCertsMovies
         Align = alTop
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
+        ExplicitWidth = 983
+        ExplicitHeight = 419
         object tabCertsMovies: TTabSheet
           Caption = 'Movie Certifications'
+          ExplicitWidth = 975
+          ExplicitHeight = 386
           object btnRefreshCertsMovies: TButton
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 969
+            Width = 949
             Height = 28
             Cursor = crHandPoint
             Align = alTop
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsMoviesClick
+            ExplicitWidth = 969
           end
           object lstCertsMovies: TListView
             AlignWithMargins = True
             Left = 3
             Top = 37
-            Width = 969
-            Height = 346
+            Width = 949
+            Height = 276
             Align = alClient
             Color = clSilver
             Columns = <
@@ -437,29 +233,34 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
+            ExplicitWidth = 969
+            ExplicitHeight = 346
           end
         end
         object tabCertsTV: TTabSheet
           Caption = 'TV Certifications'
           ImageIndex = 1
+          ExplicitWidth = 975
+          ExplicitHeight = 386
           object btnRefreshCertsTV: TButton
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 969
+            Width = 949
             Height = 28
             Cursor = crHandPoint
             Align = alTop
             Caption = 'Refresh List'
             TabOrder = 0
             OnClick = btnRefreshCertsTVClick
+            ExplicitWidth = 969
           end
           object lstCertsTV: TListView
             AlignWithMargins = True
             Left = 3
             Top = 37
-            Width = 969
-            Height = 346
+            Width = 949
+            Height = 276
             Align = alClient
             Color = clSilver
             Columns = <
@@ -481,105 +282,352 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             RowSelect = True
             TabOrder = 1
             ViewStyle = vsReport
-          end
-        end
-      end
-    end
-    object tabGenres: TTabSheet
-      Caption = 'Genres'
-      ImageIndex = 9
-      object GenrePages: TPageControl
-        Left = 0
-        Top = 0
-        Width = 983
-        Height = 419
-        ActivePage = TabSheet7
-        Align = alTop
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 0
-        object TabSheet7: TTabSheet
-          Caption = 'Movie Genres'
-          object Button2: TButton
-            AlignWithMargins = True
-            Left = 3
-            Top = 3
-            Width = 969
-            Height = 28
-            Cursor = crHandPoint
-            Align = alTop
-            Caption = 'Refresh List'
-            TabOrder = 0
-            OnClick = Button2Click
-          end
-          object lstGenreMovies: TListView
-            AlignWithMargins = True
-            Left = 3
-            Top = 37
-            Width = 969
-            Height = 346
-            Align = alClient
-            Color = clSilver
-            Columns = <
-              item
-                Caption = 'Genre Name'
-                Width = 250
-              end
-              item
-                Caption = 'ID'
-                Width = 100
-              end>
-            HotTrackStyles = [htHandPoint, htUnderlineHot]
-            ReadOnly = True
-            RowSelect = True
-            TabOrder = 1
-            ViewStyle = vsReport
-          end
-        end
-        object TabSheet8: TTabSheet
-          Caption = 'TV Genres'
-          ImageIndex = 1
-          object Button3: TButton
-            AlignWithMargins = True
-            Left = 3
-            Top = 3
-            Width = 969
-            Height = 28
-            Cursor = crHandPoint
-            Align = alTop
-            Caption = 'Refresh List'
-            TabOrder = 0
-            OnClick = Button3Click
-          end
-          object lstGenreTV: TListView
-            AlignWithMargins = True
-            Left = 3
-            Top = 37
-            Width = 969
-            Height = 346
-            Align = alClient
-            Color = clSilver
-            Columns = <
-              item
-                Caption = 'Genre Name'
-                Width = 250
-              end
-              item
-                Caption = 'ID'
-                Width = 100
-              end>
-            HotTrackStyles = [htHandPoint, htUnderlineHot]
-            ReadOnly = True
-            RowSelect = True
-            TabOrder = 1
-            ViewStyle = vsReport
+            ExplicitWidth = 969
+            ExplicitHeight = 346
           end
         end
       end
     end
   end
+  object pTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 971
+    Height = 41
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 1
+    ExplicitTop = -6
+    ExplicitWidth = 991
+    object btnUser: TJDFontButton
+      AlignWithMargins = True
+      Left = 797
+      Top = 3
+      Width = 171
+      Height = 35
+      Cursor = crHandPoint
+      Align = alRight
+      DrawStyle = fdTransparent
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      Image.AutoSize = False
+      Image.Text = #61572
+      Image.Font.Charset = DEFAULT_CHARSET
+      Image.Font.Color = clWindowText
+      Image.Font.Height = -21
+      Image.Font.Name = 'FontAwesome'
+      Image.Font.Style = []
+      Image.Font.Quality = fqAntialiased
+      Image.StandardColor = fcBlue
+      Overlay.Text = #57715
+      Overlay.Font.Charset = DEFAULT_CHARSET
+      Overlay.Font.Color = clWindowText
+      Overlay.Font.Height = -7
+      Overlay.Font.Name = 'FontAwesome'
+      Overlay.Font.Style = []
+      Overlay.Font.Quality = fqAntialiased
+      Overlay.Position = foNone
+      Overlay.Margin = 3
+      ImagePosition = fpImgRight
+      Margin = 8
+      Spacing = 8
+      SubTextFont.Charset = DEFAULT_CHARSET
+      SubTextFont.Color = clGray
+      SubTextFont.Height = -11
+      SubTextFont.Name = 'Tahoma'
+      SubTextFont.Style = []
+      TabOrder = 0
+      Text = 'User Login'
+      OnClick = btnUserClick
+      ExplicitLeft = 816
+      ExplicitTop = 0
+    end
+  end
+  object pUser: TPanel
+    Left = 152
+    Top = 274
+    Width = 697
+    Height = 199
+    TabOrder = 2
+    Visible = False
+    object gbUserLogin: TGroupBox
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 293
+      Height = 191
+      Align = alLeft
+      Caption = 'User Authentication'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      ExplicitLeft = 302
+      object Panel3: TPanel
+        Left = 2
+        Top = 18
+        Width = 289
+        Height = 24
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitLeft = 1
+        ExplicitTop = 20
+        object RadioButton3: TRadioButton
+          Tag = 1
+          AlignWithMargins = True
+          Left = 111
+          Top = 3
+          Width = 82
+          Height = 18
+          Align = alLeft
+          Caption = 'Normal'
+          TabOrder = 0
+          Visible = False
+          OnClick = UserAuthMethodClick
+        end
+        object RadioButton4: TRadioButton
+          AlignWithMargins = True
+          Left = 199
+          Top = 3
+          Width = 70
+          Height = 18
+          Align = alLeft
+          Caption = 'Guest'
+          TabOrder = 1
+          OnClick = UserAuthMethodClick
+          ExplicitLeft = 243
+          ExplicitTop = 0
+        end
+        object rbCreds: TRadioButton
+          Tag = 2
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 102
+          Height = 18
+          Align = alLeft
+          Caption = 'Credentials'
+          Checked = True
+          TabOrder = 2
+          TabStop = True
+          OnClick = UserAuthMethodClick
+        end
+      end
+      object pAuthUser: TPanel
+        Left = 2
+        Top = 42
+        Width = 289
+        Height = 53
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitLeft = 1
+        ExplicitTop = 26
+        DesignSize = (
+          289
+          53)
+        object Label2: TLabel
+          Left = 15
+          Top = 8
+          Width = 63
+          Height = 16
+          Caption = 'Username:'
+        end
+        object txtAuthUser: TEdit
+          Left = 15
+          Top = 29
+          Width = 259
+          Height = 24
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+          OnKeyUp = txtAuthPassKeyUp
+        end
+      end
+      object pAuthPass: TPanel
+        Left = 2
+        Top = 95
+        Width = 289
+        Height = 60
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 2
+        ExplicitLeft = 4
+        ExplicitTop = 101
+        DesignSize = (
+          289
+          60)
+        object Label4: TLabel
+          Left = 15
+          Top = 8
+          Width = 60
+          Height = 16
+          Margins.Right = 15
+          Caption = 'Password:'
+        end
+        object txtAuthPass: TEdit
+          Left = 15
+          Top = 32
+          Width = 259
+          Height = 24
+          Anchors = [akLeft, akTop, akRight]
+          PasswordChar = '*'
+          TabOrder = 0
+          OnKeyUp = txtAuthPassKeyUp
+        end
+      end
+      object btnLogin: TButton
+        AlignWithMargins = True
+        Left = 17
+        Top = 158
+        Width = 259
+        Height = 28
+        Cursor = crHandPoint
+        Margins.Left = 15
+        Margins.Right = 15
+        Align = alBottom
+        Caption = 'Login'
+        TabOrder = 3
+        OnClick = btnLoginClick
+        ExplicitLeft = 7
+        ExplicitTop = 157
+        ExplicitWidth = 283
+      end
+    end
+    object gbUserInfo: TGroupBox
+      AlignWithMargins = True
+      Left = 303
+      Top = 4
+      Width = 292
+      Height = 191
+      Align = alLeft
+      Caption = 'User Info'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      Visible = False
+      ExplicitLeft = 460
+      ExplicitTop = 20
+      object Panel4: TPanel
+        AlignWithMargins = True
+        Left = 143
+        Top = 21
+        Width = 144
+        Height = 131
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitLeft = 95
+        ExplicitTop = 23
+        ExplicitWidth = 301
+        ExplicitHeight = 163
+        object lblUserName: TLabel
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 138
+          Height = 18
+          Align = alTop
+          AutoSize = False
+          Caption = 'Username'
+          ExplicitLeft = 0
+          ExplicitTop = 4
+          ExplicitWidth = 164
+        end
+        object lblUserFullName: TLabel
+          AlignWithMargins = True
+          Left = 3
+          Top = 27
+          Width = 138
+          Height = 18
+          Align = alTop
+          AutoSize = False
+          Caption = 'Full Name'
+          ExplicitTop = 71
+          ExplicitWidth = 181
+        end
+        object lblUserSessionID: TLabel
+          AlignWithMargins = True
+          Left = 3
+          Top = 51
+          Width = 138
+          Height = 18
+          Align = alTop
+          AutoSize = False
+          Caption = 'Session ID'
+          OnDblClick = lblUserSessionIDDblClick
+          ExplicitTop = 95
+          ExplicitWidth = 181
+        end
+        object lblUserAccountID: TLabel
+          AlignWithMargins = True
+          Left = 3
+          Top = 75
+          Width = 138
+          Height = 18
+          Align = alTop
+          AutoSize = False
+          Caption = 'Account ID'
+          ExplicitLeft = 0
+          ExplicitTop = 92
+          ExplicitWidth = 164
+        end
+      end
+      object Panel5: TPanel
+        AlignWithMargins = True
+        Left = 5
+        Top = 21
+        Width = 132
+        Height = 131
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitHeight = 165
+        object imgUserAvatar: TImage
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 126
+          Height = 125
+          Align = alClient
+          ExplicitLeft = 8
+          ExplicitTop = 4
+          ExplicitWidth = 76
+          ExplicitHeight = 87
+        end
+      end
+      object btnLogout: TButton
+        AlignWithMargins = True
+        Left = 17
+        Top = 158
+        Width = 258
+        Height = 28
+        Cursor = crHandPoint
+        Margins.Left = 15
+        Margins.Right = 15
+        Align = alBottom
+        Caption = 'Logout'
+        TabOrder = 2
+        OnClick = btnLogoutClick
+        ExplicitLeft = 21
+        ExplicitTop = 181
+        ExplicitWidth = 339
+      end
+    end
+  end
   object MM: TMainMenu
-    Left = 24
-    Top = 496
+    Left = 32
+    Top = 344
     object Services1: TMenuItem
       Caption = 'Services'
       OnClick = Services1Click

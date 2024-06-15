@@ -1,25 +1,30 @@
 inherited frmContentSearchMovies: TfrmContentSearchMovies
   Caption = 'Search Movies'
-  ClientHeight = 523
-  ClientWidth = 991
+  ClientHeight = 561
+  ClientWidth = 1034
   OnCreate = nil
-  OnDestroy = FormDestroy
-  OnShow = FormShow
-  ExplicitWidth = 1007
-  ExplicitHeight = 562
+  ExplicitWidth = 1050
+  ExplicitHeight = 600
   PixelsPerInch = 96
   TextHeight = 18
   inherited pMain: TPanel
-    Width = 726
-    Height = 523
-    ExplicitWidth = 709
+    Width = 769
+    Height = 561
+    ExplicitWidth = 769
+    ExplicitHeight = 561
+    inherited Splitter1: TSplitter
+      Top = 251
+      Width = 769
+      ExplicitTop = 253
+      ExplicitWidth = 769
+    end
     inherited lstResults: TListView
-      Width = 720
-      Height = 182
+      Width = 763
+      Height = 213
       Columns = <
         item
           Caption = 'Movie'
-          Width = 250
+          Width = 300
         end
         item
           Caption = 'Popularity'
@@ -27,56 +32,49 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         end
         item
           Caption = 'Genre'
-          Width = 200
+          Width = 170
         end
         item
           Caption = 'Released'
-          Width = 100
+          Width = 120
         end
         item
           Caption = 'Description'
-          Width = 400
+          Width = 500
         end>
-      ExplicitWidth = 703
-      ExplicitHeight = 189
+      ExplicitTop = 35
+      ExplicitWidth = 763
+      ExplicitHeight = 215
     end
-    inherited pFooter: TPanel
-      Top = 188
-      Width = 726
-      ExplicitTop = 223
-      ExplicitWidth = 709
-      inherited btnPagePrev: TButton
-        OnClick = btnPagePrevClick
-      end
-      inherited btnPageNext: TButton
-        OnClick = btnPageNextClick
-      end
+    inherited pTop: TPanel
+      Width = 769
+      ExplicitTop = 0
+      ExplicitWidth = 769
     end
     inherited pDetail: TPanel
-      Top = 220
-      Width = 726
+      Top = 258
+      Width = 769
       Height = 303
-      ExplicitTop = 198
-      ExplicitWidth = 709
+      ExplicitTop = 258
+      ExplicitWidth = 769
       ExplicitHeight = 303
-      object PageControl1: TPageControl
-        Left = 1
-        Top = 1
-        Width = 724
-        Height = 301
-        ActivePage = TabSheet1
+      object Pages: TPageControl
+        Left = 0
+        Top = 0
+        Width = 769
+        Height = 303
+        ActivePage = TabSheet11
         Align = alClient
         MultiLine = True
         TabOrder = 0
+        OnChange = PagesChange
         object TabSheet1: TTabSheet
           Caption = 'Detail'
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object lblTitle: TLabel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
+            Width = 755
             Height = 29
             Align = alTop
             AutoSize = False
@@ -95,7 +93,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 38
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -108,7 +106,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 86
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -121,7 +119,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 62
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -140,7 +138,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 110
-            Width = 710
+            Width = 755
             Height = 105
             Align = alTop
             BorderStyle = bsNone
@@ -155,13 +153,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet2: TTabSheet
           Caption = 'Account States'
           ImageIndex = 1
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object lblFavorite: TLabel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -174,7 +170,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 27
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -186,7 +182,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 51
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -198,48 +194,44 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet3: TTabSheet
           Caption = 'Alternative Titles'
           ImageIndex = 2
-          ExplicitTop = 52
-          ExplicitHeight = 245
-          object ListView1: TListView
+          object lstAltTitles: TListView
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
-            Height = 216
+            Width = 755
+            Height = 241
             Align = alClient
             Columns = <
               item
                 Caption = 'Title'
-                Width = 250
+                Width = 350
               end
               item
                 Caption = 'Country'
                 Width = 250
               end>
+            HotTrackStyles = [htHandPoint, htUnderlineHot]
+            ReadOnly = True
+            RowSelect = True
             TabOrder = 0
             ViewStyle = vsReport
-            ExplicitLeft = 6
-            ExplicitTop = 6
           end
         end
         object TabSheet4: TTabSheet
           Caption = 'Changes'
           ImageIndex = 3
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet5: TTabSheet
           Caption = 'Credits'
           ImageIndex = 4
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object lstCredits: TListView
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
-            Height = 216
+            Width = 755
+            Height = 241
             Align = alClient
+            BorderStyle = bsNone
             Columns = <
               item
                 Caption = 'Name'
@@ -247,7 +239,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
               end
               item
                 Caption = 'Role'
-                Width = 250
+                Width = 350
               end>
             Groups = <
               item
@@ -266,23 +258,22 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
                 FooterAlign = taLeftJustify
                 TitleImage = -1
               end>
+            HotTrackStyles = [htHandPoint, htUnderlineHot]
             GroupView = True
+            ReadOnly = True
+            RowSelect = True
             TabOrder = 0
             ViewStyle = vsReport
-            ExplicitLeft = 163
-            ExplicitTop = 83
           end
         end
         object TabSheet6: TTabSheet
           Caption = 'External IDs'
           ImageIndex = 5
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object lblIMDB: TLabel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -295,7 +286,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 27
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -308,7 +299,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 51
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -321,7 +312,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 75
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -334,7 +325,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             AlignWithMargins = True
             Left = 3
             Top = 99
-            Width = 710
+            Width = 755
             Height = 18
             Align = alTop
             AutoSize = False
@@ -347,14 +338,12 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet7: TTabSheet
           Caption = 'Images'
           ImageIndex = 6
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object ListView2: TListView
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 710
-            Height = 216
+            Width = 755
+            Height = 241
             Align = alClient
             Columns = <
               item
@@ -379,74 +368,99 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
               end>
             TabOrder = 0
             ViewStyle = vsReport
-            ExplicitLeft = 35
           end
         end
         object TabSheet8: TTabSheet
           Caption = 'Keywords'
           ImageIndex = 7
-          ExplicitTop = 52
-          ExplicitHeight = 245
           object lstKeywords: TListBox
             Left = 0
             Top = 0
             Width = 217
-            Height = 222
+            Height = 247
             Align = alLeft
             ItemHeight = 18
             TabOrder = 0
-            ExplicitHeight = 245
           end
         end
         object TabSheet9: TTabSheet
           Caption = 'Lists'
           ImageIndex = 8
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet10: TTabSheet
           Caption = 'Recommendations'
           ImageIndex = 9
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet11: TTabSheet
           Caption = 'Release Dates'
           ImageIndex = 10
-          ExplicitTop = 52
-          ExplicitHeight = 245
+          ExplicitLeft = 6
+          object lstReleaseDates: TListView
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 755
+            Height = 241
+            Align = alClient
+            BorderStyle = bsNone
+            Columns = <
+              item
+                Caption = 'Release Date'
+                Width = 130
+              end
+              item
+                Caption = 'Type'
+                Width = 180
+              end
+              item
+                Caption = 'Note'
+                Width = 150
+              end
+              item
+                Caption = 'Certification'
+                Width = 120
+              end
+              item
+                Caption = 'Descriptors'
+                Width = 200
+              end
+              item
+                Caption = 'Language'
+                Width = 150
+              end>
+            HotTrackStyles = [htHandPoint, htUnderlineHot]
+            GroupView = True
+            ReadOnly = True
+            RowSelect = True
+            TabOrder = 0
+            ViewStyle = vsReport
+          end
         end
         object TabSheet12: TTabSheet
           Caption = 'Reviews'
           ImageIndex = 11
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet13: TTabSheet
           Caption = 'Similar'
           ImageIndex = 12
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet14: TTabSheet
           Caption = 'Translations'
           ImageIndex = 13
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
         object TabSheet15: TTabSheet
           Caption = 'Videos'
           ImageIndex = 14
-          ExplicitTop = 52
-          ExplicitHeight = 245
         end
       end
     end
   end
   inherited pSearch: TPanel
-    Height = 523
+    Height = 561
+    ExplicitHeight = 561
     inherited btnApply: TButton
-      Top = 494
+      Top = 532
+      ExplicitTop = 532
     end
     object Panel7: TPanel
       Left = 0

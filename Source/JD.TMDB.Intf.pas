@@ -4,7 +4,9 @@ unit JD.TMDB.Intf;
   TMDB API Wrapper for Delphi
   Written by Jerry Dodge
 
+  ----------------------------------------------------------------------------
   TMDB Object Interface Definitions
+  ----------------------------------------------------------------------------
 
   IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
 
@@ -179,6 +181,70 @@ type
 
 
 
+  { Forward Definitions }
+
+  ITMDBService = interface;
+
+  ITMDBServiceAccount = interface;
+
+  ITMDBServiceAuthentication = interface;
+
+  ITMDBServiceCertifications = interface;
+
+  ITMDBServiceChanges = interface;
+
+  ITMDBServiceCollections = interface;
+
+  ITMDBServiceCompanies = interface;
+
+  ITMDBServiceConfiguration = interface;
+
+  ITMDBServiceCredits = interface;
+
+  ITMDBServiceDiscover = interface;
+
+  ITMDBServiceFind = interface;
+
+  ITMDBServiceGenres = interface;
+
+  ITMDBServiceGuestSessions = interface;
+
+  ITMDBServiceKeywords = interface;
+
+  ITMDBServiceLists = interface;
+
+  ITMDBServiceMovieLists = interface;
+
+  ITMDBServiceMovies = interface;
+
+  ITMDBServiceNetworks = interface;
+
+  ITMDBServicePeopleLists = interface;
+
+  ITMDBServicePeople = interface;
+
+  ITMDBServiceReviews = interface;
+
+  ITMDBServiceSearch = interface;
+
+  ITMDBServiceTrending = interface;
+
+  ITMDBServiceTVSeriesLists = interface;
+
+  ITMDBServiceTVSeries = interface;
+
+  ITMDBServiceTVSeasons = interface;
+
+  ITMDBServiceTVEpisodes = interface;
+
+  ITMDBServiceTVEpisodeGroups = interface;
+
+  ITMDBServiceWatchProviders = interface;
+
+  ITMDBServiceImages = interface;
+
+  ITMDBClient = interface;
+
 
 
 
@@ -189,12 +255,10 @@ type
 
 
 
-
-
   { Pagination Related }
 
   /// <summary>
-  /// A single page of results, following TMDB's pagination standards.
+  /// A single abstract page of results, following TMDB's pagination standards.
   /// [DONE]
   /// </summary>
   ITMDBPage = interface
@@ -213,7 +277,7 @@ type
   end;
 
   /// <summary>
-  /// A single item found on a page of results, following TMDB's pagination standards.
+  /// A single abstract item found on a page of results, following TMDB's pagination standards.
   /// [DONE]
   /// </summary>
   ITMDBPageItem = interface
@@ -224,6 +288,8 @@ type
     property Owner: ITMDBPage read GetOwner;
     property Index: Integer read GetIndex;
   end;
+
+  //TODO: Change all list/item related things to inherit from this base...
 
   /// <summary>
   /// Base for each list of items
@@ -471,6 +537,52 @@ type
 
 
 
+  { Release Date Related }
+
+  /// [DONE]
+  ITMDBReleaseDateItem = interface
+    ['{78E9A30C-DCDE-4DF5-A8A7-9BF08C210F90}']
+    function GetCertification: WideString; stdcall;
+    function GetDescriptors: TTMDBStrArray; stdcall; //https://www.themoviedb.org/talk/63bcd118a6e2d20083e25c74
+    function GetISO639_1: WideString; stdcall;
+    function GetNote: WideString; stdcall;
+    function GetReleaseDate: TDateTime; stdcall;
+    function GetType: TTMDBReleaseType; stdcall;
+
+    property Certification: WideString read GetCertification;
+    property Descriptors: TTMDBStrArray read GetDescriptors;
+    property ISO639_1: WideString read GetISO639_1;
+    property Note: WideString read GetNote;
+    property ReleaseDate: TDateTime read GetReleaseDate;
+    property ReleaseType: TTMDBReleaseType read GetType;
+  end;
+
+  /// [DONE]
+  ITMDBReleaseDateCountry = interface
+    ['{E466037A-7C13-4D5C-BE6E-42A49E6C2F8C}']
+    function GetCountryCode: WideString; stdcall;
+    function GetCountryName: WideString; stdcall;
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBReleaseDateItem; stdcall;
+
+    property CountryCode: WideString read GetCountryCode;
+    property CountryName: WideString read GetCountryName;
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBReleaseDateItem read GetItem; default;
+  end;
+
+  /// [DONE]
+  ITMDBReleaseDateCountries = interface
+    ['{F93CE7EB-EE02-4107-A412-F6161832333F}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBReleaseDateCountry; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBReleaseDateCountry read GetItem; default;
+  end;
+
+
+
   { Changes Related }
 
   //TODO: This is quite a complex structure, because the data types dynamically differ
@@ -608,6 +720,8 @@ type
     property ChangeKeys: TTMDBStrArray read GetChangeKeys;
   end;
 
+
+
   { Countries Related }
 
   /// <summary>
@@ -618,6 +732,8 @@ type
     ['{A1081041-E5B2-46C4-9905-EF7984C45FCA}']
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBCountryItem; stdcall;
+
+    function GetByCode(const Code: WideString): ITMDBCountryItem; stdcall;
 
     property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBCountryItem read GetItem; default;
@@ -676,6 +792,8 @@ type
     ['{B08908B7-3C02-4BF9-8B94-AECF0EEC8D49}']
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBLanguageItem; stdcall;
+
+    function GetByCode(const Code: WideString): ITMDBLanguageItem; stdcall;
 
     property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBLanguageItem read GetItem; default;
@@ -1329,13 +1447,13 @@ type
     //function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
     function AppendedImages: ITMDBMediaImages; stdcall;
     function AppendedKeywords: ITMDBKeywordList; stdcall;
-    //function AppendedLists: ITMDB; stdcall;
+    //function AppendedLists: ITMDBList; stdcall;
     //function AppendedRecommendations: ITMDB; stdcall;
-    //function AppendedReleaseDates: ITMDB; stdcall;
+    function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDBReviewList; stdcall;
-    //function AppendedSimilar: ITMDB; stdcall;
-    //function AppendedTranslations: ITMDB; stdcall;
-    //function AppendedVideos: ITMDB; stdcall;
+    //function AppendedSimilar: ITMDBMoviePage; stdcall;
+    //function AppendedTranslations: ITMDBPrimaryTranslationList; stdcall;
+    //function AppendedVideos: ITMDBVideoList; stdcall;
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
@@ -1790,72 +1908,6 @@ type
 
 
 
-type
-
-  { Forward Definitions }
-
-  ITMDBService = interface;
-
-  ITMDBServiceAccount = interface;
-
-  ITMDBServiceAuthentication = interface;
-
-  ITMDBServiceCertifications = interface;
-
-  ITMDBServiceChanges = interface;
-
-  ITMDBServiceCollections = interface;
-
-  ITMDBServiceCompanies = interface;
-
-  ITMDBServiceConfiguration = interface;
-
-  ITMDBServiceCredits = interface;
-
-  ITMDBServiceDiscover = interface;
-
-  ITMDBServiceFind = interface;
-
-  ITMDBServiceGenres = interface;
-
-  ITMDBServiceGuestSessions = interface;
-
-  ITMDBServiceKeywords = interface;
-
-  ITMDBServiceLists = interface;
-
-  ITMDBServiceMovieLists = interface;
-
-  ITMDBServiceMovies = interface;
-
-  ITMDBServiceNetworks = interface;
-
-  ITMDBServicePeopleLists = interface;
-
-  ITMDBServicePeople = interface;
-
-  ITMDBServiceReviews = interface;
-
-  ITMDBServiceSearch = interface;
-
-  ITMDBServiceTrending = interface;
-
-  ITMDBServiceTVSeriesLists = interface;
-
-  ITMDBServiceTVSeries = interface;
-
-  ITMDBServiceTVSeasons = interface;
-
-  ITMDBServiceTVEpisodes = interface;
-
-  ITMDBServiceTVEpisodeGroups = interface;
-
-  ITMDBServiceWatchProviders = interface;
-
-  ITMDBServiceImages = interface;
-
-  ITMDB = interface;
-
 
 
   { API Services }
@@ -1866,16 +1918,14 @@ type
   /// </summary>
   ITMDBService = interface
     ['{0E665C12-812B-4B2D-8A48-17A16740290C}']
-    function GetOwner: ITMDB;
+    function GetOwner: ITMDBClient;
 
-    property Owner: ITMDB read GetOwner;
+    property Owner: ITMDBClient read GetOwner;
   end;
 
   /// [DONE]
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
-    function GetAccountInfo: ISuperObject; stdcall; //TODO
-
     function GetDetails(AAccountID: Integer;
       ASessionID: WideString = ''): ITMDBAccountDetail; stdcall;
     function GetDetailsBySession(const ASessionID: WideString): ITMDBAccountDetail; stdcall;
@@ -2027,7 +2077,7 @@ type
   ITMDBServiceMovies = interface(ITMDBService)
     ['{93A8FDCA-9C30-4BC5-BEFC-BB066A5ADE6F}']
     function GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieRequests = [];
-      const Language: WideString = ''): ITMDBMovieDetail; stdcall;
+      const Language: WideString = ''; const SessionID: String = ''): ITMDBMovieDetail; stdcall;
     function GetAccountStates(const MovieID: Integer; const SessionID: WideString = '';
       const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
     function GetAlternativeTitles(const MovieID: Integer;
@@ -2041,7 +2091,7 @@ type
     //function GetLatest(const MovieID: Integer): ITMDBx; stdcall;
     //function GetLists(const MovieID: Integer): ITMDBx; stdcall;
     //function GetRecommendations(const MovieID: Integer): ITMDBx; stdcall;
-    //function GetReleaseDates(const MovieID: Integer): ITMDBx; stdcall;
+    function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
     //function GetReviews(const MovieID: Integer): ITMDBx; stdcall;
     //function GetSimilar(const MovieID: Integer): ITMDBx; stdcall;
     //function GetTranslations(const MovieID: Integer): ITMDBx; stdcall;
@@ -2237,9 +2287,40 @@ type
 
 
 
+  { User Login State }
+
+  /// <summary>
+  /// TODO
+  /// Encapsulates a TMDB user authentication and account info.
+  /// </summary>
+  ITMDBLoginState = interface
+    ['{FCFBEAC1-3256-4574-9F6F-C5ACF0721BB3}']
+    function GetOwner: ITMDBClient;
+    function GetAuthMethod: TTMDBUserAuth; stdcall;
+    procedure SetAuthMethod(const Value: TTMDBUserAuth); stdcall;
+    function GetIsAuthenticated: Boolean; stdcall;
+    function GetIsGuest: Boolean; stdcall;
+    function GetSessionID: WideString; stdcall;
+    function GetAccountDetail: ITMDBAccountDetail; stdcall;
+
+    function LoginAsGuest: ITMDBAuthGuestSessionResult; stdcall;
+    //TODO: Trigger event to open a link in a browser for user authentication
+    function LoginAsUser: ITMDBAuthSessionResult; stdcall;
+    function LoginAsCreds(const Username, Password: WideString): ITMDBAuthSessionResult; stdcall;
+    function Logout: Boolean; stdcall;
+
+    property AuthMethod: TTMDBUserAuth read GetAuthMethod write SetAuthMethod;
+    property IsAuthenticated: Boolean read GetIsAuthenticated;
+    property IsGuest: Boolean read GetIsGuest;
+    property SessionID: WideString read GetSessionID;
+    property AccountDetail: ITMDBAccountDetail read GetAccountDetail;
+  end;
+
+
+
   { Core Access }
 
-  ITMDB = interface
+  ITMDBClient = interface
     ['{FB7CAA70-63BE-4BAC-9BE8-4E0E0225A9C3}']
 
     { Authentication }
@@ -2253,6 +2334,7 @@ type
     function GetUserAuth: TTMDBUserAuth; stdcall;
     procedure SetUserAuth(const Value: TTMDBUserAuth); stdcall;
     function GetCache: ITMDBCache; stdcall;
+    function GetLoginState: ITMDBLoginState; stdcall;
 
     { Services }
 
@@ -2292,150 +2374,10 @@ type
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property UserAuth: TTMDBUserAuth read GetUserAuth write SetUserAuth;
     property Cache: ITMDBCache read GetCache;
+    property LoginState: ITMDBLoginState read GetLoginState;
 
   end;
-
-function TMDBAuthMethodToStr(const AAuthMethod: TTMDBAuthMethod): WideString;
-function TMDBStrToAuthMethod(const AAuthMethod: WideString): TTMDBAuthMethod;
-
-function TMDBUserAuthToStr(const AUserAuth: TTMDBUserAuth): WideString;
-function TMDBStrToUserAuth(const AUserAuth: WideString): TTMDBUserAuth;
-
-function TMDBMediaTypeToStr(const AMediaType: TTMDBMediaType): WideString;
-function TMDBStrToMediaType(const AMediaType: WideString): TTMDBMediaType;
-
-function TMDBGenderToStr(const AGender: TTMDBGender): WideString;
-function TMDBStrToGender(const AGender: WideString): TTMDBGender;
-
-function TMDBMovieRequestToStr(const AValue: TTMDBMovieRequest): WideString;
-function TMDBStrToMovieRequest(const AValue: WideString): TTMDBMovieRequest;
-
-function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
 
 implementation
-
-function TMDBAuthMethodToStr(const AAuthMethod: TTMDBAuthMethod): WideString;
-begin
-  case AAuthMethod of
-    amAPIKey: Result:= 'API Key';
-    amAccessToken: Result:= 'Access Token';
-  end;
-end;
-
-function TMDBStrToAuthMethod(const AAuthMethod: WideString): TTMDBAuthMethod;
-  procedure Chk(const S: String; const T: TTMDBAuthMethod);
-  begin
-    if SameText(AAuthMethod, S) then
-      Result:= T;
-  end;
-begin
-  Chk('API Key', amAPIKey);
-  Chk('Key', amAPIKey);
-  Chk('Access Token', amAccessToken);
-  Chk('Token', amAccessToken);
-end;
-
-function TMDBUserAuthToStr(const AUserAuth: TTMDBUserAuth): WideString;
-begin
-  case AUserAuth of
-    uaUnauthorized: Result:= 'Unauthorized';
-    uaGuest: Result:= 'Guest';
-    uaNormal: Result:= 'Normal';
-    uaCredentials: Result:= 'Credentials';
-  end;
-end;
-
-function TMDBStrToUserAuth(const AUserAuth: WideString): TTMDBUserAuth;
-  procedure Chk(const S: String; const T: TTMDBUserAuth);
-  begin
-    if SameText(AUserAuth, S) then
-      Result:= T;
-  end;
-begin
-  Chk('Unauthorized', uaUnauthorized);
-  Chk('Guest', uaGuest);
-  Chk('Normal', uaNormal);
-  Chk('Credentials', uaCredentials);
-end;
-
-function TMDBMediaTypeToStr(const AMediaType: TTMDBMediaType): WideString;
-begin
-  case AMediaType of
-    mtMovie: Result:= 'movie';
-    mtTV: Result:= 'tv';
-    mtPerson: Result:= 'person';
-  end;
-end;
-
-function TMDBStrToMediaType(const AMediaType: WideString): TTMDBMediaType;
-  procedure Chk(const S: String; const T: TTMDBMediaType);
-  begin
-    if SameText(AMediaType, S) then
-      Result:= T;
-  end;
-begin
-  Chk('movie', mtMovie);
-  Chk('tv', mtTV);
-  Chk('person', mtPerson);
-end;
-
-function TMDBGenderToStr(const AGender: TTMDBGender): WideString;
-begin
-  case AGender of
-    gNotSpecified: Result:= 'Not Specified';
-    gFemale: Result:= 'Female';
-    gMale: Result:= 'Male';
-    gNonBinary: Result:= 'Non-Binary';
-  end;
-end;
-
-function TMDBStrToGender(const AGender: WideString): TTMDBGender;
-  procedure Chk(const S: String; const T: TTMDBGender);
-  begin
-    if SameText(AGender, S) then
-      Result:= T;
-  end;
-begin
-  Chk('', gNotSpecified);
-  Chk('Not Specified', gNotSpecified);
-  Chk('Unspecified', gNotSpecified);
-  Chk('Unknown', gNotSpecified);
-  Chk('Female', gFemale);
-  Chk('F', gFemale);
-  Chk('Male', gMale);
-  Chk('M', gMale);
-  Chk('Non-Binary', gNonBinary);
-  Chk('Non Binary', gNonBinary);
-  Chk('NonBinary', gNonBinary);
-end;
-
-function TMDBMovieRequestToStr(const AValue: TTMDBMovieRequest): WideString;
-begin
-  Result:= TMDB_MOVIE_REQUEST[Integer(AValue)];
-end;
-
-function TMDBStrToMovieRequest(const AValue: WideString): TTMDBMovieRequest;
-var
-  X: Integer;
-begin
-  Result:= TTMDBMovieRequest.mrAccountStates;
-  for X := 0 to Length(TMDB_MOVIE_REQUEST)-1 do begin
-    if SameText(AValue, TMDB_MOVIE_REQUEST[X]) then begin
-      Result:= TTMDBMovieRequest(X);
-    end;
-  end;
-end;
-
-function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
-var
-  R: TTMDBMovieRequest;
-begin
-  Result:= '';
-  for R in AValue do begin
-    if Result <> '' then
-      Result:= Result + ',';
-    Result:= Result + TMDB_MOVIE_REQUEST[Integer(R)];
-  end;
-end;
 
 end.

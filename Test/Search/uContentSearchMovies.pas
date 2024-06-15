@@ -29,7 +29,7 @@ type
     Panel14: TPanel;
     Label15: TLabel;
     txtSearchMoviesYear: TEdit;
-    PageControl1: TPageControl;
+    Pages: TPageControl;
     TabSheet1: TTabSheet;
     lblTitle: TLabel;
     lblReleaseDate: TLabel;
@@ -60,11 +60,19 @@ type
     TabSheet14: TTabSheet;
     TabSheet15: TTabSheet;
     lstCredits: TListView;
-    ListView1: TListView;
+    lstAltTitles: TListView;
     ListView2: TListView;
+    lstReleaseDates: TListView;
     procedure FormDestroy(Sender: TObject);
+    procedure PagesChange(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
+    procedure LoadAccountStates;
+    procedure LoadAlternativeTitles;
+    procedure LoadCredits;
+    procedure LoadKeywords;
+    procedure LoadReleaseDates;
+    procedure LoadDetails;
   protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -149,62 +157,50 @@ var
   ID: Integer;
   O: ITMDBMovieItem;
   Inc: TTMDBMovieRequests;
-  X: Integer;
-  K: ITMDBKeywordItem;
-  //I: TListItem;
-  //C: ITMDBCreditItem;
 begin
   inherited;
-  FDetail:= nil;
-  pDetail.Visible:= True;
-  pDetail.Top:= 1;
-  PrepAPI;
-  O:= ITMDBMovieItem(Obj);
-  ID:= O.ID;
-  Inc:= [mrKeywords];
-  FDetail:= API.Movies.GetDetails(ID, Inc);
+  Screen.Cursor:= crHourglass;
+  try
+    FDetail:= nil;
+    PrepAPI;
+    O:= ITMDBMovieItem(Obj);
+    ID:= O.ID;
+    Inc:= [mrKeywords, mrCredits, mrAlternativeTitles, mrAccountStates, mrReleaseDates];
+    FDetail:= API.Movies.GetDetails(ID, Inc, '', API.LoginState.SessionID);
+  finally
+    Screen.Cursor:= crDefault;
+  end;
 
+  PagesChange(nil);
+
+  {
   //Details
-  lblTitle.Caption:= FDetail.Title;
-  lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate);
-  lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
-  txtOverview.Lines.Text:= FDetail.Overview;
-  lblTagline.Caption:= FDetail.Tagline;
+  LoadDetails;
 
   //Account States
-  if FDetail.AppendedAccountStates.Favorite then
-    lblFavorite.Caption:= 'Favorite: TRUE'
-  else
-    lblFavorite.Caption:= 'Favorite: FALSE';
-  if FDetail.AppendedAccountStates.Watchlist then
-    lblWatchlist.Caption:= 'Watchlist: TRUE'
-  else
-    lblWatchlist.Caption:= 'Watchlist: FALSE';
-  lblRating.Caption:= 'Rating: '+FormatFloat('0.0', FDetail.AppendedAccountStates.RatedValue);
+  LoadAccountStates;
 
   //Alternative Titles
+  LoadAlternativeTitles;
 
   //Changes
 
   //Credits
-  lstCredits.Items.Clear;
+  LoadCredits;
 
   //External IDs
 
   //Images
 
   //Keywords
-  lstKeywords.Items.Clear;
-  for X := 0 to FDetail.AppendedKeywords.Count-1 do begin
-    K:= FDetail.AppendedKeywords[X];
-    lstKeywords.Items.Add(K.Name);
-  end;
+  LoadKeywords;
 
   //Lists
 
   //Recommendations
 
   //Release Dates
+  LoadReleaseDates;
 
   //Reviews
 
@@ -214,6 +210,155 @@ begin
 
   //Videos
 
+  }
+
+end;
+
+procedure TfrmContentSearchMovies.LoadDetails;
+begin
+  lblTitle.Caption:= FDetail.Title;
+  lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate);
+  lblGenres.Caption:= 'Genres: '+GetGenres(FDetail);
+  txtOverview.Lines.Text:= FDetail.Overview;
+  lblTagline.Caption:= FDetail.Tagline;
+end;
+
+procedure TfrmContentSearchMovies.LoadAccountStates;
+var
+  S: ITMDBAccountStates;
+begin
+  S:= FDetail.AppendedAccountStates;
+  if S.Favorite then
+    lblFavorite.Caption:= 'Favorite: TRUE'
+  else
+    lblFavorite.Caption:= 'Favorite: FALSE';
+  if S.Watchlist then
+    lblWatchlist.Caption:= 'Watchlist: TRUE'
+  else
+    lblWatchlist.Caption:= 'Watchlist: FALSE';
+  lblRating.Caption:= 'Rating: '+FormatFloat('0.0', S.RatedValue);
+end;
+
+procedure TfrmContentSearchMovies.LoadAlternativeTitles;
+var
+  AT: ITMDBAlternativeTitleList;
+  T: ITMDBAlternativeTitleItem;
+  X: Integer;
+  I: TListItem;
+  Country: ITMDBCountryItem;
+begin
+  lstAltTitles.Items.BeginUpdate;
+  try
+    lstAltTitles.Items.Clear;
+    AT:= FDetail.AppendedAlternativeTitles;
+    for X := 0 to AT.Count-1 do begin
+      T:= AT[X];
+      I:= lstAltTitles.Items.Add;
+      I.Caption:= T.Title;
+      Country:= API.Cache.Countries.GetByCode(T.ISO3166_1);
+      if Country <> nil then
+        I.SubItems.Add(Country.EnglishName)
+      else
+        I.SubItems.Add(T.ISO3166_1);
+    end;
+  finally
+    lstAltTitles.Items.EndUpdate;
+  end;
+end;
+
+procedure TfrmContentSearchMovies.LoadCredits;
+var
+  C: ITMDBCredits;
+  Ca: ITMDBCastItem;
+  Cr: ITMDBCrewItem;
+  X: Integer;
+  I: TListItem;
+begin
+  lstCredits.Items.BeginUpdate;
+  try
+    lstCredits.Items.Clear;
+    C:= FDetail.AppendedCredits;
+    //Credits - Cast
+    for X := 0 to C.Cast.Count-1 do begin
+      Ca:= C.Cast[X];
+      I:= lstCredits.Items.Add;
+      I.GroupID:= 0;
+      I.Caption:= Ca.Name;
+      I.SubItems.Add(Ca.Character);
+    end;
+    //Credits - Crew
+    for X := 0 to C.Crew.Count-1 do begin
+      Cr:= C.Crew[X];
+      I:= lstCredits.Items.Add;
+      I.GroupID:= 1;
+      I.Caption:= Cr.Name;
+      I.SubItems.Add(Cr.Job);
+    end;
+  finally
+    lstCredits.Items.EndUpdate;
+  end;
+end;
+
+procedure TfrmContentSearchMovies.LoadKeywords;
+var
+  X: Integer;
+  L: ITMDBKeywordList;
+  K: ITMDBKeywordItem;
+begin
+  lstKeywords.Items.BeginUpdate;
+  try
+    lstKeywords.Items.Clear;
+    L:= FDetail.AppendedKeywords;
+    for X := 0 to L.Count-1 do begin
+      K:= L[X];
+      lstKeywords.Items.Add(K.Name);
+    end;
+  finally
+    lstKeywords.Items.EndUpdate;
+  end;
+end;
+
+procedure TfrmContentSearchMovies.LoadReleaseDates;
+var
+  X, Y: Integer;
+  I: TListItem;
+  G: TListGroup;
+  Country: ITMDBCountryItem;
+  RD: ITMDBReleaseDateCountries;
+  RC: ITMDBReleaseDateCountry;
+  RI: ITMDBReleaseDateItem;
+begin
+  lstReleaseDates.Items.BeginUpdate;
+  lstReleaseDates.Groups.BeginUpdate;
+  try
+    lstReleaseDates.Items.Clear;
+    lstReleaseDates.Groups.Clear;
+    RD:= FDetail.AppendedReleaseDates;
+    for X := 0 to RD.Count-1 do begin
+      RC:= RD[X];
+      G:= lstReleaseDates.Groups.Add;
+      Country:= API.Cache.Countries.GetByCode(RC.CountryCode);
+      if Country = nil then
+        G.Header:= RC.CountryCode
+      else
+        G.Header:= Country.EnglishName;
+      G.State:= [lgsCollapsible,lgsCollapsed];
+      for Y := 0 to RC.Count-1 do begin
+        RI:= RC[Y];
+        I:= lstReleaseDates.Items.Add;
+        I.GroupID:= G.GroupID;
+        I.Caption:= FormatDateTime('yyyy-mm-dd', RI.ReleaseDate);
+        I.SubItems.Add(TMDBReleaseTypeToStr(RI.ReleaseType));
+        I.SubItems.Add(RI.Note);
+        I.SubItems.Add(RI.Certification);
+        I.SubItems.Add(TMDBStrArrayToStr(RI.Descriptors));
+        I.SubItems.Add(RI.ISO639_1); //TODO
+      end;
+    end;
+  finally
+    lstReleaseDates.Groups.EndUpdate;
+    lstReleaseDates.Items.EndUpdate;
+  end;
 end;
 
 function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBPageItem;
@@ -241,6 +386,34 @@ end;
 function TfrmContentSearchMovies.Page: ITMDBPage;
 begin
   Result:= ITMDBMoviePage(inherited Page);
+end;
+
+procedure TfrmContentSearchMovies.PagesChange(Sender: TObject);
+begin
+  inherited;
+  //Refresh detail of selected tab...
+  Screen.Cursor:= crHourglass;
+  try
+    case Pages.ActivePageIndex of
+      0: LoadDetails;
+      1: LoadAccountStates;
+      2: LoadAlternativeTitles;
+      3: ; //CHanges
+      4: LoadCredits;
+      5: ; //External IDs
+      6: ; //Images
+      7: LoadKeywords;
+      8: ; //Lists
+      9: ; //Recommendations
+      10: LoadReleaseDAtes;
+      11: ; //Reviews
+      12: ; //Similar
+      13: ; //Translations
+      14: ; //Videos;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
 end;
 
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;

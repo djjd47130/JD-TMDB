@@ -19,7 +19,7 @@ type
   TfrmContentPageBase = class(TfrmContentBase)
     pMain: TPanel;
     lstResults: TListView;
-    pFooter: TPanel;
+    pTop: TPanel;
     lblResults: TLabel;
     lblPage: TLabel;
     btnPagePrev: TButton;
@@ -27,6 +27,7 @@ type
     pSearch: TPanel;
     btnApply: TButton;
     pDetail: TPanel;
+    Splitter1: TSplitter;
     procedure lstResultsClick(Sender: TObject);
     procedure lstResultsDblClick(Sender: TObject);
     procedure lstResultsSelectItem(Sender: TObject; Item: TListItem;
@@ -133,6 +134,7 @@ end;
 
 procedure TfrmContentPageBase.HideDetail;
 begin
+  Splitter1.Visible:= False;
   pDetail.Visible:= False;
 end;
 
@@ -286,7 +288,10 @@ end;
 procedure TfrmContentPageBase.ShowDetail(const Index: Integer; Item: TListItem;
   Obj: ITMDBPageItem);
 begin
-
+  Splitter1.Visible:= True;
+  pDetail.Visible:= True;
+  pDetail.Top:= 1;
+  Splitter1.Top:= 1;
 end;
 
 procedure TfrmContentPageBase.UpdateFooter;

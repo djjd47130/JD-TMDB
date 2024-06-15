@@ -88,7 +88,6 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -141,13 +140,22 @@
         <DCCReference Include="..\Source\JD.TMDB.Impl.pas"/>
         <DCCReference Include="..\Source\JD.TMDB.Common.pas"/>
         <DCCReference Include="Genres\uTabGenres.pas">
-            <Form>frmTabBase1</Form>
+            <Form>frmTabGenres</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uContentListBase.pas">
             <Form>frmContentBase1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Genres\uContentGenresMovie.pas">
+            <Form>frmContentGenresMovie</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Genres\uContentGenresTV.pas">
+            <Form>frmContentGenresTV</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\JD.TMDB.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

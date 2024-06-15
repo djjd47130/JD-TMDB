@@ -7,23 +7,20 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
-  {$IFDEF USE_INTF}
   JD.TMDB.Intf,
   JD.TMDB.Impl,
-  {$ELSE}
-  JD.TMDB.API,
-  {$ENDIF}
+  JD.TMDB.Common,
   XSuperObject, XSuperJSON,
   uTabBase, uContentBase,
   uTabConfiguration,
   uTabSearch,
-  Clipbrd;
+  uTabGenres,
+  Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu;
 
 type
   TfrmTMDBTestMain = class(TForm)
     Pages: TPageControl;
     tabCertifications: TTabSheet;
-    tabGenres: TTabSheet;
     tabSetup: TTabSheet;
     Panel1: TPanel;
     gbAPIAuthMethod: TGroupBox;
@@ -34,19 +31,8 @@ type
     Label3: TLabel;
     txtAccessToken: TEdit;
     Panel2: TPanel;
-    RadioButton2: TRadioButton;
-    RadioButton1: TRadioButton;
-    GroupBox1: TGroupBox;
-    Panel3: TPanel;
-    RadioButton3: TRadioButton;
-    RadioButton4: TRadioButton;
-    RadioButton6: TRadioButton;
-    pAuthUser: TPanel;
-    Label2: TLabel;
-    txtAuthUser: TEdit;
-    pAuthPass: TPanel;
-    Label4: TLabel;
-    txtAuthPass: TEdit;
+    rAuthToken: TRadioButton;
+    rAuthKey: TRadioButton;
     MM: TMainMenu;
     Services1: TMenuItem;
     Setup1: TMenuItem;
@@ -54,27 +40,35 @@ type
     CertPages: TPageControl;
     tabCertsMovies: TTabSheet;
     tabCertsTV: TTabSheet;
-    pLoginStatus: TGroupBox;
-    btnLoginLogout: TButton;
-    pLoginUserInfo: TGroupBox;
-    Panel4: TPanel;
-    lblUserName: TLabel;
-    lblUserFullName: TLabel;
-    lblUserSessionID: TLabel;
-    Panel5: TPanel;
-    imgUserAvatar: TImage;
     Button1: TButton;
     btnRefreshCertsMovies: TButton;
     btnRefreshCertsTV: TButton;
     lstCertsMovies: TListView;
     lstCertsTV: TListView;
-    GenrePages: TPageControl;
-    TabSheet7: TTabSheet;
-    Button2: TButton;
-    TabSheet8: TTabSheet;
-    Button3: TButton;
-    lstGenreTV: TListView;
-    lstGenreMovies: TListView;
+    pTop: TPanel;
+    btnUser: TJDFontButton;
+    pUser: TPanel;
+    gbUserLogin: TGroupBox;
+    Panel3: TPanel;
+    RadioButton3: TRadioButton;
+    RadioButton4: TRadioButton;
+    rbCreds: TRadioButton;
+    pAuthUser: TPanel;
+    Label2: TLabel;
+    txtAuthUser: TEdit;
+    pAuthPass: TPanel;
+    Label4: TLabel;
+    txtAuthPass: TEdit;
+    btnLogin: TButton;
+    gbUserInfo: TGroupBox;
+    Panel4: TPanel;
+    lblUserName: TLabel;
+    lblUserFullName: TLabel;
+    lblUserSessionID: TLabel;
+    lblUserAccountID: TLabel;
+    Panel5: TPanel;
+    imgUserAvatar: TImage;
+    btnLogout: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
@@ -83,38 +77,20 @@ type
     procedure UserAuthMethodClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
-    procedure btnLoginLogoutClick(Sender: TObject);
+    procedure btnLoginClick(Sender: TObject);
     procedure btnRefreshCertsMoviesClick(Sender: TObject);
     procedure btnRefreshCertsTVClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure imgUserAvatarClick(Sender: TObject);
     procedure lblUserSessionIDDblClick(Sender: TObject);
+    procedure btnUserClick(Sender: TObject);
+    procedure btnLogoutClick(Sender: TObject);
+    procedure txtAuthPassKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
-    FAuthMethod: Integer;
-    FSessionID: String;
-    FSessionGuest: Boolean;
     FAppSetup: ISuperObject;
-
-    //TODO: Remove these in favor of using ITMDB's internal cache instead...
-    {$IFDEF USE_INTF}
-    FTMDB: ITMDB;
-
-    {$ELSE}
-    FTMDB: TTMDBAPI;
-    FConfig: ISuperObject;
-    FConfigCountries: ISuperArray;
-    FConfigJobs: ISuperArray;
-    FConfigLanguages: ISuperArray;
-    FConfigPrimaryTranslations: ISuperArray;
-    FConfigTimezones: ISuperArray;
-    FConfigMovieGenres: ISuperArray;
-    FConfigTVGenres: ISuperArray;
-    FConfigMovieCerts: ISuperObject;
-    FConfigTVCerts: ISuperObject;
-    {$ENDIF}
+    FTMDB: ITMDBClient;
+    FAuthMethod: Integer;
 
     procedure LoadSetup;
     procedure SaveSetup;
@@ -124,20 +100,16 @@ type
 
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     procedure EmbedTabs;
+    function GetAPIAuth: TTMDBAuthMethod;
+    procedure SetAPIAuth(const Value: TTMDBAuthMethod);
 
   public
     procedure PrepAPI;
-    procedure ResetAPI;
-    {$IFDEF USE_INTF}
-    function TMDB: ITMDB;
-    {$ELSE}
-    function TMDB: TTMDBAPI;
-    {$ENDIF}
-    function CountryName(const Code: String): String;
-    function MovieGenreName(const ID: Integer): String;
-    function TVGenreName(const ID: Integer): String;
+    function TMDB: ITMDBClient;
     procedure ListLanguages(AList: TStrings);
     procedure ListRegions(AList: TStrings);
+
+    property APIAuth: TTMDBAuthMethod read GetAPIAuth write SetAPIAuth;
   end;
 
 var
@@ -150,11 +122,6 @@ uses
 
 {$R *.dfm}
 
-procedure TfrmTMDBTestMain.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  SaveSetup;
-end;
-
 procedure TfrmTMDBTestMain.FormCreate(Sender: TObject);
 var
   X: Integer;
@@ -163,35 +130,31 @@ begin
   ReportMemoryLeaksOnShutdown:= True;
   {$ENDIF}
 
-
   Pages.Align:= alClient;
+  gbUserInfo.Align:= alClient;
+  gbUserLogin.Align:= alClient;
+  CertPages.Align:= alClient;
 
-  {$IFDEF USE_INTF}
-  FTMDB:= TTMDB.Create;
-  {$ELSE}
-  FTMDB:= TTMDBAPI.Create(nil);
-
-  {$ENDIF}
+  FTMDB:= TTMDBClient.Create;
+  FTMDB.AuthMethod:= TTMDBAuthMethod.amAccessToken;
+  FAuthMethod:= 2;
 
   EmbedTabs;
-
-  CertPages.Align:= alClient;
-  GenrePages.Align:= alClient;
 
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
   Pages.ActivePageIndex:= 0;
   Services1Click(Services1);
+
+  Width:= 1200;
+  Height:= 800;
+
 end;
 
 procedure TfrmTMDBTestMain.FormDestroy(Sender: TObject);
 begin
-
-  {$IFDEF USE_INTF}
   FTMDB:= nil;
-  {$ELSE}
-  FreeAndNil(FTMDB);
-  {$ENDIF}
+  FAppSetup:= nil;
 end;
 
 procedure TfrmTMDBTestMain.FormShow(Sender: TObject);
@@ -199,13 +162,9 @@ begin
   LoadSetup;
 end;
 
-procedure TfrmTMDBTestMain.imgUserAvatarClick(Sender: TObject);
-var
-  O: ISuperObject;
+procedure TfrmTMDBTestMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  //TODO:
-  O:= TMDB.Account.GetAccountInfo;
-  ShowMessage(O.AsJSON(True));
+  SaveSetup;
 end;
 
 procedure TfrmTMDBTestMain.lblUserSessionIDDblClick(Sender: TObject);
@@ -214,6 +173,8 @@ begin
 end;
 
 procedure TfrmTMDBTestMain.LoadSetup;
+var
+  C: TControl;
 begin
   if FileExists(SetupFilename) then begin
     FAppSetup:= TSuperObject.ParseFile(SetupFilename);
@@ -223,38 +184,32 @@ begin
 
   txtAPIKey.Text:= FAppSetup.S['api_key'];
   txtAccessToken.Text:= FAppSetup.S['access_token'];
+  APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
   Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
-  //TODO: current_sub_tab
+  C:= Pages.ActivePage.Controls[0];
+  if C is TfrmTabBase then begin
+    TfrmTabBase(C).Pages.ActivePageIndex:= FAppSetup.I['current_sub_tab'];
+  end;
 
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
 end;
 
 procedure TfrmTMDBTestMain.SaveSetup;
+var
+  C: TControl;
 begin
   if Assigned(FAppSetup) then begin
     FAppSetup.S['api_key']:= txtAPIKey.Text;
     FAppSetup.S['access_token']:= txtAccessToken.Text;
+    FAppSetup.I['api_auth']:= Integer(APIAuth);
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
-    //TODO: current_sub_tab
+    C:= Pages.ActivePage.Controls[0];
+    if C is TfrmTabBase then begin
+      FAppSetup.I['current_sub_tab']:=  TfrmTabBase(C).Pages.ActivePageIndex;
+    end;
+
     FAppSetup.SaveTo(SetupFilename);
   end;
-end;
-
-function TfrmTMDBTestMain.MovieGenreName(const ID: Integer): String;
-//var
-  //X: Integer;
-begin
-  Result:= '';
-  {$IFDEF USE_INTF}
-  //TODO
-  {$ELSE}
-  for X := 0 to FConfigMovieGenres.Length-1 do begin
-    if FConfigMovieGenres.O[X].I['id'] = ID then begin
-      Result:= FConfigMovieGenres.O[X].S['name'];
-      Break;
-    end;
-  end;
-  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.APIAuthMethodRadioClick(Sender: TObject);
@@ -279,193 +234,67 @@ begin
   ServiceClicked(AppSetup1);
 end;
 
-procedure TfrmTMDBTestMain.btnLoginLogoutClick(Sender: TObject);
+procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
 var
   Success: Boolean;
-  {$IFDEF USE_INTF}
-  RT: ITMDBAuthRequestTokenResult;
   GS: ITMDBAuthGuestSessionResult;
   US: ITMDBAuthSessionResult;
-  LS: ITMDBAuthSessionResultLogin;
-  {$ELSE}
-  O, S: ISuperObject;
-  {$ENDIF}
   D: ITMDBAccountDetail;
 begin
-  Self.PrepAPI;
-  {$IFDEF USE_INTF}
-  if btnLoginLogout.Tag = 1 then begin
-    //User is logged in, log them out?
-    if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
+  PrepAPI;
+  Success:= False;
 
-      FSessionGuest:= True;
-      btnLoginLogout.Caption:= 'Login';
-      btnLoginLogout.Tag:= 0;
-      if (FSessionID <> '') and (not FSessionGuest) then
-        FTMDB.Authentication.DeleteSession(FSessionID);
-      FSessionID:= '';
-      pLoginUserInfo.Visible:= False;
-
+  case FAuthMethod of
+    0: begin
+      //Guest...
+      GS:= FTMDB.LoginState.LoginAsGuest;
+      Success:= GS.Success;
+    end;
+    1: begin
+      //Normal...
+      US:= FTMDB.LoginState.LoginAsUser;
+      Success:= US.Success;
+    end;
+    2: begin
+      //Credentials...
+      US:= FTMDB.LoginState.LoginAsCreds(txtAuthUser.Text, txtAuthPass.Text);
+      Success:= US.Success;
+    end;
+  end;
+  if Success then begin
+    pUser.Visible:= False;
+    btnLogin.Tag:= 1;
+    gbUserInfo.Visible:= True;
+    gbUserLogin.Visible:= False;
+    gbUserInfo.Align:= alClient;
+    lblUserSessionID.Caption:= FTMDB.LoginState.SessionID;
+    if FTMDB.LoginState.IsGuest then begin
+      lblUserName.Caption:= 'GUEST';
+      lblUserFullName.Caption:= 'GUEST USER';
+      lblUserAccountID.Caption:= '';
+      btnUser.Text:= 'GUEST';
+    end else begin
+      D:= FTMDB.LoginState.AccountDetail;
+      lblUserName.Caption:= D.UserName;
+      lblUserFullName.Caption:= D.Name;
+      lblUserAccountID.Caption:= IntToStr(D.ID);
+      if D.Name <> '' then
+        btnUser.Text:= D.Name
+      else
+        btnUser.Text:= D.UserName;
+      //TODO: Gravatar...
     end;
   end else begin
-    //User is logged out, execute login...
-    Success:= False;
-    case FAuthMethod of
-      0: begin
-        //Guest...
-        GS:= FTMDB.Authentication.CreateGuestSession;
-        if GS.Success then begin
-          FSessionID:= GS.GuestSessionID;
-          FSessionGuest:= True;
-          Success:= True;
-        end;
-      end;
-      1: begin
-        //Normal...
-        RT:= FTMDB.Authentication.CreateRequestToken;
-        if RT.Success then begin
-          US:= FTMDB.Authentication.CreateSession(RT.RequestToken);
-          //TODO
-          if US.Success then begin
-            FSessionID:= US.SessionID;
-            FSessionGuest:= False;
-            Success:= True;
-          end;
-        end;
-      end;
-      2: begin
-        //Credentials...
-        RT:= FTMDB.Authentication.CreateRequestToken;
-        if RT.Success then begin
-          LS:= FTMDB.Authentication.CreateSessionLogin(txtAuthUser.Text, txtAuthPass.Text, RT.RequestToken);
-          if LS.Success then begin
-            US:= FTMDB.Authentication.CreateSession(RT.RequestToken);
-            //TODO
-            if US.Success then begin
-              FSessionID:= US.SessionID;
-              FSessionGuest:= False;
-              Success:= True;
-            end;
-          end;
-        end;
-      end;
-    end;
-    if Success then begin
-      btnLoginLogout.Caption:= 'Logout';
-      btnLoginLogout.Tag:= 1;
-      pLoginUserInfo.Visible:= True; //TODO
-        lblUserSessionID.Caption:= FSessionID;
-      if FSessionGuest then begin
-        lblUserName.Caption:= 'GUEST';
-        lblUserFullName.Caption:= 'GUEST';
-      end else begin
-        D:= FTMDB.Account.GetDetailsBySession(FSessionID);
-        lblUserName.Caption:= D.UserName;
-        lblUserFullName.Caption:= D.Name;
-        //TODO: Gravatar...
-      end;
-    end;
+    //TODO: Login failed...
   end;
 
-  {$ELSE}
-
-  //TODO: Log in or out user depending on selected authentication method...
-  if btnLoginLogout.Tag = 1 then begin
-    //User is logged in, log them out?
-    if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
-
-      FSessionGuest:= True;
-      btnLoginLogout.Caption:= 'Login';
-      btnLoginLogout.Tag:= 0;
-      if (FSessionID <> '') and (not FSessionGuest) then
-        FTMDB.Authentication.DeleteSession(FSessionID);
-      FSessionID:= '';
-
-    end;
-  end else begin
-    //User is logged out, execute login...
-    Success:= False;
-    case FAuthMethod of
-      0: begin
-        //Guest...
-        S:= FTMDB.Authentication.CreateGuestSession;
-        if S.B['success'] then begin
-          FSessionID:= S.S['guest_session_id'];
-          FSessionGuest:= True;
-          Success:= True;
-        end;
-      end;
-      1: begin
-        //Normal...
-        O:= FTMDB.Authentication.CreateRequestToken;
-        if O.B['success'] then begin
-          RT:= O.S['request_token'];
-          S:= FTMDB.Authentication.CreateSession(RT);
-          //TODO
-          if S.B['success'] then begin
-            FSessionID:= S.S['session_id'];
-            FSessionGuest:= False;
-            Success:= True;
-          end;
-        end;
-      end;
-      2: begin
-        //Credentials...
-        O:= FTMDB.Authentication.CreateSessionLogin(txtAuthUser.Text, txtAuthPass.Text, RT);
-        if O.B['success'] then begin
-          RT:= O.S['request_token'];
-          S:= FTMDB.Authentication.CreateSession(RT);
-          //TODO
-          if S.B['success'] then begin
-            FSessionID:= S.S['session_id'];
-            FSessionGuest:= False;
-            Success:= True;
-          end;
-        end;
-      end;
-    end;
-    if Success then begin
-      btnLoginLogout.Caption:= 'Logout';
-      btnLoginLogout.Tag:= 1;
-    end;
-  end;
-  {$ENDIF}
-end;
-
-function TfrmTMDBTestMain.CountryName(const Code: String): String;
-var
-  X: Integer;
-  {$IFDEF USE_INTF}
-  O: ITMDBCountryItem;
-  {$ELSE}
-  O: ISuperObject;
-  {$ENDIF}
-begin
-  {$IFDEF USE_INTF}
-  for X := 0 to FTMDB.Cache.Countries.Count-1 do begin
-    O:= FTMDB.Cache.Countries[X];
-    if O.ISO3166_1 = Code then begin
-      Result:= O.EnglishName;
-      Break;
-    end;
-  end;
-  {$ELSE}
-  if FConfigCountries = nil then
-    FConfigCountries:= FTMDB.Configuration.GetCountries;
-  for X := 0 to FConfigCountries.Length-1 do begin
-    O:= FConfigCountries.O[X];
-    if O.S['iso_3166_1'] = Code then begin
-      Result:= O.S['english_name'];
-      Break;
-    end;
-  end;
-  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.EmbedTabs;
 begin
   EmbedTab(TfrmTabConfiguration);
   EmbedTab(TfrmTabSearch);
+  EmbedTab(TfrmTabGenres);
 
 end;
 
@@ -484,180 +313,96 @@ begin
   T.TabVisible:= False;
 end;
 
-procedure TfrmTMDBTestMain.PrepAPI;
+function TfrmTMDBTestMain.GetAPIAuth: TTMDBAuthMethod;
 begin
-  {$IFDEF USE_INTF}
-  FTMDB.APIKey:= txtAPIKey.Text;
-  FTMDB.AccessToken:= txtAccessToken.Text;
-  //TODO: Test connection and authentication...
-
-  {$ELSE}
-  FTMDB.APIKey:= txtAPIKey.Text;
-  FTMDB.APIAccessToken:= txtAccessToken.Text;
-  //TODO: Test connection and authentication...
-  try
-    if FConfig = nil then
-      FConfig:= FTMDB.Configuration.GetDetails;
-    if FConfigCountries = nil then
-      FConfigCountries:= FTMDB.Configuration.GetCountries;
-    if FConfigJobs = nil then
-      FConfigJobs:= FTMDB.Configuration.GetJobs;
-    if FConfigLanguages = nil then
-      FConfigLanguages:= FTMDB.Configuration.GetLanguages;
-    if FConfigPrimaryTranslations = nil then
-      FConfigPrimaryTranslations:= FTMDB.Configuration.GetPrimaryTranslations;
-    if FConfigTimezones = nil then
-      FConfigTimezones:= FTMDB.Configuration.GetTimeZones;
-    if FConfigMovieGenres = nil then
-      FConfigMovieGenres:= FTMDB.Genres.GetMovieList('');
-    if FConfigTVGenres = nil then
-      FConfigTVGenres:= FTMDB.Genres.GetTVList('');
-    if FConfigMovieCerts = nil then
-      FConfigMovieCerts:= FTMDB.Certifications.GetMovieCertifications;
-    if FConfigTVCerts = nil then
-      FConfigTVCerts:= FTMDB.Certifications.GetTVCertifications;
-  except
-    //TODO
-  end;
-  {$ENDIF}
+  if rAuthKey.Checked then
+    Result:= TTMDBAuthMethod.amAPIKey
+  else
+    Result:= TTMDBAuthMethod.amAccessToken;
 end;
 
-procedure TfrmTMDBTestMain.ResetAPI;
+procedure TfrmTMDBTestMain.SetAPIAuth(const Value: TTMDBAuthMethod);
+var
+  R: TRadioButton;
 begin
-  {$IFDEF USE_INTF}
+  case Value of
+    amAPIKey: R:= rAuthKey;
+    else R:= rAuthToken;
+  end;
+  R.Checked:= True;
+  APIAuthMethodRadioClick(R);
+end;
 
-  {$ELSE}
-  FConfig:= nil;
-  FConfigCountries:= nil;
-  FConfigJobs:= nil;
-  FConfigLanguages:= nil;
-  FConfigPrimaryTranslations:= nil;
-  FConfigTimezones:= nil;
-  FConfigMovieGenres:= nil;
-  FConfigTVGenres:= nil;
-  FConfigMovieCerts:= nil;
-  FConfigTVCerts:= nil;
-  {$ENDIF}
+procedure TfrmTMDBTestMain.PrepAPI;
+begin
+  FTMDB.APIKey:= txtAPIKey.Text;
+  FTMDB.AccessToken:= txtAccessToken.Text;
+  FTMDB.AuthMethod:= GetAPIAuth;
+  //TODO: Test connection and authentication...
+
 end;
 
 procedure TfrmTMDBTestMain.Button1Click(Sender: TObject);
-{$IFDEF USE_INTF}
 var
   O: ITMDBAuthValidateKeyResult;
-{$ELSE}
-var
-  O: ISuperObject;
-{$ENDIF}
 begin
   PrepAPI;
-  {$IFDEF USE_INTF}
   O:= FTMDB.Authentication.ValidateKey;
   ShowMessage('API Key Validation Result: '+O.StatusMessage);
-  {$ELSE}
-  O:= FTMDB.Authentication.GetValidateKey;
-  ShowMessage('API Key Validation Result: '+O.S['status_message']);
-  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.ListLanguages(AList: TStrings);
 var
   X: Integer;
-  {$IFDEF USE_INTF}
   O: ITMDBLanguageItem;
-  {$ELSE}
-  O: ISuperObject;
-  {$ENDIF}
 begin
+  //TODO: Move within component once implemented...
   PrepAPI;
   AList.Clear;
-  {$IFDEF USE_INTF}
   for X := 0 to FTMDB.Cache.Languages.Count-1 do begin
     O:= FTMDB.Cache.Languages[X];
     AList.Append(O.ISO639_1);
   end;
-  {$ELSE}
-  for X := 0 to FConfigLanguages.Length-1 do begin
-    O:= FConfigLanguages.O[X];
-    AList.Append(O.S['iso_639_1']);
-  end;
-  {$ENDIF}
 end;
 
 procedure TfrmTMDBTestMain.ListRegions(AList: TStrings);
-begin
-  AList.Clear;
-
-end;
-
-procedure TfrmTMDBTestMain.Button2Click(Sender: TObject);
 var
-  G: ITMDBGenreItem;
   X: Integer;
-  I: TListItem;
+  O: ITMDBCountryItem;
 begin
+  //TODO: Move within component once implemented...
   PrepAPI;
-  Screen.Cursor:= crHourglass;
-  try
-    lstGenreMovies.Items.BeginUpdate;
-    try
-      lstGenreMovies.Items.Clear;
-      lstGenreMovies.Groups.Clear;
-      for X := 0 to FTMDB.Cache.MovieGenres.Count-1 do begin
-        G:= FTMDB.Cache.MovieGenres[X];
-        I:= lstGenreMovies.Items.Add;
-        I.Caption:= G.Name;
-        I.SubItems.Add(IntToStr(G.ID));
-      end;
-      lstGenreMovies.SortType:= TSortType.stText;
-    finally
-      lstGenreMovies.Items.EndUpdate;
-    end;
-  finally
-    Screen.Cursor:= crDefault;
+  AList.Clear;
+  for X := 0 to FTMDB.Cache.Countries.Count-1 do begin
+    O:= FTMDB.Cache.Countries[X];
+    AList.Append(O.ISO3166_1);
   end;
 end;
 
-procedure TfrmTMDBTestMain.Button3Click(Sender: TObject);
-var
-  G: ITMDBGenreItem;
-  X: Integer;
-  I: TListItem;
+procedure TfrmTMDBTestMain.btnLogoutClick(Sender: TObject);
 begin
-  PrepAPI;
-  Screen.Cursor:= crHourglass;
-  try
-    lstGenreTV.Items.BeginUpdate;
-    try
-      lstGenreTV.Items.Clear;
-      lstGenreTV.Groups.Clear;
-      for X := 0 to FTMDB.Cache.TVGenres.Count-1 do begin
-        G:= FTMDB.Cache.TVGenres[X];
-        I:= lstGenreTV.Items.Add;
-        I.Caption:= G.Name;
-        I.SubItems.Add(IntToStr(G.ID));
-      end;
-      lstGenreTV.SortType:= TSortType.stText;
-    finally
-      lstGenreTV.Items.EndUpdate;
+  pUser.Visible:= False;
+  if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
+    PrepAPI;
+    if FTMDB.GetLoginState.Logout then begin
+      btnLogin.Tag:= 0;
+      gbUserInfo.Visible:= False;
+      gbUserLogin.Visible:= True;
+      txtAuthUser.Text:= '';
+      txtAuthPass.Text:= '';
+      btnUser.Text:= 'User Login';
     end;
-  finally
-    Screen.Cursor:= crDefault;
   end;
 end;
 
 procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
 var
-  {$IFDEF USE_INTF}
   C: ITMDBCertificationCountry;
   O: ITMDBCertificationItem;
-  {$ELSE}
-  Res, O: ISuperObject;
-  C: ISuperArray;
-  M: IMember;
-  {$ENDIF}
   X, Y: Integer;
   I: TListItem;
   G: TListGroup;
+  Country: ITMDBCountryItem;
 begin
   PrepAPI;
   Screen.Cursor:= crHourglass;
@@ -667,11 +412,14 @@ begin
       lstCertsMovies.Items.Clear;
       lstCertsMovies.Groups.Clear;
 
-      {$IFDEF USE_INTF}
       for X := 0 to FTMDB.Cache.MovieCerts.Count-1 do begin
         C:= FTMDB.Cache.MovieCerts[X];
         G:= lstCertsMovies.Groups.Add;
-        G.Header:= CountryName(C.CountryCode);
+        Country:= FTMDB.Cache.Countries.GetByCode(C.CountryCode);
+        if Country <> nil then
+          G.Header:= Country.EnglishName
+        else
+          G.Header:= C.CountryCode;
         for Y := 0 to C.Count-1 do begin
           O:= C[Y];
           I:= lstCertsMovies.Items.Add;
@@ -682,23 +430,6 @@ begin
         end;
         C:= nil;
       end;
-      {$ELSE}
-      Res:= FTMDB.Certifications.GetMovieCertifications;
-      for M in Res['certifications'].AsObject do begin
-        C:= M.AsArray;
-        G:= lstCertsMovies.Groups.Add;
-        G.Header:= CountryName(M.Name) + ' ('+M.Name+')';
-        for X := 0 to C.Length-1 do begin
-          O:= C.O[X];
-          I:= lstCertsMovies.Items.Add;
-          I.Caption:= IntToStr(O.I['order']);
-          I.SubItems.Add(O.S['certification']);
-          I.SubItems.Add(O.S['meaning']);
-          I.GroupID:= G.GroupID;
-        end;
-      end;
-      Res:= nil;
-      {$ENDIF}
 
       lstCertsMovies.SortType:= TSortType.stText;
       //TODO: Sort groups...
@@ -713,17 +444,12 @@ end;
 procedure TfrmTMDBTestMain.btnRefreshCertsTVClick(Sender: TObject);
 var
   Y: Integer;
-  {$IFDEF USE_INTF}
   C: ITMDBCertificationCountry;
   O: ITMDBCertificationItem;
-  {$ELSE}
-  Res, O: ISuperObject;
-  C: ISuperArray;
-  M: IMember;
-  {$ENDIF}
   X: Integer;
   I: TListItem;
   G: TListGroup;
+  Country: ITMDBCountryItem;
 begin
   Self.PrepAPI;
   Screen.Cursor:= crHourglass;
@@ -732,11 +458,14 @@ begin
     try
       Self.lstCertsTV.Items.Clear;
       Self.lstCertsTV.Groups.Clear;
-      {$IFDEF USE_INTF}
       for X := 0 to FTMDB.Cache.TVCerts.Count-1 do begin
         C:= FTMDB.Cache.TVCerts[X];
         G:= lstCertsTV.Groups.Add;
-        G.Header:= CountryName(C.CountryCode);
+        Country:= FTMDB.Cache.Countries.GetByCode(C.CountryCode);
+        if Country <> nil then
+          G.Header:= Country.EnglishName
+        else
+          G.Header:= C.CountryCode;
         for Y := 0 to C.Count-1 do begin
           O:= C[Y];
           I:= Self.lstCertsTV.Items.Add;
@@ -746,22 +475,6 @@ begin
           I.GroupID:= G.GroupID;
         end;
       end;
-      {$ELSE}
-      Res:= FTMDB.Certifications.GetTVCertifications;
-      for M in Res['certifications'].AsObject do begin
-        C:= M.AsArray;
-        G:= Self.lstCertsTV.Groups.Add;
-        G.Header:= CountryName(M.Name) + ' ('+M.Name+')';
-        for X := 0 to C.Length-1 do begin
-          O:= C.O[X];
-          I:= Self.lstCertsTV.Items.Add;
-          I.Caption:= IntToStr(O.I['order']);
-          I.SubItems.Add(O.S['certification']);
-          I.SubItems.Add(O.S['meaning']);
-          I.GroupID:= G.GroupID;
-        end;
-      end;
-      {$ENDIF}
       lstCertsTV.SortType:= TSortType.stText;
       //TODO: Sort groups...
     finally
@@ -769,6 +482,25 @@ begin
     end;
   finally
     Screen.Cursor:= crDefault;
+  end;
+end;
+
+procedure TfrmTMDBTestMain.btnUserClick(Sender: TObject);
+begin
+  if pUser.Visible then begin
+    pUser.Visible:= False;
+  end else begin
+    pUser.Width:= 300;
+    pUser.Top:= pTop.Top + pTop.Height + 2;
+    pUser.Left:= ClientWidth - pUser.Width;
+    pUser.Visible:= True;
+    pAuthUser.Top:= 200;
+    pAuthPass.Top:= 200;
+    btnLogin.Top:= 200;
+    if gbUserLogin.Visible and rbCreds.Visible and txtAuthUser.CanFocus then begin
+      txtAuthUser.SetFocus;
+      txtAuthuser.SelectAll;
+    end;
   end;
 end;
 
@@ -812,21 +544,17 @@ begin
   Result:= TPath.Combine(Result, 'AppConfig.json');
 end;
 
-{$IFDEF USE_INTF}
-function TfrmTMDBTestMain.TMDB: ITMDB;
+function TfrmTMDBTestMain.TMDB: ITMDBClient;
 begin
   Result:= FTMDB;
 end;
-{$ELSE}
-function TfrmTMDBTestMain.TMDB: TTMDBAPI;
-begin
-  Result:= FTMDB;
-end;
-{$ENDIF}
 
-function TfrmTMDBTestMain.TVGenreName(const ID: Integer): String;
+procedure TfrmTMDBTestMain.txtAuthPassKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
 begin
-
+  if Key = VK_RETURN then begin
+    btnLogin.Click;
+  end;
 end;
 
 procedure TfrmTMDBTestMain.UserAuthMethodClick(Sender: TObject);
@@ -839,6 +567,11 @@ begin
     2: begin
       pAuthUser.Visible:= True;
       pAuthPass.Visible:= True;
+      pAuthUser.Top:= 200;
+      pAuthPass.Top:= 200;
+      btnLogin.Top:= 200;
+      txtAuthUser.SetFocus;
+      txtAuthUser.SelectAll;
     end;
     else begin
       pAuthUser.Visible:= False;

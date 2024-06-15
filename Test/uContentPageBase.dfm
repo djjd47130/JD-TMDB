@@ -1,30 +1,42 @@
 inherited frmContentPageBase: TfrmContentPageBase
   Caption = 'Content Page Base'
-  ClientHeight = 501
+  ClientHeight = 500
   ClientWidth = 910
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   ExplicitWidth = 926
-  ExplicitHeight = 540
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 18
   object pMain: TPanel
     Left = 265
     Top = 0
     Width = 645
-    Height = 501
+    Height = 500
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    object Splitter1: TSplitter
+      Left = 0
+      Top = 296
+      Width = 645
+      Height = 7
+      Cursor = crVSplit
+      Align = alBottom
+      Beveled = True
+      ResizeStyle = rsUpdate
+      Visible = False
+      ExplicitTop = 298
+    end
     object lstResults: TListView
       AlignWithMargins = True
       Left = 3
-      Top = 3
+      Top = 35
       Width = 639
-      Height = 266
+      Height = 258
       Align = alClient
-      Color = clSilver
+      BorderStyle = bsNone
       Columns = <
         item
           Caption = 'Caption'
@@ -39,45 +51,51 @@ inherited frmContentPageBase: TfrmContentPageBase
       OnClick = lstResultsClick
       OnDblClick = lstResultsDblClick
       OnSelectItem = lstResultsSelectItem
+      ExplicitTop = 3
+      ExplicitHeight = 260
     end
-    object pFooter: TPanel
+    object pTop: TPanel
       Left = 0
-      Top = 469
+      Top = 0
       Width = 645
       Height = 32
-      Align = alBottom
+      Align = alTop
+      BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 468
       object lblResults: TLabel
         AlignWithMargins = True
-        Left = 4
-        Top = 4
+        Left = 3
+        Top = 3
         Width = 165
-        Height = 24
+        Height = 26
         Align = alLeft
         AutoSize = False
         Caption = '0 Results'
         Layout = tlCenter
-        ExplicitTop = 3
+        ExplicitLeft = 4
+        ExplicitHeight = 24
       end
       object lblPage: TLabel
         AlignWithMargins = True
-        Left = 218
-        Top = 4
+        Left = 217
+        Top = 3
         Width = 119
-        Height = 24
+        Height = 26
         Align = alLeft
         Alignment = taCenter
         AutoSize = False
         Caption = 'Page 0 of 0'
         Layout = tlCenter
-        ExplicitTop = 3
+        ExplicitLeft = 218
+        ExplicitHeight = 24
       end
       object btnPagePrev: TButton
         AlignWithMargins = True
-        Left = 175
-        Top = 4
+        Left = 174
+        Top = 3
         Width = 37
-        Height = 24
+        Height = 26
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<'
@@ -87,10 +105,10 @@ inherited frmContentPageBase: TfrmContentPageBase
       end
       object btnPageNext: TButton
         AlignWithMargins = True
-        Left = 343
-        Top = 4
+        Left = 342
+        Top = 3
         Width = 37
-        Height = 24
+        Height = 26
         Cursor = crHandPoint
         Align = alLeft
         Caption = '>'
@@ -101,26 +119,28 @@ inherited frmContentPageBase: TfrmContentPageBase
     end
     object pDetail: TPanel
       Left = 0
-      Top = 272
+      Top = 303
       Width = 645
       Height = 197
       Align = alBottom
+      BevelOuter = bvNone
       TabOrder = 2
       Visible = False
+      ExplicitTop = 271
     end
   end
   object pSearch: TPanel
     Left = 0
     Top = 0
     Width = 265
-    Height = 501
+    Height = 500
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
     object btnApply: TButton
       AlignWithMargins = True
       Left = 3
-      Top = 472
+      Top = 471
       Width = 259
       Height = 26
       Cursor = crHandPoint

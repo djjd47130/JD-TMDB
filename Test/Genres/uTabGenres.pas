@@ -7,9 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTabBase, Vcl.ComCtrls;
 
 type
-  TfrmTabBase1 = class(TfrmTabBase)
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
+  TfrmTabGenres = class(TfrmTabBase)
   private
     { Private declarations }
   public
@@ -19,31 +17,37 @@ type
   end;
 
 var
-  frmTabBase1: TfrmTabBase1;
+  frmTabGenres: TfrmTabGenres;
 
 implementation
 
 {$R *.dfm}
 
-{ TfrmTabBase1 }
+uses
+  uContentGenresMovie,
+  uContentGenresTV;
 
-constructor TfrmTabBase1.Create(AOwner: TComponent);
+{ TfrmTabGenres }
+
+constructor TfrmTabGenres.Create(AOwner: TComponent);
 begin
   inherited;
 
 end;
 
-destructor TfrmTabBase1.Destroy;
+destructor TfrmTabGenres.Destroy;
 begin
 
   inherited;
 end;
 
-procedure TfrmTabBase1.EmbedAllContent;
+procedure TfrmTabGenres.EmbedAllContent;
 begin
   inherited;
 
-  //TODO
+  EmbedContent(TfrmContentGenresMovie);
+  EmbedContent(TfrmContentGenresTV);
+
 end;
 
 end.
