@@ -51,8 +51,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       OnClick = lstResultsClick
       OnDblClick = lstResultsDblClick
       OnSelectItem = lstResultsSelectItem
-      ExplicitTop = 3
-      ExplicitHeight = 260
     end
     object pTop: TPanel
       Left = 0
@@ -62,7 +60,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 468
       object lblResults: TLabel
         AlignWithMargins = True
         Left = 3
@@ -126,7 +123,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       BevelOuter = bvNone
       TabOrder = 2
       Visible = False
-      ExplicitTop = 271
     end
   end
   object pSearch: TPanel
@@ -137,18 +133,52 @@ inherited frmContentPageBase: TfrmContentPageBase
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
-    object btnApply: TButton
+    object btnApply: TJDFontButton
       AlignWithMargins = True
       Left = 3
-      Top = 471
+      Top = 456
       Width = 259
-      Height = 26
+      Height = 41
       Cursor = crHandPoint
       Align = alBottom
-      Caption = 'Apply Search -->'
       Default = True
+      DrawStyle = fdTransparent
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      Image.AutoSize = False
+      Image.Text = #61537
+      Image.Font.Charset = DEFAULT_CHARSET
+      Image.Font.Color = clWindowText
+      Image.Font.Height = -24
+      Image.Font.Name = 'FontAwesome'
+      Image.Font.Style = []
+      Image.Font.Quality = fqAntialiased
+      Image.StandardColor = fcGreen
+      Overlay.Text = #57715
+      Overlay.Font.Charset = DEFAULT_CHARSET
+      Overlay.Font.Color = clWindowText
+      Overlay.Font.Height = -7
+      Overlay.Font.Name = 'FontAwesome'
+      Overlay.Font.Style = []
+      Overlay.Font.Quality = fqAntialiased
+      Overlay.Position = foNone
+      Overlay.Margin = 3
+      ImagePosition = fpImgRight
+      Margin = 8
+      Spacing = 8
+      SubTextFont.Charset = DEFAULT_CHARSET
+      SubTextFont.Color = clGray
+      SubTextFont.Height = -11
+      SubTextFont.Name = 'Tahoma'
+      SubTextFont.Style = []
       TabOrder = 0
+      Text = 'Apply Search'
       OnClick = btnApplyClick
+      ExplicitLeft = 0
+      ExplicitTop = 459
     end
   end
 end

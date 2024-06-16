@@ -13,7 +13,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, Vcl.StdCtrls,
   Vcl.ComCtrls, Vcl.ExtCtrls,
-  JD.TMDB.Intf;
+  JD.TMDB.Intf, JD.Common, JD.Ctrls, JD.Ctrls.FontButton;
 
 type
   TfrmContentPageBase = class(TfrmContentBase)
@@ -25,9 +25,9 @@ type
     btnPagePrev: TButton;
     btnPageNext: TButton;
     pSearch: TPanel;
-    btnApply: TButton;
     pDetail: TPanel;
     Splitter1: TSplitter;
+    btnApply: TJDFontButton;
     procedure lstResultsClick(Sender: TObject);
     procedure lstResultsDblClick(Sender: TObject);
     procedure lstResultsSelectItem(Sender: TObject; Item: TListItem;
