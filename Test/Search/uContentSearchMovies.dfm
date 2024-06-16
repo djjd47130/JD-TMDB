@@ -41,13 +41,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
           Caption = 'Description'
           Width = 500
         end>
-      ExplicitTop = 35
       ExplicitWidth = 763
       ExplicitHeight = 213
     end
     inherited pTop: TPanel
       Width = 769
-      ExplicitTop = 0
       ExplicitWidth = 769
     end
     inherited pDetail: TPanel
@@ -62,7 +60,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         Top = 0
         Width = 769
         Height = 303
-        ActivePage = TabSheet10
+        ActivePage = TabSheet2
         Align = alClient
         MultiLine = True
         TabOrder = 0
@@ -152,39 +150,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet2: TTabSheet
           Caption = 'Account States'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
-          object lblFavorite: TLabel
-            AlignWithMargins = True
-            Left = 3
-            Top = 3
-            Width = 755
-            Height = 18
-            Align = alTop
-            AutoSize = False
-            Caption = 'Favorite'
-            ExplicitLeft = 6
-            ExplicitTop = 11
-            ExplicitWidth = 693
-          end
-          object lblWatchlist: TLabel
-            AlignWithMargins = True
-            Left = 3
-            Top = 27
-            Width = 755
-            Height = 18
-            Align = alTop
-            AutoSize = False
-            Caption = 'Watchlist'
-            ExplicitTop = 91
-            ExplicitWidth = 693
-          end
           object lblRating: TLabel
             AlignWithMargins = True
             Left = 3
-            Top = 51
+            Top = 3
             Width = 755
             Height = 18
             Align = alTop
@@ -193,14 +162,98 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             ExplicitTop = 123
             ExplicitWidth = 693
           end
+          object btnFavorite: TJDFontButton
+            AlignWithMargins = True
+            Left = 3
+            Top = 27
+            Width = 755
+            Height = 38
+            Cursor = crHandPoint
+            Align = alTop
+            DrawStyle = fdTransparent
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            Image.AutoSize = False
+            Image.Text = #61578
+            Image.Font.Charset = DEFAULT_CHARSET
+            Image.Font.Color = clWindowText
+            Image.Font.Height = -21
+            Image.Font.Name = 'FontAwesome'
+            Image.Font.Style = []
+            Image.Font.Quality = fqAntialiased
+            Image.StandardColor = fcRed
+            Overlay.Text = #57715
+            Overlay.Font.Charset = DEFAULT_CHARSET
+            Overlay.Font.Color = clWindowText
+            Overlay.Font.Height = -7
+            Overlay.Font.Name = 'FontAwesome'
+            Overlay.Font.Style = []
+            Overlay.Font.Quality = fqAntialiased
+            Overlay.Position = foNone
+            Overlay.Margin = 3
+            Margin = 8
+            Spacing = 8
+            SubTextFont.Charset = DEFAULT_CHARSET
+            SubTextFont.Color = clGray
+            SubTextFont.Height = -11
+            SubTextFont.Name = 'Tahoma'
+            SubTextFont.Style = []
+            TabOrder = 0
+            Text = 'Add to Favorites'
+            OnClick = btnFavoriteClick
+            ExplicitTop = 75
+          end
+          object btnWatchlist: TJDFontButton
+            AlignWithMargins = True
+            Left = 3
+            Top = 71
+            Width = 755
+            Height = 38
+            Cursor = crHandPoint
+            Align = alTop
+            DrawStyle = fdTransparent
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            Image.AutoSize = False
+            Image.Text = #61591
+            Image.Font.Charset = DEFAULT_CHARSET
+            Image.Font.Color = clWindowText
+            Image.Font.Height = -21
+            Image.Font.Name = 'FontAwesome'
+            Image.Font.Style = []
+            Image.Font.Quality = fqAntialiased
+            Image.StandardColor = fcRed
+            Overlay.Text = #57715
+            Overlay.Font.Charset = DEFAULT_CHARSET
+            Overlay.Font.Color = clWindowText
+            Overlay.Font.Height = -7
+            Overlay.Font.Name = 'FontAwesome'
+            Overlay.Font.Style = []
+            Overlay.Font.Quality = fqAntialiased
+            Overlay.Position = foNone
+            Overlay.Margin = 3
+            Margin = 8
+            Spacing = 8
+            SubTextFont.Charset = DEFAULT_CHARSET
+            SubTextFont.Color = clGray
+            SubTextFont.Height = -11
+            SubTextFont.Name = 'Tahoma'
+            SubTextFont.Style = []
+            TabOrder = 1
+            Text = 'Add to Watchlist'
+            OnClick = btnWatchlistClick
+            ExplicitTop = 155
+          end
         end
         object TabSheet3: TTabSheet
           Caption = 'Alternative Titles'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lstAltTitles: TListView
             AlignWithMargins = True
             Left = 3
@@ -227,18 +280,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet4: TTabSheet
           Caption = 'Changes'
           ImageIndex = 3
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TabSheet5: TTabSheet
           Caption = 'Credits'
           ImageIndex = 4
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lstCredits: TListView
             AlignWithMargins = True
             Left = 3
@@ -284,10 +329,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet6: TTabSheet
           Caption = 'External IDs'
           ImageIndex = 5
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lblIMDB: TLabel
             AlignWithMargins = True
             Left = 3
@@ -357,10 +398,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet7: TTabSheet
           Caption = 'Images'
           ImageIndex = 6
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object ListView2: TListView
             AlignWithMargins = True
             Left = 3
@@ -409,10 +446,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet9: TTabSheet
           Caption = 'Lists'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TabSheet10: TTabSheet
           Caption = 'Recommendations'
@@ -421,10 +454,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet11: TTabSheet
           Caption = 'Release Dates'
           ImageIndex = 10
-          ExplicitLeft = 6
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lstReleaseDates: TListView
             AlignWithMargins = True
             Left = 3
@@ -469,34 +498,18 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet12: TTabSheet
           Caption = 'Reviews'
           ImageIndex = 11
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TabSheet13: TTabSheet
           Caption = 'Similar'
           ImageIndex = 12
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TabSheet14: TTabSheet
           Caption = 'Translations'
           ImageIndex = 13
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TabSheet15: TTabSheet
           Caption = 'Videos'
           ImageIndex = 14
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
     end
@@ -504,18 +517,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
   inherited pSearch: TPanel
     Height = 561
     ExplicitHeight = 561
-    inherited btnApply: TButton
-      Top = 532
-      ExplicitTop = 532
-    end
-    object Panel7: TPanel
+    object Panel7: TPanel [0]
       Left = 0
       Top = 0
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 0
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3
@@ -537,14 +546,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         ExplicitHeight = 26
       end
     end
-    object Panel8: TPanel
+    object Panel8: TPanel [1]
       Left = 0
       Top = 57
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object Label9: TLabel
         AlignWithMargins = True
         Left = 3
@@ -572,14 +581,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
           'True')
       end
     end
-    object Panel9: TPanel
+    object Panel9: TPanel [2]
       Left = 0
       Top = 114
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 3
+      TabOrder = 2
       object Label10: TLabel
         AlignWithMargins = True
         Left = 3
@@ -601,14 +610,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         TabOrder = 0
       end
     end
-    object Panel10: TPanel
+    object Panel10: TPanel [3]
       Left = 0
       Top = 171
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 4
+      TabOrder = 3
       object Label11: TLabel
         AlignWithMargins = True
         Left = 3
@@ -630,14 +639,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         TabOrder = 0
       end
     end
-    object Panel13: TPanel
+    object Panel13: TPanel [4]
       Left = 0
       Top = 228
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 5
+      TabOrder = 4
       object Label14: TLabel
         AlignWithMargins = True
         Left = 3
@@ -659,14 +668,14 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         ExplicitHeight = 26
       end
     end
-    object Panel14: TPanel
+    object Panel14: TPanel [5]
       Left = 0
       Top = 285
       Width = 265
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 6
+      TabOrder = 5
       object Label15: TLabel
         AlignWithMargins = True
         Left = 3
@@ -687,6 +696,12 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         TabOrder = 0
         ExplicitHeight = 26
       end
+    end
+    inherited btnApply: TJDFontButton
+      Top = 517
+      TabOrder = 6
+      ExplicitLeft = 4
+      ExplicitTop = 520
     end
   end
 end

@@ -156,6 +156,22 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Source\JD.TMDB.pas"/>
+        <DCCReference Include="Certifications\uTabCertifications.pas">
+            <Form>frmTabCertifications</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Certifications\uContentCertsMovies.pas">
+            <Form>frmContentCertsMovies</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Certifications\uContentCertsTV.pas">
+            <Form>frmContentCertsTV</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Configuration\uContentConfigCountries.pas">
+            <Form>frmContentConfigCountries</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -19,7 +19,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   TextHeight = 13
   object Pages: TPageControl
     Left = 0
-    Top = 41
+    Top = 33
     Width = 971
     Height = 437
     ActivePage = tabSetup
@@ -35,6 +35,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     ParentFont = False
     TabHeight = 32
     TabOrder = 0
+    ExplicitTop = 41
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
@@ -165,139 +166,38 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         end
       end
     end
-    object tabCertifications: TTabSheet
-      Caption = 'Certifications'
-      ImageIndex = 1
-      object CertPages: TPageControl
-        Left = 0
-        Top = 0
-        Width = 963
-        Height = 349
-        ActivePage = tabCertsMovies
-        Align = alTop
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 0
-        object tabCertsMovies: TTabSheet
-          Caption = 'Movie Certifications'
-          object btnRefreshCertsMovies: TButton
-            AlignWithMargins = True
-            Left = 3
-            Top = 3
-            Width = 949
-            Height = 28
-            Cursor = crHandPoint
-            Align = alTop
-            Caption = 'Refresh List'
-            TabOrder = 0
-            OnClick = btnRefreshCertsMoviesClick
-          end
-          object lstCertsMovies: TListView
-            AlignWithMargins = True
-            Left = 3
-            Top = 37
-            Width = 949
-            Height = 276
-            Align = alClient
-            Color = clSilver
-            Columns = <
-              item
-                Caption = 'Order'
-                Width = 0
-              end
-              item
-                Caption = 'Certification'
-                Width = 120
-              end
-              item
-                Caption = 'Meaning'
-                Width = 700
-              end>
-            HotTrackStyles = [htHandPoint, htUnderlineHot]
-            GroupView = True
-            ReadOnly = True
-            RowSelect = True
-            TabOrder = 1
-            ViewStyle = vsReport
-          end
-        end
-        object tabCertsTV: TTabSheet
-          Caption = 'TV Certifications'
-          ImageIndex = 1
-          object btnRefreshCertsTV: TButton
-            AlignWithMargins = True
-            Left = 3
-            Top = 3
-            Width = 949
-            Height = 28
-            Cursor = crHandPoint
-            Align = alTop
-            Caption = 'Refresh List'
-            TabOrder = 0
-            OnClick = btnRefreshCertsTVClick
-          end
-          object lstCertsTV: TListView
-            AlignWithMargins = True
-            Left = 3
-            Top = 37
-            Width = 949
-            Height = 276
-            Align = alClient
-            Color = clSilver
-            Columns = <
-              item
-                Caption = 'Order'
-                Width = 0
-              end
-              item
-                Caption = 'Certification'
-                Width = 120
-              end
-              item
-                Caption = 'Meaning'
-                Width = 700
-              end>
-            HotTrackStyles = [htHandPoint, htUnderlineHot]
-            GroupView = True
-            ReadOnly = True
-            RowSelect = True
-            TabOrder = 1
-            ViewStyle = vsReport
-          end
-        end
-      end
-    end
   end
   object pTop: TPanel
     Left = 0
     Top = 0
     Width = 971
-    Height = 41
+    Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     object btnUser: TJDFontButton
       AlignWithMargins = True
-      Left = 797
+      Left = 760
       Top = 3
-      Width = 171
-      Height = 35
+      Width = 208
+      Height = 27
       Cursor = crHandPoint
       Align = alRight
       DrawStyle = fdTransparent
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       Image.AutoSize = False
       Image.Text = #61572
       Image.Font.Charset = DEFAULT_CHARSET
       Image.Font.Color = clWindowText
-      Image.Font.Height = -21
+      Image.Font.Height = -24
       Image.Font.Name = 'FontAwesome'
       Image.Font.Style = []
       Image.Font.Quality = fqAntialiased
-      Image.StandardColor = fcBlue
+      Image.StandardColor = fcOrange
       Overlay.Text = #57715
       Overlay.Font.Charset = DEFAULT_CHARSET
       Overlay.Font.Color = clWindowText
@@ -318,6 +218,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
+      ExplicitLeft = 759
+      ExplicitTop = 0
     end
   end
   object pUser: TPanel

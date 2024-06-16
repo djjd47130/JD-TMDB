@@ -1,4 +1,4 @@
-unit uTabConfiguration;
+unit uTabCertifications;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTabBase, Vcl.ComCtrls;
 
 type
-  TfrmTabConfiguration = class(TfrmTabBase)
+  TfrmTabCertifications = class(TfrmTabBase)
   private
     { Private declarations }
   public
@@ -17,34 +17,36 @@ type
   end;
 
 var
-  frmTabConfiguration: TfrmTabConfiguration;
+  frmTabCertifications: TfrmTabCertifications;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  uContentConfigCountries;
+  uContentCertsMovies,
+  uContentCertsTV;
 
-{ TfrmTabConfiguration }
+{ TfrmTabCertifications }
 
-constructor TfrmTabConfiguration.Create(AOwner: TComponent);
+constructor TfrmTabCertifications.Create(AOwner: TComponent);
 begin
   inherited;
 
 end;
 
-destructor TfrmTabConfiguration.Destroy;
+destructor TfrmTabCertifications.Destroy;
 begin
 
   inherited;
 end;
 
-procedure TfrmTabConfiguration.EmbedAllContent;
+procedure TfrmTabCertifications.EmbedAllContent;
 begin
   inherited;
 
-  EmbedContent(TfrmContentConfigCountries);
+  EmbedContent(TfrmContentCertsMovies);
+  EmbedContent(TfrmContentCertsTV);
 
 end;
 

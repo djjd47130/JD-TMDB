@@ -22,7 +22,11 @@ uses
   uContentListBase in 'uContentListBase.pas' {frmContentBase1},
   uContentGenresMovie in 'Genres\uContentGenresMovie.pas' {frmContentGenresMovie},
   uContentGenresTV in 'Genres\uContentGenresTV.pas' {frmContentGenresTV},
-  JD.TMDB in '..\Source\JD.TMDB.pas';
+  JD.TMDB in '..\Source\JD.TMDB.pas',
+  uTabCertifications in 'Certifications\uTabCertifications.pas' {frmTabCertifications},
+  uContentCertsMovies in 'Certifications\uContentCertsMovies.pas' {frmContentCertsMovies},
+  uContentCertsTV in 'Certifications\uContentCertsTV.pas' {frmContentCertsTV},
+  uContentConfigCountries in 'Configuration\uContentConfigCountries.pas' {frmContentConfigCountries};
 
 {$R *.res}
 
@@ -31,9 +35,6 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
-  Application.CreateForm(TfrmTabGenres, frmTabGenres);
-  Application.CreateForm(TfrmContentBase1, frmContentBase1);
-  Application.CreateForm(TfrmContentGenresMovie, frmContentGenresMovie);
-  Application.CreateForm(TfrmContentGenresTV, frmContentGenresTV);
+  Application.CreateForm(TfrmContentConfigCountries, frmContentConfigCountries);
   Application.Run;
 end.

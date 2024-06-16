@@ -1,4 +1,4 @@
-unit uContentSearchMovies;
+﻿unit uContentSearchMovies;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls,
   JD.TMDB.Intf,
-  JD.TMDB.Common;
+  JD.TMDB.Common, JD.Common, JD.Ctrls, JD.Ctrls.FontButton;
 
 type
   TfrmContentSearchMovies = class(TfrmContentPageBase)
@@ -37,8 +37,6 @@ type
     lblTagline: TLabel;
     txtOverview: TMemo;
     TabSheet2: TTabSheet;
-    lblFavorite: TLabel;
-    lblWatchlist: TLabel;
     lblRating: TLabel;
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
@@ -63,9 +61,13 @@ type
     lstAltTitles: TListView;
     ListView2: TListView;
     lstReleaseDates: TListView;
+    btnFavorite: TJDFontButton;
+    btnWatchlist: TJDFontButton;
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btnFavoriteClick(Sender: TObject);
+    procedure btnWatchlistClick(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
     procedure LoadAccountStates;
@@ -74,6 +76,9 @@ type
     procedure LoadKeywords;
     procedure LoadReleaseDates;
     procedure LoadDetails;
+    procedure DisplayAccountStates(const Value: ITMDBAccountStates);
+    procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
+    function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
   protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -131,6 +136,43 @@ begin
   end;
 end;
 
+procedure TfrmContentSearchMovies.btnFavoriteClick(Sender: TObject);
+begin
+  inherited;
+  case btnFavorite.Tag of
+    0: begin
+      FDetail.AddToFavorites;
+    end;
+    1: begin
+      FDetail.RemoveFromFavorites;
+    end;
+  end;
+  //TODO: Refresh detail with new account states...
+  FDetail:= GetMovieDetail(FDetail.ID);
+  DisplayMovieDetail(FDetail);
+end;
+
+procedure TfrmContentSearchMovies.btnWatchlistClick(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor:= crHourglass;
+  try
+    case btnWatchlist.Tag of
+      0: begin
+        FDetail.AddToWatchlist;
+      end;
+      1: begin
+        FDetail.RemoveFromWatchlist;
+      end;
+    end;
+    //TODO: Refresh detail with new account states...
+    FDetail:= GetMovieDetail(FDetail.ID);
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+  DisplayMovieDetail(FDetail);
+end;
+
 procedure TfrmContentSearchMovies.FormCreate(Sender: TObject);
 begin
   inherited;
@@ -158,12 +200,50 @@ begin
   Result:= TMDB.Client.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
 end;
 
+procedure TfrmContentSearchMovies.DisplayMovieDetail(const Value: ITMDBMovieDetail);
+begin
+  //Refresh detail of selected tab...
+  FDetail:= Value;
+  Screen.Cursor:= crHourglass;
+  try
+    case Pages.ActivePageIndex of
+      0: LoadDetails;
+      1: LoadAccountStates;
+      2: LoadAlternativeTitles;
+      3: ; //CHanges
+      4: LoadCredits;
+      5: ; //External IDs
+      6: ; //Images
+      7: LoadKeywords;
+      8: ; //Lists
+      9: ; //Recommendations
+      10: LoadReleaseDAtes;
+      11: ; //Reviews
+      12: ; //Similar
+      13: ; //Translations
+      14: ; //Videos;
+    end;
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+end;
+
+function TfrmContentSearchMovies.GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
+var
+  Inc: TTMDBMovieRequests;
+begin
+  PrepAPI;
+  Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
+    mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
+    mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
+  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, '', TMDB.LoginState.SessionID);
+end;
+
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBPageItem);
 var
   ID: Integer;
   O: ITMDBMovieItem;
-  Inc: TTMDBMovieRequests;
 begin
   inherited;
   Screen.Cursor:= crHourglass;
@@ -172,53 +252,11 @@ begin
     PrepAPI;
     O:= ITMDBMovieItem(Obj);
     ID:= O.ID;
-    Inc:= [mrKeywords, mrCredits, mrAlternativeTitles, mrAccountStates, mrReleaseDates];
-    FDetail:= TMDB.Client.Movies.GetDetails(ID, Inc, '', TMDB.LoginState.SessionID);
+    FDetail:= GetMovieDetail(ID);
   finally
     Screen.Cursor:= crDefault;
   end;
-
-  PagesChange(nil);
-
-  {
-  //Details
-  LoadDetails;
-
-  //Account States
-  LoadAccountStates;
-
-  //Alternative Titles
-  LoadAlternativeTitles;
-
-  //Changes
-
-  //Credits
-  LoadCredits;
-
-  //External IDs
-
-  //Images
-
-  //Keywords
-  LoadKeywords;
-
-  //Lists
-
-  //Recommendations
-
-  //Release Dates
-  LoadReleaseDates;
-
-  //Reviews
-
-  //Similar
-
-  //Translations
-
-  //Videos
-
-  }
-
+  DisplayMovieDetail(FDetail);
 end;
 
 procedure TfrmContentSearchMovies.LoadDetails;
@@ -238,15 +276,33 @@ var
   S: ITMDBAccountStates;
 begin
   S:= FDetail.AppendedAccountStates;
-  if S.Favorite then
-    lblFavorite.Caption:= 'Favorite: TRUE'
-  else
-    lblFavorite.Caption:= 'Favorite: FALSE';
-  if S.Watchlist then
-    lblWatchlist.Caption:= 'Watchlist: TRUE'
-  else
-    lblWatchlist.Caption:= 'Watchlist: FALSE';
-  lblRating.Caption:= 'Rating: '+FormatFloat('0.0', S.RatedValue);
+  DisplayAccountStates(S);
+
+end;
+
+procedure TfrmContentSearchMovies.DisplayAccountStates(const Value: ITMDBAccountStates);
+begin
+  if Value.Favorite then begin
+    btnFavorite.Text:= 'Remove from Favorites';
+    btnFavorite.Image.Text:= '';
+    btnFavorite.Tag:= 1;
+  end else begin
+    btnFavorite.Text:= 'Add to Favorites';
+    btnFavorite.Image.Text:= '';
+    btnFavorite.Tag:= 0;
+  end;
+
+  if Value.Watchlist then begin
+    btnWatchlist.Text:= 'Remove from Watchlist';
+    btnWatchlist.Image.Text:= '';
+    btnWatchlist.Tag:= 1;
+  end else begin
+    btnWatchlist.Text:= 'Add to Watchlist';
+    btnWatchlist.Image.Text:= '';
+    btnWatchlist.Tag:= 0;
+  end;
+
+  lblRating.Caption:= 'Rating: '+FormatFloat('0.0', Value.RatedValue);
 end;
 
 procedure TfrmContentSearchMovies.LoadAlternativeTitles;
@@ -401,29 +457,7 @@ end;
 procedure TfrmContentSearchMovies.PagesChange(Sender: TObject);
 begin
   inherited;
-  //Refresh detail of selected tab...
-  Screen.Cursor:= crHourglass;
-  try
-    case Pages.ActivePageIndex of
-      0: LoadDetails;
-      1: LoadAccountStates;
-      2: LoadAlternativeTitles;
-      3: ; //CHanges
-      4: LoadCredits;
-      5: ; //External IDs
-      6: ; //Images
-      7: LoadKeywords;
-      8: ; //Lists
-      9: ; //Recommendations
-      10: LoadReleaseDAtes;
-      11: ; //Reviews
-      12: ; //Similar
-      13: ; //Translations
-      14: ; //Videos;
-    end;
-  finally
-    Screen.Cursor:= crDefault;
-  end;
+  DisplayMovieDetail(FDetail);
 end;
 
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;

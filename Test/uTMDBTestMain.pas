@@ -15,12 +15,12 @@ uses
   uTabConfiguration,
   uTabSearch,
   uTabGenres,
+  uTabCertifications,
   Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB;
 
 type
   TfrmTMDBTestMain = class(TForm)
     Pages: TPageControl;
-    tabCertifications: TTabSheet;
     tabSetup: TTabSheet;
     Panel1: TPanel;
     gbAPIAuthMethod: TGroupBox;
@@ -37,14 +37,7 @@ type
     Services1: TMenuItem;
     Setup1: TMenuItem;
     AppSetup1: TMenuItem;
-    CertPages: TPageControl;
-    tabCertsMovies: TTabSheet;
-    tabCertsTV: TTabSheet;
     Button1: TButton;
-    btnRefreshCertsMovies: TButton;
-    btnRefreshCertsTV: TButton;
-    lstCertsMovies: TListView;
-    lstCertsTV: TListView;
     pTop: TPanel;
     btnUser: TJDFontButton;
     pUser: TPanel;
@@ -79,8 +72,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
-    procedure btnRefreshCertsMoviesClick(Sender: TObject);
-    procedure btnRefreshCertsTVClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lblUserSessionIDDblClick(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
@@ -90,22 +81,17 @@ type
   private
     FAppSetup: ISuperObject;
     FAuthMethod: Integer;
-
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
-
     procedure ServiceClicked(Sender: TObject);
-
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     procedure EmbedTabs;
     function GetAPIAuth: TTMDBAuthMethod;
     procedure SetAPIAuth(const Value: TTMDBAuthMethod);
     procedure ShowUserInfo;
-
   public
     procedure PrepAPI;
-
     property APIAuth: TTMDBAuthMethod read GetAPIAuth write SetAPIAuth;
   end;
 
@@ -124,22 +110,15 @@ begin
   {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown:= True;
   {$ENDIF}
-
   Pages.Align:= alClient;
   gbUserInfo.Align:= alClient;
   gbUserLogin.Align:= alClient;
-  CertPages.Align:= alClient;
-
   FAuthMethod:= 2;
-
   EmbedTabs;
   LoadSetup;
-
   Services1.Click;
-
   Width:= 1200;
   Height:= 800;
-
 end;
 
 procedure TfrmTMDBTestMain.FormDestroy(Sender: TObject);
@@ -166,27 +145,21 @@ begin
   end else begin
     FAppSetup:= SO;
   end;
-
   txtAPIKey.Text:= FAppSetup.S['api_key'];
   txtAccessToken.Text:= FAppSetup.S['access_token'];
   APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
-
   PrepAPI;
-
   Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
   C:= Pages.ActivePage.Controls[0];
   if C is TfrmTabBase then begin
     TfrmTabBase(C).Pages.ActivePageIndex:= FAppSetup.I['current_sub_tab'];
   end;
-
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
-
   if (FAppSetup.S['session_id'] <> '') and (FAppSetup.B['session_guest'] = False) then begin
     if TMDB.LoginState.RestoreSession(FAppSetup.S['session_id']) then begin
       ShowUserInfo;
     end;
   end;
-
 end;
 
 procedure TfrmTMDBTestMain.SaveSetup;
@@ -204,7 +177,6 @@ begin
     if C is TfrmTabBase then begin
       FAppSetup.I['current_sub_tab']:=  TfrmTabBase(C).Pages.ActivePageIndex;
     end;
-
     FAppSetup.SaveTo(SetupFilename);
   end;
 end;
@@ -265,7 +237,6 @@ begin
     txtAuthPass.Text:= '';
     btnUser.Text:= 'User Login';
   end;
-
 end;
 
 procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
@@ -310,6 +281,7 @@ var
   X: Integer;
 begin
   EmbedTab(TfrmTabConfiguration);
+  EmbedTab(TfrmTabCertifications);
   EmbedTab(TfrmTabGenres);
   EmbedTab(TfrmTabSearch);
 
@@ -379,86 +351,6 @@ begin
     if TMDB.LoginState.Logout then begin
       ShowUserInfo;
     end;
-  end;
-end;
-
-procedure TfrmTMDBTestMain.btnRefreshCertsMoviesClick(Sender: TObject);
-var
-  C: ITMDBCertificationCountry;
-  O: ITMDBCertificationItem;
-  X, Y: Integer;
-  I: TListItem;
-  G: TListGroup;
-begin
-  PrepAPI;
-  Screen.Cursor:= crHourglass;
-  try
-    lstCertsMovies.Items.BeginUpdate;
-    try
-      lstCertsMovies.Items.Clear;
-      lstCertsMovies.Groups.Clear;
-
-      for X := 0 to TMDB.Cache.MovieCerts.Count-1 do begin
-        C:= TMDB.Cache.MovieCerts[X];
-        G:= lstCertsMovies.Groups.Add;
-        G.Header:= TMDB.CountryName(C.CountryCode);
-        for Y := 0 to C.Count-1 do begin
-          O:= C[Y];
-          I:= lstCertsMovies.Items.Add;
-          I.Caption:= IntToStr(O.Order);
-          I.SubItems.Add(O.Certification);
-          I.SubItems.Add(O.Meaning);
-          I.GroupID:= G.GroupID;
-        end;
-        C:= nil;
-      end;
-
-      lstCertsMovies.SortType:= TSortType.stText;
-      //TODO: Sort groups...
-    finally
-      lstCertsMovies.Items.EndUpdate;
-    end;
-  finally
-    Screen.Cursor:= crDefault;
-  end;
-end;
-
-procedure TfrmTMDBTestMain.btnRefreshCertsTVClick(Sender: TObject);
-var
-  Y: Integer;
-  C: ITMDBCertificationCountry;
-  O: ITMDBCertificationItem;
-  X: Integer;
-  I: TListItem;
-  G: TListGroup;
-begin
-  Self.PrepAPI;
-  Screen.Cursor:= crHourglass;
-  try
-    lstCertsTV.Items.BeginUpdate;
-    try
-      Self.lstCertsTV.Items.Clear;
-      Self.lstCertsTV.Groups.Clear;
-      for X := 0 to TMDB.Cache.TVCerts.Count-1 do begin
-        C:= TMDB.Cache.TVCerts[X];
-        G:= lstCertsTV.Groups.Add;
-        G.Header:= TMDB.CountryName(C.CountryCode);
-        for Y := 0 to C.Count-1 do begin
-          O:= C[Y];
-          I:= Self.lstCertsTV.Items.Add;
-          I.Caption:= IntToStr(O.Order);
-          I.SubItems.Add(O.Certification);
-          I.SubItems.Add(O.Meaning);
-          I.GroupID:= G.GroupID;
-        end;
-      end;
-      lstCertsTV.SortType:= TSortType.stText;
-      //TODO: Sort groups...
-    finally
-      lstCertsTV.Items.EndUpdate;
-    end;
-  finally
-    Screen.Cursor:= crDefault;
   end;
 end;
 
