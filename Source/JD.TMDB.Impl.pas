@@ -1159,6 +1159,13 @@ type
     //function AppendedTranslations: ITMDB; stdcall;
     //function AppendedVideos: ITMDB; stdcall;
 
+    function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function AddRating(const Rating: Single): ITMDB...
+    //function RemoveRating: ITMDB...
+
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property Collection: ITMDBMovieCollectionRef read GetCollection;
@@ -1697,6 +1704,7 @@ type
     function GetIsAuthenticated: Boolean; stdcall;
     function GetIsGuest: Boolean; stdcall;
     function GetSessionID: WideString; stdcall;
+    function GetAccountID: Integer; stdcall;
     function GetAccountDetail: ITMDBAccountDetail; stdcall;
   public
     constructor Create(AOwner: TTMDBClient);
@@ -1714,6 +1722,7 @@ type
     property IsAuthenticated: Boolean read GetIsAuthenticated;
     property IsGuest: Boolean read GetIsGuest;
     property SessionID: WideString read GetSessionID;
+    property AccountID: Integer read GetAccountID;
     property AccountDetail: ITMDBAccountDetail read GetAccountDetail;
   end;
 
@@ -2951,6 +2960,30 @@ begin
   //FProductionCompanies:= nil;
   FProductionCountries:= nil;
   inherited;
+end;
+
+function TTMDBMovieDetail.AddToFavorites: ITMDBAccountAddFavoriteResult;
+begin
+  Result:= FTMDB.Account.SetFavorite(FTMDB.LoginState.AccountID, TTMDBMediaType.mtMovie,
+    ID, True, FTMDB.LoginState.SessionID);
+end;
+
+function TTMDBMovieDetail.AddToWatchlist: ITMDBAccountAddWatchlistResult;
+begin
+  Result:= FTMDB.Account.SetWatchlist(FTMDB.LoginState.AccountID, TTMDBMediaType.mtMovie,
+    ID, True, FTMDB.LoginState.SessionID);
+end;
+
+function TTMDBMovieDetail.RemoveFromFavorites: ITMDBAccountAddFavoriteResult;
+begin
+  Result:= FTMDB.Account.SetFavorite(FTMDB.LoginState.AccountID, TTMDBMediaType.mtMovie,
+    ID, False, FTMDB.LoginState.SessionID);
+end;
+
+function TTMDBMovieDetail.RemoveFromWatchlist: ITMDBAccountAddWatchlistResult;
+begin
+  Result:= FTMDB.Account.SetWatchlist(FTMDB.LoginState.AccountID, TTMDBMediaType.mtMovie,
+    ID, False, FTMDB.LoginState.SessionID);
 end;
 
 function TTMDBMovieDetail.AppendedAccountStates: ITMDBAccountStates;
@@ -5008,6 +5041,14 @@ end;
 function TTMDBLoginState.GetAccountDetail: ITMDBAccountDetail;
 begin
   Result:= FAccountDetail;
+end;
+
+function TTMDBLoginState.GetAccountID: Integer;
+begin
+  if FAccountDetail <> nil then
+    Result:= FAccountDetail.ID
+  else
+    Result:= 0;
 end;
 
 function TTMDBLoginState.GetAuthMethod: TTMDBUserAuth;

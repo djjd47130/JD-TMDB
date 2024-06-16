@@ -710,7 +710,7 @@ begin
   O.I['media_id']:= MediaID;
   O.B['watchlist']:= Watchlist;
   U:= URLCombine('account', AccountID);
-  U:= URLCombine(U, '');
+  U:= URLCombine(U, 'watchlist');
   AddParam(P, 'session_id', SessionID);
   Result:= FOwner.PostJSON(U, P, O);
 end;

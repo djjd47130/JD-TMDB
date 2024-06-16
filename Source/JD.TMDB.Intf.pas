@@ -1456,6 +1456,13 @@ type
     //function AppendedTranslations: ITMDBPrimaryTranslationList; stdcall;
     //function AppendedVideos: ITMDBVideoList; stdcall;
 
+    function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function AddRating(const Rating: Single): ITMDB...
+    //function RemoveRating: ITMDB...
+
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property Collection: ITMDBMovieCollectionRef read GetCollection;
@@ -2291,7 +2298,6 @@ type
   { User Login State }
 
   /// <summary>
-  /// TODO
   /// Encapsulates a TMDB user authentication and account info.
   /// </summary>
   ITMDBLoginState = interface
@@ -2302,6 +2308,7 @@ type
     function GetIsAuthenticated: Boolean; stdcall;
     function GetIsGuest: Boolean; stdcall;
     function GetSessionID: WideString; stdcall;
+    function GetAccountID: Integer; stdcall;
     function GetAccountDetail: ITMDBAccountDetail; stdcall;
 
     function LoginAsGuest: ITMDBAuthGuestSessionResult; stdcall;
@@ -2316,6 +2323,7 @@ type
     property IsAuthenticated: Boolean read GetIsAuthenticated;
     property IsGuest: Boolean read GetIsGuest;
     property SessionID: WideString read GetSessionID;
+    property AccountID: Integer read GetAccountID;
     property AccountDetail: ITMDBAccountDetail read GetAccountDetail;
   end;
 
