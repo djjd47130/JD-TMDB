@@ -36,6 +36,10 @@ A final third-level wrapper is planned which will be a component you can install
 
 There is a test application to demonstrage the usage of the TMDB API. Note that this app is in very active development at this time, and is far from ready. 
 
+### JDLib
+
+The test applications uses controls from a separate repository of mine: https://github.com/djjd47130/JDLib
+
 ## Watch Providers Attribution
 
 **IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute "**JustWatch**" in your solution.
