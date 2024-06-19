@@ -34,7 +34,7 @@ A final third-level wrapper is planned which will be a component you can install
 
 ## Test Application
 
-There is a test application to demonstrage the usage of the TMDB API. Note that this app is in very active development at this time, and is far from ready. 
+There is a test application to demonstrate the usage of the TMDB API wrapper. Note that this app is in very active development at this time, and is far from ready. 
 
 ### JDLib
 
@@ -43,4 +43,13 @@ The test applications uses controls from a separate repository of mine: https://
 ## Watch Providers Attribution
 
 **IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute "**JustWatch**" in your solution.
+
+## Usage
+
+1. Obtain an [API key of your own](https://www.themoviedb.org/settings/api)
+2. Create an instance of the `TTMDB` component. This may be installed in your component palette.
+3. Assign your key(s) via the component's `APIKey` and/or `AccessToken` properties.
+   - NOTE: Another property `AuthMethod` controls which key gets used.
+4. You're ready to use a majority of the API functions now.
+5. You may additionally login using `LoginState` in runtime.
 
