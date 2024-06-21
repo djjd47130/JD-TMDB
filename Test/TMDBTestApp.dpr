@@ -26,7 +26,8 @@ uses
   uTabCertifications in 'Certifications\uTabCertifications.pas' {frmTabCertifications},
   uContentCertsMovies in 'Certifications\uContentCertsMovies.pas' {frmContentCertsMovies},
   uContentCertsTV in 'Certifications\uContentCertsTV.pas' {frmContentCertsTV},
-  uContentConfigCountries in 'Configuration\uContentConfigCountries.pas' {frmContentConfigCountries};
+  uContentConfigCountries in 'Configuration\uContentConfigCountries.pas' {frmContentConfigCountries},
+  uContentSearchCompanies in 'Search\uContentSearchCompanies.pas' {frmContentSearchCompanies};
 
 {$R *.res}
 
@@ -35,6 +36,6 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
-  Application.CreateForm(TfrmContentConfigCountries, frmContentConfigCountries);
+  Application.CreateForm(TfrmContentSearchCompanies, frmContentSearchCompanies);
   Application.Run;
 end.

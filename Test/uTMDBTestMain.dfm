@@ -2,7 +2,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   Left = 0
   Top = 0
   Caption = 'TMDB API Test'
-  ClientHeight = 484
+  ClientHeight = 534
   ClientWidth = 971
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Left = 0
     Top = 33
     Width = 971
-    Height = 437
+    Height = 487
     ActivePage = tabSetup
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -35,7 +35,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     ParentFont = False
     TabHeight = 32
     TabOrder = 0
-    ExplicitTop = 41
     object tabSetup: TTabSheet
       Caption = 'Application Setup'
       ImageIndex = 27
@@ -218,15 +217,13 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 759
-      ExplicitTop = 0
     end
   end
   object pUser: TPanel
-    Left = 152
-    Top = 274
+    Left = 56
+    Top = 309
     Width = 697
-    Height = 199
+    Height = 188
     TabOrder = 2
     Visible = False
     object gbUserLogin: TGroupBox
@@ -234,7 +231,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       Left = 4
       Top = 4
       Width = 293
-      Height = 191
+      Height = 180
       Align = alLeft
       Caption = 'User Authentication'
       Font.Charset = DEFAULT_CHARSET
@@ -295,55 +292,61 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Left = 2
         Top = 42
         Width = 289
-        Height = 53
+        Height = 51
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        DesignSize = (
-          289
-          53)
         object Label2: TLabel
-          Left = 15
-          Top = 8
-          Width = 63
-          Height = 16
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 283
+          Height = 15
+          Align = alClient
           Caption = 'Username:'
+          Layout = tlCenter
+          ExplicitWidth = 63
+          ExplicitHeight = 16
         end
         object txtAuthUser: TEdit
-          Left = 15
-          Top = 29
-          Width = 259
+          AlignWithMargins = True
+          Left = 3
+          Top = 24
+          Width = 283
           Height = 24
-          Anchors = [akLeft, akTop, akRight]
+          Align = alBottom
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
         end
       end
       object pAuthPass: TPanel
         Left = 2
-        Top = 95
+        Top = 93
         Width = 289
-        Height = 60
+        Height = 50
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        DesignSize = (
-          289
-          60)
         object Label4: TLabel
-          Left = 15
-          Top = 8
-          Width = 60
-          Height = 16
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 271
+          Height = 14
           Margins.Right = 15
+          Align = alClient
           Caption = 'Password:'
+          Layout = tlCenter
+          ExplicitWidth = 60
+          ExplicitHeight = 16
         end
         object txtAuthPass: TEdit
-          Left = 15
-          Top = 32
-          Width = 259
+          AlignWithMargins = True
+          Left = 3
+          Top = 23
+          Width = 283
           Height = 24
-          Anchors = [akLeft, akTop, akRight]
+          Align = alBottom
           PasswordChar = '*'
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
@@ -351,15 +354,21 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       end
       object btnLogin: TButton
         AlignWithMargins = True
-        Left = 17
-        Top = 158
-        Width = 259
+        Left = 52
+        Top = 147
+        Width = 189
         Height = 28
         Cursor = crHandPoint
-        Margins.Left = 15
-        Margins.Right = 15
+        Margins.Left = 50
+        Margins.Right = 50
         Align = alBottom
         Caption = 'Login'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 3
         OnClick = btnLoginClick
       end
@@ -369,7 +378,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       Left = 303
       Top = 4
       Width = 292
-      Height = 191
+      Height = 180
       Align = alLeft
       Caption = 'User Info'
       Font.Charset = DEFAULT_CHARSET
@@ -382,10 +391,10 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       Visible = False
       object Panel4: TPanel
         AlignWithMargins = True
-        Left = 143
+        Left = 127
         Top = 21
-        Width = 144
-        Height = 131
+        Width = 160
+        Height = 120
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -393,7 +402,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 138
+          Width = 154
           Height = 18
           Align = alTop
           AutoSize = False
@@ -406,19 +415,18 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           AlignWithMargins = True
           Left = 3
           Top = 27
-          Width = 138
+          Width = 154
           Height = 18
           Align = alTop
           AutoSize = False
           Caption = 'Full Name'
-          ExplicitTop = 71
-          ExplicitWidth = 181
+          ExplicitLeft = 0
         end
         object lblUserSessionID: TLabel
           AlignWithMargins = True
           Left = 3
           Top = 51
-          Width = 138
+          Width = 154
           Height = 18
           Align = alTop
           AutoSize = False
@@ -431,7 +439,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           AlignWithMargins = True
           Left = 3
           Top = 75
-          Width = 138
+          Width = 154
           Height = 18
           Align = alTop
           AutoSize = False
@@ -445,8 +453,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         AlignWithMargins = True
         Left = 5
         Top = 21
-        Width = 132
-        Height = 131
+        Width = 116
+        Height = 120
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
@@ -454,34 +462,38 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 126
-          Height = 125
+          Width = 110
+          Height = 114
           Align = alClient
-          ExplicitLeft = 8
-          ExplicitTop = 4
-          ExplicitWidth = 76
-          ExplicitHeight = 87
+          ExplicitWidth = 22
+          ExplicitHeight = 102
         end
       end
       object btnLogout: TButton
         AlignWithMargins = True
-        Left = 17
-        Top = 158
-        Width = 258
+        Left = 52
+        Top = 147
+        Width = 188
         Height = 28
         Cursor = crHandPoint
-        Margins.Left = 15
-        Margins.Right = 15
+        Margins.Left = 50
+        Margins.Right = 50
         Align = alBottom
         Caption = 'Logout'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 2
         OnClick = btnLogoutClick
       end
     end
   end
   object MM: TMainMenu
-    Left = 32
-    Top = 344
+    Left = 240
+    Top = 16
     object Services1: TMenuItem
       Caption = 'Services'
       OnClick = Services1Click
@@ -498,7 +510,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
-    Left = 92
-    Top = 343
+    OnUserAuthRequest = TMDBUserAuthRequest
+    Left = 292
+    Top = 15
   end
 end

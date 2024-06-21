@@ -6,6 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls,
+  JD.Graphics,
   JD.TMDB.Intf,
   JD.TMDB.Common, JD.Common, JD.Ctrls, JD.Ctrls.FontButton;
 
@@ -63,11 +64,13 @@ type
     lstReleaseDates: TListView;
     btnFavorite: TJDFontButton;
     btnWatchlist: TJDFontButton;
+    lstVideos: TListView;
+    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure btnFavoriteClick(Sender: TObject);
     procedure btnWatchlistClick(Sender: TObject);
+    procedure lstVideosDblClick(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
     procedure LoadAccountStates;
@@ -76,6 +79,7 @@ type
     procedure LoadKeywords;
     procedure LoadReleaseDates;
     procedure LoadDetails;
+    procedure LoadVideos;
     procedure DisplayAccountStates(const Value: ITMDBAccountStates);
     procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
@@ -221,7 +225,7 @@ begin
       11: ; //Reviews
       12: ; //Similar
       13: ; //Translations
-      14: ; //Videos;
+      14: LoadVideos;
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -236,7 +240,8 @@ begin
   Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
     mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
-  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, '', TMDB.LoginState.SessionID);
+  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, cboSearchMoviesLanguage.Text,
+    TMDB.LoginState.SessionID);
 end;
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
@@ -285,20 +290,24 @@ begin
   if Value.Favorite then begin
     btnFavorite.Text:= 'Remove from Favorites';
     btnFavorite.Image.Text:= '';
+    btnFavorite.Image.StandardColor:= fcRed;
     btnFavorite.Tag:= 1;
   end else begin
     btnFavorite.Text:= 'Add to Favorites';
     btnFavorite.Image.Text:= '';
+    btnFavorite.Image.StandardColor:= fcBlue;
     btnFavorite.Tag:= 0;
   end;
 
   if Value.Watchlist then begin
     btnWatchlist.Text:= 'Remove from Watchlist';
     btnWatchlist.Image.Text:= '';
+    btnWatchlist.Image.StandardColor:= fcRed;
     btnWatchlist.Tag:= 1;
   end else begin
     btnWatchlist.Text:= 'Add to Watchlist';
     btnWatchlist.Image.Text:= '';
+    btnWatchlist.Image.StandardColor:= fcBlue;
     btnWatchlist.Tag:= 0;
   end;
 
@@ -427,6 +436,37 @@ begin
   end;
 end;
 
+procedure TfrmContentSearchMovies.LoadVideos;
+//var
+  //L: ITMDBVideoList;
+  //V: ITMDBVideoItem;
+  //X: Integer;
+  //I: TListItem;
+begin
+  lstVideos.Items.BeginUpdate;
+  try
+    lstVideos.Items.Clear;
+    //L:= FDetail.AppendedVideos;
+    //for X := 0 to L.Count-1 do begin
+    //  V:= L[X];
+    //  I:= lstVideos.Items.Add;
+    //  I.Caption:= V.Name;
+    //  I.SubItems.Add(V.Site);
+    //  I.SubItems.Add(V.VideoType);
+    //  I.SubItems.Add(FormatDateTime('yyyy-mm-dd', V.PublishedAt);
+    //end;
+  finally
+    lstVideos.Items.EndUpdate;
+  end;
+end;
+
+procedure TfrmContentSearchMovies.lstVideosDblClick(Sender: TObject);
+begin
+  inherited;
+  //TODO: Open video in default browser...
+
+end;
+
 function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBPageItem;
 var
   P: ITMDBMoviePage;
@@ -445,7 +485,7 @@ procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ITMDBPageItem);
 begin
   inherited;
-  //TODO: Navigate to movie details tab...
+  //TODO: Navigate to movie details tab within app...
 
 end;
 
@@ -466,8 +506,8 @@ var
   O: ITMDBMovieItem;
 begin
   inherited;
-  O:= Obj as ITMDBMovieItem; // ITMDBMovieItem(Obj); //TODO: Can we not cast interface as its ancestor?
-  Item.Caption:= O.Title; //TODO: ACCESS VIOLATION
+  O:= Obj as ITMDBMovieItem;
+  Item.Caption:= O.Title;
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
   if O.Genres.Count > 0 then
     Item.SubItems.Add(O.Genres[0].Name)

@@ -22,6 +22,7 @@ unit JD.TMDB.API;
   - Change requests - very dynamic and complex concept
   - Rate limiting - enforce time delays between requests
   - Watch Providers - enforce attribution to "JustWatch"
+  - Implement "TTMDBAPIRequestRec" to use on ALL HTTP requests
 
   REMARKS:
   - This unit *SHOULD* be fully functional at this point, with the exception
@@ -603,9 +604,11 @@ type
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
+  TTMDBAPICommand = (hcGet, hcPost, hcDelete);
+
   //TODO: A record which contains functionality necessary for a TMDB request URL...
   //  This will be passed with each possible API request instead of URLs and raw data.
-  TTMDBRequestRec = record
+  TTMDBAPIRequestRec = record
   private
     FProtocol: String;
     FRoot: String;
@@ -1302,6 +1305,10 @@ begin
   AddParam(P, 'append_to_response', AppendToResponse);
   AddParam(P, 'language', Language);
   AddParam(P, 'session_id', SessionID);
+
+  //Region test
+  AddParam(P, 'region', 'US');
+
   Result:= FOwner.GetJSON(U, P);
   S:= Result.AsJSON(True);
 end;
@@ -2605,23 +2612,23 @@ begin
   FMsecLimit := Value;
 end;
 
-{ TTMDBRequestRec }
+{ TTMDBAPIRequestRec }
 
-constructor TTMDBRequestRec.Create(const ARequest: String);
+constructor TTMDBAPIRequestRec.Create(const ARequest: String);
 begin
   FProtocol:= 'https';
   FRoot:= 'api.themoviedb.org/3';
   FRequest:= ARequest;
 end;
 
-procedure TTMDBRequestRec.AddParam(const Name, Value: String);
+procedure TTMDBAPIRequestRec.AddParam(const Name, Value: String);
 begin
   if FParams <> '' then
     FParams:= FParams + '&';
   FParams:= FParams + Name + '=' + Value;
 end;
 
-function TTMDBRequestRec.GetURL: String;
+function TTMDBAPIRequestRec.GetURL: String;
 begin
   Result:= FProtocol + '://';
   Result:= Result + URLCombine(FRoot, FRequest);

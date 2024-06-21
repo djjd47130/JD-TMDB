@@ -644,19 +644,23 @@ type
   /// [DONE]
   ITMDBCollectionItem = interface(ITMDBPageItem)
     ['{C0911ACB-C909-438A-8DC3-5A67E5F4CB4F}']
+    function GetAdult: Boolean; stdcall;
+    function GetBackdropPath: WideString; stdcall;
     function GetID: Integer; stdcall;
     function GetName: WideString; stdcall;
+    function GetOriginalLanguage: WideString; stdcall;
+    function GetOriginalName: WideString; stdcall;
     function GetOverview: WideString; stdcall;
     function GetPosterPath: WideString; stdcall;
-    function GetBackdropPath: WideString; stdcall;
-    function GetParts: ITMDBMovieList; stdcall;
 
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
     property ID: Integer read GetID;
     property Name: WideString read GetName;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property OriginalName: WideString read GetOriginalName;
     property Overview: WideString read GetOverview;
     property PosterPath: WideString read GetPosterPath;
-    property BackdropPath: WideString read GetBackdropPath;
-    property Parts: ITMDBMovieList read GetParts;
   end;
 
   /// [DONE]
@@ -671,14 +675,31 @@ type
 
   { Companies Related }
 
-  ITMDBCompanyItem = interface
+  ITMDBCompanyItem = interface(ITMDBPageItem)
     ['{491A255A-0E29-43B3-8AAC-5F727D74DD98}']
+    function GetID: Integer; stdcall;
+    function GetLogoPath: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOriginCountry: WideString; stdcall;
 
+    property ID: Integer read GetID;
+    property LogoPath: WideString read GetLogoPath;
+    property Name: WideString read GetName;
+    property OriginCountry: WideString read GetOriginCountry;
+  end;
+
+  ITMDBCompanyPage = interface(ITMDBPage)
+    ['{F3D62122-D304-4CA3-BE0C-72B1219E0DD1}']
+    function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
+
+    property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
   ITMDBCompanyList = interface
     ['{BF6B6EC5-C0E1-4D7B-B987-8F2BE6AD4211}']
+    function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
 
+    property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
 
@@ -2142,8 +2163,10 @@ type
 
   ITMDBServiceSearch = interface(ITMDBService)
     ['{D7E9618F-ED5C-4D9A-93FF-CF109294DA0F}']
-    //SearchCollections
-    //SearchCompanies
+    function SearchCollections(const Query: WideString; const IncludeAdult: Boolean = False;
+      const Language: WideString = ''; const Region: WideString = '';
+      const Page: Integer = 1): ITMDBCollectionPage; stdcall;
+    function SearchCompanies(const Query: WideString; const Page: Integer = 1): ITMDBCompanyPage; stdcall;
     //SearchKeywords
     function SearchMovies(const Query: WideString; const IncludeAdult: Boolean = False;
       const Language: WideString = ''; const Region: WideString = '';
@@ -2346,6 +2369,8 @@ type
     procedure SetUserAuth(const Value: TTMDBUserAuth); stdcall;
     function GetCache: ITMDBCache; stdcall;
     function GetLoginState: ITMDBLoginState; stdcall;
+    function GetOnUserAuthRequest: TTMDBUserAuthRequestEvent; stdcall;
+    procedure SetOnUserAuthRequest(const Value: TTMDBUserAuthRequestEvent); stdcall;
 
     { Services }
 
@@ -2387,6 +2412,8 @@ type
     property Cache: ITMDBCache read GetCache;
     property LoginState: ITMDBLoginState read GetLoginState;
 
+    property OnUserAuthRequest: TTMDBUserAuthRequestEvent
+      read GetOnUserAuthRequest write SetOnUserAuthRequest;
   end;
 
 implementation

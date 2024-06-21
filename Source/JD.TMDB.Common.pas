@@ -25,6 +25,13 @@ type
   { Common Types }
 
   /// <summary>
+  /// An event triggered when a login request requires a browser
+  ///   to be opened to a URL to authenticate.
+  /// </summary>
+  TTMDBUserAuthRequestEvent = procedure(Sender: TObject;
+    const URL: WideString; var Result: Boolean) of object;
+
+  /// <summary>
   /// Array of String, as used across TMDB library.
   /// </summary>
   TTMDBStrArray = TArray<WideString>;

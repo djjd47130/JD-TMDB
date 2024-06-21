@@ -78,6 +78,8 @@ type
     procedure btnLogoutClick(Sender: TObject);
     procedure txtAuthPassKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure TMDBUserAuthRequest(Sender: TObject; const URL: WideString;
+      var Result: Boolean);
   private
     FAppSetup: ISuperObject;
     FAuthMethod: Integer;
@@ -239,6 +241,13 @@ begin
   end;
 end;
 
+procedure TfrmTMDBTestMain.TMDBUserAuthRequest(Sender: TObject;
+  const URL: WideString; var Result: Boolean);
+begin
+  //TODO: Open URL in web browser...
+
+end;
+
 procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
 var
   Success: Boolean;
@@ -267,9 +276,7 @@ begin
   end;
   if Success then begin
     pUser.Visible:= False;
-
     ShowUserInfo;
-
   end else begin
     //TODO: Login failed...
   end;

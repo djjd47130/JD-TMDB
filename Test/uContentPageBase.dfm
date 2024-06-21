@@ -177,8 +177,6 @@ inherited frmContentPageBase: TfrmContentPageBase
       TabOrder = 0
       Text = 'Apply Search'
       OnClick = btnApplyClick
-      ExplicitLeft = 0
-      ExplicitTop = 459
     end
   end
 end

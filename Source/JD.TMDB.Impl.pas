@@ -437,9 +437,57 @@ type
 
   { Collections Related}
 
+  TTMDBCollectionItem = class(TTMDBPageItem, ITMDBCollectionItem)
+  protected
+    function GetAdult: Boolean; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOriginalLanguage: WideString; stdcall;
+    function GetOriginalName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+  public
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property OriginalName: WideString read GetOriginalName;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+  end;
+
+  TTMDBCollectionPage = class(TTMDBPage, ITMDBCollectionPage)
+  protected
+    function GetItem(const Index: Integer): ITMDBCollectionItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBCollectionItem read GetItem; default;
+  end;
+
 
 
   { Companies Related }
+
+  TTMDBCompanyItem = class(TTMDBPageItem, ITMDBCompanyItem)
+  protected
+    function GetID: Integer; stdcall;
+    function GetLogoPath: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOriginCountry: WideString; stdcall;
+  public
+    property ID: Integer read GetID;
+    property LogoPath: WideString read GetLogoPath;
+    property Name: WideString read GetName;
+    property OriginCountry: WideString read GetOriginCountry;
+  end;
+
+  TTMDBCompanyPage = class(TTMDBPage, ITMDBCompanyPage)
+  protected
+    function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
+  end;
 
 
 
@@ -1569,12 +1617,20 @@ type
 
   TTMDBServiceSearch = class(TTMDBService, ITMDBServiceSearch)
   protected
+    function SearchCollections(const Query: WideString; const IncludeAdult: Boolean = False;
+      const Language: WideString = ''; const Region: WideString = '';
+      const Page: Integer = 1): ITMDBCollectionPage; stdcall;
+    function SearchCompanies(const Query: WideString; const Page: Integer = 1): ITMDBCompanyPage; stdcall;
+    //function SearchKeywords()
     function SearchMovies(const Query: WideString; const IncludeAdult: Boolean = False;
       const Language: WideString = ''; const Region: WideString = '';
       const PrimaryReleaseYear: WideString = ''; const Year: WideString = '';
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
-
-
+    //function SearchMulti()
+    //function SearchPerson()
+    //function SearchTV(const Query: String; const FirstAirDateYear: Integer = 0;
+    //  const IncludeAdult: Boolean = False; const Language: WideString = '';
+    //  const Year: Integer = 0; const Page: Integer = 1): ITMDBTVSeriesPage;
   end;
 
   TTMDBServiceTrending = class(TTMDBService, ITMDBServiceTrending)
@@ -1763,6 +1819,7 @@ type
     FTVEpisodeGroups: ITMDBServiceTVEpisodeGroups;
     FWatchProviders: ITMDBServiceWatchProviders;
     FImages: ITMDBServiceImages;
+    FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
   protected
     function GetAPIKey: WideString; stdcall;
     procedure SetAPIKey(const Value: WideString); stdcall;
@@ -1774,6 +1831,10 @@ type
     procedure SetUserAuth(const Value: TTMDBUserAuth); stdcall;
     function GetCache: ITMDBCache; stdcall;
     function GetLoginState: ITMDBLoginState; stdcall;
+    function GetOnUserAuthRequest: TTMDBUserAuthRequestEvent; stdcall;
+    procedure SetOnUserAuthRequest(const Value: TTMDBUserAuthRequestEvent); stdcall;
+
+    procedure DoUserAuthRequest(const RequestToken: WideString; var Result: Boolean); virtual;
   public
     constructor Create;
     destructor Destroy; override;
@@ -1814,6 +1875,9 @@ type
     function TVEpisodeGroups: ITMDBServiceTVEpisodeGroups; stdcall;
     function WatchProviders: ITMDBServiceWatchProviders; stdcall;
     function Images: ITMDBServiceImages; stdcall;
+
+    property OnUserAuthRequest: TTMDBUserAuthRequestEvent
+      read GetOnUserAuthRequest write SetOnUserAuthRequest;
   end;
 
 
@@ -3949,6 +4013,26 @@ end;
 
 { TTMDBServiceSearch }
 
+function TTMDBServiceSearch.SearchCollections(const Query: WideString;
+  const IncludeAdult: Boolean; const Language, Region: WideString;
+  const Page: Integer): ITMDBCollectionPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchCollections(Query, IncludeAdult, Language,
+    Page, Region);
+  Result:= TTMDBCollectionPage.Create(O, FOwner, TTMDBCollectionItem);
+end;
+
+function TTMDBServiceSearch.SearchCompanies(const Query: WideString;
+  const Page: Integer): ITMDBCompanyPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchCompanies(Query, Page);
+  Result:= TTMDBCompanyPage.Create(O, FOwner, TTMDBCompanyItem);
+end;
+
 function TTMDBServiceSearch.SearchMovies(const Query: WideString;
   const IncludeAdult: Boolean; const Language, Region, PrimaryReleaseYear,
   Year: WideString; const Page: Integer): ITMDBMoviePage;
@@ -4132,6 +4216,11 @@ begin
   Result:= FLoginState;
 end;
 
+function TTMDBClient.GetOnUserAuthRequest: TTMDBUserAuthRequestEvent;
+begin
+  Result:= Self.FOnUserAuthRequest;
+end;
+
 function TTMDBClient.GetUserAuth: TTMDBUserAuth;
 begin
   Result:= FUserAuth;
@@ -4150,6 +4239,12 @@ end;
 procedure TTMDBClient.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FAPI.AuthMethod:= Value;
+end;
+
+procedure TTMDBClient.SetOnUserAuthRequest(
+  const Value: TTMDBUserAuthRequestEvent);
+begin
+  Self.FOnUserAuthRequest:= Value;
 end;
 
 procedure TTMDBClient.SetUserAuth(const Value: TTMDBUserAuth);
@@ -4202,6 +4297,17 @@ end;
 function TTMDBClient.Discover: ITMDBServiceDiscover;
 begin
   Result:= FDiscover;
+end;
+
+procedure TTMDBClient.DoUserAuthRequest(const RequestToken: WideString;
+  var Result: Boolean);
+var
+  U: String;
+begin
+  if Assigned(FOnUserAuthRequest) then begin
+    U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
+    FOnUserAuthRequest(Self, U, Result);
+  end;
 end;
 
 function TTMDBClient.Find: ITMDBServiceFind;
@@ -5111,19 +5217,25 @@ end;
 function TTMDBLoginState.LoginAsUser: ITMDBAuthSessionResult;
 var
   RT: ITMDBAuthRequestTokenResult;
+  Res: Boolean;
 begin
   RT:= FOwner.Authentication.CreateRequestToken;
   if RT.Success then begin
-    Result:= FOwner.Authentication.CreateSession(RT.RequestToken);
+    Res:= False;
+    //Trigger event to open browser of choice to URL...
+    FOwner.DoUserAuthRequest(RT.RequestToken, Res);
+    //TODO: How to wait for and validate result???
 
-    //TODO: Open login page in browser via event...
-
-    if Result.Success then begin
-      FSessionID:= Result.SessionID;
-      FIsAuthenticated:= True;
-      FIsGuest:= False;
-      FAccountDetail:= FOwner.Account.GetDetails(0, FSessionID);
+    if Res then begin
+      Result:= FOwner.Authentication.CreateSession(RT.RequestToken);
+      if Result.Success then begin
+        FSessionID:= Result.SessionID;
+        FIsAuthenticated:= True;
+        FIsGuest:= False;
+        FAccountDetail:= FOwner.Account.GetDetails(0, FSessionID);
+      end;
     end;
+
   end;
 end;
 
@@ -5327,6 +5439,84 @@ begin
     I._AddRef;
     FItems.Add(I);
   end;
+end;
+
+{ TTMDBCollectionItem }
+
+function TTMDBCollectionItem.GetAdult: Boolean;
+begin
+  Result:= FObj.B['adult'];
+end;
+
+function TTMDBCollectionItem.GetBackdropPath: WideString;
+begin
+  Result:= FObj.S['backdrop_path'];
+end;
+
+function TTMDBCollectionItem.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBCollectionItem.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBCollectionItem.GetOriginalLanguage: WideString;
+begin
+  Result:= FObj.S['original_language'];
+end;
+
+function TTMDBCollectionItem.GetOriginalName: WideString;
+begin
+  Result:= Fobj.S['original_name'];
+end;
+
+function TTMDBCollectionItem.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBCollectionItem.GetPosterPath: WideString;
+begin
+  Result:= FObj.S['poster_path'];
+end;
+
+{ TTMDBCollectionPage }
+
+function TTMDBCollectionPage.GetItem(const Index: Integer): ITMDBCollectionItem;
+begin
+  Result:= ITMDBCollectionItem(inherited GetPageItem(Index));
+end;
+
+{ TTMDBCompanyItem }
+
+function TTMDBCompanyItem.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBCompanyItem.GetLogoPath: WideString;
+begin
+  Result:= FObj.S['logo_path'];
+end;
+
+function TTMDBCompanyItem.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBCompanyItem.GetOriginCountry: WideString;
+begin
+  Result:= FObj.S['origin_country'];
+end;
+
+{ TTMDBCompanyPage }
+
+function TTMDBCompanyPage.GetItem(const Index: Integer): ITMDBCompanyItem;
+begin
+  Result:= ITMDBCompanyItem(inherited GetPageItem(Index));
 end;
 
 end.

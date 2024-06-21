@@ -25,9 +25,11 @@ uses
   JD.TMDB.Common;
 
 type
+
   TTMDB = class(TComponent)
   private
     FTMDB: ITMDBClient;
+    FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
     function GetAccessToken: String;
     function GetAPIKey: String;
     function GetAuthMethod: TTMDBAuthMethod;
@@ -36,6 +38,10 @@ type
     procedure SetAuthMethod(const Value: TTMDBAuthMethod);
     function GetCache: ITMDBCache;
     function GetLoginState: ITMDBLoginState;
+    procedure UserAuthRequst(Sender: TObject;
+      const URL: WideString; var Result: Boolean);
+  protected
+    procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -52,6 +58,9 @@ type
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
     property AccessToken: String read GetAccessToken write SetAccessToken;
+
+    property OnUserAuthRequest: TTMDBUserAuthRequestEvent
+      read FOnUserAuthRequest write FOnUserAuthRequest;
   end;
 
 implementation
@@ -63,6 +72,7 @@ begin
   inherited;
   FTMDB:= TTMDBClient.Create;
   FTMDB._AddRef;
+  FTMDB.OnUserAuthRequest:= UserAuthRequst;
 end;
 
 destructor TTMDB.Destroy;
@@ -70,6 +80,14 @@ begin
   FTMDB._Release;
   FTMDB:= nil;
   inherited;
+end;
+
+procedure TTMDB.DoUserAuthRequest(const URL: WideString; var Result: Boolean);
+begin
+  if Assigned(FOnUserAuthRequest) then begin
+    //U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
+    FOnUserAuthRequest(Self, URL, Result);
+  end;
 end;
 
 function TTMDB.GetAccessToken: String;
@@ -110,6 +128,12 @@ end;
 procedure TTMDB.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FTMDB.AuthMethod:= Value;
+end;
+
+procedure TTMDB.UserAuthRequst(Sender: TObject; const URL: WideString;
+  var Result: Boolean);
+begin
+  DoUserAuthRequest(URL, Result);
 end;
 
 function TTMDB.CountryName(const Code: String): String;

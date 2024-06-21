@@ -7,6 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   uTabBase,
   uContentSearchCollections,
+  uContentSearchCompanies,
   uContentSearchMovies,
   Vcl.ComCtrls;
 
@@ -47,6 +48,7 @@ begin
 
   EmbedContent(TfrmContentSearchCollections);
   EmbedContent(TfrmContentSearchMovies);
+  EmbedContent(TfrmContentSearchCompanies);
 end;
 
 end.

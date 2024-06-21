@@ -60,7 +60,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         Top = 0
         Width = 769
         Height = 303
-        ActivePage = TabSheet2
+        ActivePage = TabSheet1
         Align = alClient
         MultiLine = True
         TabOrder = 0
@@ -204,7 +204,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             TabOrder = 0
             Text = 'Add to Favorites'
             OnClick = btnFavoriteClick
-            ExplicitTop = 75
           end
           object btnWatchlist: TJDFontButton
             AlignWithMargins = True
@@ -248,7 +247,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
             TabOrder = 1
             Text = 'Add to Watchlist'
             OnClick = btnWatchlistClick
-            ExplicitTop = 155
           end
         end
         object TabSheet3: TTabSheet
@@ -510,6 +508,37 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         object TabSheet15: TTabSheet
           Caption = 'Videos'
           ImageIndex = 14
+          object lstVideos: TListView
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 755
+            Height = 241
+            Align = alClient
+            Columns = <
+              item
+                Caption = 'Title'
+                Width = 250
+              end
+              item
+                Caption = 'Site'
+                Width = 120
+              end
+              item
+                Caption = 'Type'
+                Width = 150
+              end
+              item
+                Caption = 'Published'
+                Width = 180
+              end>
+            HotTrackStyles = [htHandPoint, htUnderlineHot]
+            ReadOnly = True
+            RowSelect = True
+            TabOrder = 0
+            ViewStyle = vsReport
+            OnDblClick = lstVideosDblClick
+          end
         end
       end
     end
@@ -700,8 +729,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
     inherited btnApply: TJDFontButton
       Top = 517
       TabOrder = 6
-      ExplicitLeft = 4
-      ExplicitTop = 520
+      ExplicitTop = 517
     end
   end
 end
