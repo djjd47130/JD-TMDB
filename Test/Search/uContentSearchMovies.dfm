@@ -60,7 +60,7 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         Top = 0
         Width = 769
         Height = 303
-        ActivePage = TabSheet1
+        ActivePage = TabSheet13
         Align = alClient
         MultiLine = True
         TabOrder = 0

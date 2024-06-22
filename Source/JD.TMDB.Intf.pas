@@ -671,6 +671,58 @@ type
     property Items[const Index: Integer]: ITMDBCollectionItem read GetItem; default;
   end;
 
+  ITMDBCollectionPart = interface
+    ['{C3706419-47B1-4CD9-879C-16259A116DF5}']
+    function GetAdult: Boolean; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetTitle: WideString; stdcall;
+    function GetOriginalLanguage: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetMediaType: TTMDBMediaType; stdcall;
+    function GetGenres: ITMDBGenreList; stdcall;
+    function GetPopularity: Single; stdcall;
+    function GetReleaseDate: TDateTime; stdcall;
+    function GetVideo: Boolean; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property ID: Integer read GetID;
+    property Title: WideString read GetTitle;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property MediaType: TTMDBMediaType read GetMediaType;
+    property Genres: ITMDBGenreList read GetGenres;
+    property Popularity: Single read GetPopularity;
+    property ReleaseDate: TDateTime read GetReleaseDate;
+    property Video: Boolean read GetVideo;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
+  end;
+
+  ITMDBCollectionDetail = interface
+    ['{78E5B1AC-0FF3-4472-886E-4A7696BE1E0E}']
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetPartCount: Integer; stdcall;
+    function GetPart(const Index: Integer): ITMDBCollectionPart; stdcall;
+
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property BackdropPath: WideString read GetBackdropPath;
+    property PartCount: Integer read GetPartCount;
+    property Parts[const Index: Integer]: ITMDBCollectionPart read GetPart; default;
+  end;
+
 
 
   { Companies Related }
@@ -2015,9 +2067,12 @@ type
 
   ITMDBServiceCollections = interface(ITMDBService)
     ['{C0040473-5A07-493B-9771-2EAF58CD5DB0}']
-    //GetDetails
-    //GetImages
-    //GetTranslations
+    function GetDetails(const CollectionID: Integer;
+      const Language: WideString = ''): ITMDBCollectionDetail; stdcall;
+    //function GetImages(const CollectionID: Integer;
+    //  const IncludeImageLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBImageList; stdcall;
+    //function GetTranslations(const CollectionID: Integer): ITMDBTranslationList; stdcall;
   end;
 
   ITMDBServiceCompanies = interface(ITMDBService)

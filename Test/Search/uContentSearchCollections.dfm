@@ -3,7 +3,12 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
   PixelsPerInch = 96
   TextHeight = 18
   inherited pMain: TPanel
+    inherited Splitter1: TSplitter
+      Top = 241
+      ExplicitTop = 241
+    end
     inherited lstResults: TListView
+      Height = 203
       Columns = <
         item
           Caption = 'Name'
@@ -17,10 +22,114 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
           Caption = 'Overview'
           Width = 600
         end>
+      ExplicitHeight = 203
+    end
+    inherited pDetail: TPanel
+      Top = 248
+      Height = 252
+      ExplicitTop = 248
+      ExplicitHeight = 252
+      object Pages: TPageControl
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 639
+        Height = 246
+        ActivePage = TabSheet2
+        Align = alClient
+        TabOrder = 0
+        OnChange = PagesChange
+        object TabSheet1: TTabSheet
+          Caption = 'Details'
+          object lblTitle: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 625
+            Height = 29
+            Align = alTop
+            AutoSize = False
+            Caption = 'Collection Title'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -21
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ExplicitLeft = 19
+          end
+          object txtOverview: TMemo
+            AlignWithMargins = True
+            Left = 3
+            Top = 38
+            Width = 625
+            Height = 105
+            Align = alTop
+            BorderStyle = bsNone
+            Color = clBtnFace
+            Lines.Strings = (
+              'txtOverview')
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 0
+          end
+        end
+        object TabSheet2: TTabSheet
+          Caption = 'Parts'
+          ImageIndex = 1
+          object lstParts: TListView
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 625
+            Height = 207
+            Align = alClient
+            BorderStyle = bsNone
+            Columns = <
+              item
+                Caption = 'Item'
+                Width = 300
+              end
+              item
+                Caption = 'Popularity'
+                Width = 100
+              end
+              item
+                Caption = 'Media Type'
+                Width = 120
+              end
+              item
+                Caption = 'Genre'
+                Width = 170
+              end
+              item
+                Caption = 'Released'
+                Width = 120
+              end
+              item
+                Caption = 'Description'
+                Width = 500
+              end>
+            HideSelection = False
+            HotTrackStyles = [htHandPoint, htUnderlineHot]
+            ReadOnly = True
+            RowSelect = True
+            TabOrder = 0
+            ViewStyle = vsReport
+          end
+        end
+        object TabSheet3: TTabSheet
+          Caption = 'Images'
+          ImageIndex = 2
+        end
+        object TabSheet4: TTabSheet
+          Caption = 'Translations'
+          ImageIndex = 3
+        end
+      end
     end
   end
   inherited pSearch: TPanel
-    ExplicitLeft = -3
     object Panel7: TPanel
       Left = 0
       Top = 0
@@ -29,7 +138,6 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 8
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3

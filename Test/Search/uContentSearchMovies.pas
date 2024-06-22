@@ -250,7 +250,6 @@ var
   ID: Integer;
   O: ITMDBMovieItem;
 begin
-  inherited;
   Screen.Cursor:= crHourglass;
   try
     FDetail:= nil;
@@ -262,6 +261,7 @@ begin
     Screen.Cursor:= crDefault;
   end;
   DisplayMovieDetail(FDetail);
+  inherited;
 end;
 
 procedure TfrmContentSearchMovies.LoadDetails;

@@ -36,6 +36,5 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
-  Application.CreateForm(TfrmContentSearchCompanies, frmContentSearchCompanies);
   Application.Run;
 end.

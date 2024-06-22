@@ -465,6 +465,74 @@ type
     property Items[const Index: Integer]: ITMDBCollectionItem read GetItem; default;
   end;
 
+  TTMDBCollectionPart = class(TInterfacedObject, ITMDBCollectionPart)
+  private
+    FObj: ISuperObject;
+    FGenres: ITMDBGenreList;
+    FTMDB: ITMDBClient;
+  protected
+    function GetAdult: Boolean; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetTitle: WideString; stdcall;
+    function GetOriginalLanguage: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetMediaType: TTMDBMediaType; stdcall;
+    function GetGenres: ITMDBGenreList; stdcall;
+    function GetPopularity: Single; stdcall;
+    function GetReleaseDate: TDateTime; stdcall;
+    function GetVideo: Boolean; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property ID: Integer read GetID;
+    property Title: WideString read GetTitle;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property MediaType: TTMDBMediaType read GetMediaType;
+    property Genres: ITMDBGenreList read GetGenres;
+    property Popularity: Single read GetPopularity;
+    property ReleaseDate: TDateTime read GetReleaseDate;
+    property Video: Boolean read GetVideo;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
+  end;
+
+  TTMDBCollectionDetail = class(TInterfacedObject, ITMDBCollectionDetail)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FParts: TInterfaceList;
+    procedure PopulateParts;
+    procedure ClearParts;
+  protected
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetPartCount: Integer; stdcall;
+    function GetPart(const Index: Integer): ITMDBCollectionPart; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property BackdropPath: WideString read GetBackdropPath;
+    property PartCount: Integer read GetPartCount;
+    property Parts[const Index: Integer]: ITMDBCollectionPart read GetPart; default;
+  end;
+
 
 
   { Companies Related }
@@ -1501,6 +1569,8 @@ type
 
   TTMDBServiceCollections = class(TTMDBService, ITMDBServiceCollections)
   protected
+    function GetDetails(const CollectionID: Integer;
+      const Language: WideString = ''): ITMDBCollectionDetail; stdcall;
 
   end;
 
@@ -1890,7 +1960,7 @@ constructor TTMDBPage.Create(AObj: ISuperObject; ATMDB: TTMDBClient;
 begin
   FObj:= AObj;
   FTMDB:= ATMDB;
-  FItems:= TObjectList<TTMDBPageItem>.Create(False); //(True);
+  FItems:= TObjectList<TTMDBPageItem>.Create(False);
   FItemClass:= AItemClass;
   PopulateItems;
 end;
@@ -5487,7 +5557,7 @@ end;
 
 function TTMDBCollectionPage.GetItem(const Index: Integer): ITMDBCollectionItem;
 begin
-  Result:= ITMDBCollectionItem(inherited GetPageItem(Index));
+  Result:= TTMDBCollectionItem(inherited GetPageItem(Index));
 end;
 
 { TTMDBCompanyItem }
@@ -5517,6 +5587,200 @@ end;
 function TTMDBCompanyPage.GetItem(const Index: Integer): ITMDBCompanyItem;
 begin
   Result:= ITMDBCompanyItem(inherited GetPageItem(Index));
+end;
+
+{ TTMDBServiceCollections }
+
+function TTMDBServiceCollections.GetDetails(const CollectionID: Integer;
+  const Language: WideString): ITMDBCollectionDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetDetails(CollectionID, Language);
+  Result:= TTMDBCollectionDetail.Create(O, FOwner);
+end;
+
+{ TTMDBCollectionPart }
+
+constructor TTMDBCollectionPart.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FGenres:= nil;
+  FTMDB:= ATMDB;
+end;
+
+destructor TTMDBCollectionPart.Destroy;
+begin
+  FObj:= nil;
+  FGenres:= nil;
+  FTMDB:= nil;
+  inherited;
+end;
+
+function TTMDBCollectionPart.GetAdult: Boolean;
+begin
+  Result:= FObj.B['adult'];
+end;
+
+function TTMDBCollectionPart.GetBackdropPath: WideString;
+begin
+  Result:= FObj.S['backdrop_path'];
+end;
+
+function TTMDBCollectionPart.GetGenres: ITMDBGenreList;
+var
+  A, A2: ISuperArray;
+  O: ISuperObject;
+  X: Integer;
+begin
+  //One-time lookup and cache...
+  if FGenres = nil then begin
+    A:= FObj.A['genre_ids'];
+    A2:= SA([]);
+    for X := 0 to A.Length-1 do begin
+      O:= SO;
+      O.I['id']:= A.I[X];
+      A2.Add(O);
+    end;
+    FGenres:= TTMDBGenreList.Create(A2, MediaType, FTMDB);
+  end;
+  Result:= FGenres;
+end;
+
+function TTMDBCollectionPart.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBCollectionPart.GetMediaType: TTMDBMediaType;
+begin
+  Result:= TMDBStrToMediaType(FObj.S['media_type']);
+end;
+
+function TTMDBCollectionPart.GetOriginalLanguage: WideString;
+begin
+  Result:= FObj.S['original_language'];
+end;
+
+function TTMDBCollectionPart.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBCollectionPart.GetPopularity: Single;
+begin
+  Result:= FObj.F['popularity'];
+end;
+
+function TTMDBCollectionPart.GetPosterPath: WideString;
+begin
+  Result:= FObj.S['poster_path'];
+end;
+
+function TTMDBCollectionPart.GetReleaseDate: TDateTime;
+begin
+  Result:= ConvertDate(FObj.S['release_date']);
+end;
+
+function TTMDBCollectionPart.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+end;
+
+function TTMDBCollectionPart.GetVideo: Boolean;
+begin
+  Result:= FObj.B['video'];
+end;
+
+function TTMDBCollectionPart.GetVoteAverage: Single;
+begin
+  Result:= FObj.F['vote_average'];
+end;
+
+function TTMDBCollectionPart.GetVoteCount: Integer;
+begin
+  Result:= FObj.I['vote_count'];
+end;
+
+{ TTMDBCollectionDetail }
+
+procedure TTMDBCollectionDetail.ClearParts;
+var
+  X: Integer;
+begin
+  for X := 0 to FParts.Count-1 do begin
+    ITMDBCollectionPart(FParts[X])._Release;
+  end;
+  FParts.Clear;
+end;
+
+constructor TTMDBCollectionDetail.Create(AObj: ISuperObject;
+  ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FParts:= TInterfaceList.Create;
+  PopulateParts;
+end;
+
+destructor TTMDBCollectionDetail.Destroy;
+begin
+  ClearParts;
+  FreeAndNil(FParts);
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBCollectionDetail.GetBackdropPath: WideString;
+begin
+  Result:= FObj.S['backdrop_path'];
+end;
+
+function TTMDBCollectionDetail.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBCollectionDetail.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBCollectionDetail.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBCollectionDetail.GetPart(
+  const Index: Integer): ITMDBCollectionPart;
+begin
+  Result:= ITMDBCollectionPart(FParts[Index]);
+end;
+
+function TTMDBCollectionDetail.GetPartCount: Integer;
+begin
+  Result:= FParts.Count;
+end;
+
+function TTMDBCollectionDetail.GetPosterPath: WideString;
+begin
+  Result:= FObj.S['poster_path'];
+end;
+
+procedure TTMDBCollectionDetail.PopulateParts;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBCollectionPart;
+begin
+  ClearParts;
+  for X := 0 to FObj.A['parts'].Length-1 do begin
+    O:= FObj.A['parts'].O[X];
+    I:= TTMDBCollectionPart.Create(O, FTMDB);
+    I._AddRef;
+    FParts.Add(I);
+  end;
 end;
 
 end.
