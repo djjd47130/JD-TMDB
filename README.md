@@ -24,13 +24,13 @@ While the TMDB API supports several authentication methods for users to login an
 
 ## Delphi Wrapper
 
-The goal of this library is to have 3 layers of wrappers - Raw JSON API (`JD.TMDB.API.pas`), Interface Translation (`JD.TMDB.Intf.pas`), and Delphi Component (Future Plan).
+The goal of this library is to have 3 layers of wrappers - Raw JSON API (`JD.TMDB.API.pas`), Interface Translation (`JD.TMDB.Intf.pas`), and Delphi Component.
 
-At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component, which can be installed into your IDE. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the `X-SuperObject` JSON library for Delphi. 
+At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the `X-SuperObject` JSON library for Delphi. 
 
-A second-level wrapper is being written which further adds an abstract layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. 
+A second-level wrapper is being written which further adds an abstract layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. The base interface is `ITMDBClient`.
 
-A final third-level wrapper is planned which will be a component you can install into the Delphi IDE. It will be reponsible for everything necessary, including pre-fetching configuration data, API authentication, user authentication, language and locale options, etc.  This will ultimately be the main component to integrate your Delphi project with the TMDB API. 
+A final third-level wrapper is a component you can install into the Delphi IDE. It is reponsible for everything necessary, including pre-fetching configuration data, API authentication, user authentication, language and locale options, etc.  This will ultimately be the main component to integrate your Delphi project with the TMDB API. 
 
 ## Test Application
 
