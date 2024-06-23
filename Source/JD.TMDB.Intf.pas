@@ -1912,6 +1912,39 @@ type
     function GetType: WideString;
     function GetVoteAverage: Single;
     function GetVoteCount: Integer;
+
+    property Adult: Boolean read GetAdult;
+    property BackdropPath: WideString read GetBackdropPath;
+    property CreatedBy: ITMDBPersonList read GetCreatedBy;
+    property EpisodeRunTime: TTMDBIntArray read GetEpisodeRunTime;
+    property FirstAirDate: TDateTime read GetFirstAirDate;
+    property Genres: ITMDBGenreList read GetGenres;
+    property Homepage: WideString read GetHomepage;
+    property ID: Integer read GetID;
+    property InProduction: Boolean read GetInProduction;
+    property Languages: TTMDBStrArray read GetLanguages;
+    property LastAirDate: TDateTime read GetLastAirDate;
+    property LastEpisodeToAir: ITMDBTVEpisodeItem read GetLastEpisodeToAir;
+    property Name: WideString read GetName;
+    property NextEpisodeToAir: TDateTime read GetNextEpisodeToAir;
+    property Networks: ITMDBTVNetworkList read GetNetworks;
+    property NumberOfEpisodes: Integer read GetNumberOfEpisodes;
+    property NumberOfSeasons: Integer read GetNumberOfSeasons;
+    property OriginCountry: TTMDBStrArray read GetOriginCountry;
+    property OriginalLanguage: WideString read GetOriginalLanguage;
+    property OriginalName: WideString read GetOriginalName;
+    property Overview: WideString read GetOverview;
+    property Popularity: Single read GetPopularity;
+    property PosterPath: WideString read GetPosterPath;
+    property ProductionCompanies: ITMDBCompanyList read GetProductionCompanies;
+    property ProductionCountries: ITMDBCountryList read GetProductionCountries;
+    //TODO: Seasons
+    property SpokenLanguages: ITMDBLanguageList read GetSpokenLanguages;
+    property Status: WideString read GetStatus;
+    property Tagline: WideString read GetTagline;
+    property SeriesType: WideString read GetType;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
   end;
 
   /// [DONE]
@@ -2344,7 +2377,7 @@ type
     function GetImages(const MovieID: Integer; const IncludeImageLanguage: WideString = '';
       const Language: WideString = ''): ITMDBMediaImages; stdcall;
     function GetKeywords(const MovieID: Integer): ITMDBKeywordList; stdcall;
-    //function GetLatest(const MovieID: Integer): ITMDBx; stdcall;
+    function GetLatest: ITMDBMovieDetail;
     //function GetLists(const MovieID: Integer): ITMDBx; stdcall;
     //function GetRecommendations(const MovieID: Integer): ITMDBx; stdcall;
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
@@ -2402,15 +2435,18 @@ type
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
     //SearchMulti
     //SearchPeople
-    //SearchTV
+    function SearchTV(const Query: String; const FirstAirDateYear: Integer = 0;
+      const IncludeAdult: Boolean = False; const Language: WideString = '';
+      const Year: Integer = 0; const Page: Integer = 1): ITMDBTVSeriesPage;
   end;
 
   ITMDBServiceTrending = interface(ITMDBService)
     ['{54784907-ACC7-40D1-81D5-109FB413F18A}']
     //GetAll
-    //GetMovies
-    //GetPeople
-    //GetTV
+    function GetMovies(const TimeWindow: TTMDBTimeWindow; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    //function GetPeople(): ITMDBPersonPage; stdcall;
+    //function GetTV(): ITMDBTVPage; stdcall;
   end;
 
   ITMDBServiceTVSeriesLists = interface(ITMDBService)
@@ -2423,7 +2459,8 @@ type
 
   ITMDBServiceTVSeries = interface(ITMDBService)
     ['{A72F79E7-A3C2-4105-B0F0-3D53B59352B2}']
-    //GetDetails
+    function GetDetails(const SeriesID: Integer; const AppendToResponse: TTMDBTVSeriesRequests = [];
+      const Language: WideString = ''): ITMDBTVSeriesDetail;
     //GetAccountStates
     //GetAggregateCredits
     //GetAlternativeTitles
@@ -2580,8 +2617,11 @@ type
 
 
 
-  { Core Access }
+  { Core API Client }
 
+  /// <summary>
+  /// The core interface-based implementation of the TMDB API wrapper.
+  /// </summary>
   ITMDBClient = interface
     ['{FB7CAA70-63BE-4BAC-9BE8-4E0E0225A9C3}']
 

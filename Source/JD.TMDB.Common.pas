@@ -105,6 +105,7 @@ type
   /// </summary>
   TTMDBTVEpisodeGroupTypes = set of TTMDBTVEpisodeGroupType;
 
+  TTMDBTimeWindow = (twDay, twWeek);
 
 
 
