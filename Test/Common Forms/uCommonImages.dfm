@@ -1,22 +1,26 @@
 inherited frmCommonImages: TfrmCommonImages
   Caption = 'Images'
+  ClientHeight = 504
+  ClientWidth = 964
+  ExplicitWidth = 980
+  ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   object lstImages: TListView
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 773
-    Height = 439
+    Width = 958
+    Height = 498
     Align = alClient
     Columns = <
       item
         Caption = 'Filename'
-        Width = 250
+        Width = 400
       end
       item
         Caption = 'Language'
-        Width = 250
+        Width = 200
       end
       item
         Caption = 'Width'
@@ -28,8 +32,13 @@ inherited frmCommonImages: TfrmCommonImages
       end
       item
         Caption = 'Aspect Ratio'
-        Width = 120
+        Width = 130
       end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
     Groups = <
       item
         Header = 'Backdrops'
@@ -55,11 +64,13 @@ inherited frmCommonImages: TfrmCommonImages
         FooterAlign = taLeftJustify
         TitleImage = -1
       end>
+    HotTrackStyles = [htHandPoint, htUnderlineHot]
     GroupView = True
+    ReadOnly = True
+    RowSelect = True
+    ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -126
-    ExplicitWidth = 905
-    ExplicitHeight = 347
+    ExplicitWidth = 876
   end
 end
