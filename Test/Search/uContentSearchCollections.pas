@@ -16,9 +16,6 @@ type
     Panel8: TPanel;
     Label9: TLabel;
     cboSearchMoviesAdult: TComboBox;
-    Panel9: TPanel;
-    Label10: TLabel;
-    cboSearchMoviesLanguage: TComboBox;
     Panel10: TPanel;
     Label11: TLabel;
     cboSearchMoviesRegion: TComboBox;
@@ -62,6 +59,9 @@ implementation
 
 {$R *.dfm}
 
+uses
+  uTMDBTestMain;
+
 procedure TfrmContentSearchCollections.FormCreate(Sender: TObject);
 begin
   inherited;
@@ -83,7 +83,7 @@ begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
   A:= cboSearchMoviesAdult.ItemIndex = 1;
-  L:= cboSearchMoviesLanguage.Text;
+  L:= frmTMDBTestMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));
 end;
@@ -137,12 +137,7 @@ end;
 procedure TfrmContentSearchCollections.PrepSearch;
 begin
   inherited;
-
-  //TODO: This should rather be fetching "Primary Translations"...
-  TMDB.ListLanguages(cboSearchMoviesLanguage.Items);
-
   TMDB.ListCountries(cboSearchMoviesRegion.Items);
-
 end;
 
 procedure TfrmContentSearchCollections.SetupCols;
@@ -156,7 +151,7 @@ end;
 function TfrmContentSearchCollections.GetCollectionDetail(const ID: Integer): ITMDBCollectionDetail;
 begin
   PrepAPI;
-  Result:= TMDB.Client.Collections.GetDetails(ID, cboSearchMoviesLanguage.Text);
+  Result:= TMDB.Client.Collections.GetDetails(ID, frmTMDBTestMain.cboLanguage.Text);
 end;
 
 procedure TfrmContentSearchCollections.ShowDetail(const Index: Integer;

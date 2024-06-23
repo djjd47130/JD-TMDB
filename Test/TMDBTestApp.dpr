@@ -27,14 +27,19 @@ uses
   uContentCertsMovies in 'Certifications\uContentCertsMovies.pas' {frmContentCertsMovies},
   uContentCertsTV in 'Certifications\uContentCertsTV.pas' {frmContentCertsTV},
   uContentConfigCountries in 'Configuration\uContentConfigCountries.pas' {frmContentConfigCountries},
-  uContentSearchCompanies in 'Search\uContentSearchCompanies.pas' {frmContentSearchCompanies};
+  uContentSearchCompanies in 'Search\uContentSearchCompanies.pas' {frmContentSearchCompanies},
+  uTabMovies in 'Movies\uTabMovies.pas' {frmTabMovies},
+  uContentMovieDetail in 'Movies\uContentMovieDetail.pas' {frmContentMovieDetail},
+  uCommonFormBase in 'Common Forms\uCommonFormBase.pas' {frmCommonFormBase},
+  uCommonVideos in 'Common Forms\uCommonVideos.pas' {frmCommonVideos},
+  uCommonImages in 'Common Forms\uCommonImages.pas' {frmCommonImages},
+  uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Light');
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
   Application.Run;
 end.

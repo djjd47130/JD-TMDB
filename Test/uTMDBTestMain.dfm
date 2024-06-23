@@ -163,6 +163,49 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             end
           end
         end
+        object GroupBox1: TGroupBox
+          AlignWithMargins = True
+          Left = 367
+          Top = 4
+          Width = 258
+          Height = 193
+          Align = alLeft
+          Caption = 'Locale Options'
+          TabOrder = 1
+          object Panel6: TPanel
+            Left = 2
+            Top = 20
+            Width = 254
+            Height = 69
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 0
+            object Label5: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 3
+              Width = 248
+              Height = 18
+              Align = alTop
+              AutoSize = False
+              Caption = 'Default Language:'
+              ExplicitLeft = 16
+              ExplicitTop = 8
+              ExplicitWidth = 64
+            end
+            object cboLanguage: TComboBox
+              AlignWithMargins = True
+              Left = 3
+              Top = 27
+              Width = 248
+              Height = 26
+              Cursor = crHandPoint
+              Align = alTop
+              TabOrder = 0
+              ExplicitWidth = 26
+            end
+          end
+        end
       end
     end
   end
@@ -222,7 +265,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   object pUser: TPanel
     Left = 56
     Top = 309
-    Width = 697
+    Width = 633
     Height = 188
     TabOrder = 2
     Visible = False

@@ -176,6 +176,30 @@
             <Form>frmContentSearchCompanies</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Movies\uTabMovies.pas">
+            <Form>frmTabMovies</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Movies\uContentMovieDetail.pas">
+            <Form>frmContentMovieDetail</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonFormBase.pas">
+            <Form>frmCommonFormBase</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonVideos.pas">
+            <Form>frmCommonVideos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonImages.pas">
+            <Form>frmCommonImages</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonCredits.pas">
+            <Form>frmCommonCredits</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

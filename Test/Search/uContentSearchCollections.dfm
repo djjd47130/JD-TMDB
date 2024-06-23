@@ -41,10 +41,6 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         OnChange = PagesChange
         object TabSheet1: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lblTitle: TLabel
             AlignWithMargins = True
             Left = 3
@@ -198,7 +194,7 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
           'True')
       end
     end
-    object Panel9: TPanel
+    object Panel10: TPanel
       Left = 0
       Top = 114
       Width = 265
@@ -206,35 +202,7 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
-      object Label10: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 259
-        Height = 18
-        Align = alTop
-        Caption = 'Language:'
-        ExplicitWidth = 77
-      end
-      object cboSearchMoviesLanguage: TComboBox
-        AlignWithMargins = True
-        Left = 3
-        Top = 27
-        Width = 259
-        Height = 26
-        Cursor = crHandPoint
-        Align = alClient
-        TabOrder = 0
-      end
-    end
-    object Panel10: TPanel
-      Left = 0
-      Top = 171
-      Width = 265
-      Height = 57
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 4
+      ExplicitTop = 171
       object Label11: TLabel
         AlignWithMargins = True
         Left = 3

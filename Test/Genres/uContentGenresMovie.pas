@@ -39,7 +39,6 @@ begin
     lstGenreMovies.Items.BeginUpdate;
     try
       lstGenreMovies.Items.Clear;
-      lstGenreMovies.Groups.Clear;
       for X := 0 to TMDB.Cache.MovieGenres.Count-1 do begin
         G:= TMDB.Cache.MovieGenres[X];
         I:= lstGenreMovies.Items.Add;

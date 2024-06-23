@@ -13,8 +13,6 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     Caption = 'Refresh List'
     TabOrder = 0
     OnClick = Button2Click
-    ExplicitLeft = -2
-    ExplicitTop = -2
   end
   object lstGenreMovies: TListView
     AlignWithMargins = True
@@ -37,6 +35,5 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     RowSelect = True
     TabOrder = 1
     ViewStyle = vsReport
-    ExplicitLeft = -2
   end
 end

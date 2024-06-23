@@ -1,0 +1,49 @@
+inherited frmCommonCredits: TfrmCommonCredits
+  Caption = 'Credits'
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lstCredits: TListView
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 773
+    Height = 439
+    Align = alClient
+    BorderStyle = bsNone
+    Columns = <
+      item
+        Caption = 'Name'
+        Width = 300
+      end
+      item
+        Caption = 'Role'
+        Width = 300
+      end>
+    Groups = <
+      item
+        Header = 'Cast'
+        GroupID = 0
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taLeftJustify
+        TitleImage = -1
+      end
+      item
+        Header = 'Crew'
+        GroupID = 1
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taLeftJustify
+        TitleImage = -1
+      end>
+    HotTrackStyles = [htHandPoint, htUnderlineHot]
+    GroupView = True
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 0
+    ViewStyle = vsReport
+    ExplicitLeft = -126
+    ExplicitWidth = 905
+    ExplicitHeight = 347
+  end
+end

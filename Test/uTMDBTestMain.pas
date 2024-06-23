@@ -16,6 +16,7 @@ uses
   uTabSearch,
   uTabGenres,
   uTabCertifications,
+  uTabMovies,
   Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB;
 
 type
@@ -63,6 +64,10 @@ type
     imgUserAvatar: TImage;
     btnLogout: TButton;
     TMDB: TTMDB;
+    GroupBox1: TGroupBox;
+    Panel6: TPanel;
+    Label5: TLabel;
+    cboLanguage: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
@@ -103,7 +108,8 @@ var
 implementation
 
 uses
-  System.IOUtils;
+  System.IOUtils,
+  Vcl.Themes;
 
 {$R *.dfm}
 
@@ -112,13 +118,18 @@ begin
   {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown:= True;
   {$ENDIF}
+
+  TStyleManager.TrySetStyle('Light', False);
+
   Pages.Align:= alClient;
   gbUserInfo.Align:= alClient;
   gbUserLogin.Align:= alClient;
   FAuthMethod:= 2;
   EmbedTabs;
   LoadSetup;
-  Services1.Click;
+
+  TMDB.ListPrimaryTranslatiosn(cboLanguage.Items);
+  Services1.Click; //TODO: Why was this necessary?
   Width:= 1200;
   Height:= 800;
 end;
@@ -150,11 +161,16 @@ begin
   txtAPIKey.Text:= FAppSetup.S['api_key'];
   txtAccessToken.Text:= FAppSetup.S['access_token'];
   APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
+  cboLanguage.Text:= FAppSetup.S['default_language'];
+  //TODO: Default Country...
   PrepAPI;
   Pages.ActivePageIndex:= FAppSetup.I['current_tab'];
   C:= Pages.ActivePage.Controls[0];
   if C is TfrmTabBase then begin
     TfrmTabBase(C).Pages.ActivePageIndex:= FAppSetup.I['current_sub_tab'];
+  end else
+  if C is TPageControl then begin
+    TPageControl(C).ActivePageIndex:= FAppSetup.I['current_sub_tab'];
   end;
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
   if (FAppSetup.S['session_id'] <> '') and (FAppSetup.B['session_guest'] = False) then begin
@@ -172,12 +188,19 @@ begin
     FAppSetup.S['api_key']:= txtAPIKey.Text;
     FAppSetup.S['access_token']:= txtAccessToken.Text;
     FAppSetup.I['api_auth']:= Integer(APIAuth);
+    FAppSetup.S['default_language']:= cboLanguage.Text;
+    //TODO: Default Country...
     FAppSetup.S['session_id']:= TMDB.LoginState.SessionID;
     FAppSetup.B['session_guest']:= TMDB.LoginState.IsGuest;
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
-    C:= Pages.ActivePage.Controls[0];
-    if C is TfrmTabBase then begin
-      FAppSetup.I['current_sub_tab']:=  TfrmTabBase(C).Pages.ActivePageIndex;
+    if Pages.ActivePage.ControlCount > 0 then begin
+      C:= Pages.ActivePage.Controls[0];
+      if C is TfrmTabBase then begin
+        FAppSetup.I['current_sub_tab']:=  TfrmTabBase(C).Pages.ActivePageIndex;
+      end else
+      if C is TPageControl then begin
+        FAppSetup.I['current_sub_tab']:= TPageControl(C).ActivePageIndex;
+      end;
     end;
     FAppSetup.SaveTo(SetupFilename);
   end;
@@ -290,6 +313,7 @@ begin
   EmbedTab(TfrmTabConfiguration);
   EmbedTab(TfrmTabCertifications);
   EmbedTab(TfrmTabGenres);
+  EmbedTab(TfrmTabMovies);
   EmbedTab(TfrmTabSearch);
 
   for X := 0 to Pages.PageCount-1 do
