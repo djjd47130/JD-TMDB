@@ -524,6 +524,10 @@ type
     constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
     destructor Destroy; override;
 
+    function GetImages(const IncludeImageLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBMediaImages; stdcall;
+    function GetTranslations: ITMDBTranslationList; stdcall;
+
     property ID: Integer read GetID;
     property Name: WideString read GetName;
     property Overview: WideString read GetOverview;
@@ -554,6 +558,23 @@ type
   protected
     function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
   public
+    property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
+  end;
+
+  TTMDBCompanyList = class(TInterfacedObject, ITMDBCompanyList)
+  private
+    FItems: TInterfaceList;
+    FObj: ISuperArray;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
+  public
+    constructor Create(AObj: ISuperArray);
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
@@ -642,6 +663,68 @@ type
     property NativeName: WideString read GetNativeName;
   end;
 
+
+
+
+  { Translation Related }
+
+  TTMDBTranslationData = class(TInterfacedObject, ITMDBTranslationData)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetTagline: WideString; stdcall;
+    function GetRuntime: Integer; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+    property Tagline: WideString read GetTagline;
+    property Runtime: Integer read GetRuntime;
+  end;
+
+  TTMDBTranslationItem = class(TInterfacedObject, ITMDBTranslationItem)
+  private
+    FObj: ISuperObject;
+    FData: ITMDBTranslationData;
+  protected
+    function GetISO3166_1: WideString; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetEnglishName: WideString; stdcall;
+    function GetData: ITMDBTranslationData; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property ISO3166_1: WideString read GetISO3166_1;
+    property ISO639_1: WideString read GetISO639_1;
+    property Name: WideString read GetName;
+    property EnglishName: WideString read GetEnglishName;
+    property Data: ITMDBTranslationData read GetData;
+  end;
+
+  TTMDBTranslationList = class(TInterfacedObject, ITMDBTranslationList)
+  private
+    FObj: ISuperObject;
+    FItems: TInterfaceList;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBTranslationItem; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBTranslationItem read GetItem; default;
+  end;
 
 
 
@@ -1227,7 +1310,7 @@ type
     FObj: ISuperObject;
     FCollection: ITMDBMovieCollectionRef;
     FGenres: ITMDBGenreList;
-    //FProductionCompanies
+    FProductionCompanies: ITMDBCompanyList;
     FProductionCountries: ITMDBCountryList;
   protected
     function GetAdult: Boolean; stdcall;
@@ -1272,7 +1355,7 @@ type
     function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDB; stdcall;
     //function AppendedSimilar: ITMDB; stdcall;
-    //function AppendedTranslations: ITMDB; stdcall;
+    function AppendedTranslations: ITMDBTranslationList; stdcall;
     //function AppendedVideos: ITMDB; stdcall;
 
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
@@ -1571,7 +1654,10 @@ type
   protected
     function GetDetails(const CollectionID: Integer;
       const Language: WideString = ''): ITMDBCollectionDetail; stdcall;
-
+    function GetImages(const CollectionID: Integer;
+      const IncludeImageLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBMediaImages; stdcall;
+    function GetTranslations(const CollectionID: Integer): ITMDBTranslationList; stdcall;
   end;
 
   TTMDBServiceCompanies = class(TTMDBService, ITMDBServiceCompanies)
@@ -1658,7 +1744,7 @@ type
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
     //function GetReviews
     //function GetSimilar
-    //function GetTranslations
+    function GetTranslations(const MovieID: Integer): ITMDBTranslationList; stdcall;
     //function GetVideos
     //function GetWatchProviders
     //function AddRating
@@ -3206,6 +3292,17 @@ begin
   end;
 end;
 
+function TTMDBMovieDetail.AppendedTranslations: ITMDBTranslationList;
+var
+  O: ISuperObject;
+begin
+  O:= FObj.O['translations'];
+  if O <> nil then begin
+    Result:= TTMDBTranslationList.Create(O);
+    //TODO: Cache Result...
+  end;
+end;
+
 function TTMDBMovieDetail.GetAdult: Boolean;
 begin
   Result:= FObj.B['adult'];
@@ -3285,7 +3382,10 @@ end;
 
 function TTMDBMovieDetail.GetProductionCompanies: ITMDBCompanyList;
 begin
-  //TODO
+  if FProductionCompanies = nil then begin
+    FProductionCompanies:= TTMDBCompanyList.Create(FObj.A['production_companies']);
+  end;
+  Result:= FProductionCompanies;
 end;
 
 function TTMDBMovieDetail.GetProductionCountries: ITMDBCountryList;
@@ -4079,6 +4179,15 @@ var
 begin
   O:= FOwner.FAPI.Movies.GetReleaseDates(MovieID);
   Result:= TTMDBReleaseDateCountries.Create(O);
+end;
+
+function TTMDBServiceMovies.GetTranslations(
+  const MovieID: Integer): ITMDBTranslationList;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetTranslations(MovieID);
+  Result:= TTMDBTranslationList.Create(O);
 end;
 
 { TTMDBServiceSearch }
@@ -5589,6 +5698,52 @@ begin
   Result:= ITMDBCompanyItem(inherited GetPageItem(Index));
 end;
 
+{ TTMDBCompanyList }
+
+procedure TTMDBCompanyList.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBCompanyList.Create(AObj: ISuperArray);
+begin
+  FItems:= TInterfaceList.Create;
+  FObj:= AObj;
+  PopulateItems;
+end;
+
+destructor TTMDBCompanyList.Destroy;
+begin
+  ClearItems;
+  FObj:= nil;
+  FreeAndNil(FItems);
+  inherited;
+end;
+
+function TTMDBCompanyList.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TTMDBCompanyList.GetItem(const Index: Integer): ITMDBCompanyItem;
+begin
+  Result:= ITMDBCompanyItem(FItems[Index]);
+end;
+
+procedure TTMDBCompanyList.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBCompanyItem;
+begin
+  ClearItems;
+  for X := 0 to FObj.Length-1 do begin
+    O:= FObj.O[X];
+    I:= TTMDBCompanyItem.Create(nil, O, X);
+    FItems.Add(I);
+  end;
+end;
+
 { TTMDBServiceCollections }
 
 function TTMDBServiceCollections.GetDetails(const CollectionID: Integer;
@@ -5598,6 +5753,24 @@ var
 begin
   O:= FOwner.FAPI.Collections.GetDetails(CollectionID, Language);
   Result:= TTMDBCollectionDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceCollections.GetImages(const CollectionID: Integer;
+  const IncludeImageLanguage, Language: WideString): ITMDBMediaImages;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetImages(CollectionID, IncludeImageLanguage, Language);
+  Result:= TTMDBMediaImages.Create(O);
+end;
+
+function TTMDBServiceCollections.GetTranslations(
+  const CollectionID: Integer): ITMDBTranslationList;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetTranslations(CollectionID);
+  Result:= TTMDBTranslationList.Create(O);
 end;
 
 { TTMDBCollectionPart }
@@ -5742,6 +5915,12 @@ begin
   Result:= FObj.I['id'];
 end;
 
+function TTMDBCollectionDetail.GetImages(const IncludeImageLanguage,
+  Language: WideString): ITMDBMediaImages;
+begin
+  Result:= FTMDB.Collections.GetImages(ID, IncludeImageLanguage, Language);
+end;
+
 function TTMDBCollectionDetail.GetName: WideString;
 begin
   Result:= FObj.S['name'];
@@ -5768,6 +5947,11 @@ begin
   Result:= FObj.S['poster_path'];
 end;
 
+function TTMDBCollectionDetail.GetTranslations: ITMDBTranslationList;
+begin
+  Result:= FTMDB.Collections.GetTranslations(ID);
+end;
+
 procedure TTMDBCollectionDetail.PopulateParts;
 var
   X: Integer;
@@ -5780,6 +5964,131 @@ begin
     I:= TTMDBCollectionPart.Create(O, FTMDB);
     I._AddRef;
     FParts.Add(I);
+  end;
+end;
+
+{ TTMDBTranslationData }
+
+constructor TTMDBTranslationData.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+end;
+
+destructor TTMDBTranslationData.Destroy;
+begin
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBTranslationData.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBTranslationData.GetRuntime: Integer;
+begin
+  Result:= FObj.I['runtime'];
+end;
+
+function TTMDBTranslationData.GetTagline: WideString;
+begin
+  Result:= FObj.S['tagline'];
+end;
+
+function TTMDBTranslationData.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+end;
+
+{ TTMDBTranslationItem }
+
+constructor TTMDBTranslationItem.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+  FData:= TTMDBTranslationData.Create(FObj.O['data']);
+end;
+
+destructor TTMDBTranslationItem.Destroy;
+begin
+  FData:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBTranslationItem.GetData: ITMDBTranslationData;
+begin
+  Result:= FData;
+end;
+
+function TTMDBTranslationItem.GetEnglishName: WideString;
+begin
+  Result:= FObj.S['english_name'];
+end;
+
+function TTMDBTranslationItem.GetISO3166_1: WideString;
+begin
+  Result:= FObj.S['iso_3166_1'];
+end;
+
+function TTMDBTranslationItem.GetISO639_1: WideString;
+begin
+  Result:= FObj.S['iso_639_1'];
+end;
+
+function TTMDBTranslationItem.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+{ TTMDBTranslationList }
+
+procedure TTMDBTranslationList.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBTranslationList.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
+end;
+
+destructor TTMDBTranslationList.Destroy;
+begin
+  ClearItems;
+  FObj:= nil;
+  FreeAndNil(FItems);
+  inherited;
+end;
+
+function TTMDBTranslationList.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TTMDBTranslationList.GetItem(
+  const Index: Integer): ITMDBTranslationItem;
+begin
+  Result:= ITMDBTranslationItem(FItems[Index]);
+end;
+
+procedure TTMDBTranslationList.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBTranslationItem;
+begin
+  ClearItems;
+  for X := 0 to FObj.A['translations'].Length-1 do begin
+    O:= FObj.A['translations'].O[X];
+    I:= TTMDBTranslationItem.Create(O);
+    FItems.Add(I);
   end;
 end;
 

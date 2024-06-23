@@ -41,6 +41,10 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         OnChange = PagesChange
         object TabSheet1: TTabSheet
           Caption = 'Details'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object lblTitle: TLabel
             AlignWithMargins = True
             Left = 3

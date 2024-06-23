@@ -81,6 +81,8 @@ type
 
   ITMDBCountryItem = interface;
 
+  ITMDBMediaImages = interface;
+
   ITMDBJobDepartmentItem = interface;
 
   ITMDBJobDepartmentList = interface;
@@ -288,6 +290,7 @@ type
     property Owner: ITMDBPage read GetOwner;
     property Index: Integer read GetIndex;
   end;
+
 
 
   //TODO: Change all list/item related things to inherit from this new base...
@@ -538,6 +541,52 @@ type
 
 
 
+  { Translation Related }
+
+  /// [DONE]
+  ITMDBTranslationData = interface
+    ['{7AD55E8C-BF41-45D1-AEF4-F17E797A4BBD}']
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetTagline: WideString; stdcall;
+    function GetRuntime: Integer; stdcall;
+
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+    property Tagline: WideString read GetTagline;
+    property Runtime: Integer read GetRuntime;
+  end;
+
+  /// [DONE]
+  ITMDBTranslationItem = interface
+    ['{15A88780-ABF6-4EEA-AFFC-BC63A22A26BE}']
+    function GetISO3166_1: WideString; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetEnglishName: WideString; stdcall;
+    function GetData: ITMDBTranslationData; stdcall;
+
+    property ISO3166_1: WideString read GetISO3166_1;
+    property ISO639_1: WideString read GetISO639_1;
+    property Name: WideString read GetName;
+    property EnglishName: WideString read GetEnglishName;
+    property Data: ITMDBTranslationData read GetData;
+  end;
+
+  /// [DONE]
+  ITMDBTranslationList = interface
+    ['{7E5FB55A-B061-43A3-A6F9-DFB7AF75823D}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBTranslationItem; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBTranslationItem read GetItem; default;
+  end;
+
+
+
   { Release Date Related }
 
   /// [DONE]
@@ -688,6 +737,8 @@ type
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
 
+    //TODO: Add shortcut methods...
+
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property ID: Integer read GetID;
@@ -704,6 +755,7 @@ type
     property VoteCount: Integer read GetVoteCount;
   end;
 
+  /// [DONE]
   ITMDBCollectionDetail = interface
     ['{78E5B1AC-0FF3-4472-886E-4A7696BE1E0E}']
     function GetID: Integer; stdcall;
@@ -713,6 +765,10 @@ type
     function GetBackdropPath: WideString; stdcall;
     function GetPartCount: Integer; stdcall;
     function GetPart(const Index: Integer): ITMDBCollectionPart; stdcall;
+
+    function GetImages(const IncludeImageLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBMediaImages; stdcall;
+    function GetTranslations: ITMDBTranslationList; stdcall;
 
     property ID: Integer read GetID;
     property Name: WideString read GetName;
@@ -727,6 +783,7 @@ type
 
   { Companies Related }
 
+  /// [DONE]
   ITMDBCompanyItem = interface(ITMDBPageItem)
     ['{491A255A-0E29-43B3-8AAC-5F727D74DD98}']
     function GetID: Integer; stdcall;
@@ -740,6 +797,7 @@ type
     property OriginCountry: WideString read GetOriginCountry;
   end;
 
+  /// [DONE]
   ITMDBCompanyPage = interface(ITMDBPage)
     ['{F3D62122-D304-4CA3-BE0C-72B1219E0DD1}']
     function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
@@ -747,10 +805,13 @@ type
     property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
+  /// [DONE]
   ITMDBCompanyList = interface
     ['{BF6B6EC5-C0E1-4D7B-B987-8F2BE6AD4211}']
+    function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
 
+    property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
@@ -1371,7 +1432,6 @@ type
 
   /// <summary>
   /// A single movie in an ITMDBMoviePage.
-  /// [DONE]
   /// </summary>
   ITMDBMovieItem = interface(ITMDBPageItem)
     ['{00EB49F1-F0EA-4E7A-859E-38632667BA87}']
@@ -1393,6 +1453,7 @@ type
     function GetDetails: ITMDBMovieDetail; stdcall;
     //function GetAccountStates: ITMDBAccountStates; stdcall;
     //function GetAlternativeTitles: ITMDBAlternativeTitleList; stdcall;
+    //TODO: Add shortcuts...
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
@@ -1526,7 +1587,7 @@ type
     function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDBReviewList; stdcall;
     //function AppendedSimilar: ITMDBMoviePage; stdcall;
-    //function AppendedTranslations: ITMDBPrimaryTranslationList; stdcall;
+    function AppendedTranslations: ITMDBTranslationList; stdcall;
     //function AppendedVideos: ITMDBVideoList; stdcall;
 
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
@@ -2069,10 +2130,10 @@ type
     ['{C0040473-5A07-493B-9771-2EAF58CD5DB0}']
     function GetDetails(const CollectionID: Integer;
       const Language: WideString = ''): ITMDBCollectionDetail; stdcall;
-    //function GetImages(const CollectionID: Integer;
-    //  const IncludeImageLanguage: WideString = '';
-    //  const Language: WideString = ''): ITMDBImageList; stdcall;
-    //function GetTranslations(const CollectionID: Integer): ITMDBTranslationList; stdcall;
+    function GetImages(const CollectionID: Integer;
+      const IncludeImageLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBMediaImages; stdcall;
+    function GetTranslations(const CollectionID: Integer): ITMDBTranslationList; stdcall;
   end;
 
   ITMDBServiceCompanies = interface(ITMDBService)
@@ -2178,7 +2239,7 @@ type
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
     //function GetReviews(const MovieID: Integer): ITMDBx; stdcall;
     //function GetSimilar(const MovieID: Integer): ITMDBx; stdcall;
-    //function GetTranslations(const MovieID: Integer): ITMDBx; stdcall;
+    function GetTranslations(const MovieID: Integer): ITMDBTranslationList; stdcall;
     //function GetVideos(const MovieID: Integer): ITMDBx; stdcall;
     //function GetWatchProviders(const MovieID: Integer): ITMDBx; stdcall;
     //function AddRating

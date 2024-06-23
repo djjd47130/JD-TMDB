@@ -308,7 +308,7 @@ type
       const Page: Integer = 1): ISuperObject;
     function GetSimilar(const MovieID: Integer; const Language: String = '';
       const Page: Integer = 1): ISuperObject;
-    function GetTranslations(const MovieID: Integer): ISuperArray;
+    function GetTranslations(const MovieID: Integer): ISuperObject;
     function GetVideos(const MovieID: Integer; const Language: String = ''): ISuperArray;
     function GetWatchProviders(const MovieID: Integer): ISuperObject;
     function AddRating(const MovieID: Integer; const Rating: Single;
@@ -1446,12 +1446,12 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAPIMovies.GetTranslations(const MovieID: Integer): ISuperArray;
+function TTMDBAPIMovies.GetTranslations(const MovieID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'movie/'+IntToStr(MovieID)+'/translations';
-  Result:= FOwner.GetJSON(U, '').A['translations'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPIMovies.GetVideos(const MovieID: Integer;
