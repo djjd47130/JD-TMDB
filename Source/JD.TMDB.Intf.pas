@@ -2446,7 +2446,8 @@ type
     function GetMovies(const TimeWindow: TTMDBTimeWindow; const Language: WideString = '';
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
     //function GetPeople(): ITMDBPersonPage; stdcall;
-    //function GetTV(): ITMDBTVPage; stdcall;
+    function GetTV(const TimeWindow: TTMDBTimeWindow; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBTVPage; stdcall;
   end;
 
   ITMDBServiceTVSeriesLists = interface(ITMDBService)
@@ -2460,25 +2461,28 @@ type
   ITMDBServiceTVSeries = interface(ITMDBService)
     ['{A72F79E7-A3C2-4105-B0F0-3D53B59352B2}']
     function GetDetails(const SeriesID: Integer; const AppendToResponse: TTMDBTVSeriesRequests = [];
-      const Language: WideString = ''): ITMDBTVSeriesDetail;
-    //GetAccountStates
+      const Language: WideString = ''): ITMDBTVSeriesDetail; stdcall;
+    function GetAccountStates(const SeriesID: Integer): ITMDBAccountStates; stdcall;
     //GetAggregateCredits
-    //GetAlternativeTitles
+    function GetAlternativeTitles(const SeriesID: Integer): ITMDBAlternativeTitleList; stdcall;
     //GetChanges
     //GetContentRatings
-    //GetCredits
+    function GetGetCredits(const SeriesID: Integer; const Language: WideString = ''): ITMDBCredits; stdcall;
     //GetEpisodeGroups
     //GetExternalIDs
-    //GetImages
-    //GetKeywords
+    function GetImages(const SeriesID: Integer; const IncludeImageLanguage: WideString ='';
+      const Language: WideString = ''): ITMDBMediaImages; stdcall;
+    function GetKeywords(const SeriesID: Integer): ITMDBKeywordList; stdcall;
     //GetLatest
     //GetLists
     //GetRecommendations
     //GetReviews
     //GetScreenedTheatrically
-    //GetSimilar
+    function GetSimilar(const SeriesID: Integer; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
     //GetTranslations
-    //GetVideos
+    function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBVideoList; stdcall;
     //GetWatchProviders
     //AddRating
     //DeleteRating

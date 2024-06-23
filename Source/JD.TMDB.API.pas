@@ -419,7 +419,7 @@ type
       const Page: Integer= 1): ISuperObject;
     function GetTranslations(const SeriesID: Integer): ISuperArray;
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: String = '';
-      const Language: String = ''): ISuperArray;
+      const Language: String = ''): ISuperObject;
     function GetWatchProviders(const SeriesID: Integer): ISuperObject;
     function AddRating(const SeriesID: Integer; const Rating: Single;
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
@@ -2027,14 +2027,14 @@ begin
 end;
 
 function TTMDBAPITVSeries.GetVideos(const SeriesID: Integer;
-  const IncludeVideoLanguage, Language: String): ISuperArray;
+  const IncludeVideoLanguage, Language: String): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID)+'/videos';
   AddParam(P, 'include_video_language', IncludeVideoLanguage);
   AddParam(P, 'language', Language);
-  Result:= FOwner.GetJSON(U, P).A['results'];
+  Result:= FOwner.GetJSON(U, P);
 end;
 
 function TTMDBAPITVSeries.GetWatchProviders(const SeriesID: Integer): ISuperObject;
