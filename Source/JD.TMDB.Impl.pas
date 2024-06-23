@@ -1104,6 +1104,57 @@ type
 
 
 
+  { Video Related }
+
+  TTMDBVideoItem = class(TInterfacedObject, ITMDBVideoItem)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetISO639_1: WideString; stdcall;
+    function GetISO3166_1: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetKey: WideString; stdcall;
+    function GetSite: WideString; stdcall;
+    function GetSize: Integer; stdcall;
+    function GetType: WideString; stdcall;
+    function GetOfficial: Boolean; stdcall;
+    function GetPublishedAt: TDateTime; stdcall;
+    function GetID: WideString; stdcall;
+  public
+    constructor Create(AObj: ISuperObject); virtual;
+    destructor Destroy; override;
+
+    property ISO639_1: WideString read GetISO639_1;
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Name: WideString read GetName;
+    property Key: WideString read GetKey;
+    property Site: WideString read GetSite;
+    property Size: Integer read GetSize;
+    property VideoType: WideString read GetType;
+    property Official: Boolean read GetOfficial;
+    property PublishedAt: TDateTime read GetPublishedAt;
+    property ID: WideString read GetID;
+  end;
+
+  TTMDBVideoList = class(TInterfacedObject, ITMDBVideoList)
+  private
+    FObj: ISuperObject;
+    FItems: TInterfaceList;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBVideoItem; stdcall;
+  public
+    constructor Create(AObj: ISuperObject); virtual;
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBVideoItem read GetItem; default;
+  end;
+
+
+
   { Discover Related }
 
 
@@ -1420,9 +1471,9 @@ type
     //function AppendedRecommendations: ITMDB; stdcall;
     function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDB; stdcall;
-    //function AppendedSimilar: ITMDB; stdcall;
+    function AppendedSimilar: ITMDBMoviePage; stdcall;
     function AppendedTranslations: ITMDBTranslationList; stdcall;
-    //function AppendedVideos: ITMDB; stdcall;
+    function AppendedVideos: ITMDBVideoList; stdcall;
 
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
@@ -1809,9 +1860,10 @@ type
     //function GetRecommendations
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
     //function GetReviews
-    //function GetSimilar
+    function GetSimilar(const MovieID: Integer; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
     function GetTranslations(const MovieID: Integer): ITMDBTranslationList; stdcall;
-    //function GetVideos
+    function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideoList; stdcall;
     //function GetWatchProviders
     //function AddRating
     //function DeleteRating
@@ -1928,7 +1980,7 @@ type
     FCountries: ITMDBCountryList;
     //FJobs: ITMDBJobList;
     FLanguages: ITMDBLanguageList;
-    //FPrimaryTranslations: ITMDBPrimaryTranslations;
+    FPrimaryTranslations: TTMDBStrArray;
     FTimezones: ITMDBTimezoneList;
     FMovieCerts: ITMDBCertificationCountries;
     FTVCerts: ITMDBCertificationCountries;
@@ -1940,7 +1992,7 @@ type
     function GetCountries: ITMDBCountryList; stdcall;
     //function GetJobs: ITMDBJobList; stdcall;
     function GetLanguages: ITMDBLanguageList; stdcall;
-    //function GetPrimaryTranslations: ITMDBPrimaryTranslations; stdcall;
+    function GetPrimaryTranslations: TTMDBStrArray; stdcall;
     function GetTimezones: ITMDBTimezoneList; stdcall;
     function GetMovieCerts: ITMDBCertificationCountries; stdcall;
     function GetTVCerts: ITMDBCertificationCountries; stdcall;
@@ -1958,7 +2010,7 @@ type
     property Countries: ITMDBCountryList read GetCountries;
     //property Jobs: ITMDBJobList read GetJobs;
     property Languages: ITMDBLanguageList read GetLanguages;
-    //property PrimaryTranslations: ITMDBPrimaryTranslations read GetPrimaryTranslations;
+    property PrimaryTranslations: TTMDBStrArray read GetPrimaryTranslations;
     property Timezones: ITMDBTimezoneList read GetTimezones;
     property MovieCerts: ITMDBCertificationCountries read GetMovieCerts;
     property TVCerts: ITMDBCertificationCountries read GetTVCerts;
@@ -3358,6 +3410,18 @@ begin
   end;
 end;
 
+function TTMDBMovieDetail.AppendedSimilar: ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  Result:= nil;
+  O:= FObj.O['similar'];
+  if O <> nil then begin
+    Result:= TTMDBMoviePage.Create(O, FTMDB, TTMDBMovieItem);
+    //TODO: Cache Result...
+  end;
+end;
+
 function TTMDBMovieDetail.AppendedTranslations: ITMDBTranslationList;
 var
   O: ISuperObject;
@@ -3365,6 +3429,17 @@ begin
   O:= FObj.O['translations'];
   if O <> nil then begin
     Result:= TTMDBTranslationList.Create(O, ttMovie);
+    //TODO: Cache Result...
+  end;
+end;
+
+function TTMDBMovieDetail.AppendedVideos: ITMDBVideoList;
+var
+  O: ISuperObject;
+begin
+  O:= FObj.O['videos'];
+  if O <> nil then begin
+    Result:= TTMDBVideoList.Create(O);
     //TODO: Cache Result...
   end;
 end;
@@ -4247,6 +4322,15 @@ begin
   Result:= TTMDBReleaseDateCountries.Create(O);
 end;
 
+function TTMDBServiceMovies.GetSimilar(const MovieID: Integer;
+  const Language: WideString; const Page: Integer): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetSimilar(MovieID, Language, Page);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovieItem);
+end;
+
 function TTMDBServiceMovies.GetTranslations(
   const MovieID: Integer): ITMDBTranslationList;
 var
@@ -4254,6 +4338,15 @@ var
 begin
   O:= FOwner.FAPI.Movies.GetTranslations(MovieID);
   Result:= TTMDBTranslationList.Create(O, ttMovie);
+end;
+
+function TTMDBServiceMovies.GetVideos(const MovieID: Integer;
+  const Language: WideString): ITMDBVideoList;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetVideos(MovieID, Language);
+  Result:= TTMDBVideoList.Create(O);
 end;
 
 { TTMDBServiceSearch }
@@ -5243,6 +5336,13 @@ begin
   Result:= FMovieGenres;
 end;
 
+function TTMDBCache.GetPrimaryTranslations: TTMDBStrArray;
+begin
+  if Length(FPrimaryTranslations) = 0 then
+    FPrimaryTranslations:= FOwner.Configuration.GetPrimaryTranslations;
+  Result:= FPrimaryTranslations;
+end;
+
 function TTMDBCache.GetTimezones: ITMDBTimezoneList;
 begin
   if FTimezones = nil then
@@ -5285,9 +5385,8 @@ var
   X: Integer;
 begin
   Result:= '';
-  Self.MovieGenres;
-  for X := 0 to FMovieGenres.Count-1 do begin
-    if FMovieGenres[X].ID = ID then begin
+  for X := 0 to MovieGenres.Count-1 do begin
+    if MovieGenres[X].ID = ID then begin
       Result:= FMovieGenres[X].Name;
       Break;
     end;
@@ -5299,9 +5398,8 @@ var
   X: Integer;
 begin
   Result:= '';
-  Self.TVGenres;
-  for X := 0 to FTVGenres.Count-1 do begin
-    if FTVGenres[X].ID = ID then begin
+  for X := 0 to TVGenres.Count-1 do begin
+    if TVGenres[X].ID = ID then begin
       Result:= FTVGenres[X].Name;
       Break;
     end;
@@ -6265,6 +6363,117 @@ end;
 function TTMDBTVEpisodeTranslationData.GetOverview: WideString;
 begin
   Result:= FObj.S['overview'];
+end;
+
+{ TTMDBVideoItem }
+
+constructor TTMDBVideoItem.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+
+end;
+
+destructor TTMDBVideoItem.Destroy;
+begin
+
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBVideoItem.GetID: WideString;
+begin
+  Result:= FObj.S['id'];
+end;
+
+function TTMDBVideoItem.GetISO3166_1: WideString;
+begin
+  Result:= FObj.S['iso_3166_1'];
+end;
+
+function TTMDBVideoItem.GetISO639_1: WideString;
+begin
+  Result:= FObj.S['iso_639_1'];
+end;
+
+function TTMDBVideoItem.GetKey: WideString;
+begin
+  Result:= FObj.S['key'];
+end;
+
+function TTMDBVideoItem.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBVideoItem.GetOfficial: Boolean;
+begin
+  Result:= FObj.B['official'];
+end;
+
+function TTMDBVideoItem.GetPublishedAt: TDateTime;
+begin
+  Result:= ConvertDate(FObj.S['published_at']);
+end;
+
+function TTMDBVideoItem.GetSite: WideString;
+begin
+  Result:= FObj.S['site'];
+end;
+
+function TTMDBVideoItem.GetSize: Integer;
+begin
+  Result:= FObj.I['size'];
+end;
+
+function TTMDBVideoItem.GetType: WideString;
+begin
+  Result:= FObj.S['type'];
+end;
+
+{ TTMDBVideoList }
+
+procedure TTMDBVideoList.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBVideoList.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
+end;
+
+destructor TTMDBVideoList.Destroy;
+begin
+  ClearItems;
+  FObj:= nil;
+  FreeAndNil(FItems);
+  inherited;
+end;
+
+function TTMDBVideoList.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TTMDBVideoList.GetItem(const Index: Integer): ITMDBVideoItem;
+begin
+  Result:= ITMDBVideoItem(FItems[Index]);
+end;
+
+procedure TTMDBVideoList.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBVideoItem;
+begin
+  ClearItems;
+  for X := 0 to FObj.A['results'].Length-1 do begin
+    O:= FObj.A['results'].O[X];
+    I:= TTMDBVideoItem.Create(O);
+    FItems.Add(I);
+  end;
 end;
 
 end.

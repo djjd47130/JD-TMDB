@@ -54,6 +54,7 @@ type
     function LanguageName(const Code: String): String;
     procedure ListLanguages(AList: TStrings);
     procedure ListCountries(AList: TStrings);
+    procedure ListPrimaryTranslatiosn(AList: TStrings);
   published
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
@@ -177,6 +178,18 @@ begin
   for X := 0 to FTMDB.Cache.Languages.Count-1 do begin
     O:= FTMDB.Cache.Languages[X];
     AList.Append(O.ISO639_1);
+  end;
+end;
+
+procedure TTMDB.ListPrimaryTranslatiosn(AList: TStrings);
+var
+  A: TTMDBStrArray;
+  X: Integer;
+begin
+  AList.Clear;
+  A:= FTMDB.Cache.PrimaryTranslations;
+  for X := 0 to Length(A)-1 do begin
+    AList.Append(A[X]);
   end;
 end;
 

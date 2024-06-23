@@ -78,6 +78,11 @@ type
     rtTheatrical = 3, rtDigital = 4, rtPhysical = 5, rtTV = 6);
 
   /// <summary>
+  /// Type of credit as defined in TMDB
+  /// </summary>
+  TTMDBCreditType = (ctCast, ctCrew);
+
+  /// <summary>
   /// Gender of a person as defined in TMDB
   /// </summary>
   TTMDBGender = (gNotSpecified = 0, gFemale = 1, gMale = 2, gNonBinary = 3);

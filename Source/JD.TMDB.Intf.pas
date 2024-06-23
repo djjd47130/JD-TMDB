@@ -1487,6 +1487,48 @@ type
 
 
 
+  { Video Related }
+
+  /// [DONE]
+  ITMDBVideoItem = interface
+    ['{EC411DD6-C212-4DA8-9421-688E099079B3}']
+    function GetISO639_1: WideString; stdcall;
+    function GetISO3166_1: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetKey: WideString; stdcall;
+    function GetSite: WideString; stdcall;
+    function GetSize: Integer; stdcall;
+    function GetType: WideString; stdcall;
+    function GetOfficial: Boolean; stdcall;
+    function GetPublishedAt: TDateTime; stdcall;
+    function GetID: WideString; stdcall;
+
+    property ISO639_1: WideString read GetISO639_1;
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Name: WideString read GetName;
+    property Key: WideString read GetKey;
+    property Site: WideString read GetSite;
+    property Size: Integer read GetSize;
+    property VideoType: WideString read GetType;
+    property Official: Boolean read GetOfficial;
+    property PublishedAt: TDateTime read GetPublishedAt;
+    property ID: WideString read GetID;
+  end;
+
+  /// [DONE]
+  ITMDBVideoList = interface
+    ['{1346CC9D-5897-4BBB-B140-5FEB6A892552}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBVideoItem; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBVideoItem read GetItem; default;
+  end;
+
+
+
+
+
   { Movies Related }
 
   /// <summary>
@@ -1655,9 +1697,9 @@ type
     //function AppendedRecommendations: ITMDB; stdcall;
     function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDBReviewList; stdcall;
-    //function AppendedSimilar: ITMDBMoviePage; stdcall;
+    function AppendedSimilar: ITMDBMoviePage; stdcall;
     function AppendedTranslations: ITMDBTranslationList; stdcall;
-    //function AppendedVideos: ITMDBVideoList; stdcall;
+    function AppendedVideos: ITMDBVideoList; stdcall;
 
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
@@ -2307,9 +2349,10 @@ type
     //function GetRecommendations(const MovieID: Integer): ITMDBx; stdcall;
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
     //function GetReviews(const MovieID: Integer): ITMDBx; stdcall;
-    //function GetSimilar(const MovieID: Integer): ITMDBx; stdcall;
+    function GetSimilar(const MovieID: Integer; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
     function GetTranslations(const MovieID: Integer): ITMDBTranslationList; stdcall;
-    //function GetVideos(const MovieID: Integer): ITMDBx; stdcall;
+    function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideoList; stdcall;
     //function GetWatchProviders(const MovieID: Integer): ITMDBx; stdcall;
     //function AddRating
     //function DeleteRating
@@ -2478,7 +2521,7 @@ type
     function GetCountries: ITMDBCountryList; stdcall;
     //function GetJobs: ITMDBJobList; stdcall;
     function GetLanguages: ITMDBLanguageList; stdcall;
-    //function GetPrimaryTranslations: ITMDBPrimaryTranslations; stdcall;
+    function GetPrimaryTranslations: TTMDBStrArray; stdcall;
     function GetTimezones: ITMDBTimezoneList; stdcall;
     function GetMovieCerts: ITMDBCertificationCountries; stdcall;
     function GetTVCerts: ITMDBCertificationCountries; stdcall;
@@ -2493,7 +2536,7 @@ type
     property Countries: ITMDBCountryList read GetCountries;
     //property Jobs: ITMDBJobList read GetJobs;
     property Languages: ITMDBLanguageList read GetLanguages;
-    //property PrimaryTranslations: ITMDBPrimaryTranslations read GetPrimaryTranslations;
+    property PrimaryTranslations: TTMDBStrArray read GetPrimaryTranslations;
     property Timezones: ITMDBTimezoneList read GetTimezones;
     property MovieCerts: ITMDBCertificationCountries read GetMovieCerts;
     property TVCerts: ITMDBCertificationCountries read GetTVCerts;
