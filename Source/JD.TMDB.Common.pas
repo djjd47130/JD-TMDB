@@ -61,6 +61,12 @@ type
   TTMDBMediaType = (mtMovie, mtTV, mtPerson);
 
   /// <summary>
+  /// Type of media translations found in TMDB
+  /// </summary>
+  TTMDBTranslationType =  (ttMovie, ttCollection, ttPerson, ttTVSeries,
+    ttTVSeason, ttTVEpisode);
+
+  /// <summary>
   /// Type of list content found in TMDB
   /// </summary>
   TTMDBListType = (ltMovie, ltTVSeries, ltTVSeason, ltTVEpisode, ltPerson);
@@ -116,11 +122,19 @@ type
   /// </summary>
   TTMDBMovieRequests = set of TTMDBMovieRequest;
 
-  TTMDBTVRequest = (trAccountStates, trAggregateCredits, trAlternativeTitles,
+  TTMDBTVSeriesRequest = (trAccountStates, trAggregateCredits, trAlternativeTitles,
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos);
-  TTMDBTVRequests = set of TTMDBTVRequest;
+  TTMDBTVSeriesRequests = set of TTMDBTVSeriesRequest;
+
+  TTMDBTVSeasonRequest = (tsrAccountStates, tsrAggregateCredits, tsrChanges, tsrCredits,
+    tsrExternalIDs, tsrImages, tsrTranslations, tsrVideos);
+  TTMDBTVSeasonRequests = set of TTMDBTVSeasonRequest;
+
+  TTMDBTVEpisodeRequest = (terAccountStates, terChanges, terCredits, terExternalIDs,
+    terImages, terTranslations, terVideos);
+  TTMDBTVEpisodeRequests = set of TTMDBTVEpisodeRequest;
 
   TTMDBPersonRequest = (prChanges, prCombinedCredits, prEdternalIDs, prImages,
     prMovieCredits, prTVCredits, prTranslations);
@@ -133,10 +147,16 @@ const
     'recommendations', 'release_dates', 'reviews', 'similar', 'translations',
     'videos'];
 
-  TMDB_TV_REQUEST: Array of WideString = ['account_states', 'aggregate_credits',
+  TMDB_TV_SERIES_REQUEST: Array of WideString = ['account_states', 'aggregate_credits',
     'alternative_titles', 'changes', 'content_ratings', 'credits', 'episode_groups',
     'external_ids', 'images', 'keywords', 'lists', 'recommendations', 'reviews',
     'screened_theatrically', 'similar', 'translations', 'videos'];
+
+  TMDB_TV_SEASON_REQUEST: Array of WideString = ['account_states', 'aggregate_credits',
+    'changes', 'credits', 'external_ids', 'images', 'translations', 'videos'];
+
+  TMDB_TV_EPISODE_REQUEST: Array of WideString = ['account_states', 'changes',
+    'credits', 'external_ids', 'images', 'translations', 'videos'];
 
   TMDB_PERSON_REQUEST: Array of WideString = ['changes', 'combined_credits',
     'external_ids', 'images', 'movie_credits', 'tv_credits', 'translations'];
@@ -144,6 +164,11 @@ const
 
 
 
+
+function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
+function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
+function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String; overload;
+function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String; overload;
 
 function JSONToStrArray(Arr: ISuperArray): TTMDBStrArray;
 function JSONToIntArray(Arr: ISuperArray): TTMDBIntArray;
@@ -171,14 +196,14 @@ function TMDBStrToGender(const AGender: WideString): TTMDBGender;
 function TMDBMovieRequestToStr(const AValue: TTMDBMovieRequest): WideString;
 function TMDBStrToMovieRequest(const AValue: WideString): TTMDBMovieRequest;
 
-function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
-
-function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
-function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
-function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String; overload;
-function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String; overload;
-
 function TMDBReleaseTypeToStr(const AValue: TTMDBReleaseType): String;
+
+//Append to Result Related
+function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
+function TMDBTVSeriesRequestsToStr(const AValue: TTMDBTVSeriesRequests): WideString;
+function TMDBTVSeasonRequestsToStr(const AValue: TTMDBTVSeasonRequests): WideString;
+function TMDBTVEpisodeRequestsToStr(const AValue: TTMDBTVEpisodeRequests): WideString;
+function TMDBPersonRequestsToStr(const AValue: TTMDBPersonRequests): WideString;
 
 implementation
 
@@ -376,18 +401,6 @@ begin
   end;
 end;
 
-function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
-var
-  R: TTMDBMovieRequest;
-begin
-  Result:= '';
-  for R in AValue do begin
-    if Result <> '' then
-      Result:= Result + ',';
-    Result:= Result + TMDB_MOVIE_REQUEST[Integer(R)];
-  end;
-end;
-
 function URLCombine(P1, P2: String; const Delim: String = '/'): String;
 var
   T: String;
@@ -429,6 +442,66 @@ begin
     rtDigital: Result:= 'Digital';
     rtPhysical: Result:= 'Physical';
     rtTV: Result:= 'TV';
+  end;
+end;
+
+function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
+var
+  R: TTMDBMovieRequest;
+begin
+  Result:= '';
+  for R in AValue do begin
+    if Result <> '' then
+      Result:= Result + ',';
+    Result:= Result + TMDB_MOVIE_REQUEST[Integer(R)];
+  end;
+end;
+
+function TMDBTVSeriesRequestsToStr(const AValue: TTMDBTVSeriesRequests): WideString;
+var
+  R: TTMDBTVSeriesRequest;
+begin
+  Result:= '';
+  for R in AValue do begin
+    if Result <> '' then
+      Result:= Result + ',';
+    Result:= Result + TMDB_TV_SERIES_REQUEST[Integer(R)];
+  end;
+end;
+
+function TMDBTVSeasonRequestsToStr(const AValue: TTMDBTVSeasonRequests): WideString;
+var
+  R: TTMDBTVSeasonRequest;
+begin
+  Result:= '';
+  for R in AValue do begin
+    if Result <> '' then
+      Result:= Result + ',';
+    Result:= Result + TMDB_TV_SEASON_REQUEST[Integer(R)];
+  end;
+end;
+
+function TMDBTVEpisodeRequestsToStr(const AValue: TTMDBTVEpisodeRequests): WideString;
+var
+  R: TTMDBTVEpisodeRequest;
+begin
+  Result:= '';
+  for R in AValue do begin
+    if Result <> '' then
+      Result:= Result + ',';
+    Result:= Result + TMDB_TV_EPISODE_REQUEST[Integer(R)];
+  end;
+end;
+
+function TMDBPersonRequestsToStr(const AValue: TTMDBPersonRequests): WideString;
+var
+  R: TTMDBPersonRequest;
+begin
+  Result:= '';
+  for R in AValue do begin
+    if Result <> '' then
+      Result:= Result + ',';
+    Result:= Result + TMDB_PERSON_REQUEST[Integer(R)];
   end;
 end;
 

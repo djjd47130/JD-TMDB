@@ -546,6 +546,12 @@ type
   /// [DONE]
   ITMDBTranslationData = interface
     ['{7AD55E8C-BF41-45D1-AEF4-F17E797A4BBD}']
+
+  end;
+
+  /// [DONE]
+  ITMDBMovieTranslationData = interface(ITMDBTranslationData)
+    ['{09C095D9-4F9A-4E8C-8FA8-F71BA339DCEB}']
     function GetTitle: WideString; stdcall;
     function GetOverview: WideString; stdcall;
     function GetHomepage: WideString; stdcall;
@@ -560,19 +566,83 @@ type
   end;
 
   /// [DONE]
+  ITMDBCollectionTranslationData = interface(ITMDBTranslationData)
+    ['{AE77BCCF-6AD8-425D-9FF6-EE387DC5FD34}']
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+  end;
+
+  /// [DONE]
+  ITMDBPersonTranslationData = interface(ITMDBTranslationData)
+    ['{BB5C94AD-1FC5-4B2E-9002-8927F803B3A9}']
+    function GetBiography: WideString; stdcall;
+
+    property Biography: WideString read GetBiography;
+  end;
+
+  /// [DONE]
+  ITMDBTVSeriesTranslationData = interface(ITMDBTranslationData)
+    ['{E5FC1F22-200A-4952-BE12-A891F08381CA}']
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetTagline: WideString; stdcall;
+
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+    property Tagline: WideString read GetTagline;
+  end;
+
+  /// [DONE]
+  ITMDBTVSeasonTranslationData = interface(ITMDBTranslationData)
+    ['{3EDACBDD-D5E1-4E88-B46F-3BB871E53A64}']
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+  end;
+
+  /// [DONE]
+  ITMDBTVEpisodeTranslationData = interface(ITMDBTranslationData)
+    ['{8D3E5163-C0D7-4102-9DD1-450267F442B5}']
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+  end;
+
+  /// [DONE]
   ITMDBTranslationItem = interface
     ['{15A88780-ABF6-4EEA-AFFC-BC63A22A26BE}']
     function GetISO3166_1: WideString; stdcall;
     function GetISO639_1: WideString; stdcall;
     function GetName: WideString; stdcall;
     function GetEnglishName: WideString; stdcall;
-    function GetData: ITMDBTranslationData; stdcall;
+    function GetMovieData: ITMDBMovieTranslationData; stdcall;
+    function GetCollectionData: ITMDBCollectionTranslationData; stdcall;
+    function GetPersonData: ITMDBPersonTranslationData; stdcall;
+    function GetTVSeriesData: ITMDBTVSeriesTranslationData; stdcall;
+    function GetTVSeasonData: ITMDBTVSeasonTranslationData; stdcall;
+    function GetTVEpisodeData: ITMDBTVEpisodeTranslationData; stdcall;
 
     property ISO3166_1: WideString read GetISO3166_1;
     property ISO639_1: WideString read GetISO639_1;
     property Name: WideString read GetName;
     property EnglishName: WideString read GetEnglishName;
-    property Data: ITMDBTranslationData read GetData;
+    property MovieData: ITMDBMovieTranslationData read GetMovieData;
+    property CollectionData: ITMDBCollectionTranslationData read GetCollectionData;
+    property PersonData: ITMDBPersonTranslationData read GetPersonData;
+    property TVSeriesData: ITMDBTVSeriesTranslationData read GetTVSeriesData;
+    property TVSeasonData: ITMDBTVSeasonTranslationData read GetTVSeasonData;
+    property TVEpisodeData: ITMDBTVEpisodeTranslationData read GetTVEpisodeData;
   end;
 
   /// [DONE]
@@ -1544,7 +1614,6 @@ type
 
   /// <summary>
   /// Details of a specific movie.
-  /// [DONE]
   /// </summary>
   ITMDBMovieDetail = interface
     ['{9F2CC08D-6D65-4C6E-AEB0-8CEF4748B501}']

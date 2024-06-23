@@ -671,6 +671,12 @@ type
   TTMDBTranslationData = class(TInterfacedObject, ITMDBTranslationData)
   private
     FObj: ISuperObject;
+  public
+    constructor Create(AObj: ISuperObject); virtual;
+    destructor Destroy; override;
+  end;
+
+  TTMDBMovieTranslationData = class(TTMDBTranslationData, ITMDBMovieTranslationData)
   protected
     function GetTitle: WideString; stdcall;
     function GetOverview: WideString; stdcall;
@@ -678,9 +684,6 @@ type
     function GetTagline: WideString; stdcall;
     function GetRuntime: Integer; stdcall;
   public
-    constructor Create(AObj: ISuperObject);
-    destructor Destroy; override;
-
     property Title: WideString read GetTitle;
     property Overview: WideString read GetOverview;
     property Homepage: WideString read GetHomepage;
@@ -688,38 +691,101 @@ type
     property Runtime: Integer read GetRuntime;
   end;
 
+  TTMDBCollectionTranslationData = class(TTMDBTranslationData, ITMDBCollectionTranslationData)
+  protected
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+  public
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+  end;
+
+  TTMDBPersonTranslationData = class(TTMDBTranslationData, ITMDBPersonTranslationData)
+  protected
+    function GetBiography: WideString; stdcall;
+  public
+    property Biography: WideString read GetBiography;
+  end;
+
+  TTMDBTVSeriesTranslationData = class(TTMDBTranslationData, ITMDBTVSeriesTranslationData)
+  protected
+    function GetTitle: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetTagline: WideString; stdcall;
+  public
+    property Title: WideString read GetTitle;
+    property Overview: WideString read GetOverview;
+    property Homepage: WideString read GetHomepage;
+    property Tagline: WideString read GetTagline;
+  end;
+
+  TTMDBTVSeasonTranslationData = class(TTMDBTranslationData, ITMDBTVSeasonTranslationData)
+  protected
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+  public
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+  end;
+
+  TTMDBTVEpisodeTranslationData = class(TTMDBTranslationData, ITMDBTVEpisodeTranslationData)
+  protected
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+  public
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+  end;
+
+
+
   TTMDBTranslationItem = class(TInterfacedObject, ITMDBTranslationItem)
   private
     FObj: ISuperObject;
     FData: ITMDBTranslationData;
+    FDataType: TTMDBTranslationType;
   protected
     function GetISO3166_1: WideString; stdcall;
     function GetISO639_1: WideString; stdcall;
     function GetName: WideString; stdcall;
     function GetEnglishName: WideString; stdcall;
-    function GetData: ITMDBTranslationData; stdcall;
+    function GetMovieData: ITMDBMovieTranslationData; stdcall;
+    function GetCollectionData: ITMDBCollectionTranslationData; stdcall;
+    function GetPersonData: ITMDBPersonTranslationData; stdcall;
+    function GetTVSeriesData: ITMDBTVSeriesTranslationData; stdcall;
+    function GetTVSeasonData: ITMDBTVSeasonTranslationData; stdcall;
+    function GetTVEpisodeData: ITMDBTVEpisodeTranslationData; stdcall;
   public
-    constructor Create(AObj: ISuperObject);
+    constructor Create(AObj: ISuperObject; const ADataType: TTMDBTranslationType);
     destructor Destroy; override;
 
     property ISO3166_1: WideString read GetISO3166_1;
     property ISO639_1: WideString read GetISO639_1;
     property Name: WideString read GetName;
     property EnglishName: WideString read GetEnglishName;
-    property Data: ITMDBTranslationData read GetData;
+    property MovieData: ITMDBMovieTranslationData read GetMovieData;
+    property CollectionData: ITMDBCollectionTranslationData read GetCollectionData;
+    property PersonData: ITMDBPersonTranslationData read GetPersonData;
+    property TVSeriesData: ITMDBTVSeriesTranslationData read GetTVSeriesData;
+    property TVSeasonData: ITMDBTVSeasonTranslationData read GetTVSeasonData;
+    property TVEpisodeData: ITMDBTVEpisodeTranslationData read GetTVEpisodeData;
   end;
 
   TTMDBTranslationList = class(TInterfacedObject, ITMDBTranslationList)
   private
     FObj: ISuperObject;
     FItems: TInterfaceList;
+    FDataType: TTMDBTranslationType;
     procedure PopulateItems;
     procedure ClearItems;
   protected
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBTranslationItem; stdcall;
   public
-    constructor Create(AObj: ISuperObject);
+    constructor Create(AObj: ISuperObject; const ADataType: TTMDBTranslationType);
     destructor Destroy; override;
 
     property Count: Integer read GetCount;
@@ -3298,7 +3364,7 @@ var
 begin
   O:= FObj.O['translations'];
   if O <> nil then begin
-    Result:= TTMDBTranslationList.Create(O);
+    Result:= TTMDBTranslationList.Create(O, ttMovie);
     //TODO: Cache Result...
   end;
 end;
@@ -4187,7 +4253,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Movies.GetTranslations(MovieID);
-  Result:= TTMDBTranslationList.Create(O);
+  Result:= TTMDBTranslationList.Create(O, ttMovie);
 end;
 
 { TTMDBServiceSearch }
@@ -5770,7 +5836,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Collections.GetTranslations(CollectionID);
-  Result:= TTMDBTranslationList.Create(O);
+  Result:= TTMDBTranslationList.Create(O, ttCollection);
 end;
 
 { TTMDBCollectionPart }
@@ -5967,50 +6033,23 @@ begin
   end;
 end;
 
-{ TTMDBTranslationData }
-
-constructor TTMDBTranslationData.Create(AObj: ISuperObject);
-begin
-  FObj:= AObj;
-end;
-
-destructor TTMDBTranslationData.Destroy;
-begin
-  FObj:= nil;
-  inherited;
-end;
-
-function TTMDBTranslationData.GetHomepage: WideString;
-begin
-  Result:= FObj.S['homepage'];
-end;
-
-function TTMDBTranslationData.GetOverview: WideString;
-begin
-  Result:= FObj.S['overview'];
-end;
-
-function TTMDBTranslationData.GetRuntime: Integer;
-begin
-  Result:= FObj.I['runtime'];
-end;
-
-function TTMDBTranslationData.GetTagline: WideString;
-begin
-  Result:= FObj.S['tagline'];
-end;
-
-function TTMDBTranslationData.GetTitle: WideString;
-begin
-  Result:= FObj.S['title'];
-end;
-
 { TTMDBTranslationItem }
 
-constructor TTMDBTranslationItem.Create(AObj: ISuperObject);
+constructor TTMDBTranslationItem.Create(AObj: ISuperObject; const ADataType: TTMDBTranslationType);
+var
+  D: ISuperObject;
 begin
   FObj:= AObj;
-  FData:= TTMDBTranslationData.Create(FObj.O['data']);
+  FDataType:= ADataType;
+  D:= FObj.O['data'];
+  case ADataType of
+    ttMovie:      FData:= TTMDBMovieTranslationData.Create(D);
+    ttCollection: FData:= TTMDBCollectionTranslationData.Create(D);
+    ttPerson:     FData:= TTMDBPersonTranslationData.Create(D);
+    ttTVSeries:   FData:= TTMDBTVSeriesTranslationData.Create(D);
+    ttTVSeason:   FData:= TTMDBTVSeasonTranslationData.Create(D);
+    ttTVEpisode:  FData:= TTMDBTVEpisodeTranslationData.Create(D);
+  end;
 end;
 
 destructor TTMDBTranslationItem.Destroy;
@@ -6020,9 +6059,14 @@ begin
   inherited;
 end;
 
-function TTMDBTranslationItem.GetData: ITMDBTranslationData;
+function TTMDBTranslationItem.GetMovieData: ITMDBMovieTranslationData;
 begin
-  Result:= FData;
+  Result:= ITMDBMovieTranslationData(FData);
+end;
+
+function TTMDBTranslationItem.GetCollectionData: ITMDBCollectionTranslationData;
+begin
+  Result:= ITMDBCollectionTranslationData(FData);
 end;
 
 function TTMDBTranslationItem.GetEnglishName: WideString;
@@ -6045,6 +6089,26 @@ begin
   Result:= FObj.S['name'];
 end;
 
+function TTMDBTranslationItem.GetPersonData: ITMDBPersonTranslationData;
+begin
+  Result:= ITMDBPersonTranslationData(FData);
+end;
+
+function TTMDBTranslationItem.GetTVEpisodeData: ITMDBTVEpisodeTranslationData;
+begin
+  Result:= ITMDBTVEpisodeTranslationData(FData);
+end;
+
+function TTMDBTranslationItem.GetTVSeasonData: ITMDBTVSeasonTranslationData;
+begin
+  Result:= ITMDBTVSeasonTranslationData(FData);
+end;
+
+function TTMDBTranslationItem.GetTVSeriesData: ITMDBTVSeriesTranslationData;
+begin
+  Result:= ITMDBTVSeriesTranslationData(FData);
+end;
+
 { TTMDBTranslationList }
 
 procedure TTMDBTranslationList.ClearItems;
@@ -6052,9 +6116,10 @@ begin
   FItems.Clear;
 end;
 
-constructor TTMDBTranslationList.Create(AObj: ISuperObject);
+constructor TTMDBTranslationList.Create(AObj: ISuperObject; const ADataType: TTMDBTranslationType);
 begin
   FObj:= AObj;
+  FDataType:= ADataType;
   FItems:= TInterfaceList.Create;
   PopulateItems;
 end;
@@ -6087,9 +6152,119 @@ begin
   ClearItems;
   for X := 0 to FObj.A['translations'].Length-1 do begin
     O:= FObj.A['translations'].O[X];
-    I:= TTMDBTranslationItem.Create(O);
+    I:= TTMDBTranslationItem.Create(O, FDataType);
     FItems.Add(I);
   end;
+end;
+
+{ TTMDBTranslationData }
+
+constructor TTMDBTranslationData.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+end;
+
+destructor TTMDBTranslationData.Destroy;
+begin
+  FObj:= nil;
+  inherited;
+end;
+
+{ TTMDBMovieTranslationData }
+
+function TTMDBMovieTranslationData.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBMovieTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBMovieTranslationData.GetRuntime: Integer;
+begin
+  Result:= FObj.I['runtime'];
+end;
+
+function TTMDBMovieTranslationData.GetTagline: WideString;
+begin
+  Result:= FObj.S['tagline'];
+end;
+
+function TTMDBMovieTranslationData.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+end;
+
+{ TTMDBCollectionTranslationData }
+
+function TTMDBCollectionTranslationData.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBCollectionTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBCollectionTranslationData.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+end;
+
+{ TTMDBPersonTranslationData }
+
+function TTMDBPersonTranslationData.GetBiography: WideString;
+begin
+  Result:= FObj.S['biography'];
+end;
+
+{ TTMDBTVSeriesTranslationData }
+
+function TTMDBTVSeriesTranslationData.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBTVSeriesTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBTVSeriesTranslationData.GetTagline: WideString;
+begin
+  Result:= FObj.S['tagline'];
+end;
+
+function TTMDBTVSeriesTranslationData.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+end;
+
+{ TTMDBTVSeasonTranslationData }
+
+function TTMDBTVSeasonTranslationData.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBTVSeasonTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+{ TTMDBTVEpisodeTranslationData }
+
+function TTMDBTVEpisodeTranslationData.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBTVEpisodeTranslationData.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
 end;
 
 end.
