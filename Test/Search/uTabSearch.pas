@@ -48,8 +48,8 @@ begin
   inherited;
 
   EmbedContent(TfrmContentSearchCollections);
-  EmbedContent(TfrmContentSearchMovies);
   EmbedContent(TfrmContentSearchCompanies);
+  EmbedContent(TfrmContentSearchMovies);
   EmbedContent(TfrmContentSearchTV);
 
 end;

@@ -2,24 +2,12 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
   Caption = 'Movie Genres'
   PixelsPerInch = 96
   TextHeight = 18
-  object Button2: TButton
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 748
-    Height = 28
-    Cursor = crHandPoint
-    Align = alTop
-    Caption = 'Refresh List'
-    TabOrder = 0
-    OnClick = Button2Click
-  end
   object lstGenreMovies: TListView
     AlignWithMargins = True
     Left = 3
-    Top = 37
+    Top = 44
     Width = 748
-    Height = 433
+    Height = 426
     Align = alClient
     Columns = <
       item
@@ -33,7 +21,22 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     HotTrackStyles = [htHandPoint, htUnderlineHot]
     ReadOnly = True
     RowSelect = True
-    TabOrder = 1
+    TabOrder = 0
     ViewStyle = vsReport
+    ExplicitTop = 37
+    ExplicitHeight = 433
+  end
+  object Button2: TButton
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 748
+    Height = 35
+    Cursor = crHandPoint
+    Align = alTop
+    Caption = 'Refresh'
+    TabOrder = 1
+    OnClick = Button2Click
+    ExplicitTop = 38
   end
 end

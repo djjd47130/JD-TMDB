@@ -6,12 +6,12 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, Vcl.ComCtrls, Vcl.StdCtrls,
   JD.TMDB.Common,
-  JD.TMDB.Intf;
+  JD.TMDB.Intf, Vcl.ExtCtrls;
 
 type
   TfrmContentGenresMovie = class(TfrmContentBase)
-    Button2: TButton;
     lstGenreMovies: TListView;
+    Button2: TButton;
     procedure Button2Click(Sender: TObject);
   private
     { Private declarations }

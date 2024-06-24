@@ -170,17 +170,18 @@ const
 
 
 
-
+//Similar to TPath.Combine but more general-purpose
 function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
 function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
 function URLCombine(P1: String; P2: Integer; const Delim: String = '/'): String; overload;
 function URLCombine(P1: Integer; P2: String; const Delim: String = '/'): String; overload;
 
+//Convert JSON in ISuperArray to String Array or Integer Array
 function JSONToStrArray(Arr: ISuperArray): TTMDBStrArray;
 function JSONToIntArray(Arr: ISuperArray): TTMDBIntArray;
 
+//Convert a date from string to TDateTime
 function ConvertDate(const S: String): TDateTime;
-function ConvertDateTime(const S: String): TDateTime;
 
 function TMDBStrArrayToStr(const AValue: TTMDBStrArray): String;
 
@@ -273,17 +274,6 @@ begin
 end;
 
 function ConvertDate(const S: String): TDateTime;
-var
-  F: TFormatSettings;
-begin
-  F:= TFormatSettings.Create;
-  F.ShortDateFormat:= 'yyyy-mm-dd';
-  F.DateSeparator:= '-';
-  F.TimeSeparator:= ':';
-  Result:= StrToDateTimeDef(S, 0, F);
-end;
-
-function ConvertDateTime(const S: String): TDateTime;
 var
   F: TFormatSettings;
 begin
