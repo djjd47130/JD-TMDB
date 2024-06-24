@@ -39,7 +39,7 @@ type
     Services1: TMenuItem;
     Setup1: TMenuItem;
     AppSetup1: TMenuItem;
-    Button1: TButton;
+    btnValidateKey: TButton;
     pTop: TPanel;
     btnUser: TJDFontButton;
     pUser: TPanel;
@@ -59,13 +59,11 @@ type
     Panel4: TPanel;
     lblUserName: TLabel;
     lblUserFullName: TLabel;
-    lblUserSessionID: TLabel;
-    lblUserAccountID: TLabel;
     Panel5: TPanel;
     imgUserAvatar: TImage;
     btnLogout: TButton;
     TMDB: TTMDB;
-    GroupBox1: TGroupBox;
+    gbLocaleOptions: TGroupBox;
     Panel6: TPanel;
     Label5: TLabel;
     cboLanguage: TComboBox;
@@ -75,11 +73,10 @@ type
     procedure AppSetup1Click(Sender: TObject);
     procedure Services1Click(Sender: TObject);
     procedure UserAuthMethodClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure btnValidateKeyClick(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure lblUserSessionIDDblClick(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
     procedure txtAuthPassKeyUp(Sender: TObject; var Key: Word;
@@ -151,11 +148,6 @@ end;
 procedure TfrmTMDBTestMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   SaveSetup;
-end;
-
-procedure TfrmTMDBTestMain.lblUserSessionIDDblClick(Sender: TObject);
-begin
-  Clipboard.AsText:= lblUserSessionID.Caption;
 end;
 
 procedure TfrmTMDBTestMain.LoadSetup;
@@ -246,17 +238,14 @@ begin
     gbUserInfo.Visible:= True;
     gbUserLogin.Visible:= False;
     gbUserInfo.Align:= alClient;
-    lblUserSessionID.Caption:= TMDB.LoginState.SessionID;
     if TMDB.LoginState.IsGuest then begin
       lblUserName.Caption:= 'GUEST';
       lblUserFullName.Caption:= 'GUEST USER';
-      lblUserAccountID.Caption:= '';
       btnUser.Text:= 'GUEST';
     end else begin
       D:= TMDB.LoginState.AccountDetail;
       lblUserName.Caption:= D.UserName;
       lblUserFullName.Caption:= D.Name;
-      lblUserAccountID.Caption:= IntToStr(D.ID);
       if D.Name <> '' then
         btnUser.Text:= D.Name
       else
@@ -288,7 +277,6 @@ var
 begin
   PrepAPI;
   Success:= False;
-
   case FAuthMethod of
     0: begin
       //Guest...
@@ -297,6 +285,8 @@ begin
     end;
     1: begin
       //Normal...
+      raise Exception.Create('Sorry, this login method is not yet supported.');
+
       US:= TMDB.LoginState.LoginAsUser;
       Success:= US.Success;
     end;
@@ -312,19 +302,20 @@ begin
   end else begin
     //TODO: Login failed...
   end;
-
 end;
 
 procedure TfrmTMDBTestMain.EmbedTabs;
 var
   X: Integer;
 begin
+
   EmbedTab(TfrmTabConfiguration);
   EmbedTab(TfrmTabCertifications);
   EmbedTab(TfrmTabGenres);
   EmbedTab(TfrmTabMovies);
   EmbedTab(TfrmTabSearch);
 
+  //Hide all taps and reset to first tab...
   for X := 0 to Pages.PageCount-1 do
     Pages.Pages[X].TabVisible:= False;
   Pages.ActivePageIndex:= 0;
@@ -374,7 +365,7 @@ begin
 
 end;
 
-procedure TfrmTMDBTestMain.Button1Click(Sender: TObject);
+procedure TfrmTMDBTestMain.btnValidateKeyClick(Sender: TObject);
 var
   O: ITMDBAuthValidateKeyResult;
 begin

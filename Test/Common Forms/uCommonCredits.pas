@@ -42,7 +42,7 @@ begin
       Ca:= FCredits.Cast[X];
       I:= lstCredits.Items.Add;
       I.GroupID:= 0;
-      I.Caption:= Ca.Name;
+      I.Caption:= Ca.Title;
       I.SubItems.Add(Ca.Character);
     end;
 
@@ -50,7 +50,7 @@ begin
       Cr:= FCredits.Crew[X];
       I:= lstCredits.Items.Add;
       I.GroupID:= 1;
-      I.Caption:= Cr.Name;
+      I.Caption:= Cr.Title;
       I.SubItems.Add(Cr.Job);
     end;
 

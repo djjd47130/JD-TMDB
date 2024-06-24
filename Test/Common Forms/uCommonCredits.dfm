@@ -42,8 +42,5 @@ inherited frmCommonCredits: TfrmCommonCredits
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -126
-    ExplicitWidth = 905
-    ExplicitHeight = 347
   end
 end

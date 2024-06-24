@@ -1,23 +1,44 @@
-inherited frmContentSearchTV: TfrmContentSearchTV
-  Caption = 'Search TV'
+inherited frmContentSearchPeople: TfrmContentSearchPeople
+  Caption = 'Search People'
+  ClientHeight = 557
+  ClientWidth = 946
+  ExplicitWidth = 962
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 18
   inherited pMain: TPanel
+    Width = 681
+    Height = 557
     inherited Splitter1: TSplitter
-      Top = 209
+      Top = 273
+      Width = 681
     end
     inherited lstResults: TListView
-      Height = 171
-      ExplicitTop = 38
+      Width = 675
+      Height = 235
+      ExplicitLeft = 6
+      ExplicitWidth = 675
+      ExplicitHeight = 276
+    end
+    inherited pTop: TPanel
+      Width = 681
     end
     inherited pDetail: TPanel
-      Top = 216
-      Height = 284
-      ExplicitTop = 216
-      ExplicitHeight = 284
+      Top = 280
+      Width = 681
+      Height = 277
+      ExplicitTop = 280
+      ExplicitWidth = 681
+      ExplicitHeight = 277
     end
   end
   inherited pSearch: TPanel
+    Height = 557
+    ExplicitLeft = -3
+    ExplicitHeight = 557
+    inherited btnApply: TJDFontButton
+      Top = 513
+    end
     object Panel7: TPanel
       Left = 0
       Top = 0
@@ -26,6 +47,7 @@ inherited frmContentSearchTV: TfrmContentSearchTV
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 8
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3
@@ -80,64 +102,6 @@ inherited frmContentSearchTV: TfrmContentSearchTV
         Items.Strings = (
           'False'
           'True')
-      end
-    end
-    object Panel13: TPanel
-      Left = 0
-      Top = 114
-      Width = 265
-      Height = 57
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 3
-      object Label14: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 259
-        Height = 18
-        Align = alTop
-        Caption = 'First Air Date Year'
-        ExplicitWidth = 140
-      end
-      object txtFirstAirDateYear: TEdit
-        AlignWithMargins = True
-        Left = 3
-        Top = 27
-        Width = 259
-        Height = 27
-        Align = alClient
-        TabOrder = 0
-        ExplicitHeight = 26
-      end
-    end
-    object Panel14: TPanel
-      Left = 0
-      Top = 171
-      Width = 265
-      Height = 57
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 4
-      object Label15: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 259
-        Height = 18
-        Align = alTop
-        Caption = 'Year:'
-        ExplicitWidth = 41
-      end
-      object txtYear: TEdit
-        AlignWithMargins = True
-        Left = 3
-        Top = 27
-        Width = 259
-        Height = 27
-        Align = alClient
-        TabOrder = 0
-        ExplicitHeight = 26
       end
     end
   end

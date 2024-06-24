@@ -33,9 +33,7 @@ implementation
 procedure TfrmContentCertsMovies.btnRefreshCertsMoviesClick(Sender: TObject);
 var
   C: ITMDBCertificationCountry;
-  O: ITMDBCertificationItem;
-  X, Y: Integer;
-  I: TListItem;
+  X: Integer;
   SelCountry: String;
 begin
   inherited;
@@ -52,7 +50,10 @@ begin
         C:= FCerts[X];
         cboCountry.Items.Add(TMDB.CountryName(C.CountryCode));
       end;
-      cboCountry.ItemIndex:= 0;
+      if SelCountry <> '' then
+        cboCountry.ItemIndex:= cboCountry.Items.IndexOf(SelCountry)
+      else
+        cboCountry.ItemIndex:= 0;
       RefreshDetails;
     finally
       lstCertsMovies.Items.EndUpdate;
@@ -75,10 +76,9 @@ var
   O: ITMDBCertificationItem;
   I: TListItem;
 begin
+  lstCertsMovies.Items.Clear;
   C:= SelectedCountry;
   if C = nil then Exit;
-
-  lstCertsMovies.Items.Clear;
   for Y := 0 to C.Count-1 do begin
     O:= C[Y];
     I:= lstCertsMovies.Items.Add;

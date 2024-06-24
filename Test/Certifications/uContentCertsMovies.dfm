@@ -9,7 +9,6 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
     Width = 748
     Height = 432
     Align = alClient
-    Color = clSilver
     Columns = <
       item
         Caption = 'Order'
@@ -50,7 +49,6 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
       Style = csDropDownList
       TabOrder = 0
       OnClick = cboCountryClick
-      ExplicitTop = 6
     end
     object btnRefreshCertsMovies: TButton
       AlignWithMargins = True
