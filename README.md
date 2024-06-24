@@ -24,9 +24,9 @@ While the TMDB API supports several authentication methods for users to login an
 
 ## Delphi Wrapper
 
-The goal of this library is to have 3 layers of wrappers - Raw JSON API (`JD.TMDB.API.pas`), Interface Translation (`JD.TMDB.Intf.pas`), and Delphi Component.
+The goal of this library is to have 3 layers of wrappers - Raw JSON API (in `JD.TMDB.API.pas`), Interface Translation (in `JD.TMDB.Intf.pas` and `JD.TMDB.Impl.pas`), and Delphi Component (in `JD.TMDB.pas`).
 
-At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the `X-SuperObject` JSON library for Delphi. 
+At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the [`X-SuperObject` JSON library for Delphi](https://github.com/onryldz/x-superobject). 
 
 A second-level wrapper is being written which further adds an abstract layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. The base interface is `ITMDBClient`.
 
@@ -38,11 +38,11 @@ There is a test application to demonstrate the usage of the TMDB API wrapper. No
 
 ### JDLib
 
-The test applications uses controls from a separate repository of mine: https://github.com/djjd47130/JDLib
+The test applications uses controls from [JDLib, a separate repository of mine](https://github.com/djjd47130/JDLib).
 
 ## Watch Providers Attribution
 
-**IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute "**JustWatch**" in your solution.
+**IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute ["**JustWatch**"](https://www.justwatch.com/) in your solution.
 
 ## Usage
 
@@ -51,5 +51,5 @@ The test applications uses controls from a separate repository of mine: https://
 3. Assign your key(s) via the component's `APIKey` and/or `AccessToken` properties.
    - NOTE: Another property `AuthMethod` controls which key gets used.
 4. You're ready to use a majority of the API functions now.
-5. You may additionally login using `LoginState` in runtime.
+5. You may additionally login using `LoginState` in runtime to access account-related functionality.
 
