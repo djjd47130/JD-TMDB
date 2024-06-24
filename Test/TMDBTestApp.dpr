@@ -33,7 +33,8 @@ uses
   uCommonFormBase in 'Common Forms\uCommonFormBase.pas' {frmCommonFormBase},
   uCommonVideos in 'Common Forms\uCommonVideos.pas' {frmCommonVideos},
   uCommonImages in 'Common Forms\uCommonImages.pas' {frmCommonImages},
-  uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits};
+  uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits},
+  JD.TMDB.LocalWebServer in 'JD.TMDB.LocalWebServer.pas';
 
 {$R *.res}
 

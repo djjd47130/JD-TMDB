@@ -29,6 +29,9 @@ implementation
 
 {$R *.dfm}
 
+uses
+  uTMDBTestMain;
+
 { TfrmCommonVideos }
 
 procedure TfrmCommonVideos.LoadVideoList(const Videos: ITMDBVideoList);
@@ -54,66 +57,28 @@ begin
   end;
 end;
 
-function EmbedYouTubeHTML(const Key: String): String;
-//var
-  //L: TStringList;
-  procedure A(const S: String);
-  begin
-    //L.Append(S);
-    Result:= Result + S + ' ';
-  end;
-begin
-  //L:= TStringList.Create;
-  try
-
-    //{
-    A('<html>');
-    A('<head>');
-    A('<title>');
-    A('YouTube Video');
-    A('</title>');
-    A('</head>');
-    A('<body>');
-    //}
-
-    A('<iframe width="420" height="315"');
-    A('src="https://www.youtube.com/embed/'+Key+'">');
-    A('</iframe>');
-
-    //{
-    A('</body>');
-    A('</html>');
-    //}
-
-    //Result:= L.Text;
-  finally
-    //L.Free;
-  end;
-end;
-
 procedure TfrmCommonVideos.lstVideosDblClick(Sender: TObject);
 var
   V: ITMDBVideoItem;
-  HTML: String;
+  U: String;
+  function GetLocalBaseURL: String;
+  begin
+    Result:= 'http://localhost:'+IntToStr(frmTMDBTestMain.WebServer.Port);
+  end;
 begin
   inherited;
   //TODO: Open video in default browser, OR embedded...
   V:= FVideos[lstVideos.ItemIndex];
-
+  Edge.ReinitializeWebView;
   if SameText(V.Site, 'YouTube') then begin
-    HTML:= EmbedYouTubeHTML(V.Key);
+    U:= URLCombine('youtube', V.Key);
   end else begin
     //TODO
   end;
-
-  Clipboard.AsText:= HTML;
-
-
-  Edge.ReinitializeWebView;
-  Edge.Navigate('https://www.youtube.com/watch?v='+V.Key);
-  //Edge.NavigateToString(HTML);
-
-
+  if U <> '' then begin
+    U:= URLCombine(GetLocalBaseURL, U);
+    Edge.Navigate(U);
+  end;
 end;
 
 end.

@@ -10,6 +10,7 @@ uses
   JD.TMDB.Intf,
   JD.TMDB.Impl,
   JD.TMDB.Common,
+  JD.TMDB.LocalWebServer,
   XSuperObject, XSuperJSON,
   uTabBase, uContentBase,
   uTabConfiguration,
@@ -88,6 +89,7 @@ type
   private
     FAppSetup: ISuperObject;
     FAuthMethod: Integer;
+    FWebServer: TTMDBLocalWebServer;
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
@@ -100,6 +102,7 @@ type
   public
     procedure PrepAPI;
     property APIAuth: TTMDBAuthMethod read GetAPIAuth write SetAPIAuth;
+    property WebServer: TTMDBLocalWebServer read FWebServer;
   end;
 
 var
@@ -128,6 +131,9 @@ begin
   EmbedTabs;
   LoadSetup;
 
+  FWebServer:= TTMDBLocalWebServer.Create(TMDB);
+  FWebServer.Start;
+
   TMDB.ListPrimaryTranslatiosn(cboLanguage.Items);
   Services1.Click; //TODO: Why was this necessary?
   Width:= 1200;
@@ -136,6 +142,9 @@ end;
 
 procedure TfrmTMDBTestMain.FormDestroy(Sender: TObject);
 begin
+  FWebServer.Terminate;
+  FreeAndNil(FWebServer);
+
   FAppSetup:= nil;
 end;
 

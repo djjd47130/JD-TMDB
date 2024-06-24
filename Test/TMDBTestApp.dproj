@@ -200,6 +200,7 @@
             <Form>frmCommonCredits</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="JD.TMDB.LocalWebServer.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
