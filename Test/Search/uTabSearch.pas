@@ -9,6 +9,7 @@ uses
   uContentSearchCollections,
   uContentSearchCompanies,
   uContentSearchMovies,
+  uContentSearchTV,
   Vcl.ComCtrls;
 
 type
@@ -49,6 +50,8 @@ begin
   EmbedContent(TfrmContentSearchCollections);
   EmbedContent(TfrmContentSearchMovies);
   EmbedContent(TfrmContentSearchCompanies);
+  EmbedContent(TfrmContentSearchTV);
+
 end;
 
 end.

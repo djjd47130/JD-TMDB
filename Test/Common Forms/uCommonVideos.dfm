@@ -8,19 +8,20 @@ inherited frmCommonVideos: TfrmCommonVideos
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 251
+    Top = 249
     Width = 882
-    Height = 5
+    Height = 7
     Cursor = crVSplit
     Align = alBottom
-    ExplicitTop = 285
+    ResizeStyle = rsUpdate
+    ExplicitTop = 251
   end
   object lstVideos: TListView
     AlignWithMargins = True
     Left = 3
     Top = 3
     Width = 876
-    Height = 245
+    Height = 243
     Align = alClient
     Columns = <
       item

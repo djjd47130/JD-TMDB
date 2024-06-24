@@ -68,6 +68,7 @@ begin
   FDetailForm.Parent:= pDetail;
   FDetailForm.BorderStyle:= bsNone;
   FDetailForm.Align:= alClient;
+  FDetailForm.pTop.Visible:= False;
   FDetailForm.Show;
 
 end;

@@ -34,7 +34,8 @@ uses
   uCommonVideos in 'Common Forms\uCommonVideos.pas' {frmCommonVideos},
   uCommonImages in 'Common Forms\uCommonImages.pas' {frmCommonImages},
   uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits},
-  JD.TMDB.LocalWebServer in 'JD.TMDB.LocalWebServer.pas';
+  JD.TMDB.LocalWebServer in 'JD.TMDB.LocalWebServer.pas',
+  uContentSearchTV in 'Search\uContentSearchTV.pas' {frmContentSearchTV};
 
 {$R *.res}
 

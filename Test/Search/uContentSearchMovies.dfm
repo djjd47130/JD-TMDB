@@ -9,14 +9,15 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
     ExplicitWidth = 769
     ExplicitHeight = 561
     inherited Splitter1: TSplitter
-      Top = 224
+      Top = 145
       Width = 735
+      Beveled = False
       ExplicitTop = 253
       ExplicitWidth = 769
     end
     inherited lstResults: TListView
       Width = 729
-      Height = 186
+      Height = 107
       Columns = <
         item
           Caption = 'Movie'
@@ -46,12 +47,12 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
       ExplicitWidth = 769
     end
     inherited pDetail: TPanel
-      Top = 231
+      Top = 152
       Width = 735
-      Height = 269
-      ExplicitTop = 231
-      ExplicitWidth = 769
-      ExplicitHeight = 269
+      Height = 348
+      ExplicitTop = 152
+      ExplicitWidth = 735
+      ExplicitHeight = 348
     end
   end
   inherited pSearch: TPanel

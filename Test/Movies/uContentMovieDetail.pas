@@ -18,10 +18,6 @@ type
   TfrmContentMovieDetail = class(TfrmContentBase)
     Pages: TPageControl;
     TabSheet1: TTabSheet;
-    lblTitle: TLabel;
-    lblReleaseDate: TLabel;
-    lblGenres: TLabel;
-    lblTagline: TLabel;
     txtOverview: TMemo;
     TabSheet2: TTabSheet;
     lblRating: TLabel;
@@ -52,6 +48,8 @@ type
     Label1: TLabel;
     txtID: TEdit;
     btnSearch: TJDFontButton;
+    lstDetail: TListView;
+    Splitter1: TSplitter;
     procedure FormCreate(Sender: TObject);
     procedure PagesChange(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
@@ -234,15 +232,73 @@ begin
 end;
 
 procedure TfrmContentMovieDetail.LoadDetails;
+  function A(const N: String; const V: String): TListItem;
+  begin
+    Result:= lstDetail.Items.Add;
+    Result.Caption:= N;
+    Result.SubItems.Add(V);
+  end;
+var
+  X: Integer;
+  I: TListItem;
 begin
-  lblTitle.Caption:= FDetail.Title;
-  if FDetail.ReleaseDate <> 0 then
-    lblReleaseDate.Caption:= 'Release Date: '+FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate)
-  else
-    lblReleaseDate.Caption:= 'Release Date: (NONE)';
-  lblGenres.Caption:= 'Genres: '+GetMovieGenres(FDetail);
+  lstDetail.Items.BeginUpdate;
+  try
+    lstDetail.Items.Clear;
+
+    A('Title', FDetail.Title);
+    A('Original Title', FDetail.OriginalTitle);
+    A('Tagline', FDetail.Tagline);
+    if FDetail.Adult then
+      A('Adult', 'True')
+    else
+      A('Adult', 'False');
+    for X := 0 to FDetail.Genres.Count-1 do begin
+      I:= A('Genre', FDetail.Genres[X].Name);
+      I.Indent:= 1;
+    end;
+    A('Release Date', FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate));
+    if FDetail.Collection <> nil then begin
+      if FDetail.Collection.BelongsToCollection then begin
+        A('Collection', FDetail.Collection.Name);
+      end;
+    end;
+    A('Status', FDetail.Status);
+    A('Budget', FormatCurr('$#,###,###,##0.00', FDetail.Budget));
+    A('Revenue', FormatCurr('$#,###,###,##0.00', FDetail.Revenue));
+    A('Homepage', FDetail.Homepage);
+    A('Popularity', FormatFloat('0.000', FDetail.Popularity));
+    A('Origin Country', TMDBStrArrayToStr(FDetail.OriginalCountry));
+    A('Original Language', TMDB.LanguageName(FDetail.OriginalLanguage));
+    A('ID', IntToStr(FDetail.ID));
+    //IMDB ID
+    A('Backdrop Path', FDetail.BackdropPath);
+    A('Poster Path', FDetail.PosterPath);
+    for X := 0 to FDetail.ProductionCompanies.Count-1 do begin
+      I:= A('Production Company', FDetail.ProductionCompanies[X].Name);
+      I.Indent:= 1;
+    end;
+    for X := 0 to FDetail.ProductionCountries.Count-1 do begin
+      I:= A('Production Country', TMDB.CountryName(FDetail.ProductionCountries[X].ISO3166_1));
+      I.Indent:= 1;
+    end;
+    A('Runtime', IntToStr(FDetail.Runtime));
+    for X := 0 to FDetail.SpokenLanguages.Count-1 do begin
+      I:= A('Spoken Language', TMDB.LanguageName(FDetail.SpokenLanguages[X].ISO639_1));
+      I.Indent:= 1;
+    end;
+    if FDetail.Video then
+      A('Video', 'True')
+    else
+      A('Video', 'False');
+    A('Vote Average', FormatFloat('0.000', FDetail.VoteAverage));
+    A('Vote Count', IntToStr(FDetail.VoteCount));
+
+  finally
+    lstDetail.Items.EndUpdate;
+  end;
+
   txtOverview.Lines.Text:= FDetail.Overview;
-  lblTagline.Caption:= FDetail.Tagline;
 end;
 
 procedure TfrmContentMovieDetail.LoadAccountStates;

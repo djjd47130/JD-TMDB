@@ -146,7 +146,7 @@ begin
           AResponseInfo.ContentType:= 'text/html';
           if Doc.Count = 0 then begin
             //Main page
-
+            AResponseInfo.ContentText:= '<h1>JD TMDB Local Web Server Home Page</h1>';
           end else
           if SameText(Doc[0], 'youtube') then begin
             //Embedded YouTube video

@@ -11,7 +11,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = tabVideos
+    ActivePage = TabSheet1
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -20,94 +20,58 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object lblTitle: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 905
-        Height = 29
-        Align = alTop
-        AutoSize = False
-        Caption = 'Movie Title'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -21
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitLeft = 6
-        ExplicitTop = 11
-        ExplicitWidth = 693
-      end
-      object lblReleaseDate: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 38
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Release Date'
-        ExplicitLeft = 16
-        ExplicitTop = 64
-        ExplicitWidth = 99
-      end
-      object lblGenres: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 86
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Genres'
-        ExplicitLeft = 16
-        ExplicitTop = 88
-        ExplicitWidth = 53
-      end
-      object lblTagline: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 62
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Tagline'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -15
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitLeft = 4
-        ExplicitTop = 39
-        ExplicitWidth = 701
+      object Splitter1: TSplitter
+        Left = 0
+        Top = 220
+        Width = 911
+        Height = 7
+        Cursor = crVSplit
+        Align = alBottom
+        ResizeStyle = rsUpdate
+        ExplicitLeft = 24
+        ExplicitTop = 146
       end
       object txtOverview: TMemo
         AlignWithMargins = True
         Left = 3
-        Top = 110
+        Top = 230
         Width = 905
-        Height = 240
-        Align = alClient
+        Height = 120
+        Align = alBottom
         BorderStyle = bsNone
         Color = clBtnFace
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitHeight = 147
+        ExplicitTop = 110
+        ExplicitHeight = 240
+      end
+      object lstDetail: TListView
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 905
+        Height = 214
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 200
+          end
+          item
+            Caption = 'Value'
+            Width = 600
+          end>
+        HotTrackStyles = [htHandPoint, htUnderlineHot]
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 1
+        ViewStyle = vsReport
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Account States'
       ImageIndex = 1
-      ExplicitWidth = 761
-      ExplicitHeight = 247
       object lblRating: TLabel
         AlignWithMargins = True
         Left = 3
@@ -162,7 +126,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         TabOrder = 0
         Text = 'Add to Favorites'
         OnClick = btnFavoriteClick
-        ExplicitWidth = 755
       end
       object btnWatchlist: TJDFontButton
         AlignWithMargins = True
@@ -206,14 +169,11 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         TabOrder = 1
         Text = 'Add to Watchlist'
         OnClick = btnWatchlistClick
-        ExplicitWidth = 755
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'Alternative Titles'
       ImageIndex = 2
-      ExplicitWidth = 746
-      ExplicitHeight = 313
       object lstAltTitles: TListView
         AlignWithMargins = True
         Left = 3
@@ -235,27 +195,19 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitWidth = 740
-        ExplicitHeight = 307
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'Changes'
       ImageIndex = 3
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 4
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet6: TTabSheet
       Caption = 'External IDs'
       ImageIndex = 5
-      ExplicitWidth = 761
-      ExplicitHeight = 247
       object lblIMDB: TLabel
         AlignWithMargins = True
         Left = 3
@@ -325,14 +277,10 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object tabImages: TTabSheet
       Caption = 'Images'
       ImageIndex = 6
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet8: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 7
-      ExplicitWidth = 746
-      ExplicitHeight = 313
       object lstKeywords: TListBox
         AlignWithMargins = True
         Left = 3
@@ -353,20 +301,14 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet9: TTabSheet
       Caption = 'Lists'
       ImageIndex = 8
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet10: TTabSheet
       Caption = 'Recommendations'
       ImageIndex = 9
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet11: TTabSheet
       Caption = 'Release Dates'
       ImageIndex = 10
-      ExplicitWidth = 746
-      ExplicitHeight = 313
       object lstReleaseDates: TListView
         AlignWithMargins = True
         Left = 3
@@ -406,33 +348,23 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitWidth = 740
-        ExplicitHeight = 307
       end
     end
     object TabSheet12: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 11
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet13: TTabSheet
       Caption = 'Similar'
       ImageIndex = 12
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object TabSheet14: TTabSheet
       Caption = 'Translations'
       ImageIndex = 13
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
       ImageIndex = 14
-      ExplicitWidth = 746
-      ExplicitHeight = 313
     end
   end
   object pTop: TPanel
@@ -442,7 +374,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Height = 33
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 754
     object Label1: TLabel
       AlignWithMargins = True
       Left = 4
@@ -464,6 +395,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
       Margins.Right = 0
       Align = alLeft
       TabOrder = 0
+      ExplicitHeight = 26
     end
     object btnSearch: TJDFontButton
       AlignWithMargins = True
