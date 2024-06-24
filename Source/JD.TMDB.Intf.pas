@@ -1819,17 +1819,44 @@ type
     property VoteCount: Integer read GetVoteCount;
   end;
 
+  //[DONE]
+  ITMDBTVEpisodeItem = interface(ITMDBPageItem)
+    ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+    function GetAirDate: TDateTime; stdcall;
+    function GetEpisodeNumber: Integer; stdcall;
+    function GetProductionCode: WideString; stdcall;
+    function GetRuntime: Integer; stdcall;
+    function GetSeasonNumber: Integer; stdcall;
+    function GetShowID: Integer; stdcall;
+    function GetStillPath: WideString; stdcall;
+    function GetOrder: Integer; stdcall;
+
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
+    property AirDate: TDateTime read GetAirDate;
+    property EpisodeNumber: Integer read GetEpisodeNumber;
+    property ProductionCode: WideString read GetProductionCode;
+    property Runtime: Integer read GetRuntime;
+    property SeasonNumber: Integer read GetSeasonNumber;
+    property ShowID: Integer read GetShowID;
+    property StillPath: WideString read GetStillPath;
+    property Order: Integer read GetOrder;
+  end;
+
   /// [DONE]
   ITMDBTVEpisodePage = interface(ITMDBPage)
     ['{BB238B34-1BA9-411C-92AF-B43C6DD6702A}']
-    function GetItem(const Index: Integer): ITMDBTVEpisodeItem;
+    function GetItem(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
 
     property Items[const Index: Integer]: ITMDBTVEpisodeItem read GetItem; default;
-  end;
-
-  ITMDBTVEpisodeItem = interface(ITMDBPageItem)
-    ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
-
   end;
 
   /// [DONE]
@@ -1893,7 +1920,7 @@ type
     function GetLastAirDate: TDateTime;
     function GetLastEpisodeToAir: ITMDBTVEpisodeItem;
     function GetName: WideString;
-    function GetNextEpisodeToAir: TDateTime;
+    function GetNextEpisodeToAir: ITMDBTVEpisodeItem;
     function GetNetworks: ITMDBTVNetworkList;
     function GetNumberOfEpisodes: Integer;
     function GetNumberOfSeasons: Integer;
@@ -1926,7 +1953,7 @@ type
     property LastAirDate: TDateTime read GetLastAirDate;
     property LastEpisodeToAir: ITMDBTVEpisodeItem read GetLastEpisodeToAir;
     property Name: WideString read GetName;
-    property NextEpisodeToAir: TDateTime read GetNextEpisodeToAir;
+    property NextEpisodeToAir: ITMDBTVEpisodeItem read GetNextEpisodeToAir;
     property Networks: ITMDBTVNetworkList read GetNetworks;
     property NumberOfEpisodes: Integer read GetNumberOfEpisodes;
     property NumberOfSeasons: Integer read GetNumberOfSeasons;
