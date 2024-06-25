@@ -2142,7 +2142,9 @@ type
 
   TTMDBServiceChanges = class(TTMDBService, ITMDBServiceChanges)
   protected
-
+    //MovieList
+    //PeopleList
+    //TVList
   end;
 
   TTMDBServiceCollections = class(TTMDBService, ITMDBServiceCollections)
@@ -2157,7 +2159,9 @@ type
 
   TTMDBServiceCompanies = class(TTMDBService, ITMDBServiceCompanies)
   protected
-
+    //GetDetails
+    //GetAlternativeNames
+    //GetImages
   end;
 
   TTMDBServiceConfiguration = class(TTMDBService, ITMDBServiceConfiguration)
@@ -2172,12 +2176,14 @@ type
 
   TTMDBServiceCredits = class(TTMDBService, ITMDBServiceCredits)
   protected
-
+    //GetDetails
   end;
 
   TTMDBServiceDiscover = class(TTMDBService, ITMDBServiceDiscover)
   protected
-    //HUGE CONCEPT - Need to visit later...
+    //TODO: HUGE CONCEPT - Need to visit later...
+    //GetMovies
+    //GetTV
   end;
 
   TTMDBServiceFind = class(TTMDBService, ITMDBServiceFind)
@@ -2200,11 +2206,18 @@ type
   TTMDBServiceKeywords = class(TTMDBService, ITMDBServiceKeywords)
   protected
     function GetDetails(const KeywordID: Integer): ITMDBKeywordDetail; stdcall;
+    //Movies (DEPRECATED)
   end;
 
   TTMDBServiceLists = class(TTMDBService, ITMDBServiceLists)
   protected
-
+    //AddMovie
+    //CheckItemStatus
+    //Clear
+    //Create
+    //Delete
+    //GetDetails
+    //RemoveMovie
   end;
 
   TTMDBServiceMovieLists = class(TTMDBService, ITMDBServiceMovieLists)
@@ -7415,20 +7428,29 @@ end;
 
 function TTMDBServiceNetworks.GetAlternativeNames(
   const NetworkID: Integer): ITMDBAlternativeTitleList;
+var
+  O: ISuperArray;
 begin
-  //TODO
+  O:= FOwner.FAPI.Networks.GetAlternativeNames(NetworkID);
+  Result:= TTMDBAlternativeTitleList.Create(O);
 end;
 
 function TTMDBServiceNetworks.GetDetails(
   const NetworkID: Integer): ITMDBTVNetworkDetail;
+var
+  O: ISuperObject;
 begin
-  //TODO
+  O:= FOwner.FAPI.Networks.GetDetails(NetworkID);
+  Result:= TTMDBTVNetworkDetail.Create(O);
 end;
 
 function TTMDBServiceNetworks.GetImages(
   const NetworkID: Integer): ITMDBMediaImages;
+var
+  O: ISuperObject;
 begin
-  //TODO
+  O:= FOwner.FAPI.Networks.GetImages(NetworkID);
+  Result:= TTMDBMediaImages.Create(O);
 end;
 
 { TTMDBMediaBase }

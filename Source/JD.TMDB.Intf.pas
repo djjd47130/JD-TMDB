@@ -2409,7 +2409,6 @@ type
 
   /// <summary>
   /// Base interface for each possible TMDB service category.
-  /// [DONE]
   /// </summary>
   ITMDBService = interface
     ['{0E665C12-812B-4B2D-8A48-17A16740290C}']
@@ -2418,7 +2417,6 @@ type
     property Owner: ITMDBClient read GetOwner;
   end;
 
-  /// [DONE]
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
     function GetDetails(AAccountID: Integer;
@@ -2540,10 +2538,10 @@ type
     //GetRatedTVEpisodes
   end;
 
-  /// [DONE]
   ITMDBServiceKeywords = interface(ITMDBService)
     ['{8FE0FEB6-511B-4704-A71A-BA8B5C8E912C}']
     function GetDetails(const KeywordID: Integer): ITMDBKeywordDetail; stdcall;
+    //Movies (DEPRECATED)
   end;
 
   ITMDBServiceLists = interface(ITMDBService)

@@ -321,7 +321,7 @@ type
   public
     function GetDetails(const NetworkID: Integer): ISuperObject;
     function GetAlternativeNames(const NetworkID: Integer): ISuperArray;
-    function GetImages(const NetworkID: Integer): ISuperArray;
+    function GetImages(const NetworkID: Integer): ISuperObject;
   end;
 
   TTMDBAPIPeopleLists = class(TTMDBAPIService)
@@ -1520,12 +1520,12 @@ begin
   Result:= FOwner.GetJSON(U, '').A['results'];
 end;
 
-function TTMDBAPINetworks.GetImages(const NetworkID: Integer): ISuperArray;
+function TTMDBAPINetworks.GetImages(const NetworkID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'network/'+IntToStr(NetworkID)+'/images';
-  Result:= FOwner.GetJSON(U, '').A['logos'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 { TTMDBAPIPeopleLists }
