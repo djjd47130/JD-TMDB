@@ -2324,7 +2324,10 @@ type
 
   TTMDBServiceTVSeriesLists = class(TTMDBService, ITMDBServiceTVSeriesLists)
   protected
-
+    //GetAiringToday
+    //GetOnTheAir
+    //GetPopular
+    //GetTopRated
   end;
 
   TTMDBServiceTVSeries = class(TTMDBService, ITMDBServiceTVSeries)
@@ -4886,7 +4889,7 @@ var
   A: ISuperArray;
 begin
   A:= FOwner.FAPI.WatchProviders.GetMovieProviders(Language, WatchRegion);
-  //Result:= TTMDBWatchProviderList.Create(A);
+  Result:= TTMDBWatchProviderList.Create(A);
 end;
 
 function TTMDBServiceWatchProviders.GetTVProviders(const Language,
@@ -4895,7 +4898,7 @@ var
   A: ISuperArray;
 begin
   A:= FOwner.FAPI.WatchProviders.GetTVProviders(Language, WatchRegion);
-  //Result:= TTMDBWatchProviderList.Create(A);
+  Result:= TTMDBWatchProviderList.Create(A);
 end;
 
 { TTMDBServiceImages }
