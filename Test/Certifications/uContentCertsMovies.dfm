@@ -1,5 +1,7 @@
 inherited frmContentCertsMovies: TfrmContentCertsMovies
   Caption = 'Movie Certifications'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 18
   object lstCertsMovies: TListView
@@ -27,8 +29,6 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitTop = 37
-    ExplicitHeight = 433
   end
   object Panel1: TPanel
     Left = 0
@@ -37,8 +37,6 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
     Height = 35
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -8
-    ExplicitTop = 31
     object cboCountry: TComboBox
       AlignWithMargins = True
       Left = 111

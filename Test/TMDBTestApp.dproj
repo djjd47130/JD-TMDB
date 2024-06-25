@@ -209,6 +209,14 @@
             <Form>frmContentSearchPeople</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Search\uContentSearchMulti.pas">
+            <Form>frmContentSearchMulti</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Search\uContentSearchKeywords.pas">
+            <Form>frmContentSearchKeywords</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

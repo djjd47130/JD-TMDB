@@ -8,7 +8,9 @@ uses
   uTabBase,
   uContentSearchCollections,
   uContentSearchCompanies,
+  uContentSearchKeywords,
   uContentSearchMovies,
+  uContentSearchMulti,
   uContentSearchPeople,
   uContentSearchTV,
   Vcl.ComCtrls;
@@ -50,7 +52,9 @@ begin
 
   EmbedContent(TfrmContentSearchCollections);
   EmbedContent(TfrmContentSearchCompanies);
+  EmbedContent(TfrmContentSearchKeywords);
   EmbedContent(TfrmContentSearchMovies);
+  EmbedContent(TfrmContentSearchMulti);
   EmbedContent(TfrmContentSearchPeople);
   EmbedContent(TfrmContentSearchTV);
 

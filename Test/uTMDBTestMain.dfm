@@ -268,6 +268,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
+      ExplicitLeft = 759
+      ExplicitTop = 0
     end
   end
   object pUser: TPanel

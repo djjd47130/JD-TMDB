@@ -15,6 +15,8 @@ type
     btnRefreshCertsMovies: TButton;
     procedure btnRefreshCertsMoviesClick(Sender: TObject);
     procedure cboCountryClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FCerts: ITMDBCertificationCountries;
     procedure RefreshDetails;
@@ -67,6 +69,18 @@ procedure TfrmContentCertsMovies.cboCountryClick(Sender: TObject);
 begin
   inherited;
   RefreshDetails;
+end;
+
+procedure TfrmContentCertsMovies.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FCerts:= nil;
+end;
+
+procedure TfrmContentCertsMovies.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FCerts:= nil;
 end;
 
 procedure TfrmContentCertsMovies.RefreshDetails;

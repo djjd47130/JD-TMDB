@@ -36,7 +36,9 @@ uses
   uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits},
   JD.TMDB.LocalWebServer in 'JD.TMDB.LocalWebServer.pas',
   uContentSearchTV in 'Search\uContentSearchTV.pas' {frmContentSearchTV},
-  uContentSearchPeople in 'Search\uContentSearchPeople.pas' {frmContentSearchPeople};
+  uContentSearchPeople in 'Search\uContentSearchPeople.pas' {frmContentSearchPeople},
+  uContentSearchMulti in 'Search\uContentSearchMulti.pas' {frmContentSearchMulti},
+  uContentSearchKeywords in 'Search\uContentSearchKeywords.pas' {frmContentSearchKeywords};
 
 {$R *.res}
 
@@ -45,5 +47,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
   Application.CreateForm(TfrmContentSearchPeople, frmContentSearchPeople);
+  Application.CreateForm(TfrmContentSearchMulti, frmContentSearchMulti);
+  Application.CreateForm(TfrmContentSearchKeywords, frmContentSearchKeywords);
   Application.Run;
 end.

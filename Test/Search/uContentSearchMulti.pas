@@ -1,4 +1,4 @@
-unit uContentSearchTV;
+unit uContentSearchMulti;
 
 interface
 
@@ -10,21 +10,15 @@ uses
   JD.TMDB.Common;
 
 type
-  TfrmContentSearchTV = class(TfrmContentPageBase)
+  TfrmContentSearchMulti = class(TfrmContentPageBase)
     Panel7: TPanel;
     Label8: TLabel;
     txtQuery: TEdit;
     Panel8: TPanel;
     Label9: TLabel;
     cboIncludeAdult: TComboBox;
-    Panel13: TPanel;
-    Label14: TLabel;
-    txtFirstAirDateYear: TEdit;
-    Panel14: TPanel;
-    Label15: TLabel;
-    txtYear: TEdit;
   private
-    FDetail: ITMDBTVSeriesDetail;
+    { Private declarations }
   public
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -38,7 +32,7 @@ type
   end;
 
 var
-  frmContentSearchTV: TfrmContentSearchTV;
+  frmContentSearchMulti: TfrmContentSearchMulti;
 
 implementation
 
@@ -47,87 +41,76 @@ implementation
 uses
   uTMDBTestMain;
 
-{ TfrmContentSearchTV }
+{ TfrmContentSearchMulti }
 
-function TfrmContentSearchTV.GetData(const APageNum: Integer): ITMDBPage;
+function TfrmContentSearchMulti.GetData(const APageNum: Integer): ITMDBPage;
 var
   Q, L: String;
-  FADY, Y: Integer;
   A: Boolean;
 begin
   inherited;
   Q:= txtQuery.Text;
   A:= cboIncludeAdult.ItemIndex = 1;
   L:= frmTMDBTestMain.cboLanguage.Text;
-  FADY:= StrToIntDef(txtFirstAirDateYear.Text, 0);
-  Y:= StrToIntDef(txtYear.Text, 0);
-  Result:= TMDB.Client.Search.SearchTV(Q, FADY, A, L, Y, APageNum);
+  Result:= TMDB.Client.Search.SearchMulti(Q, A, L, APageNum);
 end;
 
-function TfrmContentSearchTV.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentSearchMulti.GetItem(const Index: Integer): ITMDBPageItem;
 var
-  P: ITMDBTVSeriesPage;
+  P: ITMDBMediaPage;
 begin
-  P:= ITMDBTVSeriesPage(Page);
+  P:= ITMDBMediaPage(Page);
   Result:= P.GetItem(Index);
 end;
 
-procedure TfrmContentSearchTV.HideDetail;
+procedure TfrmContentSearchMulti.HideDetail;
 begin
   inherited;
-  FDetail:= nil;
+  //FDetail:= nil;
 end;
 
-procedure TfrmContentSearchTV.ItemDblClick(const Index: Integer;
+procedure TfrmContentSearchMulti.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ITMDBPageItem);
 begin
   inherited;
 
 end;
 
-function TfrmContentSearchTV.Page: ITMDBPage;
+function TfrmContentSearchMulti.Page: ITMDBPage;
 begin
-  Result:= ITMDBTVSeriesPage(inherited Page);
+  Result:= ITMDBMediaPage(inherited Page);
 end;
 
-procedure TfrmContentSearchTV.PopulateItem(const Index: Integer;
+procedure TfrmContentSearchMulti.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBPageItem);
 var
-  O: ITMDBTVSeriesItem;
+  O: ITMDBMediaBase;
 begin
   inherited;
-  O:= Obj as ITMDBTVSeriesItem;
+  O:= Obj as ITMDBMediaBase;
   Item.Caption:= O.Title;
+  Item.SubItems.Add(TMDBMediaTypeToStr(O.MediaType));
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
-  if O.Genres.Count > 0 then
-    Item.SubItems.Add(O.Genres[0].Name)
-  else
-    Item.SubItems.Add('(Unknown)');
-  if O.FirstAirDate <> 0 then
-    Item.SubItems.Add(FormatDateTime('yyyy-mm-dd', O.FirstAirDate))
-  else
-    Item.SubItems.Add('');
-  Item.SubItems.Add(O.Overview);
+
 end;
 
-procedure TfrmContentSearchTV.PrepSearch;
+procedure TfrmContentSearchMulti.PrepSearch;
 begin
   inherited;
 
 end;
 
-procedure TfrmContentSearchTV.SetupCols;
+procedure TfrmContentSearchMulti.SetupCols;
 begin
   inherited;
-  AddCol('TV Show', 400);
+  AddCol('Title', 400);
+  AddCol('Media Type', 150);
   AddCol('Popularity', 100);
-  AddCol('Genre', 150);
-  AddCol('First Air Date', 160);
-  AddCol('Description', 700);
+
 end;
 
-procedure TfrmContentSearchTV.ShowDetail(const Index: Integer; Item: TListItem;
-  Obj: ITMDBPageItem);
+procedure TfrmContentSearchMulti.ShowDetail(const Index: Integer;
+  Item: TListItem; Obj: ITMDBPageItem);
 begin
   inherited;
 
