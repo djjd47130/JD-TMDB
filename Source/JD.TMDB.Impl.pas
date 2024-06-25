@@ -52,7 +52,7 @@ type
     FObj: ISuperObject;
     FItems: TObjectList<TTMDBPageItem>;
     FItemClass: TTMDBPageItemClass;
-    procedure PopulateItems;
+    procedure PopulateItems; virtual;
     procedure Clear;
   protected
     function GetTMDB: ITMDBClient; stdcall;
@@ -81,12 +81,13 @@ type
     FOwner: TTMDBPage;
     FObj: ISuperObject;
     FIndex: Integer;
+    FTMDB: ITMDBClient;
   protected
     function GetOwner: ITMDBPage; stdcall;
     function GetIndex: Integer; stdcall;
   public
     constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
-      const AIndex: Integer); virtual;
+      const AIndex: Integer; ATMDB: ITMDBClient); virtual;
     destructor Destroy; override;
 
     property Owner: ITMDBPage read GetOwner;
@@ -134,16 +135,27 @@ type
     FObj: ISuperArray;
     FItems: TInterfaceList;
     FBaseClass: TTMDBMediaBaseClass;
+    FTMDB: ITMDBClient;
     procedure PopulateItems; virtual;
     procedure ClearItems; virtual;
   protected
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBMediaBase; stdcall;
   public
-    constructor Create(AObj: ISuperArray; ABaseClass: TTMDBMediaBaseClass); virtual;
+    constructor Create(AObj: ISuperArray; ABaseClass: TTMDBMediaBaseClass;
+      const ATMDB: ITMDBClient); virtual;
     destructor Destroy; override;
 
     property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBMediaBase read GetItem; default;
+  end;
+
+  TTMDBMediaPage = class(TTMDBPage, ITMDBMediaPage)
+  private
+    procedure PopulateItems; override;
+  protected
+    function GetItem(const Index: Integer): ITMDBMediaBase; stdcall;
+  public
     property Items[const Index: Integer]: ITMDBMediaBase read GetItem; default;
   end;
 
@@ -496,7 +508,7 @@ type
     function GetItem(const Index: Integer): ITMDBChangeRecord; stdcall;
   public
     constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
-      const AIndex: Integer); override;
+      const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
   end;
 
@@ -539,13 +551,14 @@ type
   private
     FItems: TInterfaceList;
     FObj: ISuperArray;
+    FTMDB: ITMDBClient;
     procedure PopulateItems;
     procedure ClearItems;
   protected
     function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
   public
-    constructor Create(AObj: ISuperArray);
+    constructor Create(AObj: ISuperArray; const ATMDB: ITMDBClient);
     destructor Destroy; override;
 
     property Count: Integer read GetCount;
@@ -908,7 +921,30 @@ type
 
 {$REGION 'Keyword Related'}
 
-  TTMDBKeywordItem = class(TInterfacedObject, ITMDBKeywordItem)
+  TTMDBKeywordItem = class(TTMDBPageItem, ITMDBKeywordItem)
+  protected
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+  public
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+  end;
+
+  TTMDBKeywordList = class(TTMDBItemList, ITMDBKeywordList)
+  protected
+    function GetItem(const Index: Integer): ITMDBKeywordItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBKeywordItem read GetItem; default;
+  end;
+
+  TTMDBKeywordPage = class(TTMDBPage, ITMDBKeywordPage)
+  protected
+    function GetItem(const Index: Integer): ITMDBKeywordItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBKeywordItem read GetItem; default;
+  end;
+
+  TTMDBKeywordDetail = class(TInterfacedObject, ITMDBKeywordDetail)
   private
     FObj: ISuperObject;
   protected
@@ -920,22 +956,6 @@ type
 
     property ID: Integer read GetID;
     property Name: WideString read GetName;
-  end;
-
-  TTMDBKeywordList = class(TInterfacedObject, ITMDBKeywordList)
-  private
-    FObj: ISuperArray;
-    FItems: TInterfaceList;
-    procedure PopulateItems;
-    procedure Clear;
-  protected
-    function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBKeywordItem; stdcall;
-  public
-    constructor Create(AObj: ISuperArray);
-    destructor Destroy; override;
-    property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBKeywordItem read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1202,7 +1222,7 @@ type
     function GetProfilePath: WideString; stdcall;
   public
     constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
-      const AIndex: Integer); override;
+      const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
 
     property Gender: TTMDBGender read GetGender;
@@ -1495,41 +1515,59 @@ type
   /// A single movie result from ITMDBMoviePage.
   /// [DONE]
   /// </summary>
-  TTMDBMovieItem = class(TTMDBPageItem, ITMDBMovieItem)
+  TTMDBMovieItem = class(TTMDBMediaBase, ITMDBMovieItem)
   private
     FGenres: ITMDBGenreList;
   protected
-    function GetAdult: Boolean; stdcall;
     function GetBackdropPath: WideString; stdcall;
     function GetGenres: ITMDBGenreList; stdcall;
-    function GetID: Integer; stdcall;
     function GetOriginalLanguage: WideString; stdcall;
     function GetOriginalTitle: WideString; stdcall;
     function GetOverview: WideString; stdcall;
-    function GetPopularity: Single; stdcall;
     function GetPosterPath: WideString; stdcall;
     function GetReleaseDate: TDateTime; stdcall;
-    function GetTitle: WideString; stdcall;
     function GetVideo: Boolean; stdcall;
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
   public
     function GetDetails: ITMDBMovieDetail; stdcall;
+    //function GetAccountStates: ITMDBAccountStates; stdcall;
+    //function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
+    //function GetChanges(const StartDate, EndDate: TDateTime;
+    //  const Page: Integer = 1): ITMDBChangePage; stdcall;
+    //function GetCredits: ITMDBCredits; stdcall;
+    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    //function GetImages(): ITMDBMediaImages; stdcall;
+    //function GetKeywords: ITMDBKeywordList; stdcall;
+    //function GetLists(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBListPage; stdcall;
+    //function GetRecommendations(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    //function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
+    //function GetReviews(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBReviewList; stdcall;
+    //function GetSimilar(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    //function GetTranslations: ITMDBTranslationList; stdcall;
+    //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
 
-    property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property Genres: ITMDBGenreList read GetGenres;
-    property ID: Integer read GetID;
     property OriginalLanguage: WideString read GetOriginalLanguage;
     property OriginalTitle: WideString read GetOriginalTitle;
     property Overview: WideString read GetOverview;
-    property Popularity: Single read GetPopularity;
     property PosterPath: WideString read GetPosterPath;
     property ReleaseDate: TDateTime read GetReleaseDate;
-    property Title: WideString read GetTitle;
     property Video: Boolean read GetVideo;
     property VoteAverage: Single read GetVoteAverage;
     property VoteCount: Integer read GetVoteCount;
+  end;
+
+  TTMDBMovieList = class(TTMDBMediaList, ITMDBMovieList)
+  protected
+    function GetItem(const Index: Integer): ITMDBMovieItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBMovieItem read GetItem; default;
   end;
 
   /// <summary>
@@ -1567,6 +1605,7 @@ type
     property Dates: ITMDBDateRange read GetDates;
   end;
 
+  /// [DONE]
   TTMDBMovieCollectionRef = class(TInterfacedObject, ITMDBMovieCollectionRef)
   private
     FObj: ISuperObject;
@@ -1630,6 +1669,7 @@ type
     constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient); virtual;
     destructor Destroy; override;
 
+    //Append to Response Data
     function AppendedAccountStates: ITMDBAccountStates; stdcall;
     function AppendedAlternativeTitles: ITMDBAlternativeTitleList; stdcall;
     function AppendedChanges: ITMDBChangePage; stdcall;
@@ -1645,12 +1685,33 @@ type
     function AppendedTranslations: ITMDBTranslationList; stdcall;
     function AppendedVideos: ITMDBVideoList; stdcall;
 
+    //User Media Rating Shortcuts
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
     function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
     //function AddRating(const Rating: Single): ITMDB...
     //function RemoveRating: ITMDB...
+
+    //function GetAccountStates: ITMDBAccountStates; stdcall;
+    //function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
+    //function GetChanges(const StartDate, EndDate: TDateTime;
+    //  const Page: Integer = 1): ITMDBChangePage; stdcall;
+    //function GetCredits: ITMDBCredits; stdcall;
+    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    //function GetImages(): ITMDBMediaImages; stdcall;
+    //function GetKeywords: ITMDBKeywordList; stdcall;
+    //function GetLists(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBListPage; stdcall;
+    //function GetRecommendations(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    //function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
+    //function GetReviews(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBReviewList; stdcall;
+    //function GetSimilar(const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    //function GetTranslations: ITMDBTranslationList; stdcall;
+    //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
@@ -1688,41 +1749,33 @@ type
 
   { TVSeries Related }
 
-  TTMDBTVSeriesItem = class(TTMDBPageItem, ITMDBTVSeriesItem)
+  TTMDBTVSeriesItem = class(TTMDBMediaBase, ITMDBTVSeriesItem)
   private
     FGenres: ITMDBGenreList;
   protected
-    function GetAdult: Boolean; stdcall;
     function GetBackdropPath: WideString; stdcall;
     function GetGenres: ITMDBGenreList; stdcall;
-    function GetID: Integer; stdcall;
     function GetOriginCountry: TTMDBStrArray;
     function GetOriginalLanguage: WideString; stdcall;
     function GetOriginalName: WideString; stdcall;
     function GetOverview: WideString; stdcall;
-    function GetPopularity: Single; stdcall;
     function GetPosterPath: WideString; stdcall;
     function GetFirstAirDate: TDateTime; stdcall;
-    function GetName: WideString; stdcall;
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
   public
     constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
-      const AIndex: Integer); override;
+      const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
 
-    property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property Genres: ITMDBGenreList read GetGenres;
-    property ID: Integer read GetID;
     property OriginCountry: TTMDBStrArray read GetOriginCountry;
     property OriginalLanguage: WideString read GetOriginalLanguage;
     property OriginalName: WideString read GetOriginalName;
     property Overview: WideString read GetOverview;
-    property Popularity: Single read GetPopularity;
     property PosterPath: WideString read GetPosterPath;
     property FirstAirDate: TDateTime read GetFirstAirDate;
-    property Name: WideString read GetName;
     property VoteAverage: Single read GetVoteAverage;
     property VoteCount: Integer read GetVoteCount;
   end;
@@ -1735,7 +1788,8 @@ type
     property Items[const Index: Integer]: ITMDBTVSeriesItem read GetItem; default;
   end;
 
-  TTMDBTVSeriesList = class(TTMDBItemList, ITMDBTVSeriesList)
+  //[DONE]
+  TTMDBTVSeriesList = class(TTMDBMediaList, ITMDBTVSeriesList)
   protected
     function GetItem(const Index: Integer): ITMDBTVSeriesItem; stdcall;
   public
@@ -2145,7 +2199,7 @@ type
 
   TTMDBServiceKeywords = class(TTMDBService, ITMDBServiceKeywords)
   protected
-    function GetDetails(const KeywordID: Integer): ITMDBKeywordItem; stdcall;
+    function GetDetails(const KeywordID: Integer): ITMDBKeywordDetail; stdcall;
   end;
 
   TTMDBServiceLists = class(TTMDBService, ITMDBServiceLists)
@@ -2230,14 +2284,14 @@ type
       const Language: WideString = ''; const Region: WideString = '';
       const Page: Integer = 1): ITMDBCollectionPage; stdcall;
     function SearchCompanies(const Query: WideString; const Page: Integer = 1): ITMDBCompanyPage; stdcall;
-    //function SearchKeywords(const Query: WideString;
-    //  const Page: Integer = 1): ITMDBKeywordPage; stdcall;
+    function SearchKeywords(const Query: WideString;
+      const Page: Integer = 1): ITMDBKeywordPage; stdcall;
     function SearchMovies(const Query: WideString; const IncludeAdult: Boolean = False;
       const Language: WideString = ''; const Region: WideString = '';
       const PrimaryReleaseYear: WideString = ''; const Year: WideString = '';
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function SearchMulti(const Query: WideString; const IncludeAdult: Boolean = False;
-    //  const Language: WideString = ''; const Page: Integer = 1): ITMDBMediaList; stdcall;
+    function SearchMulti(const Query: WideString; const IncludeAdult: Boolean = False;
+      const Language: WideString = ''; const Page: Integer = 1): ITMDBMediaPage; stdcall;
     function SearchPeople(const Query: WideString; const IncludeAdult: Boolean = False;
       const Language: WideString = ''; const Page: Integer = 1): ITMDBPersonPage; stdcall;
     function SearchTV(const Query: String; const FirstAirDateYear: Integer = 0;
@@ -2615,7 +2669,7 @@ begin
   Clear;
   for X := 0 to FObj.A['results'].Length-1 do begin
     O:= FObj.A['results'].O[X];
-    I:= FItemClass.Create(Self, O, X);
+    I:= FItemClass.Create(Self, O, X, FTMDB);
     I._AddRef;
     FItems.Add(I);
   end;
@@ -2624,11 +2678,12 @@ end;
 { TTMDBPageItem }
 
 constructor TTMDBPageItem.Create(AOwner: TTMDBPage; AObj: ISuperObject;
-  const AIndex: Integer);
+  const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   FOwner:= AOwner;
   FObj:= AObj;
   FIndex:= AIndex;
+  FTMDB:= ATMDB;
 end;
 
 destructor TTMDBPageItem.Destroy;
@@ -3046,7 +3101,7 @@ end;
 { TTMDBChangeItem }
 
 constructor TTMDBChangeItem.Create(AOwner: TTMDBPage; AObj: ISuperObject;
-  const AIndex: Integer);
+  const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   inherited;
 
@@ -3567,11 +3622,6 @@ end;
 
 { TTMDBMovieItem }
 
-function TTMDBMovieItem.GetAdult: Boolean;
-begin
-  Result:= FObj.B['adult'];
-end;
-
 function TTMDBMovieItem.GetBackdropPath: WideString;
 begin
   Result:= FObj.S['backdrop_path'];
@@ -3580,7 +3630,7 @@ end;
 function TTMDBMovieItem.GetDetails: ITMDBMovieDetail;
 begin
   //TODO: Keep track of ownership so this can be executed...
-  //Result:= FTMDB.Movies.GetDetails(ID);
+  //Result:= FOwner.FTMDB.Movies.GetDetails(ID);
 end;
 
 function TTMDBMovieItem.GetGenres: ITMDBGenreList;
@@ -3603,11 +3653,6 @@ begin
   Result:= FGenres;
 end;
 
-function TTMDBMovieItem.GetID: Integer;
-begin
-  Result:= FObj.I['id'];
-end;
-
 function TTMDBMovieItem.GetOriginalLanguage: WideString;
 begin
   Result:= FObj.S['original_language'];
@@ -3623,11 +3668,6 @@ begin
   Result:= FObj.S['overview'];
 end;
 
-function TTMDBMovieItem.GetPopularity: Single;
-begin
-  Result:= FObj.F['popularity'];
-end;
-
 function TTMDBMovieItem.GetPosterPath: WideString;
 begin
   Result:= FObj.S['poster_path'];
@@ -3636,11 +3676,6 @@ end;
 function TTMDBMovieItem.GetReleaseDate: TDateTime;
 begin
   Result:= ConvertDate(FObj.S['release_date']);
-end;
-
-function TTMDBMovieItem.GetTitle: WideString;
-begin
-  Result:= FObj.S['title'];
 end;
 
 function TTMDBMovieItem.GetVideo: Boolean;
@@ -3783,7 +3818,7 @@ begin
   Result:= nil;
   O:= FObj.O['keywords'];
   if O <> nil then begin
-    Result:= TTMDBKeywordList.Create(O.A['keywords']);
+    Result:= TTMDBKeywordList.Create(O.A['keywords'], TTMDBKeywordItem);
     //TODO: Cache Result...
   end;
 end;
@@ -3918,7 +3953,7 @@ end;
 function TTMDBMovieDetail.GetProductionCompanies: ITMDBCompanyList;
 begin
   if FProductionCompanies = nil then begin
-    FProductionCompanies:= TTMDBCompanyList.Create(FObj.A['production_companies']);
+    FProductionCompanies:= TTMDBCompanyList.Create(FObj.A['production_companies'], FTMDB);
   end;
   Result:= FProductionCompanies;
 end;
@@ -3995,7 +4030,7 @@ end;
 { TTMDBTVSeriesItem }
 
 constructor TTMDBTVSeriesItem.Create(AOwner: TTMDBPage; AObj: ISuperObject;
-  const AIndex: Integer);
+  const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   inherited;
   FGenres:= nil;
@@ -4006,11 +4041,6 @@ begin
 
   FGenres:= nil;
   inherited;
-end;
-
-function TTMDBTVSeriesItem.GetAdult: Boolean;
-begin
-  Result:= FObj.B['adult'];
 end;
 
 function TTMDBTVSeriesItem.GetBackdropPath: WideString;
@@ -4043,16 +4073,6 @@ begin
   Result:= FGenres;
 end;
 
-function TTMDBTVSeriesItem.GetID: Integer;
-begin
-  Result:= FObj.I['id'];
-end;
-
-function TTMDBTVSeriesItem.GetName: WideString;
-begin
-  Result:= FObj.S['name'];
-end;
-
 function TTMDBTVSeriesItem.GetOriginalLanguage: WideString;
 begin
   Result:= FObj.S['original_language'];
@@ -4065,17 +4085,12 @@ end;
 
 function TTMDBTVSeriesItem.GetOriginCountry: TTMDBStrArray;
 begin
-  //TODO
+  Result:= JSONToStrArray(FObj.A['origin_country']);
 end;
 
 function TTMDBTVSeriesItem.GetOverview: WideString;
 begin
   Result:= FObj.S['overview'];
-end;
-
-function TTMDBTVSeriesItem.GetPopularity: Single;
-begin
-  Result:= FObj.F['popularity'];
 end;
 
 function TTMDBTVSeriesItem.GetPosterPath: WideString;
@@ -4620,12 +4635,12 @@ end;
 { TTMDBServiceKeywords }
 
 function TTMDBServiceKeywords.GetDetails(
-  const KeywordID: Integer): ITMDBKeywordItem;
+  const KeywordID: Integer): ITMDBKeywordDetail;
 var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Keywords.GetDetails(KeywordID);
-  //Result:= TTMDBKeywordItem.Create(O);
+  Result:= TTMDBKeywordDetail.Create(O);
 end;
 
 { TTMDBServiceMovieLists }
@@ -4721,7 +4736,7 @@ var
   O: ISuperArray;
 begin
   O:= FOwner.FAPI.Movies.GetKeywords(MovieID);
-  Result:= TTMDBKeywordList.Create(O);
+  Result:= TTMDBKeywordList.Create(O, TTMDBKeywordItem);
 end;
 
 function TTMDBServiceMovies.GetLatest: ITMDBMovieDetail;
@@ -4790,6 +4805,15 @@ begin
   Result:= TTMDBCompanyPage.Create(O, FOwner, TTMDBCompanyItem);
 end;
 
+function TTMDBServiceSearch.SearchKeywords(const Query: WideString;
+  const Page: Integer): ITMDBKeywordPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchKeywords(Query, Page);
+  Result:= TTMDBKeywordPage.Create(O, FOwner, TTMDBKeywordItem);
+end;
+
 function TTMDBServiceSearch.SearchMovies(const Query: WideString;
   const IncludeAdult: Boolean; const Language, Region, PrimaryReleaseYear,
   Year: WideString; const Page: Integer): ITMDBMoviePage;
@@ -4799,6 +4823,16 @@ begin
   O:= FOwner.FAPI.Search.SearchMovies(Query, IncludeAdult, Language, PrimaryReleaseYear,
     Page, Region, Year);
   Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovieItem);
+end;
+
+function TTMDBServiceSearch.SearchMulti(const Query: WideString;
+  const IncludeAdult: Boolean; const Language: WideString;
+  const Page: Integer): ITMDBMediaPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchMulti(Query, IncludeAdult, Language, Page);
+  Result:= TTMDBMediaPage.Create(O, FOwner, TTMDBMediaBase);
 end;
 
 function TTMDBServiceSearch.SearchPeople(const Query: WideString;
@@ -5313,8 +5347,8 @@ constructor TTMDBCredits.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
   FObj:= AObj;
   FTMDB:= ATMDB;
-  FCast:= TTMDBCastList.Create(FObj.A['cast'], TTMDBCastItem);
-  FCrew:= TTMDBCrewList.Create(FObj.A['crew'], TTMDBCrewItem);
+  FCast:= TTMDBCastList.Create(FObj.A['cast'], TTMDBCastItem, FTMDB);
+  FCrew:= TTMDBCrewList.Create(FObj.A['crew'], TTMDBCrewItem, FTMDB);
 end;
 
 destructor TTMDBCredits.Destroy;
@@ -5339,7 +5373,7 @@ end;
 { TTMDBPersonItem }
 
 constructor TTMDBPersonItem.Create(AOwner: TTMDBPage; AObj: ISuperObject;
-  const AIndex: Integer);
+  const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   inherited;
   FKnownFor:= nil;
@@ -5361,7 +5395,7 @@ end;
 function TTMDBPersonItem.GetKnownFor: ITMDBMediaList;
 begin
   if FKnownFor = nil then begin
-    FKnownFor:= TTMDBMediaList.Create(FObj.A['known_for'], TTMDBMediaBase);
+    FKnownFor:= TTMDBMediaList.Create(FObj.A['known_for'], TTMDBMediaBase, FTMDB);
   end;
   Result:= FKnownFor;
 end;
@@ -5454,7 +5488,7 @@ begin
   ClearItems;
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
-    I:= TTMDBCastItem.Create(nil, O, X);
+    I:= TTMDBCastItem.Create(nil, O, X, FTMDB);
     FItems.Add(I);
   end;
 end;
@@ -5492,7 +5526,7 @@ begin
   ClearItems;
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
-    I:= TTMDBCrewItem.Create(nil, O, X);
+    I:= TTMDBCrewItem.Create(nil, O, X, FTMDB);
     FItems.Add(I);
   end;
 end;
@@ -5799,17 +5833,6 @@ end;
 
 { TTMDBKeywordItem }
 
-constructor TTMDBKeywordItem.Create(AObj: ISuperObject);
-begin
-  Fobj:= AObj;
-end;
-
-destructor TTMDBKeywordItem.Destroy;
-begin
-
-  inherited;
-end;
-
 function TTMDBKeywordItem.GetID: Integer;
 begin
   Result:= FObj.I['id'];
@@ -5822,46 +5845,9 @@ end;
 
 { TTMDBKeywordList }
 
-constructor TTMDBKeywordList.Create(AObj: ISuperArray);
-begin
-  FObj:= AObj;
-  FItems:= TInterfaceList.Create;
-  PopulateItems;
-end;
-
-destructor TTMDBKeywordList.Destroy;
-begin
-  Clear;
-  inherited;
-end;
-
-function TTMDBKeywordList.GetCount: Integer;
-begin
-  Result:= FItems.Count;
-end;
-
 function TTMDBKeywordList.GetItem(const Index: Integer): ITMDBKeywordItem;
 begin
   Result:= ITMDBKeywordItem(FItems[Index]);
-end;
-
-procedure TTMDBKeywordList.Clear;
-begin
-  FItems.Clear;
-end;
-
-procedure TTMDBKeywordList.PopulateItems;
-var
-  X: Integer;
-  O: ISuperObject;
-  I: ITMDBKeywordItem;
-begin
-  Clear;
-  for X := 0 to FObj.Length-1 do begin
-    O:= FObj.O[X];
-    I:= TTMDBKeywordItem.Create(O);
-    FItems.Add(I);
-  end;
 end;
 
 { TTMDBLoginState }
@@ -6260,10 +6246,12 @@ begin
   FItems.Clear;
 end;
 
-constructor TTMDBCompanyList.Create(AObj: ISuperArray);
+constructor TTMDBCompanyList.Create(AObj: ISuperArray;
+  const ATMDB: ITMDBClient);
 begin
   FItems:= TInterfaceList.Create;
   FObj:= AObj;
+  FTMDB:= ATMDB;
   PopulateItems;
 end;
 
@@ -6294,7 +6282,7 @@ begin
   ClearItems;
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
-    I:= TTMDBCompanyItem.Create(nil, O, X);
+    I:= TTMDBCompanyItem.Create(nil, O, X, FTMDB);
     FItems.Add(I);
   end;
 end;
@@ -6527,6 +6515,9 @@ end;
 constructor TTMDBMovieCollectionRef.Create(AObj: ISuperObject);
 begin
   FObj:= AObj;
+  if FObj <> nil then
+    if FObj.DataType in [dtNil,dtNull] then
+      FObj:= nil;
 
 end;
 
@@ -6539,27 +6530,39 @@ end;
 
 function TTMDBMovieCollectionRef.GetBackdropPath: WideString;
 begin
-  Result:= FObj.S['backdrop_path'];
+  if FObj = nil then
+    Result:= ''
+  else
+    Result:= FObj.S['backdrop_path'];
 end;
 
 function TTMDBMovieCollectionRef.GetBelongsToCollection: Boolean;
 begin
-  Result:= True; //TODO
+  Result:= FObj <> nil;
 end;
 
 function TTMDBMovieCollectionRef.GetID: Integer;
 begin
-  Result:= FObj.I['id'];
+  if FObj = nil then
+    Result:= 0
+  else
+    Result:= FObj.I['id'];
 end;
 
 function TTMDBMovieCollectionRef.GetName: WideString;
 begin
-  Result:= FObj.S['name'];
+  if FObj = nil then
+    Result:= ''
+  else
+    Result:= FObj.S['name'];
 end;
 
 function TTMDBMovieCollectionRef.GetPosterPath: WideString;
 begin
-  Result:= FObj.S['poster_path'];
+  if FObj = nil then
+    Result:= ''
+  else
+    Result:= FObj.S['poster_path'];
 end;
 
 { TTMDBTranslationItem }
@@ -6993,7 +6996,7 @@ var
   O: ISuperArray;
 begin
   O:= FOwner.FAPI.TVSeries.GetKeywords(SeriesID);
-  Result:= TTMDBKeywordList.Create(O);
+  Result:= TTMDBKeywordList.Create(O, TTMDBKeywordItem);
 end;
 
 function TTMDBServiceTVSeries.GetLatest: ITMDBTVSeriesDetail;
@@ -7096,7 +7099,7 @@ end;
 
 function TTMDBTVSeriesDetail.GetLastEpisodeToAir: ITMDBTVEpisodeItem;
 begin
-  Result:= TTMDBTVEpisodeItem.Create(nil, FObj.O['last_episode_to_air'], 0);
+  Result:= TTMDBTVEpisodeItem.Create(nil, FObj.O['last_episode_to_air'], 0, FTMDB);
 end;
 
 function TTMDBTVSeriesDetail.GetName: WideString;
@@ -7111,7 +7114,7 @@ end;
 
 function TTMDBTVSeriesDetail.GetNextEpisodeToAir: ITMDBTVEpisodeItem;
 begin
-  Result:= TTMDBTVEpisodeItem.Create(nil, FObj.O['next_episode_to_air'], 0);
+  Result:= TTMDBTVEpisodeItem.Create(nil, FObj.O['next_episode_to_air'], 0, FTMDB);
 end;
 
 function TTMDBTVSeriesDetail.GetNumberOfEpisodes: Integer;
@@ -7156,7 +7159,7 @@ end;
 
 function TTMDBTVSeriesDetail.GetProductionCompanies: ITMDBCompanyList;
 begin
-  Result:= TTMDBCompanyList.Create(FObj.A['production_companies']);
+  Result:= TTMDBCompanyList.Create(FObj.A['production_companies'], FTMDB);
 end;
 
 function TTMDBTVSeriesDetail.GetProductionCountries: ITMDBCountryList;
@@ -7464,11 +7467,13 @@ begin
   FItems.Clear;
 end;
 
-constructor TTMDBMediaList.Create(AObj: ISuperArray; ABaseClass: TTMDBMediaBaseClass);
+constructor TTMDBMediaList.Create(AObj: ISuperArray; ABaseClass: TTMDBMediaBaseClass;
+  const ATMDB: ITMDBClient);
 begin
   FObj:= AObj;
   FItems:= TInterfaceList.Create;
   FBaseClass:= ABaseClass;
+  FTMDB:= ATMDB;
 
 end;
 
@@ -7503,14 +7508,84 @@ begin
     O:= FObj.O[X];
     MT:= TMDBStrToMediaType(O.S['media_type']);
     case MT of
-      //mtMovie:  T:= TTMDBMovieItem; //TODO
-      //mtTV:     T:= TTMDBTVSeriesItem; //TODO
+      mtMovie:  T:= TTMDBMovieItem;
+      mtTV:     T:= TTMDBTVSeriesItem;
       mtPerson: T:= TTMDBPersonItem;
       else      T:= TTMDBMediaBase;
     end;
-    I:= T.Create(nil, O, X);
+    I:= T.Create(nil, O, X, FTMDB);
     FItems.Add(I);
   end;
+end;
+
+{ TTMDBMovieList }
+
+function TTMDBMovieList.GetItem(const Index: Integer): ITMDBMovieItem;
+begin
+  Result:= TTMDBMovieItem(inherited Items[Index]);
+end;
+
+{ TTMDBMediaPage }
+
+function TTMDBMediaPage.GetItem(const Index: Integer): ITMDBMediaBase;
+begin
+  Result:= ITMDBMediaBase(inherited GetPageItem(Index));
+end;
+
+procedure TTMDBMediaPage.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: TTMDBMediaBase;
+  MT: TTMDBMediaType;
+  T: TTMDBMediaBaseClass;
+begin
+  Clear;
+  for X := 0 to FObj.A['results'].Length-1 do begin
+    O:= FObj.A['results'].O[X];
+    MT:= TMDBStrToMediaType(O.S['media_type']);
+    case MT of
+      mtMovie:  T:= TTMDBMovieItem;
+      mtTV:     T:= TTMDBTVSeriesItem;
+      mtPerson: T:= TTMDBPersonItem;
+      else      T:= TTMDBMediaBase;
+    end;
+    I:= T.Create(nil, O, X, FTMDB);
+    I._AddRef;
+    FItems.Add(I);
+  end;
+end;
+
+{ TTMDBKeywordPage }
+
+function TTMDBKeywordPage.GetItem(const Index: Integer): ITMDBKeywordItem;
+begin
+  Result:= ITMDBKeywordItem(inherited GetPageItem(Index));
+end;
+
+{ TTMDBKeywordDetail }
+
+constructor TTMDBKeywordDetail.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+
+end;
+
+destructor TTMDBKeywordDetail.Destroy;
+begin
+
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBKeywordDetail.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBKeywordDetail.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
 end;
 
 end.

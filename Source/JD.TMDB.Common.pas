@@ -58,7 +58,7 @@ type
   /// <summary>
   /// Type of media content found in TMDB
   /// </summary>
-  TTMDBMediaType = (mtMovie, mtTV, mtPerson);
+  TTMDBMediaType = (mtUnspecified, mtMovie, mtTV, mtPerson);
 
   /// <summary>
   /// Type of media translations found in TMDB
@@ -332,9 +332,10 @@ end;
 function TMDBMediaTypeToStr(const AMediaType: TTMDBMediaType): WideString;
 begin
   case AMediaType of
-    mtMovie: Result:= 'movie';
-    mtTV: Result:= 'tv';
-    mtPerson: Result:= 'person';
+    mtUnspecified: Result:= '(Unspecified)';
+    mtMovie: Result:= 'Movie';
+    mtTV: Result:= 'TV';
+    mtPerson: Result:= 'Person';
   end;
 end;
 
@@ -348,6 +349,9 @@ begin
   Chk('movie', mtMovie);
   Chk('tv', mtTV);
   Chk('person', mtPerson);
+  Chk('(Unspecified)', mtUnspecified);
+  Chk('Unspecified', mtUnspecified);
+  Chk('', mtUnspecified);
 end;
 
 function TMDBGenderToStr(const AGender: TTMDBGender): WideString;
