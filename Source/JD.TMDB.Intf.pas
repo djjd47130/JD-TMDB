@@ -1984,51 +1984,42 @@ type
 
   ITMDBTVEpisodeGroup = interface;
 
-  ITMDBTVEpisodeGroupItem = interface;
-
   ITMDBTVEpisodeGroupResponse = interface
     ['{14C7DEAF-20B9-4541-BBF8-D9A9A8E8205E}']
-    function GetDescription: WideString;
-    function GetEpisodeCount: Integer;
-    function GetGroupCount: Integer;
-    function GetGroup(const Index: Integer): ITMDBTVEpisodeGroup;
-    function GetID: WideString;
-    function GetName: WideString;
-    function GetNetwork: ITMDBTVNetworkItem;
-    function GetType: TTMDBTVEpisodeGroupType;
+    function GetDescription: WideString; stdcall;
+    function GetEpisodeCount: Integer; stdcall;
+    function GetGroupCount: Integer; stdcall;
+    function GetGroup(const Index: Integer): ITMDBTVEpisodeGroup; stdcall;
+    function GetID: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetNetwork: ITMDBTVNetworkItem; stdcall;
+    function GetType: TTMDBTVEpisodeGroupType; stdcall;
 
+    property Description: WideString read GetDescription;
+    property EpisodeCount: Integer read GetEpisodeCount;
+    property GroupCount: Integer read GetGroupCount;
+    property Groups[const Index: Integer]: ITMDBTVEpisodeGroup read GetGroup; default;
+    property ID: WideString read GetID;
+    property Name: WideString read GetName;
+    property Network: ITMDBTVNetworkItem read GetNetwork;
+    property GroupType: TTMDBTVEpisodeGroupType read GetType;
   end;
 
   ITMDBTVEpisodeGroup = interface
     ['{EBECFB23-6043-4830-8497-EAE3A6AD5E6B}']
-    function GetID: WideString;
-    function GetName: WideString;
-    function GetOrder: Integer;
-    function GetCount: Integer;
-    function GetEpisode(const Index: Integer): ITMDBTVEpisodeGroupItem;
-    function GetLocked: Boolean;
+    function GetID: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOrder: Integer; stdcall;
+    function GetCount: Integer; stdcall;
+    function GetEpisode(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
+    function GetLocked: Boolean; stdcall;
 
-  end;
-
-  //TODO: Can this be reused / shared with ITMDBTVEpisodeItem?
-  //  As seen in details of a TV Season (ITMDBTVSeasonItem), each episode
-  //  object contains even more details than is found here in episode groups...
-  ITMDBTVEpisodeGroupItem = interface
-    ['{11318A52-2ECD-454F-89BF-4655C58DC3DC}']
-    function GetAirDate: TDateTime;
-    function GetEpisodeNumber: Integer;
-    function GetID: Integer;
-    function GetName: WideString;
-    function GetOverview: WideString;
-    function GetProductionCode: WideString;
-    function GetRuntime: Integer;
-    function GetSeasonNumber: Integer;
-    function GetShowID: Integer;
-    function GetStillPath: WideString;
-    function GetVoteAverage: Single;
-    function GetVoteCount: Integer;
-    function GetOrder: Integer;
-
+    property ID: WideString read GetID;
+    property Name: WideString read GetName;
+    property Order: Integer read GetOrder;
+    property Count: Integer read GetCount;
+    property Episodes[const Index: Integer]: ITMDBTVEpisodeItem read GetEpisode; default;
+    property Locked: Boolean read GetLocked;
   end;
 
 {$ENDREGION}
@@ -2731,9 +2722,10 @@ type
     //DeleteRating
   end;
 
+  /// [DONE]
   ITMDBServiceTVEpisodeGroups = interface(ITMDBService)
     ['{B55FFFC4-7C29-4BA1-89C5-0CF1A8D88943}']
-    //GetDetails
+    function GetDetails(const TVEpisodeGroupID: String): ITMDBTVEpisodeGroupResponse; stdcall;
   end;
 
   /// [DONE]

@@ -1952,6 +1952,69 @@ type
 
 
 
+{$REGION 'TV Episode Group Related'}
+
+  TTMDBTVEpisodeGroupResponse = class(TInterfacedObject, ITMDBTVEpisodeGroupResponse)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FItems: TInterfaceList;
+    FNetwork: ITMDBTVNetworkItem;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetDescription: WideString; stdcall;
+    function GetEpisodeCount: Integer; stdcall;
+    function GetGroupCount: Integer; stdcall;
+    function GetGroup(const Index: Integer): ITMDBTVEpisodeGroup; stdcall;
+    function GetID: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetNetwork: ITMDBTVNetworkItem; stdcall;
+    function GetType: TTMDBTVEpisodeGroupType; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property Description: WideString read GetDescription;
+    property EpisodeCount: Integer read GetEpisodeCount;
+    property GroupCount: Integer read GetGroupCount;
+    property Groups[const Index: Integer]: ITMDBTVEpisodeGroup read GetGroup; default;
+    property ID: WideString read GetID;
+    property Name: WideString read GetName;
+    property Network: ITMDBTVNetworkItem read GetNetwork;
+    property GroupType: TTMDBTVEpisodeGroupType read GetType;
+  end;
+
+  TTMDBTVEpisodeGroup = class(TInterfacedObject, ITMDBTVEpisodeGroup)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FItems: TInterfaceList;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetID: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOrder: Integer; stdcall;
+    function GetCount: Integer; stdcall;
+    function GetEpisode(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
+    function GetLocked: Boolean; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property ID: WideString read GetID;
+    property Name: WideString read GetName;
+    property Order: Integer read GetOrder;
+    property Count: Integer read GetCount;
+    property Episodes[const Index: Integer]: ITMDBTVEpisodeItem read GetEpisode; default;
+    property Locked: Boolean read GetLocked;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Lists Related'}
 
   { Lists Related }
@@ -2388,11 +2451,13 @@ type
     //DeleteRating
   end;
 
+  /// [DONE]
   TTMDBServiceTVEpisodeGroups = class(TTMDBService, ITMDBServiceTVEpisodeGroups)
   protected
-    //GetDetails
+    function GetDetails(const TVEpisodeGroupID: String): ITMDBTVEpisodeGroupResponse; stdcall;
   end;
 
+  /// [DONE]
   TTMDBServiceWatchProviders = class(TTMDBService, ITMDBServiceWatchProviders)
   protected
     function GetAvailableRegions(const Language: WideString = ''): ITMDBCountryList; stdcall;
@@ -7611,6 +7676,171 @@ end;
 function TTMDBKeywordDetail.GetName: WideString;
 begin
   Result:= FObj.S['name'];
+end;
+
+{ TTMDBServiceTVEpisodeGroups }
+
+function TTMDBServiceTVEpisodeGroups.GetDetails(
+  const TVEpisodeGroupID: String): ITMDBTVEpisodeGroupResponse;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVEpisodeGroups.GetDetail(TVEpisodeGroupID);
+  Result:= TTMDBTVEpisodeGroupResponse.Create(O, FOwner);
+end;
+
+{ TTMDBTVEpisodeGroupResponse }
+
+procedure TTMDBTVEpisodeGroupResponse.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBTVEpisodeGroupResponse.Create(AObj: ISuperObject;
+  ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FItems:= TInterfaceList.Create;
+  FNetwork:= nil;
+  PopulateItems;
+end;
+
+destructor TTMDBTVEpisodeGroupResponse.Destroy;
+begin
+  ClearItems;
+  FreeAndNil(FItems);
+  FNetwork:= nil;
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetDescription: WideString;
+begin
+  Result:= FObj.S['description'];
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetEpisodeCount: Integer;
+begin
+  Result:= FObj.I['episode_count'];
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetGroup(
+  const Index: Integer): ITMDBTVEpisodeGroup;
+begin
+  Result:= ITMDBTVEpisodeGroup(FItems[Index]);
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetGroupCount: Integer;
+begin
+  Result:= FObj.I['group_count'];
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetID: WideString;
+begin
+  Result:= FObj.S['id'];
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetNetwork: ITMDBTVNetworkItem;
+begin
+  if FNetwork = nil then begin
+    FNetwork:= TTMDBTVNetworkItem.Create(FObj.O['network']);
+  end;
+  Result:= FNetwork;
+end;
+
+function TTMDBTVEpisodeGroupResponse.GetType: TTMDBTVEpisodeGroupType;
+begin
+  Result:= TTMDBTVEpisodeGroupType(FObj.I['type']);
+end;
+
+procedure TTMDBTVEpisodeGroupResponse.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBTVEpisodeGroup;
+begin
+  ClearItems;
+  for X := 0 to FObj.A['groups'].Length-1 do  begin
+    O:= FObj.A['groups'].O[X];
+    I:= TTMDBTVEpisodeGroup.Create(O, FTMDB);
+    FItems.Add(I);
+  end;
+end;
+
+{ TTMDBTVEpisodeGroup }
+
+procedure TTMDBTVEpisodeGroup.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBTVEpisodeGroup.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
+end;
+
+destructor TTMDBTVEpisodeGroup.Destroy;
+begin
+  ClearItems;
+  FreeAndNil(FItems);
+  FObj:= nil;
+  FTMDB:= nil;
+  inherited;
+end;
+
+function TTMDBTVEpisodeGroup.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TTMDBTVEpisodeGroup.GetEpisode(
+  const Index: Integer): ITMDBTVEpisodeItem;
+begin
+  Result:= ITMDBTVEpisodeItem(FItems[Index]);
+end;
+
+function TTMDBTVEpisodeGroup.GetID: WideString;
+begin
+  Result:= FObj.S['id'];
+end;
+
+function TTMDBTVEpisodeGroup.GetLocked: Boolean;
+begin
+  Result:= FObj.B['locked'];
+end;
+
+function TTMDBTVEpisodeGroup.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBTVEpisodeGroup.GetOrder: Integer;
+begin
+  Result:= FObj.I['order'];
+end;
+
+procedure TTMDBTVEpisodeGroup.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBTVEpisodeItem;
+begin
+  ClearItems;
+  for X := 0 to FObj.A['episodes'].Length-1 do begin
+    O:= FObj.A['episodes'].O[X];
+    I:= TTMDBTVEpisodeItem.Create(nil, O, X, FTMDB);
+    FItems.Add(I);
+  end;
 end;
 
 end.
