@@ -585,6 +585,32 @@ type
     property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
+  TTMDBCompanyDetail = class(TInterfacedObject, ITMDBCompanyDetail)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetDescription: WideString; stdcall;
+    function GetHeadquarters: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetLogoPath: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOriginCountry: WideString; stdcall;
+    function GetParentCompany: WideString; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property Description: WideString read GetDescription;
+    property Headquarters: WideString read GetHeadquarters;
+    property Homepage: WideString read GetHomepage;
+    property ID: Integer read GetID;
+    property LogoPath: WideString read GetLogoPath;
+    property Name: WideString read GetName;
+    property OriginCountry: WideString read GetOriginCountry;
+    property ParentCompany: WideString read GetParentCompany;
+  end;
+
 {$ENDREGION}
 
 
@@ -1920,7 +1946,6 @@ type
 
 {$REGION 'TV Episode Related'}
 
-  //[DONE]
   TTMDBTVEpisodeItem = class(TTMDBPageItem, ITMDBTVEpisodeItem)
   protected
     function GetID: Integer; stdcall;
@@ -1952,7 +1977,6 @@ type
     property Order: Integer read GetOrder;
   end;
 
-  //[DONE]
   TTMDBTVEpisodePage = class(TTMDBPage, ITMDBTVEpisodePage)
   protected
     function GetItem(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
@@ -1960,7 +1984,6 @@ type
     property Items[const Index: Integer]: ITMDBTVEpisodeItem read GetItem; default;
   end;
 
-  //[DONE]
   TTMDBTVEpisodeList = class(TTMDBItemList, ITMDBTVEpisodeList)
   protected
     function GetItem(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
@@ -2256,9 +2279,9 @@ type
 
   TTMDBServiceCompanies = class(TTMDBService, ITMDBServiceCompanies)
   protected
-    //GetDetails
-    //GetAlternativeNames
-    //GetImages
+    function GetDetails(const CompanyID: Integer): ITMDBCompanyDetail; stdcall;
+    function GetAlternativeNames(const CompanyID: Integer): ITMDBAlternativeTitleList; stdcall;
+    function GetImages(const CompanyID: Integer): ITMDBMediaImages; stdcall;
   end;
 
   TTMDBServiceConfiguration = class(TTMDBService, ITMDBServiceConfiguration)
@@ -7887,6 +7910,92 @@ end;
 function TTMDBRatedTVEpisodeItem.GetRating: Single;
 begin
   Result:= FObj.F['rating']; //TODO: Integer???
+end;
+
+{ TTMDBServiceCompanies }
+
+function TTMDBServiceCompanies.GetAlternativeNames(
+  const CompanyID: Integer): ITMDBAlternativeTitleList;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetAlternativeNames(CompanyID);
+  Result:= TTMDBAlternativeTitleList.Create(O);
+end;
+
+function TTMDBServiceCompanies.GetDetails(
+  const CompanyID: Integer): ITMDBCompanyDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetDetails(CompanyID);
+  Result:= TTMDBCompanyDetail.Create(O);
+end;
+
+function TTMDBServiceCompanies.GetImages(
+  const CompanyID: Integer): ITMDBMediaImages;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetImages(CompanyID);
+  Result:= TTMDBMediaImages.Create(O);
+end;
+
+{ TTMDBCompanyDetail }
+
+constructor TTMDBCompanyDetail.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+
+end;
+
+destructor TTMDBCompanyDetail.Destroy;
+begin
+
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBCompanyDetail.GetDescription: WideString;
+begin
+  Result:= FObj.S['description'];
+end;
+
+function TTMDBCompanyDetail.GetHeadquarters: WideString;
+begin
+  Result:= FObj.S['headquarters'];
+end;
+
+function TTMDBCompanyDetail.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBCompanyDetail.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBCompanyDetail.GetLogoPath: WideString;
+begin
+  Result:= FObj.S['logo_path'];
+end;
+
+function TTMDBCompanyDetail.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBCompanyDetail.GetOriginCountry: WideString;
+begin
+  Result:= FObj.S['origin_country'];
+end;
+
+function TTMDBCompanyDetail.GetParentCompany: WideString;
+begin
+  Result:= FObj.S['parent_company'];
+  //TODO: Apparently this could be "null"...
+
 end;
 
 end.

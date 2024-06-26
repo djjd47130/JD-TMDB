@@ -947,6 +947,27 @@ type
     property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
   end;
 
+  ITMDBCompanyDetail = interface
+    ['{B5A7E62D-03AA-481A-BA02-DD4EAB7F6AC3}']
+    function GetDescription: WideString; stdcall;
+    function GetHeadquarters: WideString; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetLogoPath: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOriginCountry: WideString; stdcall;
+    function GetParentCompany: WideString; stdcall;
+
+    property Description: WideString read GetDescription;
+    property Headquarters: WideString read GetHeadquarters;
+    property Homepage: WideString read GetHomepage;
+    property ID: Integer read GetID;
+    property LogoPath: WideString read GetLogoPath;
+    property Name: WideString read GetName;
+    property OriginCountry: WideString read GetOriginCountry;
+    property ParentCompany: WideString read GetParentCompany;
+  end;
+
 {$ENDREGION}
 
 
@@ -1912,7 +1933,6 @@ type
 
 {$REGION 'TV Episode Related'}
 
-  //[DONE]
   ITMDBTVEpisodeItem = interface(ITMDBPageItem)
     ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
     function GetID: Integer; stdcall;
@@ -1944,7 +1964,6 @@ type
     property Order: Integer read GetOrder;
   end;
 
-  /// [DONE]
   ITMDBTVEpisodePage = interface(ITMDBPage)
     ['{BB238B34-1BA9-411C-92AF-B43C6DD6702A}']
     function GetItem(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
@@ -1954,7 +1973,6 @@ type
 
   /// <summary>
   /// A list of TV episodes
-  /// [DONE]
   /// </summary>
   ITMDBTVEpisodeList = interface(ITMDBItemList)
     ['{C574FEB8-2F01-408A-95B5-6B80E218EECD}']
@@ -1963,7 +1981,6 @@ type
     property Items[const Index: Integer]: ITMDBTVEpisodeItem read GetItem; default;
   end;
 
-  /// [DONE]
   ITMDBRatedTVEpisodePage = interface(ITMDBTVEpisodePage)
     ['{DDC4B9FA-AC4B-4EAC-B9B8-78464034BC68}']
     function GetItem(const Index: Integer): ITMDBRatedTVEpisodeItem; stdcall;
@@ -1971,7 +1988,6 @@ type
     property Items[const Index: Integer]: ITMDBRatedTVEpisodeItem read GetItem; default;
   end;
 
-  /// [DONE]
   ITMDBRatedTVEpisodeItem = interface(ITMDBTVEpisodeItem)
     ['{0FDB3732-0EB1-43FF-A006-4E6EFC411C54}']
     function GetRating: Single; stdcall;
@@ -2405,6 +2421,7 @@ type
 
   /// <summary>
   /// Base interface for each possible TMDB service category.
+  /// [DONE]
   /// </summary>
   ITMDBService = interface
     ['{0E665C12-812B-4B2D-8A48-17A16740290C}']
@@ -2413,6 +2430,7 @@ type
     property Owner: ITMDBClient read GetOwner;
   end;
 
+  /// [DONE]
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
     function GetDetails(AAccountID: Integer;
@@ -2486,9 +2504,9 @@ type
 
   ITMDBServiceCompanies = interface(ITMDBService)
     ['{13F92C49-85D1-4C7F-BBA6-8B815B23EDDE}']
-    //GetDetails
-    //GetAlternativeNames
-    //GetImages
+    function GetDetails(const CompanyID: Integer): ITMDBCompanyDetail; stdcall;
+    function GetAlternativeNames(const CompanyID: Integer): ITMDBAlternativeTitleList; stdcall;
+    function GetImages(const CompanyID: Integer): ITMDBMediaImages; stdcall;
   end;
 
   /// [DONE]
