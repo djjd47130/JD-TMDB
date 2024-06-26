@@ -27,7 +27,7 @@ uses
 
 type
 
-  { Forward Definitions }
+{$REGION 'Forward Definitions'}
 
   ITMDBPage = interface;
 
@@ -171,7 +171,7 @@ type
 
 
 
-  { Forward Definitions }
+  { API Service Forward Definitions }
 
   ITMDBService = interface;
 
@@ -235,13 +235,14 @@ type
 
   ITMDBClient = interface;
 
+{$ENDREGION}
+
 
 
 {$REGION 'Lists Pages and Items'}
 
   /// <summary>
-  /// A single abstract item found in a list or page following TMDB's pagination standards.
-  /// Typically contains a brief summary of a larger item entity.
+  /// A single abstract item found in any given possible item list across TMDB.
   /// </summary>
   /// <remarks>
   /// - TODO: Change "Owner" from "ITMDBPage" to "ITMDBItemList".
@@ -316,6 +317,7 @@ type
   /// <summary>
   /// A list of ITMDBMediaBase objects. Can contain a mix of any given
   /// media type, or all one specific media type.
+  /// //TODO: Change to inherit from ITMDBItemList
   /// </summary>
   ITMDBMediaList = interface
     ['{3B5A5855-C20A-4F15-8AD0-A83D587C7623}']
@@ -326,6 +328,9 @@ type
     property Items[const Index: Integer]: ITMDBMediaBase read GetItem; default;
   end;
 
+  /// <summary>
+  /// A page of ITMDBMediaBase objects. Much like ITMDBMediaList, but paginated.
+  /// </summary>
   ITMDBMediaPage = interface(ITMDBPage)
     ['{31FFE854-7CAB-45A5-9ADC-6FB82F1AA8AF}']
     function GetItem(const Index: Integer): ITMDBMediaBase; stdcall;
@@ -1214,6 +1219,102 @@ type
 
 
 
+{$REGION 'Image Related'}
+
+  { Image Related }
+
+  /// [DONE]
+  ITMDBMediaImage = interface
+    ['{5E421D4C-DD05-4F49-84C7-0FC5A3A9BCE6}']
+    function GetAspectRatio: Single; stdcall;
+    function GetHeight: Integer; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetFilePath: WideString; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+    function GetWidth: Integer; stdcall;
+
+    property AspectRatio: Single read GetAspectRatio;
+    property Height: Integer read GetHeight;
+    property ISO639_1: WideString read GetISO639_1;
+    property FilePath: WideString read GetFilePath;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
+    property Width: Integer read GetWidth;
+  end;
+
+  /// [DONE]
+  ITMDBMediaImageList = interface
+    ['{124D54B5-7433-4C5B-8907-C5D5700D970E}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
+  end;
+
+  /// [DONE]
+  ITMDBMediaImages = interface
+    ['{FD622861-6E8C-49DE-8151-3E072AF39299}']
+    function GetBackdrops: ITMDBMediaImageList; stdcall;
+    function GetLogos: ITMDBMediaImageList; stdcall;
+    function GetPosters: ITMDBMediaImageList; stdcall;
+    function GetID: Integer; stdcall;
+
+    property Backdrops: ITMDBMediaImageList read GetBackdrops;
+    property Logos: ITMDBMediaImageList read GetLogos;
+    property Posters: ITMDBMediaImageList read GetPosters;
+    property ID: Integer read GetID;
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'Video Related'}
+
+  { Video Related }
+
+  /// [DONE]
+  ITMDBVideoItem = interface
+    ['{EC411DD6-C212-4DA8-9421-688E099079B3}']
+    function GetISO639_1: WideString; stdcall;
+    function GetISO3166_1: WideString; stdcall;
+    function GetName: WideString; stdcall;
+    function GetKey: WideString; stdcall;
+    function GetSite: WideString; stdcall;
+    function GetSize: Integer; stdcall;
+    function GetType: WideString; stdcall;
+    function GetOfficial: Boolean; stdcall;
+    function GetPublishedAt: TDateTime; stdcall;
+    function GetID: WideString; stdcall;
+
+    property ISO639_1: WideString read GetISO639_1;
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Name: WideString read GetName;
+    property Key: WideString read GetKey;
+    property Site: WideString read GetSite;
+    property Size: Integer read GetSize;
+    property VideoType: WideString read GetType;
+    property Official: Boolean read GetOfficial;
+    property PublishedAt: TDateTime read GetPublishedAt;
+    property ID: WideString read GetID;
+  end;
+
+  /// [DONE]
+  ITMDBVideoList = interface
+    ['{1346CC9D-5897-4BBB-B140-5FEB6A892552}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBVideoItem; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBVideoItem read GetItem; default;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Person Related'}
 
   { People Related }
@@ -1308,102 +1409,6 @@ type
 
     property Cast: ITMDBCastList read GetCast;
     property Crew: ITMDBCrewList read GetCrew;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Image Related'}
-
-  { Image Related }
-
-  /// [DONE]
-  ITMDBMediaImage = interface
-    ['{5E421D4C-DD05-4F49-84C7-0FC5A3A9BCE6}']
-    function GetAspectRatio: Single; stdcall;
-    function GetHeight: Integer; stdcall;
-    function GetISO639_1: WideString; stdcall;
-    function GetFilePath: WideString; stdcall;
-    function GetVoteAverage: Single; stdcall;
-    function GetVoteCount: Integer; stdcall;
-    function GetWidth: Integer; stdcall;
-
-    property AspectRatio: Single read GetAspectRatio;
-    property Height: Integer read GetHeight;
-    property ISO639_1: WideString read GetISO639_1;
-    property FilePath: WideString read GetFilePath;
-    property VoteAverage: Single read GetVoteAverage;
-    property VoteCount: Integer read GetVoteCount;
-    property Width: Integer read GetWidth;
-  end;
-
-  /// [DONE]
-  ITMDBMediaImageList = interface
-    ['{124D54B5-7433-4C5B-8907-C5D5700D970E}']
-    function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
-
-    property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
-  end;
-
-  /// [DONE]
-  ITMDBMediaImages = interface
-    ['{FD622861-6E8C-49DE-8151-3E072AF39299}']
-    function GetBackdrops: ITMDBMediaImageList; stdcall;
-    function GetLogos: ITMDBMediaImageList; stdcall;
-    function GetPosters: ITMDBMediaImageList; stdcall;
-    function GetID: Integer; stdcall;
-
-    property Backdrops: ITMDBMediaImageList read GetBackdrops;
-    property Logos: ITMDBMediaImageList read GetLogos;
-    property Posters: ITMDBMediaImageList read GetPosters;
-    property ID: Integer read GetID;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Video Related'}
-
-  { Video Related }
-
-  /// [DONE]
-  ITMDBVideoItem = interface
-    ['{EC411DD6-C212-4DA8-9421-688E099079B3}']
-    function GetISO639_1: WideString; stdcall;
-    function GetISO3166_1: WideString; stdcall;
-    function GetName: WideString; stdcall;
-    function GetKey: WideString; stdcall;
-    function GetSite: WideString; stdcall;
-    function GetSize: Integer; stdcall;
-    function GetType: WideString; stdcall;
-    function GetOfficial: Boolean; stdcall;
-    function GetPublishedAt: TDateTime; stdcall;
-    function GetID: WideString; stdcall;
-
-    property ISO639_1: WideString read GetISO639_1;
-    property ISO3166_1: WideString read GetISO3166_1;
-    property Name: WideString read GetName;
-    property Key: WideString read GetKey;
-    property Site: WideString read GetSite;
-    property Size: Integer read GetSize;
-    property VideoType: WideString read GetType;
-    property Official: Boolean read GetOfficial;
-    property PublishedAt: TDateTime read GetPublishedAt;
-    property ID: WideString read GetID;
-  end;
-
-  /// [DONE]
-  ITMDBVideoList = interface
-    ['{1346CC9D-5897-4BBB-B140-5FEB6A892552}']
-    function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBVideoItem; stdcall;
-
-    property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBVideoItem read GetItem; default;
   end;
 
 {$ENDREGION}

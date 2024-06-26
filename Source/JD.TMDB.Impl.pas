@@ -27,25 +27,72 @@ uses
 
 type
 
+{$REGION 'Forward Definitions'}
+
   { Forward Definitions }
 
   TTMDBPageItem = class;
+
+  TTMDBItemList = class;
+
+  TTMDBPage = class;
+
+  TTMDBMediaBase = class;
+
+  TTMDBMediaList = class;
+
+
 
   TTMDBMoviePage = class;
 
   TTMDBMovieItem = class;
 
+
+
   TTMDBClient = class;
+
+{$ENDREGION}
 
 
 
 {$REGION 'Lists Pages and Items'}
 
-  { Pagination Related }
-
   TTMDBPageItemClass = class of TTMDBPageItem;
 
-  //[DONE]
+  TTMDBPageItem = class(TInterfacedObject, ITMDBPageItem)
+  private
+    FOwner: TTMDBPage;
+    FObj: ISuperObject;
+    FIndex: Integer;
+    FTMDB: ITMDBClient;
+  protected
+    function GetOwner: ITMDBPage; stdcall;
+    function GetIndex: Integer; stdcall;
+  public
+    constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
+      const AIndex: Integer; ATMDB: ITMDBClient); virtual;
+    destructor Destroy; override;
+
+    property Owner: ITMDBPage read GetOwner;
+    property Index: Integer read GetIndex;
+  end;
+
+  TTMDBItemList = class(TInterfacedObject, ITMDBItemList)
+  private
+    FObj: ISuperArray;
+    FItems: TList<ITMDBPageItem>;
+    FItemClass: TTMDBPageItemClass;
+  protected
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBPageItem; stdcall;
+  public
+    constructor Create(AObj: ISuperArray; AItemClass: TTMDBPageItemClass); virtual;
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBPageItem read GetItem; default;
+  end;
+
   TTMDBPage = class(TInterfacedObject, ITMDBPage)
   private
     FTMDB: TTMDBClient;
@@ -75,44 +122,17 @@ type
     property TMDB: TTMDBClient read FTMDB;
   end;
 
-  //[DONE]
-  TTMDBPageItem = class(TInterfacedObject, ITMDBPageItem)
-  private
-    FOwner: TTMDBPage;
-    FObj: ISuperObject;
-    FIndex: Integer;
-    FTMDB: ITMDBClient;
-  protected
-    function GetOwner: ITMDBPage; stdcall;
-    function GetIndex: Integer; stdcall;
-  public
-    constructor Create(AOwner: TTMDBPage; AObj: ISuperObject;
-      const AIndex: Integer; ATMDB: ITMDBClient); virtual;
-    destructor Destroy; override;
-
-    property Owner: ITMDBPage read GetOwner;
-    property Index: Integer read GetIndex;
-  end;
-
-  /// [DONE]
-  TTMDBItemList = class(TInterfacedObject, ITMDBItemList)
-  private
-    FObj: ISuperArray;
-    FItems: TList<ITMDBPageItem>;
-    FItemClass: TTMDBPageItemClass;
-  protected
-    function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBPageItem; stdcall;
-  public
-    constructor Create(AObj: ISuperArray; AItemClass: TTMDBPageItemClass); virtual;
-    destructor Destroy; override;
-
-    property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBPageItem read GetItem; default;
-  end;
-
-  TTMDBMediaBase = class;
-
+  /// <summary>
+  /// Base class for media-specific objects:
+  /// - Movie
+  /// - TV Series
+  /// - Person
+  /// "MediaType" property specifies which type of data it contains,
+  /// where it can be further cast accordingly:
+  /// - ITMDBMovieItem
+  /// - ITMDBTVSeriesItem
+  /// - ITMDBPersonItem
+  /// </summary>
   TTMDBMediaBaseClass = class of TTMDBMediaBase;
 
   TTMDBMediaBase = class(TTMDBPageItem, ITMDBMediaBase)
@@ -1948,6 +1968,20 @@ type
     property Items[const Index: Integer]: ITMDBTVEpisodeItem read GetItem; default;
   end;
 
+  TTMDBRatedTVEpisodePage = class(TTMDBTVEpisodePage, ITMDBRatedTVEpisodePage)
+  protected
+    function GetItem(const Index: Integer): ITMDBRatedTVEpisodeItem; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBRatedTVEpisodeItem read GetItem; default;
+  end;
+
+  TTMDBRatedTVEpisodeItem = class(TTMDBTVEpisodeItem, ITMDBRatedTVEpisodeItem)
+  protected
+    function GetRating: Single; stdcall;
+  public
+    property Rating: Single read GetRating;
+  end;
+
 {$ENDREGION}
 
 
@@ -2877,9 +2911,7 @@ var
   S: String;
 begin
   S:= FObj.S['expires_at'];
-  Result:= StrToDateTimeDef(S, 0);
-  //TODO: This will probably fail and return 0 due to extra text in string...
-
+  Result:= ConvertDate(S); //TODO: Ensure this accounts for time...
 end;
 
 function TTMDBAuthGuestSessionResult.GetGuestSessionID: WideString;
@@ -2904,8 +2936,7 @@ var
   S: String;
 begin
   S:= FObj.S['expires_at'];
-  Result:= StrToDateTimeDef(S, 0);
-  //TODO: This will probably fail and return 0 due to extra text in string...
+  Result:= ConvertDate(S); //TODO: Ensure this accounts for time...
 
 end;
 
@@ -4531,7 +4562,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Account.GetRatedTVEpisodes(AccountID, Language, Page, SessionID, SortBy);
-  //Result:= TTMDBRatedTVEpisodePage.Create(O); //TODO
+  Result:= TTMDBRatedTVEpisodePage.Create(O, FOwner, TTMDBRatedTVEpisodeItem);
 end;
 
 function TTMDBServiceAccount.GetWatchlistMovies(const AccountID, Page: Integer;
@@ -7841,6 +7872,21 @@ begin
     I:= TTMDBTVEpisodeItem.Create(nil, O, X, FTMDB);
     FItems.Add(I);
   end;
+end;
+
+{ TTMDBRatedTVEpisodePage }
+
+function TTMDBRatedTVEpisodePage.GetItem(
+  const Index: Integer): ITMDBRatedTVEpisodeItem;
+begin
+  Result:= TTMDBRatedTVEpisodeItem(inherited GetItem(Index));
+end;
+
+{ TTMDBRatedTVEpisodeItem }
+
+function TTMDBRatedTVEpisodeItem.GetRating: Single;
+begin
+  Result:= FObj.F['rating']; //TODO: Integer???
 end;
 
 end.
