@@ -7920,7 +7920,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Companies.GetAlternativeNames(CompanyID);
-  Result:= TTMDBAlternativeTitleList.Create(O);
+  Result:= TTMDBAlternativeTitleList.Create(O.A['results']);
 end;
 
 function TTMDBServiceCompanies.GetDetails(
