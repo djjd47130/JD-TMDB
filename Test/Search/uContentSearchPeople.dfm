@@ -20,9 +20,8 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
     inherited lstResults: TListView
       Width = 675
       Height = 235
-      ExplicitLeft = 6
       ExplicitWidth = 675
-      ExplicitHeight = 276
+      ExplicitHeight = 235
     end
     inherited pTop: TPanel
       Width = 681
@@ -39,7 +38,6 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
   end
   inherited pSearch: TPanel
     Height = 557
-    ExplicitLeft = -3
     ExplicitHeight = 557
     inherited btnApply: TJDFontButton
       Top = 513
@@ -53,15 +51,15 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 8
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtQuery: TEdit
         AlignWithMargins = True

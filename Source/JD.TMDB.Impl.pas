@@ -83,7 +83,7 @@ type
   private
     FTMDB: ITMDBClient;
     FObj: ISuperArray;
-    FItems: TInterfaceList;
+    FList: TInterfaceList;
     FItemClass: TTMDBItemClass;
     procedure PopulateItems; virtual;
     procedure ClearItems; virtual;
@@ -109,7 +109,7 @@ type
     function GetTotalResults: Integer; stdcall;
     function GetItems: ITMDBItems;
   public
-    constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient;
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient;
       AItemClass: TTMDBItemClass; AItemsClass: TTMDBItemsClass); virtual;
     destructor Destroy; override;
 
@@ -125,19 +125,6 @@ type
 
 {$REGION 'Media Base Related'}
 
-  /// <summary>
-  /// Base class for media-specific objects:
-  /// - Movie
-  /// - TV Series
-  /// - Person
-  /// "MediaType" property specifies which type of data it contains,
-  /// where it can be further cast accordingly:
-  /// - ITMDBMovieItem
-  /// - ITMDBTVSeriesItem
-  /// - ITMDBPersonItem
-  /// </summary>
-  TTMDBMediaBaseClass = class of TTMDBMedium;
-
   TTMDBMedium = class(TTMDBItem, ITMDBMedium)
   protected
     function GetMediaType: TTMDBMediaType; stdcall;
@@ -146,6 +133,11 @@ type
     function GetTitle: WideString; stdcall;
     function GetPopularity: Single; stdcall;
   public
+    function AsMovie: ITMDBMovieItem; stdcall;
+    function AsPerson: ITMDBPersonItem; stdcall;
+    function AsTVSeries: ITMDBTVSeriesItem; stdcall;
+    function AsTVEpisode: ITMDBTVEpisodeItem; stdcall;
+
     property MediaType: TTMDBMediaType read GetMediaType;
     property Adult: Boolean read GetAdult;
     property ID: Integer read GetID;
@@ -155,16 +147,10 @@ type
 
   TTMDBMedia = class(TTMDBItems, ITMDBMedia)
   private
-    FTMDB: ITMDBClient;
-    procedure PopulateItems; virtual;
-    procedure ClearItems; virtual;
+    procedure PopulateItems; override;
   protected
     function GetItem(const Index: Integer): ITMDBMedium; stdcall;
   public
-    constructor Create(AObj: ISuperArray; ATMDB: ITMDBClient;
-      AItemClass: TTMDBItemClass); override;
-    destructor Destroy; override;
-
     property Items[const Index: Integer]: ITMDBMedium read GetItem; default;
   end;
 
@@ -172,7 +158,7 @@ type
   protected
     function GetItems: ITMDBMedia; stdcall;
   public
-    constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient;
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient;
       AItemClass: TTMDBItemClass; AItemsClass: TTMDBItemsClass); override;
     destructor Destroy; override;
 
@@ -1443,7 +1429,7 @@ type
   protected
     function GetDates: ITMDBDateRange; stdcall;
   public
-    constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient); reintroduce;
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); reintroduce;
     destructor Destroy; override;
 
     property Dates: ITMDBDateRange read GetDates;
@@ -1471,7 +1457,7 @@ type
 
   TTMDBMovieDetail = class(TInterfacedObject, ITMDBMovieDetail)
   private
-    FTMDB: TTMDBClient;
+    FTMDB: ITMDBClient;
     FObj: ISuperObject;
     FCollection: ITMDBMovieCollectionRef;
     FGenres: ITMDBGenreList;
@@ -1506,7 +1492,7 @@ type
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
   public
-    constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient); virtual;
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); virtual;
     destructor Destroy; override;
 
     //Append to Response Data
@@ -1660,7 +1646,7 @@ type
   TTMDBTVSeriesDetail = class(TInterfacedObject, ITMDBTVSeriesDetail)
   private
     FObj: ISuperObject;
-    FTMDB: TTMDBClient;
+    FTMDB: ITMDBClient;
   protected
     function GetAdult: Boolean;
     function GetBackdropPath: WideString;
@@ -1696,7 +1682,7 @@ type
     function GetVoteCount: Integer;
 
   public
-    constructor Create(AObj: ISuperObject; ATMDB: TTMDBClient);
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
     destructor Destroy; override;
 
     property Adult: Boolean read GetAdult;
@@ -2520,9 +2506,41 @@ type
 
 implementation
 
+{ TTMDBItem }
+
+constructor TTMDBItem.Create(AOwner: ITMDBItems; AObj: ISuperObject;
+  const AIndex: Integer; ATMDB: ITMDBClient);
+begin
+  FOwner:= AOwner;
+  FObj:= AObj;
+  FIndex:= AIndex;
+  FTMDB:= ATMDB;
+end;
+
+destructor TTMDBItem.Destroy;
+begin
+  FOwner:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBItem.GetIndex: Integer;
+begin
+  Result:= FIndex;
+end;
+
+function TTMDBItem.GetOwner: ITMDBItems;
+begin
+  Result:= FOwner;
+end;
+
+
+
+
+
 { TTMDBPage }
 
-constructor TTMDBPage.Create(AObj: ISuperObject; ATMDB: TTMDBClient;
+constructor TTMDBPage.Create(AObj: ISuperObject; ATMDB: ITMDBClient;
   AItemClass: TTMDBItemClass; AItemsClass: TTMDBItemsClass);
 var
   A: ISuperArray;
@@ -2559,33 +2577,9 @@ begin
   Result:= FObj.I['total_results'];
 end;
 
-{ TTMDBPageItem }
 
-constructor TTMDBItem.Create(AOwner: ITMDBItems; AObj: ISuperObject;
-  const AIndex: Integer; ATMDB: ITMDBClient);
-begin
-  FOwner:= AOwner;
-  FObj:= AObj;
-  FIndex:= AIndex;
-  FTMDB:= ATMDB;
-end;
 
-destructor TTMDBItem.Destroy;
-begin
-  FOwner:= nil;
-  FObj:= nil;
-  inherited;
-end;
 
-function TTMDBItem.GetIndex: Integer;
-begin
-  Result:= FIndex;
-end;
-
-function TTMDBItem.GetOwner: ITMDBItems;
-begin
-  Result:= FOwner;
-end;
 
 { TTMDBAlternativeTitle }
 
@@ -3352,7 +3346,7 @@ end;
 
 { TTMDBMovieDetail }
 
-constructor TTMDBMovieDetail.Create(AObj: ISuperObject; ATMDB: TTMDBClient);
+constructor TTMDBMovieDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
   FObj:= AObj;
   FTMDB:= ATMDB;
@@ -4614,8 +4608,6 @@ begin
   FUserAuth:= Value;
 end;
 
-{ Services }
-
 function TTMDBClient.Account: ITMDBServiceAccount;
 begin
   Result:= FAccount;
@@ -4851,7 +4843,7 @@ end;
 constructor TTMDBPersonItem.Create(AOwner: ITMDBItems; AObj: ISuperObject;
   const AIndex: Integer; ATMDB: ITMDBClient);
 begin
-  inherited;
+  inherited Create(AOwner, AObj, AIndex, ATMDB);
   FKnownFor:= nil;
 
 end;
@@ -4890,7 +4882,7 @@ end;
 
 function TTMDBPersonList.GetItem(const Index: Integer): ITMDBPersonItem;
 begin
-  Result:= ITMDBPersonItem(FItems[Index]);
+  Result:= inherited GetItem(Index) as ITMDBPersonItem;
 end;
 
 { TTMDBItems }
@@ -4901,7 +4893,7 @@ begin
   FObj:= AObj;
   FTMDB:= ATMDB;
   FItemClass:= AItemClass;
-  FItems:= TInterfaceList.Create;
+  FList:= TInterfaceList.Create;
   PopulateItems;
 end;
 
@@ -4910,28 +4902,28 @@ begin
   ClearItems;
   FObj:= nil;
   FTMDB:= nil;
-  FreeAndNil(FItems);
+  FreeAndNil(FList);
   inherited;
 end;
 
 function TTMDBItems.GetCount: Integer;
 begin
-  Result:= FItems.Count;
+  Result:= FList.Count;
 end;
 
 function TTMDBItems.GetItem(const Index: Integer): ITMDBItem;
 begin
-  Result:= ITMDBItem(FItems[Index]);
+  Result:= (FList[Index]) as ITMDBItem;
 end;
 
 procedure TTMDBItems.ClearItems;
 var
   X: Integer;
 begin
-  for X := 0 to FItems.Count-1 do begin
-    ITMDBItem(FItems[X])._Release;
+  for X := 0 to FList.Count-1 do begin
+    ITMDBItem(FList[X])._Release;
   end;
-  FItems.Clear;
+  FList.Clear;
 end;
 
 procedure TTMDBItems.PopulateItems;
@@ -4945,7 +4937,7 @@ begin
     O:= FObj.O[X];
     I:= FItemClass.Create(Self, O, X, FTMDB);
     I._AddRef;
-    FItems.Add(I);
+    FList.Add(I);
   end;
 end;
 
@@ -4988,7 +4980,7 @@ begin
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
     I:= TTMDBCastItem.Create(nil, O, X, FTMDB);
-    FItems.Add(I);
+    FList.Add(I);
   end;
 end;
 
@@ -5026,7 +5018,7 @@ begin
   for X := 0 to FObj.Length-1 do begin
     O:= FObj.O[X];
     I:= TTMDBCrewItem.Create(nil, O, X, FTMDB);
-    FItems.Add(I);
+    FList.Add(I);
   end;
 end;
 
@@ -5136,7 +5128,7 @@ end;
 
 { TTMDBDatedMoviePage }
 
-constructor TTMDBDatedMoviePage.Create(AObj: ISuperObject; ATMDB: TTMDBClient);
+constructor TTMDBDatedMoviePage.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
   inherited Create(AObj, ATMDB, TTMDBMovieItem, TTMDBMovieList);
   FDates:= TTMDBDateRange.Create(FObj.O['dates']);
@@ -5297,7 +5289,7 @@ end;
 
 function TTMDBKeywordList.GetItem(const Index: Integer): ITMDBKeywordItem;
 begin
-  Result:= ITMDBKeywordItem(FItems[Index]);
+  Result:= inherited GetItem(Index) as ITMDBKeywordItem;
 end;
 
 { TTMDBLoginState }
@@ -6370,7 +6362,7 @@ end;
 
 { TTMDBTVSeriesDetail }
 
-constructor TTMDBTVSeriesDetail.Create(AObj: ISuperObject; ATMDB: TTMDBClient);
+constructor TTMDBTVSeriesDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
   FObj:= AObj;
   FTMDB:= ATMDB;
@@ -6625,7 +6617,7 @@ end;
 
 function TTMDBTVNetworkList.GetItem(const Index: Integer): ITMDBTVNetworkItem;
 begin
-  Result:= ITMDBTVNetworkItem(FItems[Index]);
+  Result:= inherited GetItem(Index) as ITMDBTVNetworkItem;
 end;
 
 { TTMDBTVNetworkItem }
@@ -6726,6 +6718,26 @@ end;
 
 { TTMDBMedium }
 
+function TTMDBMedium.AsMovie: ITMDBMovieItem;
+begin
+  Result:= Self as ITMDBMovieItem;
+end;
+
+function TTMDBMedium.AsPerson: ITMDBPersonItem;
+begin
+  Result:= Self as ITMDBPersonItem;
+end;
+
+function TTMDBMedium.AsTVEpisode: ITMDBTVEpisodeItem;
+begin
+  Result:= Self as ITMDBTVEpisodeItem;
+end;
+
+function TTMDBMedium.AsTVSeries: ITMDBTVSeriesItem;
+begin
+  Result:= Self as ITMDBTVSeriesItem;
+end;
+
 function TTMDBMedium.GetAdult: Boolean;
 begin
   Result:= FObj.B['adult'];
@@ -6755,25 +6767,6 @@ end;
 
 { TTMDBMedia }
 
-procedure TTMDBMedia.ClearItems;
-begin
-  FItems.Clear;
-end;
-
-constructor TTMDBMedia.Create(AObj: ISuperArray; ATMDB: ITMDBClient;
-  AItemClass: TTMDBItemClass);
-begin
-  inherited Create(AObj, ATMDB, AItemClass);
-  FTMDB:= ATMDB;
-end;
-
-destructor TTMDBMedia.Destroy;
-begin
-  ClearItems;
-  FObj:= nil;
-  inherited;
-end;
-
 function TTMDBMedia.GetItem(const Index: Integer): ITMDBMedium;
 begin
   Result:= inherited GetItem(Index) as ITMDBMedium;
@@ -6785,7 +6778,7 @@ var
   O: ISuperObject;
   I: ITMDBMedium;
   MT: TTMDBMediaType;
-  T: TTMDBMediaBaseClass;
+  T: TTMDBItemClass;
 begin
   ClearItems;
   for X := 0 to FObj.Length-1 do begin
@@ -6795,10 +6788,12 @@ begin
       mtMovie:  T:= TTMDBMovieItem;
       mtTV:     T:= TTMDBTVSeriesItem;
       mtPerson: T:= TTMDBPersonItem;
-      else      T:= TTMDBMedium;
+      else begin
+        T:= FItemClass;
+      end;
     end;
-    I:= T.Create(nil, O, X, FTMDB);
-    FItems.Add(I);
+    I:= T.Create(Self, O, X, FTMDB) as ITMDBMedium;
+    FList.Add(I);
   end;
 end;
 
@@ -6806,12 +6801,12 @@ end;
 
 function TTMDBMovieList.GetItem(const Index: Integer): ITMDBMovieItem;
 begin
-  Result:= TTMDBMovieItem(inherited Items[Index]);
+  Result:= (inherited GetItem(Index)) as ITMDBMovieItem;
 end;
 
 { TTMDBMediaPage }
 
-constructor TTMDBMediaPage.Create(AObj: ISuperObject; ATMDB: TTMDBClient;
+constructor TTMDBMediaPage.Create(AObj: ISuperObject; ATMDB: ITMDBClient;
   AItemClass: TTMDBItemClass; AItemsClass: TTMDBItemsClass);
 begin
   inherited Create(AObj, ATMDB, AItemClass, AItemsClass);

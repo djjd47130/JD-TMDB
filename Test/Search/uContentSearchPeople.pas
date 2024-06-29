@@ -59,7 +59,7 @@ function TfrmContentSearchPeople.GetItem(const Index: Integer): ITMDBItem;
 var
   P: ITMDBPersonPage;
 begin
-  P:= ITMDBPersonPage(Page);
+  P:= Page as ITMDBPersonPage;
   Result:= P.Items.GetItem(Index);
 end;
 
@@ -78,7 +78,7 @@ end;
 
 function TfrmContentSearchPeople.Page: ITMDBPage;
 begin
-  Result:= ITMDBPersonPage(inherited Page);
+  Result:= (inherited Page) as ITMDBPersonPage;
 end;
 
 procedure TfrmContentSearchPeople.PopulateItem(const Index: Integer;

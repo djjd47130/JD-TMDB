@@ -23,8 +23,6 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitTop = 37
-    ExplicitHeight = 433
   end
   object Button2: TButton
     AlignWithMargins = True
@@ -37,6 +35,5 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button2Click
-    ExplicitTop = 38
   end
 end

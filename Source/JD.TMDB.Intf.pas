@@ -307,6 +307,11 @@ type
     function GetTitle: WideString; stdcall;
     function GetPopularity: Single; stdcall;
 
+    function AsMovie: ITMDBMovieItem; stdcall;
+    function AsPerson: ITMDBPersonItem; stdcall;
+    function AsTVSeries: ITMDBTVSeriesItem; stdcall;
+    function AsTVEpisode: ITMDBTVEpisodeItem; stdcall;
+
     property MediaType: TTMDBMediaType read GetMediaType;
     property Adult: Boolean read GetAdult;
     property ID: Integer read GetID;
