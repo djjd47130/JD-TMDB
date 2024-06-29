@@ -42,11 +42,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   end;
 
 var
@@ -148,7 +148,7 @@ begin
 end;
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   ID: Integer;
   O: ITMDBMovieItem;
@@ -167,12 +167,12 @@ begin
   inherited;
 end;
 
-function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBItem;
 var
   P: ITMDBMoviePage;
 begin
   P:= ITMDBMoviePage(Page);
-  Result:= P.GetItem(Index);
+  Result:= P.Items.GetItem(Index);
 end;
 
 procedure TfrmContentSearchMovies.HideDetail;
@@ -182,7 +182,7 @@ begin
 end;
 
 procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
   //TODO: Navigate to movie details tab within app...
@@ -201,12 +201,12 @@ begin
 end;
 
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   O: ITMDBMovieItem;
 begin
   inherited;
-  O:= Obj as ITMDBMovieItem;
+  O:= Obj as ITMDBMovieItem; //TODO: Obj is nil???!!!
   Item.Caption:= O.Title;
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
   if O.Genres.Count > 0 then

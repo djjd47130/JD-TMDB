@@ -131,7 +131,8 @@ begin
   FWebServer:= TTMDBLocalWebServer.Create(TMDB);
   FWebServer.Start;
 
-  TMDB.ListPrimaryTranslatiosn(cboLanguage.Items);
+  TMDB.ListPrimaryTranslations(cboLanguage.Items);
+
   Services1.Click; //TODO: Why was this necessary?
   Width:= 1200;
   Height:= 800;

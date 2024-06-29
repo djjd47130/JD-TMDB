@@ -24,11 +24,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   end;
 
 var
@@ -55,12 +55,12 @@ begin
   Result:= TMDB.Client.Search.SearchMulti(Q, A, L, APageNum);
 end;
 
-function TfrmContentSearchMulti.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentSearchMulti.GetItem(const Index: Integer): ITMDBItem;
 var
   P: ITMDBMediaPage;
 begin
   P:= ITMDBMediaPage(Page);
-  Result:= P.GetItem(Index);
+  Result:= P.Items.GetItem(Index);
 end;
 
 procedure TfrmContentSearchMulti.HideDetail;
@@ -70,7 +70,7 @@ begin
 end;
 
 procedure TfrmContentSearchMulti.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 
@@ -82,12 +82,12 @@ begin
 end;
 
 procedure TfrmContentSearchMulti.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBMediaBase;
+  O: ITMDBMedium;
 begin
   inherited;
-  O:= Obj as ITMDBMediaBase;
+  O:= Obj as ITMDBMedium;
   Item.Caption:= O.Title;
   Item.SubItems.Add(TMDBMediaTypeToStr(O.MediaType));
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
@@ -110,7 +110,7 @@ begin
 end;
 
 procedure TfrmContentSearchMulti.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 

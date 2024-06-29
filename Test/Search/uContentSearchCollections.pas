@@ -43,11 +43,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   public
     { Public declarations }
   end;
@@ -89,12 +89,12 @@ begin
 end;
 
 function TfrmContentSearchCollections.GetItem(
-  const Index: Integer): ITMDBPageItem;
+  const Index: Integer): ITMDBItem;
 var
   P: ITMDBCollectionPage;
 begin
   P:= ITMDBCollectionPage(Page);
-  Result:= ITMDBCollectionItem(P.GetItem(Index));
+  Result:= ITMDBCollectionItem(P.Items.GetItem(Index));
 end;
 
 procedure TfrmContentSearchCollections.HideDetail;
@@ -104,7 +104,7 @@ begin
 end;
 
 procedure TfrmContentSearchCollections.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
   //TODO: Navigate to movie details tab within app...
@@ -123,7 +123,7 @@ begin
 end;
 
 procedure TfrmContentSearchCollections.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   O: ITMDBCollectionItem;
 begin
@@ -155,7 +155,7 @@ begin
 end;
 
 procedure TfrmContentSearchCollections.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   ID: Integer;
   O: ITMDBCollectionItem;

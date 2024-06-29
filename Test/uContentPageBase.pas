@@ -50,13 +50,13 @@ type
     function Page: ITMDBPage; virtual;
     function LoadPage(const APageNum: Integer): Boolean; virtual;
     procedure PopulateResults; virtual;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); virtual;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); virtual;
 
     function GetData(const APageNum: Integer): ITMDBPage; virtual;
-    function GetItem(const Index: Integer): ITMDBPageItem; virtual;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); virtual;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); virtual;
-    procedure ItemClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); virtual;
+    function GetItem(const Index: Integer): ITMDBItem; virtual;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); virtual;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); virtual;
+    procedure ItemClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); virtual;
 
   public
     procedure PageNext; virtual;
@@ -127,9 +127,9 @@ begin
   //Override required
 end;
 
-function TfrmContentPageBase.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentPageBase.GetItem(const Index: Integer): ITMDBItem;
 begin
-  Result:= FObj.PageItems[Index];
+  Result:= FObj.Items[Index];
 end;
 
 procedure TfrmContentPageBase.HideDetail;
@@ -139,13 +139,13 @@ begin
 end;
 
 procedure TfrmContentPageBase.ItemClick(const Index: Integer; Item: TListItem;
-  Obj: ITMDBPageItem);
+  Obj: ITMDBItem);
 begin
   //Override expected
 end;
 
 procedure TfrmContentPageBase.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   //Override expected
 end;
@@ -166,7 +166,7 @@ procedure TfrmContentPageBase.lstResultsClick(Sender: TObject);
 var
   I: TListItem;
   X: Integer;
-  O: ITMDBPageItem;
+  O: ITMDBItem;
 begin
   inherited;
   if lstResults.Selected = nil then Exit;
@@ -180,7 +180,7 @@ procedure TfrmContentPageBase.lstResultsDblClick(Sender: TObject);
 var
   I: TListItem;
   X: Integer;
-  O: ITMDBPageItem;
+  O: ITMDBItem;
 begin
   inherited;
   if lstResults.Selected = nil then Exit;
@@ -195,7 +195,7 @@ procedure TfrmContentPageBase.lstResultsSelectItem(Sender: TObject;
 var
   I: TListItem;
   X: Integer;
-  O: ITMDBPageItem;
+  O: ITMDBItem;
 begin
   inherited;
   if not Selected then
@@ -240,20 +240,20 @@ begin
 end;
 
 procedure TfrmContentPageBase.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   //Override required
 end;
 
 procedure TfrmContentPageBase.PopulateResults;
 var
-  O: ITMDBPageItem;
+  O: ITMDBItem;
   X: Integer;
   I: TListItem;
 begin
   lstResults.Items.Clear;
   if FObj = nil then Exit;
-  for X := 0 to FObj.Count-1 do begin
+  for X := 0 to FObj.Items.Count-1 do begin
     O:= GetItem(X);
     I:= lstResults.Items.Add;
     PopulateItem(X, I, O);
@@ -273,7 +273,7 @@ end;
 function TfrmContentPageBase.ResultCount: Integer;
 begin
   if FObj <> nil then begin
-    Result:= FObj.Count;
+    Result:= FObj.Items.Count;
   end else begin
     Result:= 0;
   end;
@@ -286,7 +286,7 @@ begin
 end;
 
 procedure TfrmContentPageBase.ShowDetail(const Index: Integer; Item: TListItem;
-  Obj: ITMDBPageItem);
+  Obj: ITMDBItem);
 begin
   Splitter1.Visible:= True;
   pDetail.Visible:= True;

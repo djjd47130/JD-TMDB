@@ -54,7 +54,7 @@ type
     function LanguageName(const Code: String): String;
     procedure ListLanguages(AList: TStrings);
     procedure ListCountries(AList: TStrings);
-    procedure ListPrimaryTranslatiosn(AList: TStrings);
+    procedure ListPrimaryTranslations(AList: TStrings);
   published
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
@@ -181,7 +181,7 @@ begin
   end;
 end;
 
-procedure TTMDB.ListPrimaryTranslatiosn(AList: TStrings);
+procedure TTMDB.ListPrimaryTranslations(AList: TStrings);
 var
   A: TTMDBStrArray;
   X: Integer;

@@ -5,9 +5,11 @@ inherited frmContentSearchKeywords: TfrmContentSearchKeywords
   inherited pMain: TPanel
     inherited Splitter1: TSplitter
       Top = 321
+      ExplicitTop = 321
     end
     inherited lstResults: TListView
       Height = 283
+      ExplicitHeight = 283
     end
     inherited pDetail: TPanel
       Top = 328
@@ -55,11 +57,10 @@ inherited frmContentSearchKeywords: TfrmContentSearchKeywords
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 107
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
-        ExplicitWidth = 107
       end
       object txtQuery: TEdit
         AlignWithMargins = True

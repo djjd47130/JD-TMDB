@@ -24,11 +24,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   end;
 
 var
@@ -61,12 +61,12 @@ begin
   Result:= TMDB.Client.Search.SearchKeywords(Q, APageNum);
 end;
 
-function TfrmContentSearchKeywords.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentSearchKeywords.GetItem(const Index: Integer): ITMDBItem;
 var
   P: ITMDBKeywordPage;
 begin
   P:= ITMDBKeywordPage(Page);
-  Result:= P.GetItem(Index);
+  Result:= P.Items.GetItem(Index);
 end;
 
 procedure TfrmContentSearchKeywords.HideDetail;
@@ -76,7 +76,7 @@ begin
 end;
 
 procedure TfrmContentSearchKeywords.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 
@@ -88,7 +88,7 @@ begin
 end;
 
 procedure TfrmContentSearchKeywords.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   O: ITMDBKeywordItem;
 begin
@@ -113,7 +113,7 @@ begin
 end;
 
 procedure TfrmContentSearchKeywords.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   ID: Integer;
   I: TListItem;

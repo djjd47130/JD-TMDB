@@ -24,11 +24,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   end;
 
 var
@@ -55,12 +55,12 @@ begin
   Result:= TMDB.Client.Search.SearchPeople(Q, A, L, APageNum);
 end;
 
-function TfrmContentSearchPeople.GetItem(const Index: Integer): ITMDBPageItem;
+function TfrmContentSearchPeople.GetItem(const Index: Integer): ITMDBItem;
 var
   P: ITMDBPersonPage;
 begin
   P:= ITMDBPersonPage(Page);
-  Result:= P.GetItem(Index);
+  Result:= P.Items.GetItem(Index);
 end;
 
 procedure TfrmContentSearchPeople.HideDetail;
@@ -70,7 +70,7 @@ begin
 end;
 
 procedure TfrmContentSearchPeople.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 
@@ -82,7 +82,7 @@ begin
 end;
 
 procedure TfrmContentSearchPeople.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   O: ITMDBPersonItem;
 begin
@@ -112,7 +112,7 @@ begin
 end;
 
 procedure TfrmContentSearchPeople.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 

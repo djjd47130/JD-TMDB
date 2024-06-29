@@ -16,11 +16,10 @@ inherited frmContentSearchCompanies: TfrmContentSearchCompanies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 107
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
-        ExplicitWidth = 107
       end
       object txtSearchMoviesQuery: TEdit
         AlignWithMargins = True

@@ -201,7 +201,7 @@ begin
       0: LoadDetails;
       1: LoadAccountStates;
       2: LoadAlternativeTitles;
-      3: ; //CHanges
+      3: ; //Changes
       4: LoadCredits;
       5: ; //External IDs
       6: LoadImages;
@@ -341,8 +341,8 @@ end;
 
 procedure TfrmContentMovieDetail.LoadAlternativeTitles;
 var
-  AT: ITMDBAlternativeTitleList;
-  T: ITMDBAlternativeTitleItem;
+  AT: ITMDBAlternativeTitles;
+  T: ITMDBAlternativeTitle;
   X: Integer;
   I: TListItem;
   Country: ITMDBCountryItem;

@@ -20,11 +20,11 @@ type
     procedure SetupCols; override;
     procedure PrepSearch; override;
     function GetData(const APageNum: Integer): ITMDBPage; override;
-    function GetItem(const Index: Integer): ITMDBPageItem; override;
+    function GetItem(const Index: Integer): ITMDBItem; override;
     procedure HideDetail; override;
-    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
-    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBPageItem); override;
+    procedure PopulateItem(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ShowDetail(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
+    procedure ItemDblClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); override;
   public
     { Public declarations }
   end;
@@ -48,12 +48,12 @@ begin
 end;
 
 function TfrmContentSearchCompanies.GetItem(
-  const Index: Integer): ITMDBPageItem;
+  const Index: Integer): ITMDBItem;
 var
   P: ITMDBCompanyPage;
 begin
   P:= ITMDBCompanyPage(Page);
-  Result:= P.GetItem(Index);
+  Result:= P.Items.GetItem(Index);
 end;
 
 procedure TfrmContentSearchCompanies.HideDetail;
@@ -63,7 +63,7 @@ begin
 end;
 
 procedure TfrmContentSearchCompanies.ItemDblClick(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
   //TODO: Navigate to company details tab within app...
@@ -75,7 +75,7 @@ begin
 end;
 
 procedure TfrmContentSearchCompanies.PopulateItem(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 var
   O: ITMDBCompanyItem;
 begin
@@ -99,7 +99,7 @@ begin
 end;
 
 procedure TfrmContentSearchCompanies.ShowDetail(const Index: Integer;
-  Item: TListItem; Obj: ITMDBPageItem);
+  Item: TListItem; Obj: ITMDBItem);
 begin
   inherited;
 
