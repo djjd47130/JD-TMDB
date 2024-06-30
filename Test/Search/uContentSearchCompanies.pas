@@ -77,10 +77,10 @@ end;
 procedure TfrmContentSearchCompanies.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBCompanyItem;
+  O: ITMDBCompany;
 begin
   inherited;
-  O:= Obj as ITMDBCompanyItem;
+  O:= Obj as ITMDBCompany;
   Item.Caption:= O.Name;
   Item.SubItems.Add(O.OriginCountry);
 end;

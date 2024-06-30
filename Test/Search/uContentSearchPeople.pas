@@ -84,10 +84,10 @@ end;
 procedure TfrmContentSearchPeople.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBPersonItem;
+  O: ITMDBPerson;
 begin
   inherited;
-  O:= Obj as ITMDBPersonItem;
+  O:= Obj as ITMDBPerson;
   Item.Caption:= O.Title;
   Item.SubItems.Add(O.KnownForDepartment);
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));

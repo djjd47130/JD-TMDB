@@ -28,7 +28,7 @@ implementation
 
 procedure TfrmContentGenresTV.Button3Click(Sender: TObject);
 var
-  G: ITMDBGenreItem;
+  G: ITMDBGenre;
   X: Integer;
   I: TListItem;
 begin

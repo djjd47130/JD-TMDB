@@ -345,7 +345,7 @@ var
   T: ITMDBAlternativeTitle;
   X: Integer;
   I: TListItem;
-  Country: ITMDBCountryItem;
+  Country: ITMDBCountry;
 begin
   lstAltTitles.Items.BeginUpdate;
   try
@@ -379,8 +379,8 @@ end;
 procedure TfrmContentMovieDetail.LoadKeywords;
 var
   X: Integer;
-  L: ITMDBKeywordList;
-  K: ITMDBKeywordItem;
+  L: ITMDBKeywords;
+  K: ITMDBKeyword;
 begin
   lstKeywords.Items.BeginUpdate;
   try
@@ -430,10 +430,10 @@ var
   X, Y: Integer;
   I: TListItem;
   G: TListGroup;
-  Country: ITMDBCountryItem;
+  Country: ITMDBCountry;
   RD: ITMDBReleaseDateCountries;
   RC: ITMDBReleaseDateCountry;
-  RI: ITMDBReleaseDateItem;
+  RI: ITMDBReleaseDate;
 begin
   lstReleaseDates.Items.BeginUpdate;
   lstReleaseDates.Groups.BeginUpdate;

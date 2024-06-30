@@ -87,7 +87,7 @@ procedure TfrmContentCertsMovies.RefreshDetails;
 var
   C: ITMDBCertificationCountry;
   Y: Integer;
-  O: ITMDBCertificationItem;
+  O: ITMDBCertification;
   I: TListItem;
 begin
   lstCertsMovies.Items.Clear;

@@ -17,9 +17,9 @@ type
     Splitter1: TSplitter;
     procedure lstVideosDblClick(Sender: TObject);
   private
-    FVideos: ITMDBVideoList;
+    FVideos: ITMDBVideos;
   public
-    procedure LoadVideoList(const Videos: ITMDBVideoList);
+    procedure LoadVideoList(const Videos: ITMDBVideos);
   end;
 
 var
@@ -34,9 +34,9 @@ uses
 
 { TfrmCommonVideos }
 
-procedure TfrmCommonVideos.LoadVideoList(const Videos: ITMDBVideoList);
+procedure TfrmCommonVideos.LoadVideoList(const Videos: ITMDBVideos);
 var
-  V: ITMDBVideoItem;
+  V: ITMDBVideo;
   X: Integer;
   I: TListItem;
 begin
@@ -59,7 +59,7 @@ end;
 
 procedure TfrmCommonVideos.lstVideosDblClick(Sender: TObject);
 var
-  V: ITMDBVideoItem;
+  V: ITMDBVideo;
   U: String;
   function GetLocalBaseURL: String;
   begin

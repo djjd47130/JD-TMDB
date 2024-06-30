@@ -12,9 +12,9 @@ type
   TfrmCommonImages = class(TfrmCommonFormBase)
     lstImages: TListView;
   private
-    FImages: ITMDBMediaImages;
+    FImages: ITMDBMediaImageGroup;
   public
-    procedure LoadImages(const Images: ITMDBMediaImages);
+    procedure LoadImages(const Images: ITMDBMediaImageGroup);
   end;
 
 var
@@ -26,9 +26,9 @@ implementation
 
 { TfrmCommonImages }
 
-procedure TfrmCommonImages.LoadImages(const Images: ITMDBMediaImages);
+procedure TfrmCommonImages.LoadImages(const Images: ITMDBMediaImageGroup);
 var
-  L: ITMDBMediaImageList;
+  L: ITMDBMediaImages;
   Img: ITMDBMediaImage;
   I: TListItem;
   X: Integer;

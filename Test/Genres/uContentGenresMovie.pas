@@ -28,8 +28,8 @@ implementation
 
 procedure TfrmContentGenresMovie.Button2Click(Sender: TObject);
 var
-  L: ITMDBGenreList;
-  G: ITMDBGenreItem;
+  L: ITMDBGenres;
+  G: ITMDBGenre;
   X: Integer;
   I: TListItem;
 begin

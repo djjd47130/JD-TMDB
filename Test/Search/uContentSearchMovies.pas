@@ -151,13 +151,13 @@ procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
   ID: Integer;
-  O: ITMDBMovieItem;
+  O: ITMDBMovie;
 begin
   Screen.Cursor:= crHourglass;
   try
     FDetail:= nil;
     PrepAPI;
-    O:= ITMDBMovieItem(Obj);
+    O:= (Obj) as ITMDBMovie;
     ID:= O.ID;
     FDetail:= GetMovieDetail(ID);
   finally
@@ -203,10 +203,10 @@ end;
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBMovieItem;
+  O: ITMDBMovie;
 begin
   inherited;
-  O:= Obj as ITMDBMovieItem; //TODO: Obj is nil???!!!
+  O:= Obj as ITMDBMovie;
   Item.Caption:= O.Title;
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
   if O.Genres.Count > 0 then

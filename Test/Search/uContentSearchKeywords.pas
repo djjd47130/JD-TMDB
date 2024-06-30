@@ -90,10 +90,10 @@ end;
 procedure TfrmContentSearchKeywords.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBKeywordItem;
+  O: ITMDBKeyword;
 begin
   inherited;
-  O:= Obj as ITMDBKeywordItem;
+  O:= Obj as ITMDBKeyword;
   Item.Caption:= O.Name;
   Item.SubItems.Add(IntToStr(O.ID));
 end;
@@ -117,10 +117,10 @@ procedure TfrmContentSearchKeywords.ShowDetail(const Index: Integer;
 var
   ID: Integer;
   I: TListItem;
-  O: ITMDBKeywordItem;
+  O: ITMDBKeyword;
 begin
   inherited;
-  O:= Obj as ITMDBKeywordItem;
+  O:= Obj as ITMDBKeyword;
   lstDetail.Items.Clear;
   ID:= O.ID;
   FDetail:= TMDB.Client.Keywords.GetDetails(ID);

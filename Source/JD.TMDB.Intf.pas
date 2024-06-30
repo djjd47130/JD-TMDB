@@ -133,7 +133,7 @@ type
   ITMDBTVSeason = interface;
   ITMDBTVSeasons = interface;
   ITMDBTVSeasonPage = interface;
-  //ITMDBTVSeasonDetail = interface;
+  ITMDBTVSeasonDetail = interface;
   ITMDBTVEpisode = interface;
   ITMDBTVEpisodes = interface;
   ITMDBTVEpisodePage = interface;
@@ -1804,6 +1804,11 @@ type
     function GetItems: ITMDBTVSeasons; stdcall;
 
     property Items: ITMDBTVSeasons read GetItems;
+  end;
+
+  ITMDBTVSeasonDetail = interface
+    ['{8E456798-FF9E-483E-B3DA-3CC5EDA54C98}']
+
   end;
 
 {$ENDREGION}

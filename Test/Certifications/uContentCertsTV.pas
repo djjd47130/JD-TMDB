@@ -29,7 +29,7 @@ procedure TfrmContentCertsTV.btnRefreshCertsTVClick(Sender: TObject);
 var
   Y: Integer;
   C: ITMDBCertificationCountry;
-  O: ITMDBCertificationItem;
+  O: ITMDBCertification;
   X: Integer;
   I: TListItem;
   G: TListGroup;

@@ -94,7 +94,7 @@ var
   P: ITMDBCollectionPage;
 begin
   P:= ITMDBCollectionPage(Page);
-  Result:= ITMDBCollectionItem(P.Items.GetItem(Index));
+  Result:= ITMDBCollection(P.Items.GetItem(Index));
 end;
 
 procedure TfrmContentSearchCollections.HideDetail;
@@ -125,10 +125,10 @@ end;
 procedure TfrmContentSearchCollections.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBCollectionItem;
+  O: ITMDBCollection;
 begin
   inherited;
-  O:= Obj as ITMDBCollectionItem;
+  O:= Obj as ITMDBCollection;
   Item.Caption:= O.Name;
   Item.SubItems.Add(O.OriginalLanguage);
   Item.SubItems.Add(O.Overview);
@@ -158,13 +158,13 @@ procedure TfrmContentSearchCollections.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
   ID: Integer;
-  O: ITMDBCollectionItem;
+  O: ITMDBCollection;
 begin
   Screen.Cursor:= crHourglass;
   try
     FDetail:= nil;
     PrepAPI;
-    O:= ITMDBCollectionItem(Obj);
+    O:= (Obj) as ITMDBCollection;
     ID:= O.ID;
     FDetail:= GetCollectionDetail(ID);
   finally

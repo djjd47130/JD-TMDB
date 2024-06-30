@@ -28,8 +28,8 @@ implementation
 
 procedure TfrmCommonCredits.LoadCredits(const Credits: ITMDBCredits);
 var
-  Ca: ITMDBCastItem;
-  Cr: ITMDBCrewItem;
+  Ca: ITMDBCastPerson;
+  Cr: ITMDBCrewPerson;
   X: Integer;
   I: TListItem;
 begin

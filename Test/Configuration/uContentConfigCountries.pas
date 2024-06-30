@@ -28,7 +28,7 @@ implementation
 procedure TfrmContentConfigCountries.Button2Click(Sender: TObject);
 var
   X: Integer;
-  C: ITMDBCountryItem;
+  C: ITMDBCountry;
   I: TListItem;
 begin
   inherited;

@@ -93,10 +93,10 @@ end;
 procedure TfrmContentSearchTV.PopulateItem(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
 var
-  O: ITMDBTVSeriesItem;
+  O: ITMDBTVSerie;
 begin
   inherited;
-  O:= Obj as ITMDBTVSeriesItem;
+  O:= Obj as ITMDBTVSerie;
   Item.Caption:= O.Title;
   Item.SubItems.Add(FormatFloat('0.000', O.Popularity));
   if O.Genres.Count > 0 then
