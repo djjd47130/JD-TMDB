@@ -54,7 +54,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'API Authentication'
           TabOrder = 0
-          ExplicitHeight = 177
           object gbAPIAuthMethodAPIKey: TPanel
             Left = 2
             Top = 48
@@ -92,8 +91,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             BevelOuter = bvNone
             TabOrder = 1
             Visible = False
-            ExplicitTop = 101
-            ExplicitWidth = 353
             DesignSize = (
               369
               60)
@@ -121,7 +118,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 2
-            ExplicitWidth = 353
             object rAuthToken: TRadioButton
               Tag = 1
               AlignWithMargins = True
@@ -164,7 +160,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               ParentFont = False
               TabOrder = 2
               OnClick = btnValidateKeyClick
-              ExplicitLeft = 284
             end
           end
         end
@@ -177,8 +172,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'Locale Options'
           TabOrder = 1
-          ExplicitLeft = 367
-          ExplicitHeight = 177
           object Panel6: TPanel
             Left = 2
             Top = 20
@@ -187,7 +180,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 254
             object Label5: TLabel
               AlignWithMargins = True
               Left = 3
@@ -210,7 +202,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
               Cursor = crHandPoint
               Align = alTop
               TabOrder = 0
-              ExplicitWidth = 248
             end
           end
         end
@@ -268,8 +259,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 759
-      ExplicitTop = 0
     end
   end
   object pUser: TPanel
@@ -302,8 +291,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitTop = 18
-        ExplicitWidth = 289
         object RadioButton3: TRadioButton
           Tag = 1
           AlignWithMargins = True
@@ -314,7 +301,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alLeft
           Caption = 'Normal'
           TabOrder = 0
-          Visible = False
           OnClick = UserAuthMethodClick
         end
         object RadioButton4: TRadioButton
@@ -351,8 +337,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 42
-        ExplicitWidth = 289
         object Label2: TLabel
           AlignWithMargins = True
           Left = 3
@@ -374,7 +358,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alBottom
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
-          ExplicitTop = 24
         end
       end
       object pAuthPass: TPanel
@@ -385,8 +368,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 93
-        ExplicitWidth = 289
         object Label4: TLabel
           AlignWithMargins = True
           Left = 3
@@ -410,7 +391,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           PasswordChar = '*'
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
-          ExplicitTop = 23
         end
       end
       object btnLogin: TButton
@@ -432,7 +412,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         ParentFont = False
         TabOrder = 3
         OnClick = btnLoginClick
-        ExplicitWidth = 189
       end
     end
     object gbUserInfo: TGroupBox
@@ -445,7 +424,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       Caption = 'User Info'
       TabOrder = 1
       Visible = False
-      ExplicitLeft = 303
       object Panel4: TPanel
         AlignWithMargins = True
         Left = 127
@@ -455,9 +433,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitTop = 21
-        ExplicitWidth = 160
-        ExplicitHeight = 120
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
@@ -493,8 +468,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 21
-        ExplicitHeight = 120
         object imgUserAvatar: TImage
           AlignWithMargins = True
           Left = 3
@@ -525,7 +498,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         ParentFont = False
         TabOrder = 2
         OnClick = btnLogoutClick
-        ExplicitWidth = 188
       end
     end
   end

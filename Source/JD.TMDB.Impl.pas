@@ -5380,6 +5380,7 @@ function TTMDBLoginState.LoginAsUser: ITMDBAuthSessionResult;
 var
   RT: ITMDBAuthRequestTokenResult;
   Res: Boolean;
+  O: ISuperObject;
 begin
   RT:= FOwner.Authentication.CreateRequestToken;
   if RT.Success then begin
@@ -5396,6 +5397,13 @@ begin
         FIsGuest:= False;
         FAccountDetail:= FOwner.Account.GetDetails(0, FSessionID);
       end;
+    end else begin
+      O:= SO;
+      O.B['success']:= False;
+      O.B['failure']:= True;
+      O.I['status_code']:= 17;
+      O.S['status_message']:= 'Session denied.';
+      Result:= TTMDBAuthSessionResult.Create(O);
     end;
 
   end;

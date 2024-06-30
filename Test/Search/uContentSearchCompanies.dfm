@@ -11,15 +11,15 @@ inherited frmContentSearchCompanies: TfrmContentSearchCompanies
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 8
       object Label8: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtSearchMoviesQuery: TEdit
         AlignWithMargins = True

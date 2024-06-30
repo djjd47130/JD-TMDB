@@ -52,9 +52,6 @@ inherited frmCommonVideos: TfrmCommonVideos
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = lstVideosDblClick
-    ExplicitLeft = -2
-    ExplicitTop = -2
-    ExplicitHeight = 489
   end
   object Panel1: TPanel
     Left = 0
@@ -75,10 +72,6 @@ inherited frmCommonVideos: TfrmCommonVideos
       Margins.Bottom = 20
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 104
-      ExplicitTop = 24
-      ExplicitWidth = 585
-      ExplicitHeight = 161
     end
   end
 end

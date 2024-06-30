@@ -80,6 +80,12 @@ begin
   FServer.Active:= True;
 end;
 
+procedure TTMDBLocalWebServer.Uninit;
+begin
+  FServer.Active:= False;
+  FreeAndNil(FServer);
+end;
+
 function BaseHTML(const Title, Head, Body: String): String;
   procedure A(const S: String);
   begin
@@ -148,6 +154,10 @@ begin
             //Main page
             AResponseInfo.ContentText:= '<h1>JD TMDB Local Web Server Home Page</h1>';
           end else
+          if SameText(Doc[0], 'authgranted') then begin
+            //User authentication successfull - proceed with login...
+            AResponseInfo.ContentText:= '<h1>Authentication granted, please wait...</h1>';
+          end else
           if SameText(Doc[0], 'youtube') then begin
             //Embedded YouTube video
             AResponseInfo.ContentText:= EmbedYouTubeHTML(Doc[1]);
@@ -175,12 +185,6 @@ end;
 procedure TTMDBLocalWebServer.SetPort(const Value: Integer);
 begin
   FPort := Value;
-end;
-
-procedure TTMDBLocalWebServer.Uninit;
-begin
-  FServer.Active:= False;
-  FreeAndNil(FServer);
 end;
 
 end.

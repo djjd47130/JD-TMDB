@@ -38,7 +38,8 @@ uses
   uContentSearchTV in 'Search\uContentSearchTV.pas' {frmContentSearchTV},
   uContentSearchPeople in 'Search\uContentSearchPeople.pas' {frmContentSearchPeople},
   uContentSearchMulti in 'Search\uContentSearchMulti.pas' {frmContentSearchMulti},
-  uContentSearchKeywords in 'Search\uContentSearchKeywords.pas' {frmContentSearchKeywords};
+  uContentSearchKeywords in 'Search\uContentSearchKeywords.pas' {frmContentSearchKeywords},
+  uLoginBrowser in 'uLoginBrowser.pas' {frmLoginBrowser};
 
 {$R *.res}
 
@@ -46,8 +47,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
-  Application.CreateForm(TfrmContentSearchPeople, frmContentSearchPeople);
-  Application.CreateForm(TfrmContentSearchMulti, frmContentSearchMulti);
-  Application.CreateForm(TfrmContentSearchKeywords, frmContentSearchKeywords);
+  Application.CreateForm(TfrmLoginBrowser, frmLoginBrowser);
   Application.Run;
 end.

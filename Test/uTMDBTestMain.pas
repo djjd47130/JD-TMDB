@@ -18,6 +18,7 @@ uses
   uTabGenres,
   uTabCertifications,
   uTabMovies,
+  uLoginBrowser,
   Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB;
 
 type
@@ -68,6 +69,7 @@ type
     Label5: TLabel;
     cboLanguage: TComboBox;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
@@ -76,7 +78,6 @@ type
     procedure btnValidateKeyClick(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
     procedure txtAuthPassKeyUp(Sender: TObject; var Key: Word;
@@ -265,9 +266,21 @@ end;
 
 procedure TfrmTMDBTestMain.TMDBUserAuthRequest(Sender: TObject;
   const URL: WideString; var Result: Boolean);
+var
+  F: TfrmLoginBrowser;
+  U: String;
 begin
-  //TODO: Open URL in web browser...
-
+  //Open URL in web browser to authenticate user...
+  F:= TfrmLoginBrowser.Create(nil);
+  try
+    //We instruct it to redirect to our web server upon successful login...
+    U:= URL + '?redirect_to=http://localhost:'+IntToStr(FWebServer.Port)+'/authgranted';
+    F.LoadURL(U);
+    F.ShowModal;
+    Result:= F.Success;
+  finally
+    F.Free;
+  end;
 end;
 
 procedure TfrmTMDBTestMain.btnLoginClick(Sender: TObject);
@@ -286,7 +299,7 @@ begin
     end;
     1: begin
       //Normal...
-      raise Exception.Create('Sorry, this login method is not yet supported.');
+      //raise Exception.Create('Sorry, this login method is not yet supported.');
 
       US:= TMDB.LoginState.LoginAsUser;
       Success:= US.Success;
