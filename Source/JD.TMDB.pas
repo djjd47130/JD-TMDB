@@ -88,6 +88,8 @@ begin
   if Assigned(FOnUserAuthRequest) then begin
     //U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
     FOnUserAuthRequest(Self, URL, Result);
+    //TODO: Add optional internal browser to be used instead of triggering event.
+    //NOTE: This will also require moving the HTTP server into TTMDB as well.
   end;
 end;
 
@@ -139,7 +141,7 @@ end;
 
 function TTMDB.CountryName(const Code: String): String;
 var
-  C: ITMDBCountryItem;
+  C: ITMDBCountry;
 begin
   Result:= Code;
   C:= Cache.Countries.GetByCode(Code);
@@ -149,7 +151,7 @@ end;
 
 function TTMDB.LanguageName(const Code: String): String;
 var
-  L: ITMDBLanguageItem;
+  L: ITMDBLanguage;
 begin
   Result:= Code;
   L:= Cache.Languages.GetByCode(Code);
@@ -160,7 +162,7 @@ end;
 procedure TTMDB.ListCountries(AList: TStrings);
 var
   X: Integer;
-  O: ITMDBCountryItem;
+  O: ITMDBCountry;
 begin
   AList.Clear;
   for X := 0 to FTMDB.Cache.Countries.Count-1 do begin
@@ -172,7 +174,7 @@ end;
 procedure TTMDB.ListLanguages(AList: TStrings);
 var
   X: Integer;
-  O: ITMDBLanguageItem;
+  O: ITMDBLanguage;
 begin
   AList.Clear;
   for X := 0 to FTMDB.Cache.Languages.Count-1 do begin

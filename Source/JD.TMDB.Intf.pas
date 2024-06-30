@@ -29,210 +29,168 @@ type
 
 {$REGION 'Forward Definitions'}
 
-  ITMDBPage = interface;
-
   ITMDBItem = interface;
-
-  ITMDBAccountDetail = interface;
-
-  ITMDBAccountAddFavoriteResult = interface;
-
-  ITMDBAccountAddWatchlistResult = interface;
-
-  ITMDBAuthGuestSessionResult = interface;
-
-  ITMDBAuthRequestTokenResult = interface;
-
-  ITMDBAuthSessionResult = interface;
-
-  ITMDBAuthSessionResultLogin = interface;
-
-  ITMDBAuthDeleteSessionResult = interface;
-
-  ITMDBAuthValidateKeyResult = interface;
-
-  ITMDBCertificationItem = interface;
-
-  ITMDBCertificationCountry = interface;
-
-  ITMDBCertificationCountries = interface;
-
-  ITMDBChangeValue = interface;
-
-  ITMDBChangeRecord = interface;
-
-  ITMDBChangeItem = interface;
-
-  ITMDBChangePage = interface;
-
-  ITMDBCollectionPage = interface;
-
-  ITMDBCollectionItem = interface;
-
-  ITMDBCompanyItem = interface;
-
-  ITMDBCompanyList = interface;
-
-  ITMDBConfigurationImages = interface;
-
-  ITMDBConfiguration = interface;
-
-  ITMDBCountryList = interface;
-
-  ITMDBCountryItem = interface;
-
-  ITMDBMediaImages = interface;
-
-  ITMDBJobDepartmentItem = interface;
-
-  ITMDBJobDepartmentList = interface;
-
-  ITMDBLanguageList = interface;
-
-  ITMDBLanguageItem = interface;
-
-  ITMDBTimezoneItem = interface;
-
-  ITMDBTimezoneList = interface;
-
-  ITMDBCredits = interface;
-
-  ITMDBGenreList = interface;
-
-  ITMDBGenreItem = interface;
-
-  ITMDBKeywordItem = interface;
-
-  ITMDBPersonItem = interface;
-
-  ITMDBPersonPage = interface;
-
-  ITMDBMovieItem = interface;
-
-  ITMDBMoviePage = interface;
-
-  ITMDBRatedMovieItem = interface;
-
-  ITMDBRatedMoviePage = interface;
-
-  ITMDBMovieCollectionRef = interface;
-
-  ITMDBMovieDetail = interface;
-
-  ITMDBTVNetworkItem = interface;
-
-  ITMDBTVSeriesPage = interface;
-
-  ITMDBTVSeriesItem = interface;
-
-  ITMDBTVEpisodePage = interface;
-
-  ITMDBTVEpisodeItem = interface;
-
-  ITMDBRatedTVSeriesPage = interface;
-
-  ITMDBRatedTVSeriesItem = interface;
-
-  ITMDBRatedTVEpisodePage = interface;
-
-  ITMDBRatedTVEpisodeItem = interface;
-
-  ITMDBTVSeriesDetail = interface;
-
-  ITMDBTVSeasonPage = interface;
-
-  ITMDBTVSeasonItem = interface;
-
-  ITMDBTVEpisodeGroupResponse = interface;
-
-  ITMDBListPage = interface;
-
-  ITMDBListItem = interface;
-
-  ITMDBDiscoverMoviePage = interface;
-
-  ITMDBDiscoverMovieItem = interface;
-
-  ITMDBDiscoverTVPage = interface;
-
-  ITMDBDiscoverTVItem = interface;
-
   ITMDBItems = interface;
-
-  ITMDBMovieList = interface;
-
-  ITMDBPersonList = interface;
-
-  ITMDBTVSeriesList = interface;
-
-  ITMDBTVEpisodeList = interface;
-
+  ITMDBPage = interface;
+  ITMDBDetail = interface;
+  ITMDBMedium = interface;
+  ITMDBMedia = interface;
+  ITMDBMediaPage = interface;
+  ITMDBAlternativeTitle = interface;
+  ITMDBAlternativeTitles = interface;
+  ITMDBAccountDetail = interface;
+  ITMDBAccountAddFavoriteResult = interface;
+  ITMDBAccountAddWatchlistResult = interface;
+  ITMDBAccountStates = interface;
+  ITMDBAuthGuestSessionResult = interface;
+  ITMDBAuthRequestTokenResult = interface;
+  ITMDBAuthSessionResult = interface;
+  ITMDBAuthSessionResultLogin = interface;
+  ITMDBAuthDeleteSessionResult = interface;
+  ITMDBAuthValidateKeyResult = interface;
+  ITMDBCertification = interface;
+  ITMDBCertificationCountry = interface;
+  ITMDBCertificationCountries = interface;
+  ITMDBReleaseDate = interface;
+  ITMDBReleaseDateCountry = interface;
+  ITMDBReleaseDateCountries = interface;
+  ITMDBChangeValue = interface;
+  ITMDBChangeRecord = interface;
+  ITMDBChange = interface;
+  ITMDBChanges = interface;
+  ITMDBChangePage = interface;
+  //ITMDBChangeDetail = interface;
+  ITMDBTranslationData = interface;
+  ITMDBMovieTranslationData = interface;
+  ITMDBCollectionTranslationData = interface;
+  ITMDBPersonTranslationData = interface;
+  ITMDBTVSeriesTranslationData = interface;
+  ITMDBTVSeasonTranslationData = interface;
+  ITMDBTVEpisodeTranslationData = interface;
+  ITMDBTranslation = interface;
+  ITMDBTranslations = interface;
+  ITMDBCollection = interface;
+  ITMDBCollections = interface;
+  ITMDBCollectionPage = interface;
+  ITMDBCollectionPart = interface;
+  ITMDBCollectionDetail = interface;
+  ITMDBCompany = interface;
+  ITMDBCompanies = interface;
+  ITMDBCompanyPage = interface;
+  ITMDBCompanyDetail = interface;
+  ITMDBConfigurationImages = interface;
+  ITMDBConfiguration = interface;
+  ITMDBCountry = interface;
+  ITMDBCountries = interface;
+  ITMDBJobDepartment = interface;
+  ITMDBJobDepartments = interface;
+  ITMDBLanguage = interface;
+  ITMDBLanguages = interface;
+  ITMDBTimezone = interface;
+  ITMDBTimezones = interface;
+  ITMDBGenre = interface;
+  ITMDBGenres = interface;
+  ITMDBKeyword = interface;
+  ITMDBKeywords = interface;
+  ITMDBKeywordPage = interface;
+  ITMDBKeywordDetail = interface;
+  ITMDBMediaImage = interface;
+  ITMDBMediaImages = interface;
+  ITMDBMediaImageGroup = interface;
+  ITMDBVideo = interface;
+  ITMDBVideos = interface;
+  ITMDBPerson = interface;
+  ITMDBPeople = interface;
+  ITMDBPersonPage = interface;
+  ITMDBPersonDetail = interface;
+  ITMDBCastPerson = interface;
+  ITMDBCastPeople = interface;
+  ITMDBCrewPerson = interface;
+  ITMDBCrewPeople = interface;
+  ITMDBCredits = interface;
+  ITMDBMovie = interface;
+  ITMDBMovies = interface;
+  ITMDBMoviePage = interface;
+  ITMDBRatedMovie = interface;
+  ITMDBRatedMovies = interface;
+  ITMDBRatedMoviePage = interface;
+  ITMDBMovieCollectionRef = interface;
+  ITMDBMovieDetail = interface;
+  ITMDBDateRange = interface;
+  ITMDBDatedMoviePage = interface;
+  ITMDBTVNetwork = interface;
+  ITMDBTVNetworks = interface;
+  ITMDBTVNetworkDetail = interface;
+  ITMDBContentRating = interface;
+  ITMDBContentRatings = interface;
+  ITMDBTVSerie = interface;
+  ITMDBTVSeries = interface;
+  ITMDBTVSeriesPage = interface;
+  ITMDBRatedTVSerie = interface;
+  ITMDBRatedTVSeries = interface;
+  ITMDBRatedTVSeriesPage = interface;
+  ITMDBTVSeriesDetail = interface;
+  ITMDBTVSeason = interface;
+  ITMDBTVSeasons = interface;
+  ITMDBTVSeasonPage = interface;
+  //ITMDBTVSeasonDetail = interface;
+  ITMDBTVEpisode = interface;
+  ITMDBTVEpisodes = interface;
+  ITMDBTVEpisodePage = interface;
+  ITMDBRatedTVEpisode = interface;
+  ITMDBRatedTVEpisodes = interface;
+  ITMDBTVEpisodeDetail = interface;
+  ITMDBTVEpisodeGroup = interface;
+  ITMDBTVEpisodeGroups = interface;
+  ITMDBList = interface;
+  ITMDBLists = interface;
+  ITMDBListPage = interface;
+  ITMDBListDetail = interface;
+  ITMDBDiscoverMoviesParams = interface;
+  ITMDBDiscoverTVParams = interface;
+  ITMDBDiscoverMovie = interface;
+  ITMDBDiscoverMovies = interface;
+  ITMDBDiscoverMoviePage = interface;
+  ITMDBDiscoverTVSerie = interface;
+  ITMDBDiscoverTVSeries = interface;
+  ITMDBDiscoverTVSeriesPage = interface;
   ITMDBFindResults = interface;
-
-
-
-  { API Service Forward Definitions }
-
+  ITMDBWatchProviderPriority = interface;
+  ITMDBWatchProviderPriorities = interface;
+  ITMDBWatchProvider = interface;
+  ITMDBWatchProviders = interface;
   ITMDBService = interface;
-
   ITMDBServiceAccount = interface;
-
   ITMDBServiceAuthentication = interface;
-
   ITMDBServiceCertifications = interface;
-
   ITMDBServiceChanges = interface;
-
   ITMDBServiceCollections = interface;
-
   ITMDBServiceCompanies = interface;
-
   ITMDBServiceConfiguration = interface;
-
   ITMDBServiceCredits = interface;
-
   ITMDBServiceDiscover = interface;
-
   ITMDBServiceFind = interface;
-
   ITMDBServiceGenres = interface;
-
   ITMDBServiceGuestSessions = interface;
-
   ITMDBServiceKeywords = interface;
-
   ITMDBServiceLists = interface;
-
   ITMDBServiceMovieLists = interface;
-
   ITMDBServiceMovies = interface;
-
   ITMDBServiceNetworks = interface;
-
   ITMDBServicePeopleLists = interface;
-
   ITMDBServicePeople = interface;
-
   ITMDBServiceReviews = interface;
-
   ITMDBServiceSearch = interface;
-
   ITMDBServiceTrending = interface;
-
   ITMDBServiceTVSeriesLists = interface;
-
   ITMDBServiceTVSeries = interface;
-
   ITMDBServiceTVSeasons = interface;
-
   ITMDBServiceTVEpisodes = interface;
-
   ITMDBServiceTVEpisodeGroups = interface;
-
   ITMDBServiceWatchProviders = interface;
-
   ITMDBServiceImages = interface;
-
+  ITMDBCache = interface;
+  ITMDBLoginState = interface;
   ITMDBClient = interface;
 
 {$ENDREGION}
@@ -293,6 +251,23 @@ type
 
 
 
+{$REGION 'Detail Related'}
+
+  /// <summary>
+  /// Base type for any details of a given entity within TMDB.
+  /// For example, ITMDBMovieDetail, ITMDBPersonDetail, ITMDBNetworkDetail, etc.
+  /// </summary>
+  ITMDBDetail = interface
+    ['{45ECEE84-E982-4699-AF1C-BD2A2AE7BF62}']
+    function GetID: Integer; stdcall; //NOTE: Some use string for "id"
+    function GetTitle: WideString; stdcall; //NOTE: Shared between "name" and "title"
+
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Media Base Related'}
 
   /// <summary>
@@ -307,10 +282,10 @@ type
     function GetTitle: WideString; stdcall;
     function GetPopularity: Single; stdcall;
 
-    function AsMovie: ITMDBMovieItem; stdcall;
-    function AsPerson: ITMDBPersonItem; stdcall;
-    function AsTVSeries: ITMDBTVSeriesItem; stdcall;
-    function AsTVEpisode: ITMDBTVEpisodeItem; stdcall;
+    function AsMovie: ITMDBMovie; stdcall;
+    function AsPerson: ITMDBPerson; stdcall;
+    function AsTVSeries: ITMDBTVSerie; stdcall;
+    function AsTVEpisode: ITMDBTVEpisode; stdcall;
 
     property MediaType: TTMDBMediaType read GetMediaType;
     property Adult: Boolean read GetAdult;
@@ -525,7 +500,7 @@ type
 
 {$REGION 'Certification Related'}
 
-  ITMDBCertificationItem = interface
+  ITMDBCertification = interface
     ['{02B6525F-7A01-4FDC-B39F-2F276D999827}']
     function GetCertification: WideString; stdcall;
     function GetMeaning: WideString; stdcall;
@@ -541,12 +516,12 @@ type
     function GetCountryCode: WideString; stdcall;
     function GetCountryName: WideString; stdcall;
     function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBCertificationItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCertification; stdcall;
 
     property CountryCode: WideString read GetCountryCode;
     property CountryName: WideString read GetCountryName;
     property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBCertificationItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCertification read GetItem; default;
   end;
 
   ITMDBCertificationCountries = interface
@@ -633,7 +608,8 @@ type
     property Overview: WideString read GetOverview;
   end;
 
-  ITMDBTranslationItem = interface
+  //TODO: Inherit from item base...
+  ITMDBTranslation = interface
     ['{15A88780-ABF6-4EEA-AFFC-BC63A22A26BE}']
     function GetISO3166_1: WideString; stdcall;
     function GetISO639_1: WideString; stdcall;
@@ -658,13 +634,14 @@ type
     property TVEpisodeData: ITMDBTVEpisodeTranslationData read GetTVEpisodeData;
   end;
 
-  ITMDBTranslationList = interface
+  //TODO: Inherit from list base...
+  ITMDBTranslations = interface
     ['{7E5FB55A-B061-43A3-A6F9-DFB7AF75823D}']
     function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBTranslationItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTranslation; stdcall;
 
     property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBTranslationItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTranslation read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -673,7 +650,7 @@ type
 
 {$REGION 'Release Date Related'}
 
-  ITMDBReleaseDateItem = interface
+  ITMDBReleaseDate = interface
     ['{78E9A30C-DCDE-4DF5-A8A7-9BF08C210F90}']
     function GetCertification: WideString; stdcall;
     function GetDescriptors: TTMDBStrArray; stdcall;
@@ -695,12 +672,12 @@ type
     function GetCountryCode: WideString; stdcall;
     function GetCountryName: WideString; stdcall;
     function GetCount: Integer; stdcall;
-    function GetItem(const Index: Integer): ITMDBReleaseDateItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBReleaseDate; stdcall;
 
     property CountryCode: WideString read GetCountryCode;
     property CountryName: WideString read GetCountryName;
     property Count: Integer read GetCount;
-    property Items[const Index: Integer]: ITMDBReleaseDateItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBReleaseDate read GetItem; default;
   end;
 
   ITMDBReleaseDateCountries = interface
@@ -751,7 +728,7 @@ type
     //TODO: Properties...
   end;
 
-  ITMDBChangeItem = interface(ITMDBItem)
+  ITMDBChange = interface(ITMDBItem)
     ['{04186AE5-0DFE-4E30-99A8-8B8CBC98E17F}']
     function GetKey: WideString; stdcall;
     function GetItem(const Index: Integer): ITMDBChangeRecord; stdcall;
@@ -760,18 +737,18 @@ type
     property Items[const Index: Integer]: ITMDBChangeRecord read GetItem; default;
   end;
 
-  ITMDBChangeList = interface(ITMDBItems)
+  ITMDBChanges = interface(ITMDBItems)
     ['{67851829-A928-4C8E-9DED-694E0CE8139B}']
-    function GetItem(const Index: Integer): ITMDBChangeItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBChange; stdcall;
 
-    property Items[const Index: Integer]: ITMDBChangeItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBChange read GetItem; default;
   end;
 
   ITMDBChangePage = interface(ITMDBPage)
     ['{EEBB8A61-5597-4B56-B8AF-82E3C1F54F75}']
-    function GetItems: ITMDBChangeList; stdcall;
+    function GetItems: ITMDBChanges; stdcall;
 
-    property Items: ITMDBChangeList read GetItems;
+    property Items: ITMDBChanges read GetItems;
   end;
 
 {$ENDREGION}
@@ -780,7 +757,7 @@ type
 
 {$REGION 'Collection Related'}
 
-  ITMDBCollectionItem = interface(ITMDBItem)
+  ITMDBCollection = interface(ITMDBItem)
     ['{C0911ACB-C909-438A-8DC3-5A67E5F4CB4F}']
     function GetAdult: Boolean; stdcall;
     function GetBackdropPath: WideString; stdcall;
@@ -801,20 +778,21 @@ type
     property PosterPath: WideString read GetPosterPath;
   end;
 
-  ITMDBCollectionList = interface(ITMDBItems)
+  ITMDBCollections = interface(ITMDBItems)
     ['{DF22CFAD-33BC-4EF4-AB99-1848AB11E191}']
-    function GetItem(const Index: Integer): ITMDBCollectionItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCollection; stdcall;
 
-    property Items[const Index: Integer]: ITMDBCollectionItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCollection read GetItem; default;
   end;
 
   ITMDBCollectionPage = interface(ITMDBPage)
     ['{7A7ADCD0-8062-4CF3-8D07-903DCCDA42E8}']
-    function GetItems: ITMDBCollectionList; stdcall;
+    function GetItems: ITMDBCollections; stdcall;
 
-    property Items: ITMDBCollectionList read GetItems;
+    property Items: ITMDBCollections read GetItems;
   end;
 
+  //TODO: Change to ITMDBMedium
   ITMDBCollectionPart = interface
     ['{C3706419-47B1-4CD9-879C-16259A116DF5}']
     function GetAdult: Boolean; stdcall;
@@ -825,7 +803,7 @@ type
     function GetOverview: WideString; stdcall;
     function GetPosterPath: WideString; stdcall;
     function GetMediaType: TTMDBMediaType; stdcall;
-    function GetGenres: ITMDBGenreList; stdcall;
+    function GetGenres: ITMDBGenres; stdcall;
     function GetPopularity: Single; stdcall;
     function GetReleaseDate: TDateTime; stdcall;
     function GetVideo: Boolean; stdcall;
@@ -842,7 +820,7 @@ type
     property Overview: WideString read GetOverview;
     property PosterPath: WideString read GetPosterPath;
     property MediaType: TTMDBMediaType read GetMediaType;
-    property Genres: ITMDBGenreList read GetGenres;
+    property Genres: ITMDBGenres read GetGenres;
     property Popularity: Single read GetPopularity;
     property ReleaseDate: TDateTime read GetReleaseDate;
     property Video: Boolean read GetVideo;
@@ -861,8 +839,8 @@ type
     function GetPart(const Index: Integer): ITMDBCollectionPart; stdcall;
 
     function GetImages(const IncludeImageLanguage: WideString = '';
-      const Language: WideString = ''): ITMDBMediaImages; stdcall;
-    function GetTranslations: ITMDBTranslationList; stdcall;
+      const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    function GetTranslations: ITMDBTranslations; stdcall;
 
     property ID: Integer read GetID;
     property Name: WideString read GetName;
@@ -879,7 +857,7 @@ type
 
 {$REGION 'Company Related'}
 
-  ITMDBCompanyItem = interface(ITMDBItem)
+  ITMDBCompany = interface(ITMDBItem)
     ['{491A255A-0E29-43B3-8AAC-5F727D74DD98}']
     function GetID: Integer; stdcall;
     function GetLogoPath: WideString; stdcall;
@@ -892,18 +870,18 @@ type
     property OriginCountry: WideString read GetOriginCountry;
   end;
 
-  ITMDBCompanyList = interface(ITMDBItems)
+  ITMDBCompanies = interface(ITMDBItems)
     ['{BF6B6EC5-C0E1-4D7B-B987-8F2BE6AD4211}']
-    function GetItem(const Index: Integer): ITMDBCompanyItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCompany; stdcall;
 
-    property Items[const Index: Integer]: ITMDBCompanyItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCompany read GetItem; default;
   end;
 
   ITMDBCompanyPage = interface(ITMDBPage)
     ['{F3D62122-D304-4CA3-BE0C-72B1219E0DD1}']
-    function GetItems: ITMDBCompanyList; stdcall;
+    function GetItems: ITMDBCompanies; stdcall;
 
-    property Items: ITMDBCompanyList read GetItems;
+    property Items: ITMDBCompanies read GetItems;
   end;
 
   ITMDBCompanyDetail = interface
@@ -976,7 +954,7 @@ type
   /// <summary>
   /// A single country record.
   /// </summary>
-  ITMDBCountryItem = interface(ITMDBItem)
+  ITMDBCountry = interface(ITMDBItem)
     ['{8E894D16-379C-431B-9F27-6FBB80F761B0}']
     function GetISO3166_1: WideString; stdcall;
     function GetEnglishName: WideString; stdcall;
@@ -990,13 +968,13 @@ type
   /// <summary>
   /// A list containing all possible countries supported by TMDB.
   /// </summary>
-  ITMDBCountryList = interface(ITMDBItems)
+  ITMDBCountries = interface(ITMDBItems)
     ['{A1081041-E5B2-46C4-9905-EF7984C45FCA}']
-    function GetItem(const Index: Integer): ITMDBCountryItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCountry; stdcall;
 
-    function GetByCode(const Code: WideString): ITMDBCountryItem; stdcall;
+    function GetByCode(const Code: WideString): ITMDBCountry; stdcall;
 
-    property Items[const Index: Integer]: ITMDBCountryItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCountry read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1008,7 +986,7 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBJobDepartmentItem = interface(ITMDBItem)
+  ITMDBJobDepartment = interface(ITMDBItem)
     ['{847352D6-4054-4E62-897C-258305FBEDE2}']
     function GetDepartment: WideString; stdcall;
     function GetJobs: TTMDBStrArray; stdcall;
@@ -1020,11 +998,11 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBJobDepartmentList = interface(ITMDBItems)
+  ITMDBJobDepartments = interface(ITMDBItems)
     ['{2B9A1DF6-2CA9-48E2-886C-179F7F92383C}']
-    function GetItem(const Index: Integer): ITMDBJobDepartmentItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBJobDepartment; stdcall;
 
-    property Items[const Index: Integer]: ITMDBJobDepartmentItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBJobDepartment read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1036,7 +1014,7 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBLanguageItem = interface(ITMDBItem)
+  ITMDBLanguage = interface(ITMDBItem)
     ['{CBEECBBE-5CBE-4592-9C65-B82F1D07CCF7}']
     function GetISO639_1: WideString; stdcall;
     function GetEnglishName: WideString; stdcall;
@@ -1050,13 +1028,13 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBLanguageList = interface(ITMDBItems)
+  ITMDBLanguages = interface(ITMDBItems)
     ['{B08908B7-3C02-4BF9-8B94-AECF0EEC8D49}']
-    function GetItem(const Index: Integer): ITMDBLanguageItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBLanguage; stdcall;
 
-    function GetByCode(const Code: WideString): ITMDBLanguageItem; stdcall;
+    function GetByCode(const Code: WideString): ITMDBLanguage; stdcall;
 
-    property Items[const Index: Integer]: ITMDBLanguageItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBLanguage read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1068,7 +1046,7 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBTimezoneItem = interface(ITMDBItem)
+  ITMDBTimezone = interface(ITMDBItem)
     ['{58364B5B-DC6E-4A66-B3A5-7D812382C720}']
     function GetISO3166_1: WideString; stdcall;
     function GetZones: TTMDBStrArray; stdcall;
@@ -1080,11 +1058,11 @@ type
   /// <summary>
   ///
   /// </summary>
-  ITMDBTimezoneList = interface(ITMDBItems)
+  ITMDBTimezones = interface(ITMDBItems)
     ['{E120B06B-06AC-4591-9469-1173DA85C199}']
-    function GetItem(const Index: Integer): ITMDBTimezoneItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTimezone; stdcall;
 
-    property Items[const Index: Integer]: ITMDBTimezoneItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTimezone read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1096,7 +1074,7 @@ type
   /// <summary>
   /// A specific genre within a genre list.
   /// </summary>
-  ITMDBGenreItem = interface(ITMDBItem)
+  ITMDBGenre = interface(ITMDBItem)
     ['{6C6A1423-D7D9-473D-86C7-07A7FAB64AE7}']
     function GetID: Integer; stdcall;
     function GetName: WideString; stdcall;
@@ -1108,12 +1086,12 @@ type
   /// <summary>
   /// A list of genres.
   /// </summary>
-  ITMDBGenreList = interface(ITMDBItems)
+  ITMDBGenres = interface(ITMDBItems)
     ['{8C26B769-0488-47B8-BFBA-DA1D8DAA05E4}']
-    function GetItem(const Index: Integer): ITMDBGenreItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBGenre; stdcall;
     function GetMediaType: TTMDBMediaType; stdcall;
 
-    property Items[const Index: Integer]: ITMDBGenreItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBGenre read GetItem; default;
     property MediaType: TTMDBMediaType read GetMediaType;
   end;
 
@@ -1123,7 +1101,7 @@ type
 
 {$REGION 'Keyword Related'}
 
-  ITMDBKeywordItem = interface(ITMDBItem)
+  ITMDBKeyword = interface(ITMDBItem)
     ['{98460089-3E55-4022-A8AC-863EDBB8567A}']
     function GetID: Integer; stdcall;
     function GetName: WideString; stdcall;
@@ -1132,18 +1110,18 @@ type
     property Name: WideString read GetName;
   end;
 
-  ITMDBKeywordList = interface(ITMDBItems)
+  ITMDBKeywords = interface(ITMDBItems)
     ['{3E3016F7-4459-4C65-87E8-DCE6B023EBDF}']
-    function GetItem(const Index: Integer): ITMDBKeywordItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBKeyword; stdcall;
 
-    property Items[const Index: Integer]: ITMDBKeywordItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBKeyword read GetItem; default;
   end;
 
   ITMDBKeywordPage = interface(ITMDBPage)
     ['{DC679E95-D35E-4361-AF65-D1F10C52B881}']
-    function GetItems: ITMDBKeywordList; stdcall;
+    function GetItems: ITMDBKeywords; stdcall;
 
-    property Items: ITMDBKeywordList read GetItems;
+    property Items: ITMDBKeywords read GetItems;
   end;
 
   ITMDBKeywordDetail = interface
@@ -1180,23 +1158,23 @@ type
     property Width: Integer read GetWidth;
   end;
 
-  ITMDBMediaImageList = interface(ITMDBItems)
+  ITMDBMediaImages = interface(ITMDBItems)
     ['{124D54B5-7433-4C5B-8907-C5D5700D970E}']
     function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
 
     property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
   end;
 
-  ITMDBMediaImages = interface
+  ITMDBMediaImageGroup = interface
     ['{FD622861-6E8C-49DE-8151-3E072AF39299}']
-    function GetBackdrops: ITMDBMediaImageList; stdcall;
-    function GetLogos: ITMDBMediaImageList; stdcall;
-    function GetPosters: ITMDBMediaImageList; stdcall;
+    function GetBackdrops: ITMDBMediaImages; stdcall;
+    function GetLogos: ITMDBMediaImages; stdcall;
+    function GetPosters: ITMDBMediaImages; stdcall;
     function GetID: Integer; stdcall;
 
-    property Backdrops: ITMDBMediaImageList read GetBackdrops;
-    property Logos: ITMDBMediaImageList read GetLogos;
-    property Posters: ITMDBMediaImageList read GetPosters;
+    property Backdrops: ITMDBMediaImages read GetBackdrops;
+    property Logos: ITMDBMediaImages read GetLogos;
+    property Posters: ITMDBMediaImages read GetPosters;
     property ID: Integer read GetID;
   end;
 
@@ -1206,7 +1184,7 @@ type
 
 {$REGION 'Video Related'}
 
-  ITMDBVideoItem = interface(ITMDBItem)
+  ITMDBVideo = interface(ITMDBItem)
     ['{EC411DD6-C212-4DA8-9421-688E099079B3}']
     function GetISO639_1: WideString; stdcall;
     function GetISO3166_1: WideString; stdcall;
@@ -1231,11 +1209,11 @@ type
     property ID: WideString read GetID;
   end;
 
-  ITMDBVideoList = interface(ITMDBItems)
+  ITMDBVideos = interface(ITMDBItems)
     ['{1346CC9D-5897-4BBB-B140-5FEB6A892552}']
-    function GetItem(const Index: Integer): ITMDBVideoItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBVideo; stdcall;
 
-    property Items[const Index: Integer]: ITMDBVideoItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBVideo read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1247,7 +1225,7 @@ type
   /// <summary>
   /// A single person as found in TMDB
   /// </summary>
-  ITMDBPersonItem = interface(ITMDBMedium)
+  ITMDBPerson = interface(ITMDBMedium)
     ['{28C68CE8-358F-4C6E-B4D1-E859D8CCBD65}']
     function GetGender: TTMDBGender; stdcall;
     function GetKnownForDepartment: WideString; stdcall;
@@ -1263,11 +1241,11 @@ type
   /// <summary>
   /// A list of people
   /// </summary>
-  ITMDBPersonList = interface(ITMDBMedia)
+  ITMDBPeople = interface(ITMDBMedia)
     ['{80B66DAA-C18D-427B-9A0C-B0F070725B83}']
-    function GetItem(const Index: Integer): ITMDBPersonItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBPerson; stdcall;
 
-    property Items[const Index: Integer]: ITMDBPersonItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBPerson read GetItem; default;
   end;
 
   /// <summary>
@@ -1275,9 +1253,14 @@ type
   /// </summary>
   ITMDBPersonPage = interface(ITMDBMediaPage)
     ['{88C5FCB1-50A7-4D3A-AB69-95B542D77FD5}']
-    function GetItems: ITMDBPersonList; stdcall;
+    function GetItems: ITMDBPeople; stdcall;
 
-    property Items: ITMDBPersonList read GetItems;
+    property Items: ITMDBPeople read GetItems;
+  end;
+
+  ITMDBPersonDetail = interface(ITMDBDetail)
+    ['{2C4F4272-71FB-47EA-926A-FB26C5DFFA18}']
+
   end;
 
 {$ENDREGION}
@@ -1286,7 +1269,7 @@ type
 
 {$REGION 'Credit Related'}
 
-  ITMDBCastItem = interface(ITMDBPersonItem)
+  ITMDBCastPerson = interface(ITMDBPerson)
     ['{9CCB9511-A5A5-4BE2-9991-D8A388F7439C}']
     function GetCastID: Integer; stdcall;
     function GetCharacter: WideString; stdcall;
@@ -1299,14 +1282,14 @@ type
     property Order: Integer read GetOrder;
   end;
 
-  ITMDBCastList = interface(ITMDBPersonList)
+  ITMDBCastPeople = interface(ITMDBPeople)
     ['{EE41CD2D-6271-48D8-8A5F-646646C44F30}']
-    function GetItem(const Index: Integer): ITMDBCastItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCastPerson; stdcall;
 
-    property Items[const Index: Integer]: ITMDBCastItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCastPerson read GetItem; default;
   end;
 
-  ITMDBCrewItem = interface(ITMDBPersonItem)
+  ITMDBCrewPerson = interface(ITMDBPerson)
     ['{51AE4CAA-1698-4AF6-B05C-D55E45BAE4ED}']
     function GetCreditID: WideString; stdcall;
     function GetDepartment: WideString; stdcall;
@@ -1317,20 +1300,20 @@ type
     property Job: WideString read GetJob;
   end;
 
-  ITMDBCrewList = interface(ITMDBPersonList)
+  ITMDBCrewPeople = interface(ITMDBPeople)
     ['{1FF0C1A1-EB42-4EF9-8C1B-DEA3AFBD6777}']
-    function GetItem(const Index: Integer): ITMDBCrewItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBCrewPerson; stdcall;
 
-    property Items[const Index: Integer]: ITMDBCrewItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBCrewPerson read GetItem; default;
   end;
 
   ITMDBCredits = interface
     ['{6A1470C6-79DA-4EE8-B43E-F76EEA9015B9}']
-    function GetCast: ITMDBCastList; stdcall;
-    function GetCrew: ITMDBCrewList; stdcall;
+    function GetCast: ITMDBCastPeople; stdcall;
+    function GetCrew: ITMDBCrewPeople; stdcall;
 
-    property Cast: ITMDBCastList read GetCast;
-    property Crew: ITMDBCrewList read GetCrew;
+    property Cast: ITMDBCastPeople read GetCast;
+    property Crew: ITMDBCrewPeople read GetCrew;
   end;
 
 {$ENDREGION}
@@ -1342,10 +1325,10 @@ type
   /// <summary>
   /// A single movie item as found in TMDB.
   /// </summary>
-  ITMDBMovieItem = interface(ITMDBMedium)
+  ITMDBMovie = interface(ITMDBMedium)
     ['{00EB49F1-F0EA-4E7A-859E-38632667BA87}']
     function GetBackdropPath: WideString; stdcall;
-    function GetGenres: ITMDBGenreList; stdcall;
+    function GetGenres: ITMDBGenres; stdcall;
     function GetOriginalLanguage: WideString; stdcall;
     function GetOriginalTitle: WideString; stdcall;
     function GetOverview: WideString; stdcall;
@@ -1377,7 +1360,7 @@ type
     //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
 
     property BackdropPath: WideString read GetBackdropPath;
-    property Genres: ITMDBGenreList read GetGenres;
+    property Genres: ITMDBGenres read GetGenres;
     property OriginalLanguage: WideString read GetOriginalLanguage;
     property OriginalTitle: WideString read GetOriginalTitle;
     property Overview: WideString read GetOverview;
@@ -1391,11 +1374,11 @@ type
   /// <summary>
   /// A list of movies
   /// </summary>
-  ITMDBMovieList = interface(ITMDBMedia)
+  ITMDBMovies = interface(ITMDBMedia)
     ['{AC2F3E06-A3C5-4B7B-B83C-23258F6E2FEF}']
-    function GetItem(const Index: Integer): ITMDBMovieItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBMovie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBMovieItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBMovie read GetItem; default;
   end;
 
   /// <summary>
@@ -1403,33 +1386,33 @@ type
   /// </summary>
   ITMDBMoviePage = interface(ITMDBMediaPage)
     ['{D35DC3E6-D4BB-416D-9A43-348C0FCAABB1}']
-    function GetItems: ITMDBMovieList; stdcall;
+    function GetItems: ITMDBMovies; stdcall;
 
-    property Items: ITMDBMovieList read GetItems;
+    property Items: ITMDBMovies read GetItems;
   end;
 
 
 
 
-  ITMDBRatedMovieItem = interface(ITMDBMovieItem)
+  ITMDBRatedMovie = interface(ITMDBMovie)
     ['{8C67545E-20BB-4A32-8FB7-136C642F73A9}']
     function GetRating: Single; stdcall;
 
     property Rating: Single read GetRating;
   end;
 
-  ITMDBRatedMovieList = interface(ITMDBMovieList)
+  ITMDBRatedMovies = interface(ITMDBMovies)
     ['{F76B28E0-0F0E-45EB-B808-9821549BC755}']
-    function GetItem(const Index: Integer): ITMDBRatedMovieItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBRatedMovie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBRatedMovieItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBRatedMovie read GetItem; default;
   end;
 
   ITMDBRatedMoviePage = interface(ITMDBMoviePage)
     ['{5E267356-3F72-4C5B-87B6-B1D596FDD037}']
-    function GetItems: ITMDBRatedMovieList; stdcall;
+    function GetItems: ITMDBRatedMovies; stdcall;
 
-    property Items: ITMDBRatedMovieList read GetItems;
+    property Items: ITMDBRatedMovies read GetItems;
   end;
 
   /// <summary>
@@ -1459,7 +1442,7 @@ type
     function GetBackdropPath: WideString; stdcall;
     function GetCollection: ITMDBMovieCollectionRef; stdcall;
     function GetBudget: Currency; stdcall;
-    function GetGenres: ITMDBGenreList; stdcall;
+    function GetGenres: ITMDBGenres; stdcall;
     function GetHomepage: WideString; stdcall;
     function GetID: Integer; stdcall;
     function GetIMDBID: WideString; stdcall;
@@ -1469,12 +1452,12 @@ type
     function GetOverview: WideString; stdcall;
     function GetPopularity: Single; stdcall;
     function GetPosterPath: WideString; stdcall;
-    function GetProductionCompanies: ITMDBCompanyList; stdcall;
-    function GetProductionCountries: ITMDBCountryList; stdcall;
+    function GetProductionCompanies: ITMDBCompanies; stdcall;
+    function GetProductionCountries: ITMDBCountries; stdcall;
     function GetReleaseDate: TDateTime; stdcall;
     function GetRevenue: Currency; stdcall;
     function GetRuntime: Integer; stdcall;
-    function GetSpokenLanguages: ITMDBLanguageList; stdcall;
+    function GetSpokenLanguages: ITMDBLanguages; stdcall;
     function GetStatus: WideString; stdcall;
     function GetTagline: WideString; stdcall;
     function GetTitle: WideString; stdcall;
@@ -1487,15 +1470,15 @@ type
     function AppendedChanges: ITMDBChangePage; stdcall;
     function AppendedCredits: ITMDBCredits; stdcall;
     //function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
-    function AppendedImages: ITMDBMediaImages; stdcall;
-    function AppendedKeywords: ITMDBKeywordList; stdcall;
+    function AppendedImages: ITMDBMediaImageGroup; stdcall;
+    function AppendedKeywords: ITMDBKeywords; stdcall;
     //function AppendedLists: ITMDBListPage; stdcall;
     //function AppendedRecommendations: ITMDB; stdcall;
     function AppendedReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function AppendedReviews: ITMDBReviewList; stdcall;
     function AppendedSimilar: ITMDBMoviePage; stdcall;
-    function AppendedTranslations: ITMDBTranslationList; stdcall;
-    function AppendedVideos: ITMDBVideoList; stdcall;
+    function AppendedTranslations: ITMDBTranslations; stdcall;
+    function AppendedVideos: ITMDBVideos; stdcall;
 
     function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
@@ -1530,7 +1513,7 @@ type
     property BackdropPath: WideString read GetBackdropPath;
     property Collection: ITMDBMovieCollectionRef read GetCollection;
     property Budget: Currency read GetBudget;
-    property Genres: ITMDBGenreList read GetGenres;
+    property Genres: ITMDBGenres read GetGenres;
     property Homepage: WideString read GetHomepage;
     property ID: Integer read GetID;
     property ITMDBID: WideString read GetIMDBID;
@@ -1540,12 +1523,12 @@ type
     property Overview: WideString read GetOverview;
     property Popularity: Single read GetPopularity;
     property PosterPath: WideString read GetPosterPath;
-    property ProductionCompanies: ITMDBCompanyList read GetProductionCompanies;
-    property ProductionCountries: ITMDBCountryList read GetProductionCountries;
+    property ProductionCompanies: ITMDBCompanies read GetProductionCompanies;
+    property ProductionCountries: ITMDBCountries read GetProductionCountries;
     property ReleaseDate: TDateTime read GetReleaseDate;
     property Revenue: Currency read GetRevenue;
     property Runtime: Integer read GetRuntime;
-    property SpokenLanguages: ITMDBLanguageList read GetSpokenLanguages;
+    property SpokenLanguages: ITMDBLanguages read GetSpokenLanguages;
     property Status: WideString read GetStatus;
     property Tagline: WideString read GetTagline;
     property Title: WideString read GetTitle;
@@ -1582,7 +1565,7 @@ type
 
 {$REGION 'Network Related'}
 
-  ITMDBTVNetworkItem = interface(ITMDBItem)
+  ITMDBTVNetwork = interface(ITMDBItem)
     ['{BCC9E4A7-07DD-416E-9F04-54CDC2A50DA3}']
     function GetID: Integer; stdcall;
     function GetLogoPath: WideString; stdcall;
@@ -1595,11 +1578,11 @@ type
     property OriginCountry: WideString read GetOriginCountry;
   end;
 
-  ITMDBTVNetworkList = interface(ITMDBItems)
+  ITMDBTVNetworks = interface(ITMDBItems)
     ['{2569A653-F292-4E48-8FE1-DBBCCE289102}']
-    function GetItem(const Index: Integer): ITMDBTVNetworkItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTVNetwork; stdcall;
 
-    property Items[const Index: Integer]: ITMDBTVNetworkItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTVNetwork read GetItem; default;
   end;
 
   ITMDBTVNetworkDetail = interface
@@ -1623,9 +1606,10 @@ type
 
 
 
+//TODO: Implement
 {$REGION 'Content Rating Related'}
 
-  ITMDBContentRatingItem = interface(ITMDBItem)
+  ITMDBContentRating = interface(ITMDBItem)
     ['{D6DDA578-E421-4CB9-8436-A24EADEC8D06}']
     function GetDescriptors: TTMDBStrArray; stdcall;
     function GetISO3166_1: WideString; stdcall;
@@ -1636,11 +1620,11 @@ type
     property Rating: WideString read GetRating;
   end;
 
-  ITMDBContentRatingList = interface(ITMDBItems)
+  ITMDBContentRatings = interface(ITMDBItems)
     ['{DBCEC84C-C2A6-4243-90B8-114BEA06A6A3}']
-    function GetItem(const Index: Integer): ITMDBContentRatingItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBContentRating; stdcall;
 
-    property Items[const Index: Integer]: ITMDBContentRatingItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBContentRating read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -1653,10 +1637,10 @@ type
   /// A single TV Show in an ITMDBTVPage.
   /// [DONE]
   /// </summary>
-  ITMDBTVSeriesItem = interface(ITMDBMedium)
+  ITMDBTVSerie = interface(ITMDBMedium)
     ['{7907FF27-E02F-4270-9AAB-322E6C31516D}']
     function GetBackdropPath: WideString; stdcall;
-    function GetGenres: ITMDBGenreList; stdcall;
+    function GetGenres: ITMDBGenres; stdcall;
     function GetOriginCountry: TTMDBStrArray;
     function GetOriginalLanguage: WideString; stdcall;
     function GetOriginalName: WideString; stdcall;
@@ -1667,7 +1651,7 @@ type
     function GetVoteCount: Integer; stdcall;
 
     property BackdropPath: WideString read GetBackdropPath;
-    property Genres: ITMDBGenreList read GetGenres;
+    property Genres: ITMDBGenres read GetGenres;
     property OriginCountry: TTMDBStrArray read GetOriginCountry;
     property OriginalLanguage: WideString read GetOriginalLanguage;
     property OriginalName: WideString read GetOriginalName;
@@ -1681,11 +1665,11 @@ type
   /// <summary>
   /// A list of TV series
   /// </summary>
-  ITMDBTVSeriesList = interface(ITMDBMedia)
+  ITMDBTVSeries = interface(ITMDBMedia)
     ['{13D059E8-BC04-423B-AA5B-8590DFA6E97F}']
-    function GetItem(const Index: Integer): ITMDBTVSeriesItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTVSerie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBTVSeriesItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTVSerie read GetItem; default;
   end;
 
   /// <summary>
@@ -1693,53 +1677,53 @@ type
   /// </summary>
   ITMDBTVSeriesPage = interface(ITMDBMediaPage)
     ['{05742B99-FDCC-47E5-B34F-987ECA5DEBA2}']
-    function GetItems: ITMDBTVSeriesList; stdcall;
+    function GetItems: ITMDBTVSeries; stdcall;
 
-    property Items: ITMDBTVSeriesList read GetItems;
+    property Items: ITMDBTVSeries read GetItems;
   end;
 
 
 
 
 
-  ITMDBRatedTVSeriesItem = interface(ITMDBTVSeriesItem)
+  ITMDBRatedTVSerie = interface(ITMDBTVSerie)
     ['{D48E190F-3095-452A-AE5C-75E70DB7C709}']
     function GetRating: Single; stdcall;
 
     property Rating: Single read GetRating;
   end;
 
-  ITMDBRatedTVSeriesList = interface(ITMDBTVSeriesList)
+  ITMDBRatedTVSeries = interface(ITMDBTVSeries)
     ['{C7614607-9784-4D6A-99C2-66CB135A0736}']
-    function GetItem(const Index: Integer): ITMDBRatedTVSeriesItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBRatedTVSerie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBRatedTVSeriesItem read GetItem;
+    property Items[const Index: Integer]: ITMDBRatedTVSerie read GetItem;
   end;
 
   ITMDBRatedTVSeriesPage = interface(ITMDBTVSeriesPage)
     ['{AD5E62E1-41CE-4564-8407-DCEE9F2F0756}']
-    function GetItems: ITMDBTVSeriesList; stdcall;
+    function GetItems: ITMDBTVSeries; stdcall;
 
-    property Items: ITMDBTVSeriesList read GetItems;
+    property Items: ITMDBTVSeries read GetItems;
   end;
 
   ITMDBTVSeriesDetail = interface
     ['{21659C51-7E37-4353-A47E-B1D5C31B456D}']
     function GetAdult: Boolean;
     function GetBackdropPath: WideString;
-    function GetCreatedBy: ITMDBPersonList;
+    function GetCreatedBy: ITMDBPeople;
     function GetEpisodeRunTime: TTMDBIntArray;
     function GetFirstAirDate: TDateTime;
-    function GetGenres: ITMDBGenreList;
+    function GetGenres: ITMDBGenres;
     function GetHomepage: WideString;
     function GetID: Integer;
     function GetInProduction: Boolean;
     function GetLanguages: TTMDBStrArray;
     function GetLastAirDate: TDateTime;
-    function GetLastEpisodeToAir: ITMDBTVEpisodeItem;
+    function GetLastEpisodeToAir: ITMDBTVEpisode;
     function GetName: WideString;
-    function GetNextEpisodeToAir: ITMDBTVEpisodeItem;
-    function GetNetworks: ITMDBTVNetworkList;
+    function GetNextEpisodeToAir: ITMDBTVEpisode;
+    function GetNetworks: ITMDBTVNetworks;
     function GetNumberOfEpisodes: Integer;
     function GetNumberOfSeasons: Integer;
     function GetOriginCountry: TTMDBStrArray;
@@ -1748,10 +1732,10 @@ type
     function GetOverview: WideString;
     function GetPopularity: Single;
     function GetPosterPath: WideString;
-    function GetProductionCompanies: ITMDBCompanyList;
-    function GetProductionCountries: ITMDBCountryList;
+    function GetProductionCompanies: ITMDBCompanies;
+    function GetProductionCountries: ITMDBCountries;
     //function GetSeasons: ITMDBTVSeasonList;
-    function GetSpokenLanguages: ITMDBLanguageList;
+    function GetSpokenLanguages: ITMDBLanguages;
     function GetStatus: WideString;
     function GetTagline: WideString;
     function GetType: WideString;
@@ -1760,19 +1744,19 @@ type
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
-    property CreatedBy: ITMDBPersonList read GetCreatedBy;
+    property CreatedBy: ITMDBPeople read GetCreatedBy;
     property EpisodeRunTime: TTMDBIntArray read GetEpisodeRunTime;
     property FirstAirDate: TDateTime read GetFirstAirDate;
-    property Genres: ITMDBGenreList read GetGenres;
+    property Genres: ITMDBGenres read GetGenres;
     property Homepage: WideString read GetHomepage;
     property ID: Integer read GetID;
     property InProduction: Boolean read GetInProduction;
     property Languages: TTMDBStrArray read GetLanguages;
     property LastAirDate: TDateTime read GetLastAirDate;
-    property LastEpisodeToAir: ITMDBTVEpisodeItem read GetLastEpisodeToAir;
+    property LastEpisodeToAir: ITMDBTVEpisode read GetLastEpisodeToAir;
     property Name: WideString read GetName;
-    property NextEpisodeToAir: ITMDBTVEpisodeItem read GetNextEpisodeToAir;
-    property Networks: ITMDBTVNetworkList read GetNetworks;
+    property NextEpisodeToAir: ITMDBTVEpisode read GetNextEpisodeToAir;
+    property Networks: ITMDBTVNetworks read GetNetworks;
     property NumberOfEpisodes: Integer read GetNumberOfEpisodes;
     property NumberOfSeasons: Integer read GetNumberOfSeasons;
     property OriginCountry: TTMDBStrArray read GetOriginCountry;
@@ -1781,10 +1765,10 @@ type
     property Overview: WideString read GetOverview;
     property Popularity: Single read GetPopularity;
     property PosterPath: WideString read GetPosterPath;
-    property ProductionCompanies: ITMDBCompanyList read GetProductionCompanies;
-    property ProductionCountries: ITMDBCountryList read GetProductionCountries;
+    property ProductionCompanies: ITMDBCompanies read GetProductionCompanies;
+    property ProductionCountries: ITMDBCountries read GetProductionCountries;
     //TODO: Seasons
-    property SpokenLanguages: ITMDBLanguageList read GetSpokenLanguages;
+    property SpokenLanguages: ITMDBLanguages read GetSpokenLanguages;
     property Status: WideString read GetStatus;
     property Tagline: WideString read GetTagline;
     property SeriesType: WideString read GetType;
@@ -1798,7 +1782,7 @@ type
 
 {$REGION 'TV Season Related'}
 
-  ITMDBTVSeasonItem = interface(ITMDBMedium)
+  ITMDBTVSeason = interface(ITMDBMedium)
     ['{A3291740-EB50-467E-8B82-ED5F3463A882}']
     function GetSeasonNumber: Integer;
     //TODO
@@ -1808,18 +1792,18 @@ type
   /// <summary>
   /// A list of TV seasons
   /// </summary>
-  ITMDBTVSeasonList = interface(ITMDBMedia)
+  ITMDBTVSeasons = interface(ITMDBMedia)
     ['{BA1F02CD-9D5F-4AC7-B849-7B524C3B25F1}']
-    function GetItem(const Index: Integer): ITMDBTVSeasonItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTVSeason; stdcall;
 
-    property Items[const Index: Integer]: ITMDBTVSeasonItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTVSeason read GetItem; default;
   end;
 
   ITMDBTVSeasonPage = interface(ITMDBMediaPage)
     ['{697CDF42-1FE5-49C3-92C5-87BE730AD427}']
-    function GetItems: ITMDBTVSeasonList; stdcall;
+    function GetItems: ITMDBTVSeasons; stdcall;
 
-    property Items: ITMDBTVSeasonList read GetItems;
+    property Items: ITMDBTVSeasons read GetItems;
   end;
 
 {$ENDREGION}
@@ -1828,7 +1812,7 @@ type
 
 {$REGION 'TV Episode Related'}
 
-  ITMDBTVEpisodeItem = interface(ITMDBMedium)
+  ITMDBTVEpisode = interface(ITMDBMedium)
     ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
     function GetOverview: WideString; stdcall;
     function GetVoteAverage: Single; stdcall;
@@ -1858,41 +1842,46 @@ type
   /// <summary>
   /// A list of TV episodes
   /// </summary>
-  ITMDBTVEpisodeList = interface(ITMDBMedia)
+  ITMDBTVEpisodes = interface(ITMDBMedia)
     ['{C574FEB8-2F01-408A-95B5-6B80E218EECD}']
-    function GetItem(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBTVEpisode; stdcall;
 
-    property Items[const Index: Integer]: ITMDBTVEpisodeItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBTVEpisode read GetItem; default;
   end;
 
   ITMDBTVEpisodePage = interface(ITMDBMediaPage)
     ['{BB238B34-1BA9-411C-92AF-B43C6DD6702A}']
-    function GetItems: ITMDBTVEpisodeList; stdcall;
+    function GetItems: ITMDBTVEpisodes; stdcall;
 
-    property Items: ITMDBTVEpisodeList read GetItems;
+    property Items: ITMDBTVEpisodes read GetItems;
   end;
 
 
 
-  ITMDBRatedTVEpisodeItem = interface(ITMDBTVEpisodeItem)
+  ITMDBRatedTVEpisode = interface(ITMDBTVEpisode)
     ['{0FDB3732-0EB1-43FF-A006-4E6EFC411C54}']
     function GetRating: Single; stdcall;
 
     property Rating: Single read GetRating;
   end;
 
-  ITMDBRatedTVEpisodeList = interface(ITMDBTVEpisodeList)
+  ITMDBRatedTVEpisodes = interface(ITMDBTVEpisodes)
     ['{B9718FA3-4D61-4E43-BE53-58E28E787CF4}']
-    function GetItem(const Index: Integer): ITMDBRatedTVEpisodeItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBRatedTVEpisode; stdcall;
 
-    property Items[const Index: Integer]: ITMDBRatedTVEpisodeItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBRatedTVEpisode read GetItem; default;
   end;
 
   ITMDBRatedTVEpisodePage = interface(ITMDBTVEpisodePage)
     ['{DDC4B9FA-AC4B-4EAC-B9B8-78464034BC68}']
-    function GetItems: ITMDBRatedTVEpisodeList; stdcall;
+    function GetItems: ITMDBRatedTVEpisodes; stdcall;
 
-    property Items: ITMDBRatedTVEpisodeList read GetItems;
+    property Items: ITMDBRatedTVEpisodes read GetItems;
+  end;
+
+  ITMDBTVEpisodeDetail = interface
+    ['{54B42FE7-72A4-4D20-B249-F9F987285053}']
+
   end;
 
 {$ENDREGION}
@@ -1901,9 +1890,7 @@ type
 
 {$REGION 'TV Episode Group Related'}
 
-  ITMDBTVEpisodeGroup = interface;
-
-  ITMDBTVEpisodeGroupResponse = interface
+  ITMDBTVEpisodeGroups = interface
     ['{14C7DEAF-20B9-4541-BBF8-D9A9A8E8205E}']
     function GetDescription: WideString; stdcall;
     function GetEpisodeCount: Integer; stdcall;
@@ -1911,7 +1898,7 @@ type
     function GetGroup(const Index: Integer): ITMDBTVEpisodeGroup; stdcall;
     function GetID: WideString; stdcall;
     function GetName: WideString; stdcall;
-    function GetNetwork: ITMDBTVNetworkItem; stdcall;
+    function GetNetwork: ITMDBTVNetwork; stdcall;
     function GetType: TTMDBTVEpisodeGroupType; stdcall;
 
     property Description: WideString read GetDescription;
@@ -1920,7 +1907,7 @@ type
     property Groups[const Index: Integer]: ITMDBTVEpisodeGroup read GetGroup; default;
     property ID: WideString read GetID;
     property Name: WideString read GetName;
-    property Network: ITMDBTVNetworkItem read GetNetwork;
+    property Network: ITMDBTVNetwork read GetNetwork;
     property GroupType: TTMDBTVEpisodeGroupType read GetType;
   end;
 
@@ -1930,14 +1917,14 @@ type
     function GetName: WideString; stdcall;
     function GetOrder: Integer; stdcall;
     function GetCount: Integer; stdcall;
-    function GetEpisode(const Index: Integer): ITMDBTVEpisodeItem; stdcall;
+    function GetEpisode(const Index: Integer): ITMDBTVEpisode; stdcall;
     function GetLocked: Boolean; stdcall;
 
     property ID: WideString read GetID;
     property Name: WideString read GetName;
     property Order: Integer read GetOrder;
     property Count: Integer read GetCount;
-    property Episodes[const Index: Integer]: ITMDBTVEpisodeItem read GetEpisode; default;
+    property Episodes[const Index: Integer]: ITMDBTVEpisode read GetEpisode; default;
     property Locked: Boolean read GetLocked;
   end;
 
@@ -1947,7 +1934,7 @@ type
 
 {$REGION 'List Related'}
 
-  ITMDBListItem = interface(ITMDBItem)
+  ITMDBList = interface(ITMDBItem)
     ['{7B153F3B-E562-45AC-8708-6C1F3E6EE6B2}']
     function GetDescription: WideString;
     function GetFavoriteCount: Integer;
@@ -1968,9 +1955,9 @@ type
 
   ITMDBLists = interface(ITMDBItems)
     ['{3E59EB7F-7ACA-4C60-87CF-14D8D57DDA17}']
-    function GetItem(const Index: Integer): ITMDBListItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBList; stdcall;
 
-    property Items[const Index: Integer]: ITMDBListItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBList read GetItem; default;
   end;
 
   ITMDBListPage = interface(ITMDBPage)
@@ -1978,6 +1965,23 @@ type
     function GetItems: ITMDBLists; stdcall;
 
     property Items: ITMDBLists read GetItems;
+  end;
+
+  ITMDBListDetail = interface
+    ['{23EA408A-0752-455E-B9CA-0BB1C5BB02A1}']
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetParts: ITMDBMedia; stdcall;
+
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property BackdropPath: WideString read GetBackdropPath;
+    property Parts: ITMDBMedia read GetParts;
   end;
 
 {$ENDREGION}
@@ -2207,44 +2211,44 @@ type
 
 
 
-  ITMDBDiscoverMovieItem = interface(ITMDBMovieItem)
+  ITMDBDiscoverMovie = interface(ITMDBMovie)
     ['{183EA5A3-E50B-4002-8B6F-A388C19DDF66}']
 
   end;
 
-  ITMDBDiscoverMovieItems = interface(ITMDBMovieList)
+  ITMDBDiscoverMovies = interface(ITMDBMovies)
     ['{77D1077D-D1F7-4AC5-B600-D73D41B9FEFD}']
-    function GetItem(const Index: Integer): ITMDBDiscoverMovieItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBDiscoverMovie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBDiscoverMovieItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBDiscoverMovie read GetItem; default;
   end;
 
   ITMDBDiscoverMoviePage = interface(ITMDBMoviePage)
     ['{DF3A6755-6B14-4A74-832F-865B4764D012}']
-    function GetItems: ITMDBDiscoverMovieItems; stdcall;
+    function GetItems: ITMDBDiscoverMovies; stdcall;
 
-    property Items: ITMDBDiscoverMovieItems read GetItems;
+    property Items: ITMDBDiscoverMovies read GetItems;
   end;
 
 
 
-  ITMDBDiscoverTVItem = interface(ITMDBTVSeriesItem)
+  ITMDBDiscoverTVSerie = interface(ITMDBTVSerie)
     ['{41B039D6-31F6-42B9-B69F-7D9F8B6E6DAD}']
 
   end;
 
-  ITMDBDiscoverTVItems = interface(ITMDBTVSeriesList)
+  ITMDBDiscoverTVSeries = interface(ITMDBTVSeries)
     ['{3803C415-5314-4D63-B72E-CDFD35B498F1}']
-    function GetItem(const Index: Integer): ITMDBDiscoverTVItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBDiscoverTVSerie; stdcall;
 
-    property Items[const Index: Integer]: ITMDBDiscoverTVItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBDiscoverTVSerie read GetItem; default;
   end;
 
-  ITMDBDiscoverTVPage = interface(ITMDBTVSeriesPage)
+  ITMDBDiscoverTVSeriesPage = interface(ITMDBTVSeriesPage)
     ['{A2A8C881-C40C-4115-A4FA-F28BCF281F40}']
-    function GetItems: ITMDBDiscoverTVItems; stdcall;
+    function GetItems: ITMDBDiscoverTVSeries; stdcall;
 
-    property Items: ITMDBDiscoverTVItems read GetItems;
+    property Items: ITMDBDiscoverTVSeries read GetItems;
   end;
 
 {$ENDREGION}
@@ -2258,17 +2262,17 @@ type
   /// </summary>
   ITMDBFindResults = interface
     ['{4A7BEA80-3F67-4CF2-8A79-31CA9E19EB0D}']
-    function GetMovieResults: ITMDBMovieList;
-    function GetPersonResults: ITMDBPersonList;
-    function GetTVResults: ITMDBTVSeriesList;
-    function GetTVEpisodeResults: ITMDBTVEpisodeList;
-    function GetTVSeasonResults: ITMDBTVSeasonList;
+    function GetMovieResults: ITMDBMovies;
+    function GetPersonResults: ITMDBPeople;
+    function GetTVResults: ITMDBTVSeries;
+    function GetTVEpisodeResults: ITMDBTVEpisodes;
+    function GetTVSeasonResults: ITMDBTVSeasons;
 
-    property MovieResults: ITMDBMovieList read GetMovieResults;
-    property PersonResults: ITMDBPersonList read GetPersonResults;
-    property TVResults: ITMDBTVSeriesList read GetTVResults;
-    property TVEpisodeResults: ITMDBTVEpisodeList read GetTVEpisodeResults;
-    property TVSeasonResults: ITMDBTVSeasonList read GetTVSeasonResults;
+    property MovieResults: ITMDBMovies read GetMovieResults;
+    property PersonResults: ITMDBPeople read GetPersonResults;
+    property TVResults: ITMDBTVSeries read GetTVResults;
+    property TVEpisodeResults: ITMDBTVEpisodes read GetTVEpisodeResults;
+    property TVSeasonResults: ITMDBTVSeasons read GetTVSeasonResults;
   end;
 
 {$ENDREGION}
@@ -2277,6 +2281,7 @@ type
 
 {$REGION 'Watch Provider Related'}
 
+  //TODO: THIS SHOULD NOT INHERIT FROM BASE BECAUSE IT'S NOT A JSON OBJECT!!!
   ITMDBWatchProviderPriority = interface(ITMDBItem)
     ['{9C41902E-4F0B-452E-8B80-40A3B139061B}']
     function GetCountryCode: WideString; stdcall;
@@ -2293,7 +2298,7 @@ type
     property Items[const Index: Integer]: ITMDBWatchProviderPriority read GetItem; default;
   end;
 
-  ITMDBWatchProviderItem = interface(ITMDBItem)
+  ITMDBWatchProvider = interface(ITMDBItem)
     ['{D94AA552-F436-494D-881B-7FEEBC429068}']
     function GetDisplayPriorities: ITMDBWatchProviderPriorities; stdcall;
     function GetDisplayPriority: Integer; stdcall;
@@ -2308,11 +2313,11 @@ type
     property ProviderID: Integer read GetProviderID;
   end;
 
-  ITMDBWatchProviderList = interface(ITMDBItems)
+  ITMDBWatchProviders = interface(ITMDBItems)
     ['{59B51A31-211F-48CD-BED4-B61E9EAA3EB1}']
-    function GetItem(const Index: Integer): ITMDBWatchProviderItem; stdcall;
+    function GetItem(const Index: Integer): ITMDBWatchProvider; stdcall;
 
-    property Items[const Index: Integer]: ITMDBWatchProviderItem read GetItem; default;
+    property Items[const Index: Integer]: ITMDBWatchProvider read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -2406,37 +2411,42 @@ type
       const Language: WideString = ''): ITMDBCollectionDetail; stdcall;
     function GetImages(const CollectionID: Integer;
       const IncludeImageLanguage: WideString = '';
-      const Language: WideString = ''): ITMDBMediaImages; stdcall;
-    function GetTranslations(const CollectionID: Integer): ITMDBTranslationList; stdcall;
+      const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    function GetTranslations(const CollectionID: Integer): ITMDBTranslations; stdcall;
   end;
 
+  /// [DONE]
   ITMDBServiceCompanies = interface(ITMDBService)
     ['{13F92C49-85D1-4C7F-BBA6-8B815B23EDDE}']
     function GetDetails(const CompanyID: Integer): ITMDBCompanyDetail; stdcall;
     function GetAlternativeNames(const CompanyID: Integer): ITMDBAlternativeTitles; stdcall;
-    function GetImages(const CompanyID: Integer): ITMDBMediaImages; stdcall;
+    function GetImages(const CompanyID: Integer): ITMDBMediaImageGroup; stdcall;
   end;
 
   /// [DONE]
   ITMDBServiceConfiguration = interface(ITMDBService)
     ['{A459EFE0-D167-4247-8EAD-319021284D10}']
     function GetDetails: ITMDBConfiguration; stdcall;
-    function GetCountries: ITMDBCountryList; stdcall;
-    function GetJobs: ITMDBJobDepartmentList; stdcall;
-    function GetLanguages: ITMDBLanguageList; stdcall;
+    function GetCountries: ITMDBCountries; stdcall;
+    function GetJobs: ITMDBJobDepartments; stdcall;
+    function GetLanguages: ITMDBLanguages; stdcall;
     function GetPrimaryTranslations: TTMDBStrArray; stdcall;
-    function GetTimezones: ITMDBTimezoneList; stdcall;
+    function GetTimezones: ITMDBTimezones; stdcall;
   end;
 
+  /// [TODO]
   ITMDBServiceCredits = interface(ITMDBService)
     ['{B5BDB2EC-A303-474B-B71F-C329100CC378}']
     //GetDetails
   end;
 
+  /// [TODO]
   ITMDBServiceDiscover = interface(ITMDBService)
     ['{F3D713B4-04D6-48D8-A4C9-6505CD361694}']
-    //GetMovies
-    //GetTV
+    //function DiscoverMovies(Params: ITMDBDiscoverMovieParams;
+    //  const Page: Integer = 1): ITMDBMovies;
+    //function DiscoverTV(Params: ITMDBDiscoverTVParams;
+    //  const Page: Integer = 1): ITMDBTVSeries;
   end;
 
   /// [DONE]
@@ -2449,10 +2459,11 @@ type
   /// [DONE]
   ITMDBServiceGenres = interface(ITMDBService)
     ['{E21E59C6-5416-4D9A-B6EB-33E004A5622D}']
-    function GetMovieList(const Language: WideString = ''): ITMDBGenreList; stdcall;
-    function GetTVList(const Language: WideString = ''): ITMDBGenreList; stdcall;
+    function GetMovieList(const Language: WideString = ''): ITMDBGenres; stdcall;
+    function GetTVList(const Language: WideString = ''): ITMDBGenres; stdcall;
   end;
 
+  /// [TODO]
   ITMDBServiceGuestSessions = interface(ITMDBService)
     ['{FDF85071-F2F4-49A6-BAAD-6ECD96BE3CBD}']
     //GetRatedMovies
@@ -2477,10 +2488,7 @@ type
     //RemoveMovie
   end;
 
-  /// <summary>
-  /// Essentially the same as "Discover Movies", but with preset criteria.
   /// [DONE]
-  /// </summary>
   ITMDBServiceMovieLists = interface(ITMDBService)
     ['{FAFB9948-B099-47AD-8C0F-74FE3A1B2E0E}']
     function GetNowPlaying(const Language: WideString = ''; const Page: Integer = 1;
@@ -2501,22 +2509,22 @@ type
       const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
     function GetAlternativeTitles(const MovieID: Integer;
       const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
-    //function GetChanges(): ITMDBChangeList; stdcall;
+    //function GetChanges(): ITMDBChanges; stdcall;
     function GetCredits(const MovieID: Integer; const Language: String = ''): ITMDBCredits; stdcall;
     //function GetExternalIDs(const MovieID: Integer): ITMDBExternalIDs; stdcall;
     function GetImages(const MovieID: Integer; const IncludeImageLanguage: WideString = '';
-      const Language: WideString = ''): ITMDBMediaImages; stdcall;
-    function GetKeywords(const MovieID: Integer): ITMDBKeywordList; stdcall;
+      const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    function GetKeywords(const MovieID: Integer): ITMDBKeywords; stdcall;
     function GetLatest: ITMDBMovieDetail;
     //function GetLists(const MovieID: Integer): ITMDBListPage; stdcall;
     //function GetRecommendations(const MovieID: Integer): ITMDBMovieList; stdcall;
     function GetReleaseDates(const MovieID: Integer): ITMDBReleaseDateCountries; stdcall;
-    //function GetReviews(const MovieID: Integer): ITMDBReviewList; stdcall;
+    //function GetReviews(const MovieID: Integer): ITMDBReviews; stdcall;
     function GetSimilar(const MovieID: Integer; const Language: WideString = '';
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    function GetTranslations(const MovieID: Integer): ITMDBTranslationList; stdcall;
-    function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideoList; stdcall;
-    //function GetWatchProviders(const MovieID: Integer): ITMDBx; stdcall;
+    function GetTranslations(const MovieID: Integer): ITMDBTranslations; stdcall;
+    function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideos; stdcall;
+    //function GetWatchProviders(const MovieID: Integer): ITMDBWatchProviders; stdcall;
     //function AddRating(const MovieID: Integer; const Rating: Single
     //  const SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
@@ -2529,7 +2537,7 @@ type
     ['{766C690C-DD9A-4E3B-A611-F93B1CFE1DF6}']
     function GetDetails(const NetworkID: Integer): ITMDBTVNetworkDetail; stdcall;
     function GetAlternativeNames(const NetworkID: Integer): ITMDBAlternativeTitles; stdcall;
-    function GetImages(const NetworkID: Integer): ITMDBMediaImages; stdcall;
+    function GetImages(const NetworkID: Integer): ITMDBMediaImageGroup; stdcall;
   end;
 
   ITMDBServicePeopleLists = interface(ITMDBService)
@@ -2553,7 +2561,7 @@ type
 
   ITMDBServiceReviews = interface(ITMDBService)
     ['{FD2277E9-2A59-413D-B67B-B210D32F1133}']
-    //function GetDetail(const ReviewID: WideString): ITMDBReviewDetail; stdcall;
+    //function GetDetails(const ReviewID: WideString): ITMDBReviewDetail; stdcall;
   end;
 
   ITMDBServiceSearch = interface(ITMDBService)
@@ -2604,12 +2612,12 @@ type
     function GetAlternativeTitles(const SeriesID: Integer): ITMDBAlternativeTitles; stdcall;
     //GetChanges
     //function GetContentRatings(const SeriesID: Integer): ITMDBContentRatingList; stdcall;
-    function GetGetCredits(const SeriesID: Integer; const Language: WideString = ''): ITMDBCredits; stdcall;
+    function GetCredits(const SeriesID: Integer; const Language: WideString = ''): ITMDBCredits; stdcall;
     //GetEpisodeGroups
     //GetExternalIDs
     function GetImages(const SeriesID: Integer; const IncludeImageLanguage: WideString ='';
-      const Language: WideString = ''): ITMDBMediaImages; stdcall;
-    function GetKeywords(const SeriesID: Integer): ITMDBKeywordList; stdcall;
+      const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    function GetKeywords(const SeriesID: Integer): ITMDBKeywords; stdcall;
     //GetLatest
     //GetLists
     //GetRecommendations
@@ -2619,7 +2627,7 @@ type
       const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
     //GetTranslations
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
-      const Language: WideString = ''): ITMDBVideoList; stdcall;
+      const Language: WideString = ''): ITMDBVideos; stdcall;
     //GetWatchProviders
     //AddRating
     //DeleteRating
@@ -2656,7 +2664,18 @@ type
   /// [DONE]
   ITMDBServiceTVEpisodeGroups = interface(ITMDBService)
     ['{B55FFFC4-7C29-4BA1-89C5-0CF1A8D88943}']
-    function GetDetails(const TVEpisodeGroupID: String): ITMDBTVEpisodeGroupResponse; stdcall;
+    function GetDetails(const TVEpisodeGroupID: String): ITMDBTVEpisodeGroups; stdcall;
+  end;
+
+  /// [DONE]
+  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
+  ITMDBServiceWatchProviders = interface(ITMDBService)
+    ['{FDB079FA-C25C-4337-BDD7-C4E4A9186A36}']
+    function GetAvailableRegions(const Language: WideString = ''): ITMDBCountries; stdcall;
+    function GetMovieProviders(const Language: WideString = '';
+      const WatchRegion: WideString = ''): ITMDBWatchProviders; stdcall;
+    function GetTVProviders(const Language: WideString = '';
+      const WatchRegion: WideString = ''): ITMDBWatchProviders; stdcall;
   end;
 
   /// [DONE]
@@ -2674,17 +2693,6 @@ type
       const Size: WideString = 'original'): Boolean; stdcall;
   end;
 
-  /// [DONE]
-  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
-  ITMDBServiceWatchProviders = interface(ITMDBService)
-    ['{FDB079FA-C25C-4337-BDD7-C4E4A9186A36}']
-    function GetAvailableRegions(const Language: WideString = ''): ITMDBCountryList; stdcall;
-    function GetMovieProviders(const Language: WideString = '';
-      const WatchRegion: WideString = ''): ITMDBWatchProviderList; stdcall;
-    function GetTVProviders(const Language: WideString = '';
-      const WatchRegion: WideString = ''): ITMDBWatchProviderList; stdcall;
-  end;
-
 {$ENDREGION}
 
 
@@ -2695,35 +2703,33 @@ type
 
 {$REGION 'TMDB Client'}
 
-  { Cached Data }
-
   ITMDBCache = interface
     ['{7D0D9646-6136-48D8-8FC1-03A6950B670F}']
     function GetConfig: ITMDBConfiguration; stdcall;
-    function GetCountries: ITMDBCountryList; stdcall;
-    //function GetJobs: ITMDBJobList; stdcall;
-    function GetLanguages: ITMDBLanguageList; stdcall;
+    function GetCountries: ITMDBCountries; stdcall;
+    function GetJobDepartments: ITMDBJobDepartments; stdcall;
+    function GetLanguages: ITMDBLanguages; stdcall;
     function GetPrimaryTranslations: TTMDBStrArray; stdcall;
-    function GetTimezones: ITMDBTimezoneList; stdcall;
+    function GetTimezones: ITMDBTimezones; stdcall;
     function GetMovieCerts: ITMDBCertificationCountries; stdcall;
     function GetTVCerts: ITMDBCertificationCountries; stdcall;
-    function GetMovieGenres: ITMDBGenreList; stdcall;
-    function GetTVGenres: ITMDBGenreList; stdcall;
+    function GetMovieGenres: ITMDBGenres; stdcall;
+    function GetTVGenres: ITMDBGenres; stdcall;
 
     procedure RefreshAll; stdcall;
     function MovieGenre(const ID: Integer): WideString; stdcall;
     function TVGenre(const ID: Integer): WideString; stdcall;
 
     property Config: ITMDBConfiguration read GetConfig;
-    property Countries: ITMDBCountryList read GetCountries;
+    property Countries: ITMDBCountries read GetCountries;
     //property Jobs: ITMDBJobList read GetJobs;
-    property Languages: ITMDBLanguageList read GetLanguages;
+    property Languages: ITMDBLanguages read GetLanguages;
     property PrimaryTranslations: TTMDBStrArray read GetPrimaryTranslations;
-    property Timezones: ITMDBTimezoneList read GetTimezones;
+    property Timezones: ITMDBTimezones read GetTimezones;
     property MovieCerts: ITMDBCertificationCountries read GetMovieCerts;
     property TVCerts: ITMDBCertificationCountries read GetTVCerts;
-    property MovieGenres: ITMDBGenreList read GetMovieGenres;
-    property TVGenres: ITMDBGenreList read GetTVGenres;
+    property MovieGenres: ITMDBGenres read GetMovieGenres;
+    property TVGenres: ITMDBGenres read GetTVGenres;
   end;
 
 
