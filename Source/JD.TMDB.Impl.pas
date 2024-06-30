@@ -260,6 +260,21 @@ type
     property Items: ITMDBItems read GetItems;
   end;
 
+  TTMDBDetail = class(TInterfacedObject, ITMDBDetail)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+  protected
+    function GetID: Integer; stdcall; //NOTE: Some use string for "id"
+    function GetTitle: WideString; stdcall; //NOTE: Shared between "name" and "title"
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); virtual;
+    destructor Destroy; override;
+
+    property ID: Integer read GetID;
+    property Title: WideString read GetTitle;
+  end;
+
 {$ENDREGION}
 
 
@@ -336,24 +351,18 @@ type
 
 {$REGION 'Account Related'}
 
-  TTMDBAccountDetail = class(TInterfacedObject, ITMDBAccountDetail)
-  private
-    FObj: ISuperObject;
+  TTMDBAccountDetail = class(TTMDBDetail, ITMDBAccountDetail)
   protected
-    function GetID: Integer; stdcall;
     function GetUserName: WideString; stdcall;
-    function GetName: WideString; stdcall;
     function GetIncludeAdult: Boolean; stdcall;
     function GetCountryCode: WideString; stdcall;
     function GetLanguageCode: WideString; stdcall;
     function GetGravatarHash: WideString; stdcall;
     function GetTMDBAvatarPath: WideString; stdcall;
   public
-    constructor Create(AObj: ISuperObject);
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 
-    property ID: Integer read GetID;
     property UserName: WideString read GetUserName;
-    property Name: WideString read GetName;
     property IncludeAdult: Boolean read GetIncludeAdult;
     property CountryCode: WideString read GetCountryCode;
     property LanguageCode: WideString read GetLanguageCode;
@@ -2744,9 +2753,10 @@ end;
 
 { TTMDBAccountDetail }
 
-constructor TTMDBAccountDetail.Create(AObj: ISuperObject);
+constructor TTMDBAccountDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
-  FObj:= AObj;
+  inherited Create(AObj, ATMDB);
+
 end;
 
 function TTMDBAccountDetail.GetCountryCode: WideString;
@@ -2759,11 +2769,6 @@ begin
   Result:= FObj.O['avatar'].O['gravatar'].S['hash'];
 end;
 
-function TTMDBAccountDetail.GetID: Integer;
-begin
-  Result:= FObj.I['id'];
-end;
-
 function TTMDBAccountDetail.GetIncludeAdult: Boolean;
 begin
   Result:= FObj.B['include_adult'];
@@ -2772,11 +2777,6 @@ end;
 function TTMDBAccountDetail.GetLanguageCode: WideString;
 begin
   Result:= FObj.S['iso_639_1'];
-end;
-
-function TTMDBAccountDetail.GetName: WideString;
-begin
-  Result:= FObj.S['name'];
 end;
 
 function TTMDBAccountDetail.GetTMDBAvatarPath: WideString;
@@ -4046,7 +4046,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Account.GetDetails(AAccountID, ASessionID);
-  Result:= TTMDBAccountDetail.Create(O);
+  Result:= TTMDBAccountDetail.Create(O, FOwner);
 end;
 
 function TTMDBServiceAccount.GetDetailsBySession(
@@ -4055,7 +4055,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Account.GetDetailsBySession(ASessionID);
-  Result:= TTMDBAccountDetail.Create(O);
+  Result:= TTMDBAccountDetail.Create(O, FOwner);
 end;
 
 function TTMDBServiceAccount.SetFavorite(const AccountID: Integer;
@@ -7418,6 +7418,35 @@ end;
 function TTMDBListDetail.GetPosterPath: WideString;
 begin
   Result:= FObj.S['poster_path'];
+end;
+
+{ TTMDBDetail }
+
+constructor TTMDBDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+
+end;
+
+destructor TTMDBDetail.Destroy;
+begin
+
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBDetail.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBDetail.GetTitle: WideString;
+begin
+  Result:= FObj.S['title'];
+  if Result = '' then
+    Result:= FObj.S['name'];
 end;
 
 end.

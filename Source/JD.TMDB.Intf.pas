@@ -59,7 +59,7 @@ type
   ITMDBChange = interface;
   ITMDBChanges = interface;
   ITMDBChangePage = interface;
-  //ITMDBChangeDetail = interface;
+  ITMDBChangeDetail = interface;
   ITMDBTranslationData = interface;
   ITMDBMovieTranslationData = interface;
   ITMDBCollectionTranslationData = interface;
@@ -134,6 +134,7 @@ type
   ITMDBTVSeasons = interface;
   ITMDBTVSeasonPage = interface;
   ITMDBTVSeasonDetail = interface;
+  //ITMDBTVSeasonEpisode = interface;
   ITMDBTVEpisode = interface;
   ITMDBTVEpisodes = interface;
   ITMDBTVEpisodePage = interface;
@@ -202,9 +203,6 @@ type
   /// <summary>
   /// A single abstract item found in any given possible item list across TMDB.
   /// </summary>
-  /// <remarks>
-  /// - TODO: Update all possible list item interfaces to inherit from this common base.
-  /// </remarks}
   ITMDBItem = interface
     ['{9909E734-78DB-4CBB-B84D-A8E16315DA4E}']
     function GetOwner: ITMDBItems; stdcall;
@@ -217,9 +215,6 @@ type
   /// <summary>
   /// Base for each possible list of items
   /// </summary>
-  /// <remarks>
-  /// - TODO: Change all item lists to inherit from this new base.
-  /// </remarks>
   ITMDBItems = interface
     ['{3159DDC3-F510-4353-B24A-ACFD459948C9}']
     function GetCount: Integer; stdcall;
@@ -247,12 +242,6 @@ type
     property Items: ITMDBItems read GetItems;
   end;
 
-{$ENDREGION}
-
-
-
-{$REGION 'Detail Related'}
-
   /// <summary>
   /// Base type for any details of a given entity within TMDB.
   /// For example, ITMDBMovieDetail, ITMDBPersonDetail, ITMDBNetworkDetail, etc.
@@ -262,6 +251,8 @@ type
     function GetID: Integer; stdcall; //NOTE: Some use string for "id"
     function GetTitle: WideString; stdcall; //NOTE: Shared between "name" and "title"
 
+    property ID: Integer read GetID;
+    property Title: WideString read GetTitle;
   end;
 
 {$ENDREGION}
@@ -348,20 +339,16 @@ type
   /// <summary>
   /// The details of a given user account.
   /// </summary>
-  ITMDBAccountDetail = interface
+  ITMDBAccountDetail = interface(ITMDBDetail)
     ['{DE0E4519-BED8-4218-BE84-A4C0AC5C6DBD}']
-    function GetID: Integer; stdcall;
     function GetUserName: WideString; stdcall;
-    function GetName: WideString; stdcall;
     function GetIncludeAdult: Boolean; stdcall;
     function GetCountryCode: WideString; stdcall;
     function GetLanguageCode: WideString; stdcall;
     function GetGravatarHash: WideString; stdcall;
     function GetTMDBAvatarPath: WideString; stdcall;
 
-    property ID: Integer read GetID;
     property UserName: WideString read GetUserName;
-    property Name: WideString read GetName;
     property IncludeAdult: Boolean read GetIncludeAdult;
     property CountryCode: WideString read GetCountryCode;
     property LanguageCode: WideString read GetLanguageCode;
@@ -749,6 +736,11 @@ type
     function GetItems: ITMDBChanges; stdcall;
 
     property Items: ITMDBChanges read GetItems;
+  end;
+
+  ITMDBChangeDetail = interface(ITMDBDetail)
+    ['{94256BA1-3101-4B36-A602-F0CCB3564CA6}']
+    //TODO
   end;
 
 {$ENDREGION}
@@ -1782,6 +1774,9 @@ type
 
 {$REGION 'TV Season Related'}
 
+  /// <summary>
+  /// A single TV season as found in TMDB
+  /// </summary>
   ITMDBTVSeason = interface(ITMDBMedium)
     ['{A3291740-EB50-467E-8B82-ED5F3463A882}']
     function GetSeasonNumber: Integer;
@@ -1790,7 +1785,7 @@ type
   end;
 
   /// <summary>
-  /// A list of TV seasons
+  /// A list of TV seasons as found in TMDB
   /// </summary>
   ITMDBTVSeasons = interface(ITMDBMedia)
     ['{BA1F02CD-9D5F-4AC7-B849-7B524C3B25F1}']
@@ -1799,6 +1794,9 @@ type
     property Items[const Index: Integer]: ITMDBTVSeason read GetItem; default;
   end;
 
+  /// <summary>
+  /// A page of TV seasons as found in TMDB
+  /// </summary>
   ITMDBTVSeasonPage = interface(ITMDBMediaPage)
     ['{697CDF42-1FE5-49C3-92C5-87BE730AD427}']
     function GetItems: ITMDBTVSeasons; stdcall;
@@ -1806,8 +1804,33 @@ type
     property Items: ITMDBTVSeasons read GetItems;
   end;
 
+  /// <summary>
+  /// A TV episode as found with a TV Season
+  /// </summary>
+  (*
+  //TODO: WHY THE FUCK DOESN'T THIS WANT TO INHERIT FROM ITMDBTVEPISODE?!?!?!?!?!
+  ITMDBTVSeasonEpisode = interface(ITMDBTVEpisode)
+    ['{87C960B0-FECC-4DB3-B4CC-822674CC88A2}']
+    function GetCrew: ITMDBCrewPeople; stdcall;
+    function GetGuestStars: ITMDBCastPeople; stdcall;
+
+  end;
+  *)
+
+  /// <summary>
+  /// The details of a single TV season as found in TMDB
+  /// </summary>
   ITMDBTVSeasonDetail = interface
     ['{8E456798-FF9E-483E-B3DA-3CC5EDA54C98}']
+    function Get_ID: WideString; stdcall;
+    function GetAirDate: TDateTime; stdcall;
+    //function GetEpisodes: ITMDBTVEpisodes; stdcall; //TODO: Structure is different...
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetSeasonNumber: Integer; stdcall;
+    function GetVoteAverage: Single; stdcall;
 
   end;
 

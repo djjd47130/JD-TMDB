@@ -247,9 +247,9 @@ begin
     end else begin
       D:= TMDB.LoginState.AccountDetail;
       lblUserName.Caption:= D.UserName;
-      lblUserFullName.Caption:= D.Name;
-      if D.Name <> '' then
-        btnUser.Text:= D.Name
+      lblUserFullName.Caption:= D.Title;
+      if D.Title <> '' then
+        btnUser.Text:= D.Title
       else
         btnUser.Text:= D.UserName;
       //TODO: Gravatar...
