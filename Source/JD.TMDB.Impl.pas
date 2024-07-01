@@ -31,7 +31,7 @@ type
   TTMDBItem = class;
   TTMDBItems = class;
   TTMDBPage = class;
-  //TTMDBDetail = class;
+  TTMDBDetail = class;
   TTMDBMedium = class;
   TTMDBMedia = class;
   TTMDBMediaPage = class;
@@ -50,9 +50,9 @@ type
   TTMDBCertification = class;
   TTMDBCertificationCountry = class;
   TTMDBCertificationCountries = class;
-  //TTMDBReleaseDate = class;
-  //TTMDBReleaseDateCountry = class;
-  //TTMDBReleaseDateCountries = class;
+  TTMDBReleaseDate = class;
+  TTMDBReleaseDateCountry = class;
+  TTMDBReleaseDateCountries = class;
   //TTMDBChangeValue = class;
   //TTMDBChangeRecord = class;
   TTMDBChange = class;
@@ -128,7 +128,7 @@ type
   TTMDBRatedTVSerie = class;
   TTMDBRatedTVSeries = class;
   TTMDBRatedTVSeriesPage = class;
-  TTMDBTVSeriesDetail = class;
+  TTMDBTVSerieDetail = class;
   //TTMDBTVSeason = class;
   //TTMDBTVSeasons = class;
   //TTMDBTVSeasonPage = class;
@@ -138,7 +138,7 @@ type
   TTMDBTVEpisodePage = class;
   TTMDBRatedTVEpisode = class;
   TTMDBRatedTVEpisodes = class;
-  //TTMDBTVEpisodeDetail = class;
+  TTMDBTVEpisodeDetail = class;
   TTMDBTVEpisodeGroup = class;
   TTMDBTVEpisodeGroups = class;
   TTMDBList = class;
@@ -196,7 +196,7 @@ type
 
 
 
-{$REGION 'Lists Pages and Items'}
+{$REGION 'Common'}
 
   TTMDBItemClass = class of TTMDBItem;
 
@@ -319,30 +319,6 @@ type
     destructor Destroy; override;
 
     property Items: ITMDBMedia read GetItems;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Alternative Title Related'}
-
-  TTMDBAlternativeTitle = class(TTMDBItem, ITMDBAlternativeTitle)
-  protected
-    function GetISO3166_1: WideString; stdcall;
-    function GetTitle: WideString; stdcall;
-    function GetType: WideString; stdcall;
-  public
-    property ISO3166_1: WideString read GetISO3166_1;
-    property Title: WideString read GetTitle;
-    property &Type: WideString read GetType;
-  end;
-
-  TTMDBAlternativeTitles = class(TTMDBItems, ITMDBAlternativeTitles)
-  protected
-    function GetItem(const Index: Integer): ITMDBAlternativeTitle; stdcall;
-  public
-    property Items[const Index: Integer]: ITMDBAlternativeTitle read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -518,6 +494,30 @@ type
 
 
 
+{$REGION 'Alternative Title Related'}
+
+  TTMDBAlternativeTitle = class(TTMDBItem, ITMDBAlternativeTitle)
+  protected
+    function GetISO3166_1: WideString; stdcall;
+    function GetTitle: WideString; stdcall;
+    function GetType: WideString; stdcall;
+  public
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Title: WideString read GetTitle;
+    property &Type: WideString read GetType;
+  end;
+
+  TTMDBAlternativeTitles = class(TTMDBItems, ITMDBAlternativeTitles)
+  protected
+    function GetItem(const Index: Integer): ITMDBAlternativeTitle; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBAlternativeTitle read GetItem; default;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Certification Related'}
 
   TTMDBCertification = class(TInterfacedObject, ITMDBCertification)
@@ -583,10 +583,6 @@ type
 
 
 {$REGION 'Release Date Related'}
-
-  TTMDBReleaseDate = class;
-  TTMDBReleaseDateCountry = class;
-  TTMDBReleaseDateCountries = class;
 
   TTMDBReleaseDate = class(TInterfacedObject, ITMDBReleaseDate)
   private
@@ -815,6 +811,154 @@ type
 
 
 
+{$REGION 'Genre Related'}
+
+  TTMDBGenre = class(TTMDBItem, ITMDBGenre)
+  protected
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+  public
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+  end;
+
+  TTMDBGenres = class(TTMDBItems, ITMDBGenres)
+  private
+    FMediaType: TTMDBMediaType;
+  protected
+    function GetItem(const Index: Integer): ITMDBGenre; stdcall;
+    function GetMediaType: TTMDBMediaType; stdcall;
+  public
+    constructor Create(AObj: ISuperArray; ATMDB: ITMDBClient;
+      AMediaType: TTMDBMediaType); reintroduce;
+
+    property Items[const Index: Integer]: ITMDBGenre read GetItem;
+    property MediaType: TTMDBMediaType read GetMediaType;
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'Images Related'}
+
+  TTMDBMediaImage = class(TTMDBItem, ITMDBMediaImage)
+  protected
+    function GetAspectRatio: Single; stdcall;
+    function GetHeight: Integer; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetFilePath: WideString; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+    function GetWidth: Integer; stdcall;
+  public
+    property AspectRatio: Single read GetAspectRatio;
+    property Height: Integer read GetHeight;
+    property ISO639_1: WideString read GetISO639_1;
+    property FilePath: WideString read GetFilePath;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
+    property Width: Integer read GetWidth;
+  end;
+
+  TTMDBMediaImages = class(TTMDBItems, ITMDBMediaImages)
+  protected
+    function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
+  end;
+
+  TTMDBMediaImageGroup = class(TInterfacedObject, ITMDBMediaImageGroup)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FBackdrops: ITMDBMediaImages;
+    FLogos: ITMDBMediaImages;
+    FPosters: ITMDBMediaImages;
+  protected
+    function GetBackdrops: ITMDBMediaImages; stdcall;
+    function GetLogos: ITMDBMediaImages; stdcall;
+    function GetPosters: ITMDBMediaImages; stdcall;
+    function GetID: Integer; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); virtual;
+    destructor Destroy; override;
+
+    property Backdrops: ITMDBMediaImages read GetBackdrops;
+    property Logos: ITMDBMediaImages read GetLogos;
+    property Posters: ITMDBMediaImages read GetPosters;
+    property ID: Integer read GetID;
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'Job / Department Related'}
+
+  TTMDBJobDepartment = class(TTMDBItem, ITMDBJobDepartment)
+  protected
+    function GetDepartment: WideString; stdcall;
+    function GetJobs: TTMDBStrArray; stdcall;
+  public
+    property Department: WideString read GetDepartment;
+    property Jobs: TTMDBStrArray read GetJobs;
+  end;
+
+  TTMDBJobDepartments = class(TTMDBItems, ITMDBJobDepartments)
+  protected
+    function GetItem(const Index: Integer): ITMDBJobDepartment; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBJobDepartment read GetItem; default;
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'Keyword Related'}
+
+  TTMDBKeyword = class(TTMDBItem, ITMDBKeyword)
+  protected
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+  public
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+  end;
+
+  TTMDBKeywords = class(TTMDBItems, ITMDBKeywords)
+  protected
+    function GetItem(const Index: Integer): ITMDBKeyword; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBKeyword read GetItem; default;
+  end;
+
+  TTMDBKeywordPage = class(TTMDBPage, ITMDBKeywordPage)
+  protected
+    function GetItems: ITMDBKeywords; stdcall;
+  public
+    property Items: ITMDBKeywords read GetItems;
+  end;
+
+  TTMDBKeywordDetail = class(TInterfacedObject, ITMDBKeywordDetail)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Language Related'}
 
   TTMDBLanguage = class(TTMDBItem, ITMDBLanguage)
@@ -835,6 +979,28 @@ type
     function GetByCode(const Code: WideString): ITMDBLanguage; stdcall;
 
     property Items[const Index: Integer]: ITMDBLanguage read GetItem; default;
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'Timezone Related'}
+
+  TTMDBTimezone = class(TTMDBItem, ITMDBTimezone)
+  protected
+    function GetISO3166_1: WideString; stdcall;
+    function GetZones: TTMDBStrArray; stdcall;
+  public
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Zones: TTMDBStrArray read GetZones;
+  end;
+
+  TTMDBTimezones = class(TTMDBItems, ITMDBTimezones)
+  protected
+    function GetItem(const Index: Integer): ITMDBTimezone; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBTimezone read GetItem; default;
   end;
 
 {$ENDREGION}
@@ -969,147 +1135,6 @@ type
 
 
 
-{$REGION 'Job / Department Related'}
-
-  TTMDBJobDepartment = class(TTMDBItem, ITMDBJobDepartment)
-  protected
-    function GetDepartment: WideString; stdcall;
-    function GetJobs: TTMDBStrArray; stdcall;
-  public
-    property Department: WideString read GetDepartment;
-    property Jobs: TTMDBStrArray read GetJobs;
-  end;
-
-  TTMDBJobDepartments = class(TTMDBItems, ITMDBJobDepartments)
-  protected
-    function GetItem(const Index: Integer): ITMDBJobDepartment; stdcall;
-  public
-    property Items[const Index: Integer]: ITMDBJobDepartment read GetItem; default;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Timezone Related'}
-
-  TTMDBTimezone = class(TTMDBItem, ITMDBTimezone)
-  protected
-    function GetISO3166_1: WideString; stdcall;
-    function GetZones: TTMDBStrArray; stdcall;
-  public
-    property ISO3166_1: WideString read GetISO3166_1;
-    property Zones: TTMDBStrArray read GetZones;
-  end;
-
-  TTMDBTimezones = class(TTMDBItems, ITMDBTimezones)
-  protected
-    function GetItem(const Index: Integer): ITMDBTimezone; stdcall;
-  public
-    property Items[const Index: Integer]: ITMDBTimezone read GetItem; default;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Keyword Related'}
-
-  TTMDBKeyword = class(TTMDBItem, ITMDBKeyword)
-  protected
-    function GetID: Integer; stdcall;
-    function GetName: WideString; stdcall;
-  public
-    property ID: Integer read GetID;
-    property Name: WideString read GetName;
-  end;
-
-  TTMDBKeywords = class(TTMDBItems, ITMDBKeywords)
-  protected
-    function GetItem(const Index: Integer): ITMDBKeyword; stdcall;
-  public
-    property Items[const Index: Integer]: ITMDBKeyword read GetItem; default;
-  end;
-
-  TTMDBKeywordPage = class(TTMDBPage, ITMDBKeywordPage)
-  protected
-    function GetItems: ITMDBKeywords; stdcall;
-  public
-    property Items: ITMDBKeywords read GetItems;
-  end;
-
-  TTMDBKeywordDetail = class(TInterfacedObject, ITMDBKeywordDetail)
-  private
-    FObj: ISuperObject;
-  protected
-    function GetID: Integer; stdcall;
-    function GetName: WideString; stdcall;
-  public
-    constructor Create(AObj: ISuperObject);
-    destructor Destroy; override;
-
-    property ID: Integer read GetID;
-    property Name: WideString read GetName;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Images Related'}
-
-  TTMDBMediaImage = class(TTMDBItem, ITMDBMediaImage)
-  protected
-    function GetAspectRatio: Single; stdcall;
-    function GetHeight: Integer; stdcall;
-    function GetISO639_1: WideString; stdcall;
-    function GetFilePath: WideString; stdcall;
-    function GetVoteAverage: Single; stdcall;
-    function GetVoteCount: Integer; stdcall;
-    function GetWidth: Integer; stdcall;
-  public
-    property AspectRatio: Single read GetAspectRatio;
-    property Height: Integer read GetHeight;
-    property ISO639_1: WideString read GetISO639_1;
-    property FilePath: WideString read GetFilePath;
-    property VoteAverage: Single read GetVoteAverage;
-    property VoteCount: Integer read GetVoteCount;
-    property Width: Integer read GetWidth;
-  end;
-
-  TTMDBMediaImages = class(TTMDBItems, ITMDBMediaImages)
-  protected
-    function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
-  public
-    property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
-  end;
-
-  TTMDBMediaImageGroup = class(TInterfacedObject, ITMDBMediaImageGroup)
-  private
-    FObj: ISuperObject;
-    FTMDB: ITMDBClient;
-    FBackdrops: ITMDBMediaImages;
-    FLogos: ITMDBMediaImages;
-    FPosters: ITMDBMediaImages;
-  protected
-    function GetBackdrops: ITMDBMediaImages; stdcall;
-    function GetLogos: ITMDBMediaImages; stdcall;
-    function GetPosters: ITMDBMediaImages; stdcall;
-    function GetID: Integer; stdcall;
-  public
-    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); virtual;
-    destructor Destroy; override;
-
-    property Backdrops: ITMDBMediaImages read GetBackdrops;
-    property Logos: ITMDBMediaImages read GetLogos;
-    property Posters: ITMDBMediaImages read GetPosters;
-    property ID: Integer read GetID;
-  end;
-
-{$ENDREGION}
-
-
-
 {$REGION 'Video Related'}
 
   TTMDBVideo = class(TTMDBItem, ITMDBVideo)
@@ -1142,35 +1167,6 @@ type
     function GetItem(const Index: Integer): ITMDBVideo; stdcall;
   public
     property Items[const Index: Integer]: ITMDBVideo read GetItem; default;
-  end;
-
-{$ENDREGION}
-
-
-
-{$REGION 'Genre Related'}
-
-  TTMDBGenre = class(TTMDBItem, ITMDBGenre)
-  protected
-    function GetID: Integer; stdcall;
-    function GetName: WideString; stdcall;
-  public
-    property ID: Integer read GetID;
-    property Name: WideString read GetName;
-  end;
-
-  TTMDBGenres = class(TTMDBItems, ITMDBGenres)
-  private
-    FMediaType: TTMDBMediaType;
-  protected
-    function GetItem(const Index: Integer): ITMDBGenre; stdcall;
-    function GetMediaType: TTMDBMediaType; stdcall;
-  public
-    constructor Create(AObj: ISuperArray; ATMDB: ITMDBClient;
-      AMediaType: TTMDBMediaType); reintroduce;
-
-    property Items[const Index: Integer]: ITMDBGenre read GetItem;
-    property MediaType: TTMDBMediaType read GetMediaType;
   end;
 
 {$ENDREGION}
@@ -1771,7 +1767,7 @@ type
 
 
 
-  TTMDBTVSeriesDetail = class(TInterfacedObject, ITMDBTVSeriesDetail)
+  TTMDBTVSerieDetail = class(TTMDBDetail, ITMDBTVSerieDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1783,12 +1779,10 @@ type
     function GetFirstAirDate: TDateTime;
     function GetGenres: ITMDBGenres;
     function GetHomepage: WideString;
-    function GetID: Integer;
     function GetInProduction: Boolean;
     function GetLanguages: TTMDBStrArray;
     function GetLastAirDate: TDateTime;
     function GetLastEpisodeToAir: ITMDBTVEpisode;
-    function GetName: WideString;
     function GetNextEpisodeToAir: ITMDBTVEpisode;
     function GetNetworks: ITMDBTVNetworks;
     function GetNumberOfEpisodes: Integer;
@@ -1801,7 +1795,7 @@ type
     function GetPosterPath: WideString;
     function GetProductionCompanies: ITMDBCompanies;
     function GetProductionCountries: ITMDBCountries;
-    //function GetSeasons: ITMDBTVSeasonList;
+    //function GetSeasons: ITMDBTVSeasons;
     function GetSpokenLanguages: ITMDBLanguages;
     function GetStatus: WideString;
     function GetTagline: WideString;
@@ -1820,12 +1814,10 @@ type
     property FirstAirDate: TDateTime read GetFirstAirDate;
     property Genres: ITMDBGenres read GetGenres;
     property Homepage: WideString read GetHomepage;
-    property ID: Integer read GetID;
     property InProduction: Boolean read GetInProduction;
     property Languages: TTMDBStrArray read GetLanguages;
     property LastAirDate: TDateTime read GetLastAirDate;
     property LastEpisodeToAir: ITMDBTVEpisode read GetLastEpisodeToAir;
-    property Name: WideString read GetName;
     property NextEpisodeToAir: ITMDBTVEpisode read GetNextEpisodeToAir;
     property Networks: ITMDBTVNetworks read GetNetworks;
     property NumberOfEpisodes: Integer read GetNumberOfEpisodes;
@@ -1925,6 +1917,11 @@ type
     function GetItems: ITMDBRatedTVEpisodes; stdcall;
   public
     property Items: ITMDBRatedTVEpisodes read GetItems;
+  end;
+
+  TTMDBTVEpisodeDetail = class(TTMDBDetail, ITMDBTVEpisodeDetail)
+  protected
+    //TODO
   end;
 
 {$ENDREGION}
@@ -2059,7 +2056,7 @@ type
 
 {$REGION 'Watch Provider Related'}
 
-  TTMDBWatchProviderPriority = class(TTMDBItem, ITMDBWatchProviderPriority)
+  TTMDBWatchProviderPriority = class(TInterfacedObject, ITMDBWatchProviderPriority)
   private
     FCountryCode: WideString;
     FPriority: Integer;
@@ -2067,14 +2064,27 @@ type
     function GetCountryCode: WideString; stdcall;
     function GetPriority: Integer; stdcall;
   public
+    constructor Create(const ACountryCode: WideString; const APriority: Integer);
+
     property CountryCode: WideString read GetCountryCode;
     property Priority: Integer read GetPriority;
   end;
 
-  TTMDBWatchProviderPriorities = class(TTMDBItems, ITMDBWatchProviderPriorities)
+  TTMDBWatchProviderPriorities = class(TInterfacedObject, ITMDBWatchProviderPriorities)
+  private
+    FObj: ISuperObject;
+    FItems: TInterfaceList;
+    FTMDB: ITMDBClient;
+    procedure PopulateItems;
+    procedure ClearItems;
   protected
+    function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBWatchProviderPriority; stdcall;
   public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBWatchProviderPriority read GetItem; default;
   end;
 
@@ -2238,7 +2248,9 @@ type
 
   TTMDBServiceGuestSessions = class(TTMDBService, ITMDBServiceGuestSessions)
   protected
-
+    //GetRatedMovies
+    //GetRatedTV
+    //GetRatedTVEpisodes
   end;
 
   TTMDBServiceKeywords = class(TTMDBService, ITMDBServiceKeywords)
@@ -2371,7 +2383,7 @@ type
   TTMDBServiceTVSeries = class(TTMDBService, ITMDBServiceTVSeries)
   protected
     function GetDetails(const SeriesID: Integer; const AppendToResponse: TTMDBTVSeriesRequests = [];
-      const Language: WideString = ''): ITMDBTVSeriesDetail; stdcall;
+      const Language: WideString = ''): ITMDBTVSerieDetail; stdcall;
     function GetAccountStates(const SeriesID: Integer): ITMDBAccountStates; stdcall;
     //GetAggregateCredits
     function GetAlternativeTitles(const SeriesID: Integer): ITMDBAlternativeTitles; stdcall;
@@ -2383,7 +2395,7 @@ type
     function GetImages(const SeriesID: Integer; const IncludeImageLanguage: WideString ='';
       const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
     function GetKeywords(const SeriesID: Integer): ITMDBKeywords; stdcall;
-    function GetLatest: ITMDBTVSeriesDetail; stdcall;
+    function GetLatest: ITMDBTVSerieDetail; stdcall;
     //GetLists
     //GetRecommendations
     //GetReviews
@@ -3930,6 +3942,13 @@ end;
 
 { TTMDBWatchProviderPriority }
 
+constructor TTMDBWatchProviderPriority.Create(const ACountryCode: WideString;
+  const APriority: Integer);
+begin
+  FCountryCode:= ACountryCode;
+  FPriority:= APriority;
+end;
+
 function TTMDBWatchProviderPriority.GetCountryCode: WideString;
 begin
   Result:= FCountryCode;
@@ -3942,10 +3961,38 @@ end;
 
 { TTMDBWatchProviderPriorities }
 
+constructor TTMDBWatchProviderPriorities.Create(AObj: ISuperObject;
+  ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
+end;
+
+destructor TTMDBWatchProviderPriorities.Destroy;
+begin
+  ClearItems;
+  FreeAndNil(FItems);
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBWatchProviderPriorities.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+procedure TTMDBWatchProviderPriorities.ClearItems;
+begin
+  FItems.Clear;
+end;
+
 function TTMDBWatchProviderPriorities.GetItem(
   const Index: Integer): ITMDBWatchProviderPriority;
 begin
-  Result:= (inherited GetItem(Index)) as ITMDBWatchProviderPriority;
+  Result:= FItems[Index] as ITMDBWatchProviderPriority;
 end;
 
 { TTMDBWatchProviderItem }
@@ -3954,10 +4001,8 @@ constructor TTMDBWatchProvider.Create(AOwner: ITMDBItems; AObj: ISuperObject;
   const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   inherited Create(AOwner, AObj, AIndex, ATMDB);
-
-  //FDisplayPriorities:= TTMDBWatchProviderPriorities.Create(FObj.O['display_priorities'],
-    //ATMDB, TTMDBWatchProviderPriority);
-  //TODO: THIS IS NOT THE SAME TYPE OF LIST!!!
+  FDisplayPriorities:= TTMDBWatchProviderPriorities.Create(FObj.O['display_priorities'],
+    ATMDB);
 
 end;
 
@@ -4001,904 +4046,44 @@ begin
   Result:= (inherited GetItem(Index)) as ITMDBWatchProvider;
 end;
 
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-{ TTMDBService }
-
-constructor TTMDBService.Create(AOwner: TTMDBClient);
-begin
-  FOwner:= AOwner;
-end;
-
-destructor TTMDBService.Destroy;
-begin
-
-  inherited;
-end;
-
-function TTMDBService.GetOwner: ITMDBClient;
-begin
-  Result:= FOwner;
-end;
-
-{ TTMDBServiceAccount }
-
-function TTMDBServiceAccount.GetDetails(AAccountID: Integer;
-  ASessionID: WideString): ITMDBAccountDetail;
+procedure TTMDBWatchProviderPriorities.PopulateItems;
 var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetDetails(AAccountID, ASessionID);
-  Result:= TTMDBAccountDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceAccount.GetDetailsBySession(
-  const ASessionID: WideString): ITMDBAccountDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetDetailsBySession(ASessionID);
-  Result:= TTMDBAccountDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceAccount.SetFavorite(const AccountID: Integer;
-  const MediaType: TTMDBMediaType; const MediaID: Integer;
-  const Favorite: Boolean; const SessionID: WideString = ''): ITMDBAccountAddFavoriteResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.AddFavorite(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Favorite, SessionID);
-  Result:= TTMDBAccountAddFavoriteResult.Create(O);
-end;
-
-function TTMDBServiceAccount.SetWatchlist(const AccountID: Integer;
-  const MediaType: TTMDBMediaType; const MediaID: Integer;
-  const Watchlist: Boolean; const SessionID: WideString = ''): ITMDBAccountAddWatchlistResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.AddToWatchlist(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Watchlist, SessionID);
-  Result:= TTMDBAccountAddWatchlistResult.Create(O);
-end;
-
-function TTMDBServiceAccount.GetFavoriteMovies(const AccountID: Integer; const Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetFavoriteMovies(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceAccount.GetFavoriteTV(const AccountID, Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBTVSeriesPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetFavoriteTV(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
-end;
-
-function TTMDBServiceAccount.GetLists(const AccountID, Page: Integer;
-  const SessionID: WideString): ITMDBListPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetLists(AccountID, Page, SessionID);
-  Result:= TTMDBListPage.Create(O, FOwner, TTMDBList, TTMDBLists);
-end;
-
-function TTMDBServiceAccount.GetRatedMovies(const AccountID, Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBRatedMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetRatedMovies(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBRatedMoviePage.Create(O, FOwner, TTMDBRatedMovie, TTMDBRatedMovies);
-end;
-
-function TTMDBServiceAccount.GetRatedTV(const AccountID, Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBRatedTVSeriesPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetRatedTV(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBRatedTVSeriesPage.Create(O, FOwner, TTMDBRatedTVSerie, TTMDBRatedTVSeries);
-end;
-
-function TTMDBServiceAccount.GetRatedTVEpisodes(AccountID: Integer;
-  const Page: Integer; const Language, SessionID,
-  SortBy: WideString): ITMDBRatedTVEpisodePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetRatedTVEpisodes(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBRatedTVEpisodePage.Create(O, FOwner, TTMDBRatedTVEpisode, TTMDBRatedTVEpisodes);
-end;
-
-function TTMDBServiceAccount.GetWatchlistMovies(const AccountID, Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetWatchlistMovies(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceAccount.GetWatchlistTV(const AccountID, Page: Integer;
-  const Language, SessionID, SortBy: WideString): ITMDBTVSeriesPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Account.GetWatchlistTV(AccountID, Language, Page, SessionID, SortBy);
-  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
-end;
-
-{ TTMDBServiceAuthentication }
-
-function TTMDBServiceAuthentication.CreateGuestSession: ITMDBAuthGuestSessionResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.CreateGuestSession;
-  Result:= TTMDBAuthGuestSessionResult.Create(O);
-end;
-
-function TTMDBServiceAuthentication.CreateRequestToken: ITMDBAuthRequestTokenResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.CreateRequestToken;
-  Result:= TTMDBAuthRequestTokenResult.Create(O);
-end;
-
-function TTMDBServiceAuthentication.CreateSession(
-  const ARequestToken: WideString): ITMDBAuthSessionResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.CreateSession(ARequestToken);
-  Result:= TTMDBAuthSessionResult.Create(O);
-end;
-
-function TTMDBServiceAuthentication.CreateSessionLogin(const AUsername,
-  APassword, ARequestToken: WideString): ITMDBAuthSessionResultLogin;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.CreateSessionLogin(AUsername, APassword, ARequestToken);
-  Result:= TTMDBAuthSessionResultLogin.Create(O);
-end;
-
-function TTMDBServiceAuthentication.CreateSessionV4(
-  const AAccessToken: WideString): ITMDBAuthSessionResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.CreateSessionV4(AAccessToken);
-  Result:= TTMDBAuthSessionResult.Create(O);
-end;
-
-function TTMDBServiceAuthentication.DeleteSession(
-  const SessionID: WideString): ITMDBAuthDeleteSessionResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.DeleteSession(SessionID);
-  Result:= TTMDBAuthDeleteSessionResult.Create(O);
-end;
-
-function TTMDBServiceAuthentication.ValidateKey: ITMDBAuthValidateKeyResult;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Authentication.GetValidateKey;
-  Result:= TTMDBAuthValidateKeyResult.Create(O);
-end;
-
-{ TTMDBServiceCertifications }
-
-function TTMDBServiceCertifications.GetMovieCertifications: ITMDBCertificationCountries;
-var
-  Res: ISuperObject;
-begin
-  Res:= FOwner.FAPI.Certifications.GetMovieCertifications;
-  Result:= TTMDBCertificationCountries.Create(Res);
-end;
-
-function TTMDBServiceCertifications.GetTVCertifications: ITMDBCertificationCountries;
-var
-  Res: ISuperObject;
-begin
-  Res:= FOwner.FAPI.Certifications.GetTVCertifications;
-  Result:= TTMDBCertificationCountries.Create(Res);
-end;
-
-{ TTMDBServiceConfiguration }
-
-function TTMDBServiceConfiguration.GetDetails: ITMDBConfiguration;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Configuration.GetDetails;
-  Result:= TTMDBConfiguration.Create(O);
-end;
-
-function TTMDBServiceConfiguration.GetCountries: ITMDBCountries;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Configuration.GetCountries;
-  Result:= TTMDBCountries.Create(A, FOwner, TTMDBCountry);
-end;
-
-function TTMDBServiceConfiguration.GetJobs: ITMDBJobDepartments;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Configuration.GetJobs;
-  Result:= TTMDBJobDepartments.Create(A, FOwner, TTMDBJobDepartment);
-end;
-
-function TTMDBServiceConfiguration.GetLanguages: ITMDBLanguages;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Configuration.GetLanguages;
-  Result:= TTMDBLanguages.Create(A, FOwner, TTMDBLanguage);
-end;
-
-function TTMDBServiceConfiguration.GetPrimaryTranslations: TTMDBStrArray;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Configuration.GetPrimaryTranslations;
-  Result:= JSONToStrArray(A);
-end;
-
-function TTMDBServiceConfiguration.GetTimezones: ITMDBTimezones;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Configuration.GetTimeZones;
-  Result:= TTMDBTimezones.Create(A, FOwner, TTMDBTimezone);
-end;
-
-{ TTMDBServiceFind }
-
-function TTMDBServiceFind.FindByID(const ExternalID, ExternalSource,
-  Language: String): ITMDBFindResults;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Find.GetFindByID(ExternalID, ExternalSource, Language);
-  //Result:= TTMDBFindResults.Create(O);
-end;
-
-{ TTMDBServiceGenres }
-
-function TTMDBServiceGenres.GetMovieList(
-  const Language: WideString): ITMDBGenres;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Genres.GetMovieList(Language);
-  Result:= TTMDBGenres.Create(A, FOwner, TTMDBMediaType.mtMovie);
-end;
-
-function TTMDBServiceGenres.GetTVList(
-  const Language: WideString): ITMDBGenres;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.Genres.GetTVList(Language);
-  Result:= TTMDBGenres.Create(A, FOwner, TTMDBMediaType.mtTV);
-end;
-
-{ TTMDBServiceKeywords }
-
-function TTMDBServiceKeywords.GetDetails(
-  const KeywordID: Integer): ITMDBKeywordDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Keywords.GetDetails(KeywordID);
-  Result:= TTMDBKeywordDetail.Create(O);
-end;
-
-{ TTMDBServiceMovieLists }
-
-function TTMDBServiceMovieLists.GetNowPlaying(const Language: WideString;
-  const Page: Integer; const Region: String): ITMDBDatedMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.MovieLists.GetNowPlaying(Language, Page, Region);
-  Result:= TTMDBDatedMoviePage.Create(O, FOwner);
-end;
-
-function TTMDBServiceMovieLists.GetPopular(const Language: WideString;
-  const Page: Integer; const Region: String): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.MovieLists.GetPopular(Language, Page, Region);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceMovieLists.GetTopRated(const Language: WideString;
-  const Page: Integer; const Region: String): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.MovieLists.GetTopRated(Language, Page, Region);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceMovieLists.GetUpcoming(const Language: WideString;
-  const Page: Integer; const Region: String): ITMDBDatedMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.MovieLists.GetUpcoming(Language, Page, Region);
-  Result:= TTMDBDatedMoviePage.Create(O, FOwner);
-end;
-
-{ TTMDBServiceMovies }
-
-function TTMDBServiceMovies.GetAccountStates(const MovieID: Integer;
-  const SessionID, GuestSessionID: WideString): ITMDBAccountStates;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetAccountStates(MovieID, SessionID, GuestSessionID);
-  Result:= TTMDBAccountStates.Create(O);
-end;
-
-function TTMDBServiceMovies.GetAlternativeTitles(const MovieID: Integer;
-  const Country: WideString): ITMDBAlternativeTitles;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.Movies.GetAlternativeTitles(MovieID, Country);
-  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
-end;
-
-function TTMDBServiceMovies.GetCredits(const MovieID: Integer;
-  const Language: String): ITMDBCredits;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetCredits(MovieID, Language);
-  Result:= TTMDBCredits.Create(O, Owner);
-end;
-
-function TTMDBServiceMovies.GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieRequests = [];
-  const Language: WideString = ''; const SessionID: String = ''): ITMDBMovieDetail;
-var
-  O: ISuperObject;
-  ATR: String;
-begin
-  ATR:= TMDBMovieRequestsToStr(AppendToResponse);
-  O:= FOwner.FAPI.Movies.GetDetails(MovieID, ATR, Language, SessionID);
-  Result:= TTMDBMovieDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceMovies.GetImages(const MovieID: Integer;
-  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetImages(MovieID, IncludeImageLanguage, Language);
-  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
-end;
-
-function TTMDBServiceMovies.GetKeywords(
-  const MovieID: Integer): ITMDBKeywords;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.Movies.GetKeywords(MovieID);
-  Result:= TTMDBKeywords.Create(O, FOwner, TTMDBKeyword);
-end;
-
-function TTMDBServiceMovies.GetLatest: ITMDBMovieDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetLatest;
-  Result:= TTMDBMovieDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceMovies.GetReleaseDates(
-  const MovieID: Integer): ITMDBReleaseDateCountries;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.Movies.GetReleaseDates(MovieID);
-  Result:= TTMDBReleaseDateCountries.Create(O);
-end;
-
-function TTMDBServiceMovies.GetSimilar(const MovieID: Integer;
-  const Language: WideString; const Page: Integer): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetSimilar(MovieID, Language, Page);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceMovies.GetTranslations(
-  const MovieID: Integer): ITMDBTranslations;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetTranslations(MovieID);
-  Result:= TTMDBTranslations.Create(O, ttMovie);
-end;
-
-function TTMDBServiceMovies.GetVideos(const MovieID: Integer;
-  const Language: WideString): ITMDBVideos;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Movies.GetVideos(MovieID, Language);
-  Result:= TTMDBVideos.Create(O.A['results'], FOwner, TTMDBVideo);
-end;
-
-{ TTMDBServiceSearch }
-
-function TTMDBServiceSearch.SearchCollections(const Query: WideString;
-  const IncludeAdult: Boolean; const Language, Region: WideString;
-  const Page: Integer): ITMDBCollectionPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchCollections(Query, IncludeAdult, Language,
-    Page, Region);
-  Result:= TTMDBCollectionPage.Create(O, FOwner, TTMDBCollection, TTMDBCollections);
-end;
-
-function TTMDBServiceSearch.SearchCompanies(const Query: WideString;
-  const Page: Integer): ITMDBCompanyPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchCompanies(Query, Page);
-  Result:= TTMDBCompanyPage.Create(O, FOwner, TTMDBCompany, TTMDBCompanies);
-end;
-
-function TTMDBServiceSearch.SearchKeywords(const Query: WideString;
-  const Page: Integer): ITMDBKeywordPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchKeywords(Query, Page);
-  Result:= TTMDBKeywordPage.Create(O, FOwner, TTMDBKeyword, TTMDBKeywords);
-end;
-
-function TTMDBServiceSearch.SearchMovies(const Query: WideString;
-  const IncludeAdult: Boolean; const Language, Region, PrimaryReleaseYear,
-  Year: WideString; const Page: Integer): ITMDBMoviePage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchMovies(Query, IncludeAdult, Language, PrimaryReleaseYear,
-    Page, Region, Year);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceSearch.SearchMulti(const Query: WideString;
-  const IncludeAdult: Boolean; const Language: WideString;
-  const Page: Integer): ITMDBMediaPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchMulti(Query, IncludeAdult, Language, Page);
-  Result:= TTMDBMediaPage.Create(O, FOwner, TTMDBMedium, TTMDBMedia);
-end;
-
-function TTMDBServiceSearch.SearchPeople(const Query: WideString;
-  const IncludeAdult: Boolean; const Language: WideString;
-  const Page: Integer): ITMDBPersonPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchPerson(Query, IncludeAdult, Language, Page);
-  Result:= TTMDBPersonPage.Create(O, FOwner, TTMDBPerson, TTMDBPeople);
-end;
-
-function TTMDBServiceSearch.SearchTV(const Query: String;
-  const FirstAirDateYear: Integer; const IncludeAdult: Boolean;
-  const Language: WideString; const Year, Page: Integer): ITMDBTVSeriesPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Search.SearchTV(Query, IntToStr(FirstAirDateYear),
-    IncludeAdult, Language, Page, IntToStr(Year));
-  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
-end;
-
-{ TTMDBServiceWatchProviders }
-
-function TTMDBServiceWatchProviders.GetAvailableRegions(
-  const Language: WideString): ITMDBCountries;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.WatchProviders.GetAvailableRegions(Language);
-  Result:= TTMDBCountries.Create(A, FOwner, TTMDBCountry);
-end;
-
-function TTMDBServiceWatchProviders.GetMovieProviders(const Language,
-  WatchRegion: WideString): ITMDBWatchProviders;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.WatchProviders.GetMovieProviders(Language, WatchRegion);
-  Result:= TTMDBWatchProviders.Create(A, FOwner, TTMDBWatchProvider);
-end;
-
-function TTMDBServiceWatchProviders.GetTVProviders(const Language,
-  WatchRegion: WideString): ITMDBWatchProviders;
-var
-  A: ISuperArray;
-begin
-  A:= FOwner.FAPI.WatchProviders.GetTVProviders(Language, WatchRegion);
-  Result:= TTMDBWatchProviders.Create(A, FOwner, TTMDBWatchProvider);
-end;
-
-{ TTMDBServiceImages }
-
-function TTMDBServiceImages.GetImage(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= FOwner.FAPI.Images.GetImage(Base64, Path, Size);
-end;
-
-function TTMDBServiceImages.GetBackdrop(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= GetImage(Base64, Path, Size);
-end;
-
-function TTMDBServiceImages.GetLogo(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= GetImage(Base64, Path, Size);
-end;
-
-function TTMDBServiceImages.GetPoster(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= GetImage(Base64, Path, Size);
-end;
-
-function TTMDBServiceImages.GetProfile(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= GetImage(Base64, Path, Size);
-end;
-
-function TTMDBServiceImages.GetStill(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-begin
-  Result:= GetImage(Base64, Path, Size);
-end;
-
-{ TTMDBClient }
-
-constructor TTMDBClient.Create;
-begin
-  FAPI:= TTMDBAPI.Create(nil);
-  FLoginState:= TTMDBLoginState.Create(Self);
-
-  { Create Services }
-
-  FAccount:= TTMDBServiceAccount.Create(Self);
-  FAuthentication:= TTMDBServiceAuthentication.Create(Self);
-  FCertifications:= TTMDBServiceCertifications.Create(Self);
-  FChanges:= TTMDBServiceChanges.Create(Self);
-  FCollections:= TTMDBServiceCollections.Create(Self);
-  FCompanies:= TTMDBServiceCompanies.Create(Self);
-  FConfiguration:= TTMDBServiceConfiguration.Create(Self);
-  FCredits:= TTMDBServiceCredits.Create(Self);
-  FDiscover:= TTMDBServiceDiscover.Create(Self);
-  FFind:= TTMDBServiceFind.Create(Self);
-  FGenres:= TTMDBServiceGenres.Create(Self);
-  FGuestSessions:= TTMDBServiceGuestSessions.Create(Self);
-  FKeywords:= TTMDBServiceKeywords.Create(Self);
-  FLists:= TTMDBServiceLists.Create(Self);
-  FMovieLists:= TTMDBServiceMovieLists.Create(Self);
-  FMovies:= TTMDBServiceMovies.Create(Self);
-  FNetworks:= TTMDBServiceNetworks.Create(Self);
-  FPeopleLists:= TTMDBServicePeopleLists.Create(Self);
-  FPeople:= TTMDBServicePeople.Create(Self);
-  FReviews:= TTMDBServiceReviews.Create(Self);
-  FSearch:= TTMDBServiceSearch.Create(Self);
-  FTrending:= TTMDBServiceTrending.Create(Self);
-  FTVSeriesLists:= TTMDBServiceTVSeriesLists.Create(Self);
-  FTVSeries:= TTMDBServiceTVSeries.Create(Self);
-  FTVSeasons:= TTMDBServiceTVSeasons.Create(Self);
-  FTVEpisodes:= TTMDBServiceTVEpisodes.Create(Self);
-  FTVEpisodeGroups:= TTMDBServiceTVEpisodeGroups.Create(Self);
-  FWatchProviders:= TTMDBServiceWatchProviders.Create(Self);
-  FImages:= TTMDBServiceImages.Create(Self);
-end;
-
-destructor TTMDBClient.Destroy;
-begin
-  FAccount:= nil;
-  FAuthentication:= nil;
-  FCertifications:= nil;
-  FChanges:= nil;
-  FCollections:= nil;
-  FCredits:= nil;
-  FDiscover:= nil;
-  FFind:= nil;
-  FGenres:= nil;
-  FGuestSessions:= nil;
-  FKeywords:= nil;
-  FLists:= nil;
-  FMovieLists:= nil;
-  FMovies:= nil;
-  FNetworks:= nil;
-  FPeopleLists:= nil;
-  FPeople:= nil;
-  FReviews:= nil;
-  FSearch:= nil;
-  FTrending:= nil;
-  FTVSeriesLists:= nil;
-  FTVSeries:= nil;
-  FTVSeasons:= nil;
-  FTVEpisodes:= nil;
-  FTVEpisodeGroups:= nil;
-  FWatchProviders:= nil;
-  FImages:= nil;
-
-  FLoginState:= nil;
-  FCache:= nil;
-
-  FreeAndNil(FAPI);
-  inherited;
-end;
-
-function TTMDBClient.GetAccessToken: WideString;
-begin
-  Result:= FAPI.APIReadAccessToken;
-end;
-
-function TTMDBClient.GetAPIKey: WideString;
-begin
-  Result:= FAPI.APIKey;
-end;
-
-function TTMDBClient.GetAuthMethod: TTMDBAuthMethod;
-begin
-  Result:= FAPI.AuthMethod;
-end;
-
-function TTMDBClient.GetCache: ITMDBCache;
-begin
-  if FCache = nil then begin
-    FCache:= TTMDBCache.Create(Self);
+  M: IMember;
+  X: Integer;
+  I: ITMDBWatchProviderPriority;
+begin
+  ClearItems;
+  X:= 0;
+  for M in FObj do begin
+    I:= TTMDBWatchProviderPriority.Create(M.Name, M.AsInteger);
+    Inc(X);
   end;
-  Result:= FCache;
+
 end;
 
-function TTMDBClient.GetLoginState: ITMDBLoginState;
-begin
-  Result:= FLoginState;
-end;
 
-function TTMDBClient.GetOnUserAuthRequest: TTMDBUserAuthRequestEvent;
-begin
-  Result:= Self.FOnUserAuthRequest;
-end;
 
-function TTMDBClient.GetUserAuth: TTMDBUserAuth;
-begin
-  Result:= FUserAuth;
-end;
 
-procedure TTMDBClient.SetAccessToken(const Value: WideString);
-begin
-  FAPI.APIReadAccessToken:= Value;
-end;
 
-procedure TTMDBClient.SetAPIKey(const Value: WideString);
-begin
-  FAPI.APIKey:= Value;
-end;
 
-procedure TTMDBClient.SetAuthMethod(const Value: TTMDBAuthMethod);
-begin
-  FAPI.AuthMethod:= Value;
-end;
 
-procedure TTMDBClient.SetOnUserAuthRequest(
-  const Value: TTMDBUserAuthRequestEvent);
-begin
-  Self.FOnUserAuthRequest:= Value;
-end;
 
-procedure TTMDBClient.SetUserAuth(const Value: TTMDBUserAuth);
-begin
-  FUserAuth:= Value;
-end;
 
-function TTMDBClient.Account: ITMDBServiceAccount;
-begin
-  Result:= FAccount;
-end;
 
-function TTMDBClient.Authentication: ITMDBServiceAuthentication;
-begin
-  Result:= FAuthentication;
-end;
 
-function TTMDBClient.Certifications: ITMDBServiceCertifications;
-begin
-  Result:= FCertifications;
-end;
 
-function TTMDBClient.Changes: ITMDBServiceChanges;
-begin
-  Result:= FChanges;
-end;
 
-function TTMDBClient.Collections: ITMDBServiceCollections;
-begin
-  Result:= FCollections;
-end;
 
-function TTMDBClient.Companies: ITMDBServiceCompanies;
-begin
-  Result:= FCompanies;
-end;
 
-function TTMDBClient.Configuration: ITMDBServiceConfiguration;
-begin
-  Result:= FConfiguration;
-end;
 
-function TTMDBClient.Credits: ITMDBServiceCredits;
-begin
-  Result:= FCredits;
-end;
 
-function TTMDBClient.Discover: ITMDBServiceDiscover;
-begin
-  Result:= FDiscover;
-end;
 
-procedure TTMDBClient.DoUserAuthRequest(const RequestToken: WideString;
-  var Result: Boolean);
-var
-  U: String;
-begin
-  if Assigned(FOnUserAuthRequest) then begin
-    U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
-    FOnUserAuthRequest(Self, U, Result);
-  end;
-end;
 
-function TTMDBClient.Find: ITMDBServiceFind;
-begin
-  Result:= FFind;
-end;
 
-function TTMDBClient.Genres: ITMDBServiceGenres;
-begin
-  Result:= FGenres;
-end;
 
-function TTMDBClient.GuestSessions: ITMDBServiceGuestSessions;
-begin
-  Result:= FGuestSessions;
-end;
 
-function TTMDBClient.Images: ITMDBServiceImages;
-begin
-  Result:= FImages;
-end;
 
-function TTMDBClient.Keywords: ITMDBServiceKeywords;
-begin
-  Result:= FKeywords;
-end;
 
-function TTMDBClient.Lists: ITMDBServiceLists;
-begin
-  Result:= FLists;
-end;
-
-function TTMDBClient.MovieLists: ITMDBServiceMovieLists;
-begin
-  Result:= FMovieLists;
-end;
-
-function TTMDBClient.Movies: ITMDBServiceMovies;
-begin
-  Result:= FMovies;
-end;
-
-function TTMDBClient.Networks: ITMDBServiceNetworks;
-begin
-  Result:= FNetworks;
-end;
-
-function TTMDBClient.People: ITMDBServicePeople;
-begin
-  Result:= FPeople;
-end;
-
-function TTMDBClient.PeopleLists: ITMDBServicePeopleLists;
-begin
-  Result:= FPeopleLists;
-end;
-
-function TTMDBClient.Reviews: ITMDBServiceReviews;
-begin
-  Result:= FReviews;
-end;
-
-function TTMDBClient.Search: ITMDBServiceSearch;
-begin
-  Result:= FSearch;
-end;
-
-function TTMDBClient.Trending: ITMDBServiceTrending;
-begin
-  Result:= FTrending;
-end;
-
-function TTMDBClient.TVEpisodeGroups: ITMDBServiceTVEpisodeGroups;
-begin
-  Result:= FTVEpisodeGroups;
-end;
-
-function TTMDBClient.TVEpisodes: ITMDBServiceTVEpisodes;
-begin
-  Result:= FTVEpisodes;
-end;
-
-function TTMDBClient.TVSeasons: ITMDBServiceTVSeasons;
-begin
-  Result:= FTVSeasons;
-end;
-
-function TTMDBClient.TVSeries: ITMDBServiceTVSeries;
-begin
-  Result:= FTVSeries;
-end;
-
-function TTMDBClient.TVSeriesLists: ITMDBServiceTVSeriesLists;
-begin
-  Result:= FTVSeriesLists;
-end;
-
-function TTMDBClient.WatchProviders: ITMDBServiceWatchProviders;
-begin
-  Result:= FWatchProviders;
-end;
 
 { TTMDBAccountStates }
 
@@ -5824,35 +5009,6 @@ begin
   Result:= inherited GetItem(Index) as ITMDBCompany;
 end;
 
-{ TTMDBServiceCollections }
-
-function TTMDBServiceCollections.GetDetails(const CollectionID: Integer;
-  const Language: WideString): ITMDBCollectionDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Collections.GetDetails(CollectionID, Language);
-  Result:= TTMDBCollectionDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceCollections.GetImages(const CollectionID: Integer;
-  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Collections.GetImages(CollectionID, IncludeImageLanguage, Language);
-  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
-end;
-
-function TTMDBServiceCollections.GetTranslations(
-  const CollectionID: Integer): ITMDBTranslations;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Collections.GetTranslations(CollectionID);
-  Result:= TTMDBTranslations.Create(O, ttCollection);
-end;
-
 { TTMDBCollectionPart }
 
 constructor TTMDBCollectionPart.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
@@ -6395,131 +5551,16 @@ begin
   Result:= (inherited GetItem(Index)) as ITMDBVideo;
 end;
 
-{ TTMDBServiceTrending }
-
-function TTMDBServiceTrending.GetMovies(const TimeWindow: TTMDBTimeWindow;
-  const Language: WideString; const Page: Integer): ITMDBMoviePage;
-var
-  O: ISuperObject;
-  TW: String;
-begin
-  case TimeWindow of
-    twDay:  TW:= 'day';
-    twWeek: TW:= 'week';
-  end;
-  O:= FOwner.FAPI.Trending.GetMovies(TW, Language, Page);
-  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
-end;
-
-function TTMDBServiceTrending.GetTV(const TimeWindow: TTMDBTimeWindow;
-  const Language: WideString; const Page: Integer): ITMDBTVSeriesPage;
-var
-  O: ISuperObject;
-  TW: String;
-begin
-  case TimeWindow of
-    twDay:  TW:= 'day';
-    twWeek: TW:= 'week';
-  end;
-  O:= FOwner.FAPI.Trending.GetTV(TW, Language, Page);
-  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
-end;
-
-{ TTMDBServiceTVSeries }
-
-function TTMDBServiceTVSeries.GetAccountStates(
-  const SeriesID: Integer): ITMDBAccountStates;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetAccountStates(SeriesID, FOwner.LoginState.SessionID);
-  Result:= TTMDBAccountStates.Create(O);
-end;
-
-function TTMDBServiceTVSeries.GetAlternativeTitles(
-  const SeriesID: Integer): ITMDBAlternativeTitles;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.TVSeries.GetAlternativeTitles(SeriesID);
-  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
-end;
-
-function TTMDBServiceTVSeries.GetDetails(const SeriesID: Integer;
-  const AppendToResponse: TTMDBTVSeriesRequests;
-  const Language: WideString): ITMDBTVSeriesDetail;
-var
-  ATR: String;
-  O: ISuperObject;
-begin
-  ATR:= TMDBTVSeriesRequestsToStr(AppendToResponse);
-  O:= FOwner.FAPI.TVSeries.GetDetails(SeriesID, ATR, Language);
-  Result:= TTMDBTVSeriesDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceTVSeries.GetCredits(const SeriesID: Integer;
-  const Language: WideString): ITMDBCredits;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetCredits(SeriesID, Language);
-  Result:= TTMDBCredits.Create(O, FOwner);
-end;
-
-function TTMDBServiceTVSeries.GetImages(const SeriesID: Integer;
-  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetImages(SeriesID, IncludeImageLanguage, Language);
-  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
-end;
-
-function TTMDBServiceTVSeries.GetKeywords(
-  const SeriesID: Integer): ITMDBKeywords;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.TVSeries.GetKeywords(SeriesID);
-  Result:= TTMDBKeywords.Create(O, FOwner, TTMDBKeyword);
-end;
-
-function TTMDBServiceTVSeries.GetLatest: ITMDBTVSeriesDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetLatest;
-  Result:= TTMDBTVSeriesDetail.Create(O, FOwner);
-end;
-
-function TTMDBServiceTVSeries.GetSimilar(const SeriesID: Integer;
-  const Language: WideString; const Page: Integer): ITMDBTVSeriesPage;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetSimilar(SeriesID, Language, Page);
-  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
-end;
-
-function TTMDBServiceTVSeries.GetVideos(const SeriesID: Integer;
-  const IncludeVideoLanguage, Language: WideString): ITMDBVideos;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVSeries.GetVideos(SeriesID, IncludeVideoLanguage, Language);
-  Result:= TTMDBVideos.Create(O.A['results'], FOwner, TTMDBVideo);
-end;
-
 { TTMDBTVSeriesDetail }
 
-constructor TTMDBTVSeriesDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+constructor TTMDBTVSerieDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
 begin
   FObj:= AObj;
   FTMDB:= ATMDB;
 
 end;
 
-destructor TTMDBTVSeriesDetail.Destroy;
+destructor TTMDBTVSerieDetail.Destroy;
 begin
 
   FObj:= nil;
@@ -6527,157 +5568,147 @@ begin
   inherited;
 end;
 
-function TTMDBTVSeriesDetail.GetAdult: Boolean;
+function TTMDBTVSerieDetail.GetAdult: Boolean;
 begin
   Result:= FObj.B['adult'];
 end;
 
-function TTMDBTVSeriesDetail.GetBackdropPath: WideString;
+function TTMDBTVSerieDetail.GetBackdropPath: WideString;
 begin
   Result:= FObj.S['backdrop_path'];
 end;
 
-function TTMDBTVSeriesDetail.GetCreatedBy: ITMDBPeople;
+function TTMDBTVSerieDetail.GetCreatedBy: ITMDBPeople;
 begin
   //TODO
 end;
 
-function TTMDBTVSeriesDetail.GetEpisodeRunTime: TTMDBIntArray;
+function TTMDBTVSerieDetail.GetEpisodeRunTime: TTMDBIntArray;
 begin
   Result:= JSONToIntArray(FObj.A['episode_run_time']);
 end;
 
-function TTMDBTVSeriesDetail.GetFirstAirDate: TDateTime;
+function TTMDBTVSerieDetail.GetFirstAirDate: TDateTime;
 begin
   Result:= ConvertDate(FObj.S['first_air_date']);
 end;
 
-function TTMDBTVSeriesDetail.GetGenres: ITMDBGenres;
+function TTMDBTVSerieDetail.GetGenres: ITMDBGenres;
 begin
   Result:= TTMDBGenres.Create(FObj.A['genres'], FTMDB, mtTV);
 end;
 
-function TTMDBTVSeriesDetail.GetHomepage: WideString;
+function TTMDBTVSerieDetail.GetHomepage: WideString;
 begin
   Result:= FObj.S['homepage'];
 end;
 
-function TTMDBTVSeriesDetail.GetID: Integer;
-begin
-  Result:= FObj.I['id'];
-end;
-
-function TTMDBTVSeriesDetail.GetInProduction: Boolean;
+function TTMDBTVSerieDetail.GetInProduction: Boolean;
 begin
   Result:= FObj.B['in_production'];
 end;
 
-function TTMDBTVSeriesDetail.GetLanguages: TTMDBStrArray;
+function TTMDBTVSerieDetail.GetLanguages: TTMDBStrArray;
 begin
   Result:= JSONToStrArray(FObj.A['languages']);
 end;
 
-function TTMDBTVSeriesDetail.GetLastAirDate: TDateTime;
+function TTMDBTVSerieDetail.GetLastAirDate: TDateTime;
 begin
   Result:= ConvertDate(FObj.S['last_air_date']);
 end;
 
-function TTMDBTVSeriesDetail.GetLastEpisodeToAir: ITMDBTVEpisode;
+function TTMDBTVSerieDetail.GetLastEpisodeToAir: ITMDBTVEpisode;
 begin
   Result:= TTMDBTVEpisode.Create(nil, FObj.O['last_episode_to_air'], 0, FTMDB);
 end;
 
-function TTMDBTVSeriesDetail.GetName: WideString;
-begin
-  Result:= FObj.S['name'];
-end;
-
-function TTMDBTVSeriesDetail.GetNetworks: ITMDBTVNetworks;
+function TTMDBTVSerieDetail.GetNetworks: ITMDBTVNetworks;
 begin
   //TODO
 end;
 
-function TTMDBTVSeriesDetail.GetNextEpisodeToAir: ITMDBTVEpisode;
+function TTMDBTVSerieDetail.GetNextEpisodeToAir: ITMDBTVEpisode;
 begin
   Result:= TTMDBTVEpisode.Create(nil, FObj.O['next_episode_to_air'], 0, FTMDB);
 end;
 
-function TTMDBTVSeriesDetail.GetNumberOfEpisodes: Integer;
+function TTMDBTVSerieDetail.GetNumberOfEpisodes: Integer;
 begin
   Result:= FObj.I['number_of_episodes'];
 end;
 
-function TTMDBTVSeriesDetail.GetNumberOfSeasons: Integer;
+function TTMDBTVSerieDetail.GetNumberOfSeasons: Integer;
 begin
   Result:= FObj.I['number_of_seasons'];
 end;
 
-function TTMDBTVSeriesDetail.GetOriginalLanguage: WideString;
+function TTMDBTVSerieDetail.GetOriginalLanguage: WideString;
 begin
   Result:= FObj.S['original_language'];
 end;
 
-function TTMDBTVSeriesDetail.GetOriginalName: WideString;
+function TTMDBTVSerieDetail.GetOriginalName: WideString;
 begin
   Result:= FObj.S['original_name'];
 end;
 
-function TTMDBTVSeriesDetail.GetOriginCountry: TTMDBStrArray;
+function TTMDBTVSerieDetail.GetOriginCountry: TTMDBStrArray;
 begin
   Result:= JSONToStrArray(FObj.A['origin_country']);
 end;
 
-function TTMDBTVSeriesDetail.GetOverview: WideString;
+function TTMDBTVSerieDetail.GetOverview: WideString;
 begin
   Result:= FObj.S['overview'];
 end;
 
-function TTMDBTVSeriesDetail.GetPopularity: Single;
+function TTMDBTVSerieDetail.GetPopularity: Single;
 begin
   Result:= FObj.F['popularity'];
 end;
 
-function TTMDBTVSeriesDetail.GetPosterPath: WideString;
+function TTMDBTVSerieDetail.GetPosterPath: WideString;
 begin
   Result:= FObj.S['poster_path'];
 end;
 
-function TTMDBTVSeriesDetail.GetProductionCompanies: ITMDBCompanies;
+function TTMDBTVSerieDetail.GetProductionCompanies: ITMDBCompanies;
 begin
   Result:= TTMDBCompanies.Create(FObj.A['production_companies'], FTMDB, TTMDBCompany);
 end;
 
-function TTMDBTVSeriesDetail.GetProductionCountries: ITMDBCountries;
+function TTMDBTVSerieDetail.GetProductionCountries: ITMDBCountries;
 begin
   Result:= TTMDBCountries.Create(FObj.A['production_countries'], FTMDB, TTMDBCountry);
 end;
 
-function TTMDBTVSeriesDetail.GetSpokenLanguages: ITMDBLanguages;
+function TTMDBTVSerieDetail.GetSpokenLanguages: ITMDBLanguages;
 begin
   Result:= TTMDBLanguages.Create(FObj.A['spoken_languages'], FTMDB, TTMDBLanguage);
 end;
 
-function TTMDBTVSeriesDetail.GetStatus: WideString;
+function TTMDBTVSerieDetail.GetStatus: WideString;
 begin
   Result:= FObj.S['status'];
 end;
 
-function TTMDBTVSeriesDetail.GetTagline: WideString;
+function TTMDBTVSerieDetail.GetTagline: WideString;
 begin
   Result:= FObj.S['tagline'];
 end;
 
-function TTMDBTVSeriesDetail.GetType: WideString;
+function TTMDBTVSerieDetail.GetType: WideString;
 begin
   Result:= FObj.S['type'];
 end;
 
-function TTMDBTVSeriesDetail.GetVoteAverage: Single;
+function TTMDBTVSerieDetail.GetVoteAverage: Single;
 begin
   Result:= FObj.F['vote_average'];
 end;
 
-function TTMDBTVSeriesDetail.GetVoteCount: Integer;
+function TTMDBTVSerieDetail.GetVoteCount: Integer;
 begin
   Result:= FObj.I['vote_count'];
 end;
@@ -6837,35 +5868,6 @@ begin
   Result:= FObj.S['origin_country'];
 end;
 
-{ TTMDBServiceNetworks }
-
-function TTMDBServiceNetworks.GetAlternativeNames(
-  const NetworkID: Integer): ITMDBAlternativeTitles;
-var
-  O: ISuperArray;
-begin
-  O:= FOwner.FAPI.Networks.GetAlternativeNames(NetworkID);
-  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
-end;
-
-function TTMDBServiceNetworks.GetDetails(
-  const NetworkID: Integer): ITMDBTVNetworkDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Networks.GetDetails(NetworkID);
-  Result:= TTMDBTVNetworkDetail.Create(O);
-end;
-
-function TTMDBServiceNetworks.GetImages(
-  const NetworkID: Integer): ITMDBMediaImageGroup;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Networks.GetImages(NetworkID);
-  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
-end;
-
 { TTMDBMedium }
 
 function TTMDBMedium.AsMovie: ITMDBMovie;
@@ -6997,17 +5999,6 @@ end;
 function TTMDBKeywordDetail.GetName: WideString;
 begin
   Result:= FObj.S['name'];
-end;
-
-{ TTMDBServiceTVEpisodeGroups }
-
-function TTMDBServiceTVEpisodeGroups.GetDetails(
-  const TVEpisodeGroupID: String): ITMDBTVEpisodeGroups;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.TVEpisodeGroups.GetDetail(TVEpisodeGroupID);
-  Result:= TTMDBTVEpisodeGroups.Create(O, FOwner);
 end;
 
 { TTMDBTVEpisodeGroupResponse }
@@ -7169,35 +6160,6 @@ end;
 function TTMDBRatedTVEpisode.GetRating: Single;
 begin
   Result:= FObj.F['rating']; //TODO: Integer???
-end;
-
-{ TTMDBServiceCompanies }
-
-function TTMDBServiceCompanies.GetAlternativeNames(
-  const CompanyID: Integer): ITMDBAlternativeTitles;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Companies.GetAlternativeNames(CompanyID);
-  Result:= TTMDBAlternativeTitles.Create(O.A['results'], FOwner, TTMDBAlternativeTitle);
-end;
-
-function TTMDBServiceCompanies.GetDetails(
-  const CompanyID: Integer): ITMDBCompanyDetail;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Companies.GetDetails(CompanyID);
-  Result:= TTMDBCompanyDetail.Create(O);
-end;
-
-function TTMDBServiceCompanies.GetImages(
-  const CompanyID: Integer): ITMDBMediaImageGroup;
-var
-  O: ISuperObject;
-begin
-  O:= FOwner.FAPI.Companies.GetImages(CompanyID);
-  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
 end;
 
 { TTMDBCompanyDetail }
@@ -7447,6 +6409,1135 @@ begin
   Result:= FObj.S['title'];
   if Result = '' then
     Result:= FObj.S['name'];
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{ TTMDBService }
+
+constructor TTMDBService.Create(AOwner: TTMDBClient);
+begin
+  FOwner:= AOwner;
+end;
+
+destructor TTMDBService.Destroy;
+begin
+
+  inherited;
+end;
+
+function TTMDBService.GetOwner: ITMDBClient;
+begin
+  Result:= FOwner;
+end;
+
+{ TTMDBServiceAccount }
+
+function TTMDBServiceAccount.GetDetails(AAccountID: Integer;
+  ASessionID: WideString): ITMDBAccountDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetDetails(AAccountID, ASessionID);
+  Result:= TTMDBAccountDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceAccount.GetDetailsBySession(
+  const ASessionID: WideString): ITMDBAccountDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetDetailsBySession(ASessionID);
+  Result:= TTMDBAccountDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceAccount.SetFavorite(const AccountID: Integer;
+  const MediaType: TTMDBMediaType; const MediaID: Integer;
+  const Favorite: Boolean; const SessionID: WideString = ''): ITMDBAccountAddFavoriteResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.AddFavorite(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Favorite, SessionID);
+  Result:= TTMDBAccountAddFavoriteResult.Create(O);
+end;
+
+function TTMDBServiceAccount.SetWatchlist(const AccountID: Integer;
+  const MediaType: TTMDBMediaType; const MediaID: Integer;
+  const Watchlist: Boolean; const SessionID: WideString = ''): ITMDBAccountAddWatchlistResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.AddToWatchlist(AccountID, TMDBMediaTypeToStr(MediaType), MediaID, Watchlist, SessionID);
+  Result:= TTMDBAccountAddWatchlistResult.Create(O);
+end;
+
+function TTMDBServiceAccount.GetFavoriteMovies(const AccountID: Integer; const Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetFavoriteMovies(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceAccount.GetFavoriteTV(const AccountID, Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetFavoriteTV(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBServiceAccount.GetLists(const AccountID, Page: Integer;
+  const SessionID: WideString): ITMDBListPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetLists(AccountID, Page, SessionID);
+  Result:= TTMDBListPage.Create(O, FOwner, TTMDBList, TTMDBLists);
+end;
+
+function TTMDBServiceAccount.GetRatedMovies(const AccountID, Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBRatedMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetRatedMovies(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBRatedMoviePage.Create(O, FOwner, TTMDBRatedMovie, TTMDBRatedMovies);
+end;
+
+function TTMDBServiceAccount.GetRatedTV(const AccountID, Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBRatedTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetRatedTV(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBRatedTVSeriesPage.Create(O, FOwner, TTMDBRatedTVSerie, TTMDBRatedTVSeries);
+end;
+
+function TTMDBServiceAccount.GetRatedTVEpisodes(AccountID: Integer;
+  const Page: Integer; const Language, SessionID,
+  SortBy: WideString): ITMDBRatedTVEpisodePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetRatedTVEpisodes(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBRatedTVEpisodePage.Create(O, FOwner, TTMDBRatedTVEpisode, TTMDBRatedTVEpisodes);
+end;
+
+function TTMDBServiceAccount.GetWatchlistMovies(const AccountID, Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetWatchlistMovies(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceAccount.GetWatchlistTV(const AccountID, Page: Integer;
+  const Language, SessionID, SortBy: WideString): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Account.GetWatchlistTV(AccountID, Language, Page, SessionID, SortBy);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+{ TTMDBServiceAuthentication }
+
+function TTMDBServiceAuthentication.CreateGuestSession: ITMDBAuthGuestSessionResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.CreateGuestSession;
+  Result:= TTMDBAuthGuestSessionResult.Create(O);
+end;
+
+function TTMDBServiceAuthentication.CreateRequestToken: ITMDBAuthRequestTokenResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.CreateRequestToken;
+  Result:= TTMDBAuthRequestTokenResult.Create(O);
+end;
+
+function TTMDBServiceAuthentication.CreateSession(
+  const ARequestToken: WideString): ITMDBAuthSessionResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.CreateSession(ARequestToken);
+  Result:= TTMDBAuthSessionResult.Create(O);
+end;
+
+function TTMDBServiceAuthentication.CreateSessionLogin(const AUsername,
+  APassword, ARequestToken: WideString): ITMDBAuthSessionResultLogin;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.CreateSessionLogin(AUsername, APassword, ARequestToken);
+  Result:= TTMDBAuthSessionResultLogin.Create(O);
+end;
+
+function TTMDBServiceAuthentication.CreateSessionV4(
+  const AAccessToken: WideString): ITMDBAuthSessionResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.CreateSessionV4(AAccessToken);
+  Result:= TTMDBAuthSessionResult.Create(O);
+end;
+
+function TTMDBServiceAuthentication.DeleteSession(
+  const SessionID: WideString): ITMDBAuthDeleteSessionResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.DeleteSession(SessionID);
+  Result:= TTMDBAuthDeleteSessionResult.Create(O);
+end;
+
+function TTMDBServiceAuthentication.ValidateKey: ITMDBAuthValidateKeyResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Authentication.GetValidateKey;
+  Result:= TTMDBAuthValidateKeyResult.Create(O);
+end;
+
+{ TTMDBServiceCertifications }
+
+function TTMDBServiceCertifications.GetMovieCertifications: ITMDBCertificationCountries;
+var
+  Res: ISuperObject;
+begin
+  Res:= FOwner.FAPI.Certifications.GetMovieCertifications;
+  Result:= TTMDBCertificationCountries.Create(Res);
+end;
+
+function TTMDBServiceCertifications.GetTVCertifications: ITMDBCertificationCountries;
+var
+  Res: ISuperObject;
+begin
+  Res:= FOwner.FAPI.Certifications.GetTVCertifications;
+  Result:= TTMDBCertificationCountries.Create(Res);
+end;
+
+{ TTMDBServiceCompanies }
+
+function TTMDBServiceCompanies.GetAlternativeNames(
+  const CompanyID: Integer): ITMDBAlternativeTitles;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetAlternativeNames(CompanyID);
+  Result:= TTMDBAlternativeTitles.Create(O.A['results'], FOwner, TTMDBAlternativeTitle);
+end;
+
+function TTMDBServiceCompanies.GetDetails(
+  const CompanyID: Integer): ITMDBCompanyDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetDetails(CompanyID);
+  Result:= TTMDBCompanyDetail.Create(O);
+end;
+
+function TTMDBServiceCompanies.GetImages(
+  const CompanyID: Integer): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Companies.GetImages(CompanyID);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+{ TTMDBServiceConfiguration }
+
+function TTMDBServiceConfiguration.GetDetails: ITMDBConfiguration;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Configuration.GetDetails;
+  Result:= TTMDBConfiguration.Create(O);
+end;
+
+function TTMDBServiceConfiguration.GetCountries: ITMDBCountries;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Configuration.GetCountries;
+  Result:= TTMDBCountries.Create(A, FOwner, TTMDBCountry);
+end;
+
+function TTMDBServiceConfiguration.GetJobs: ITMDBJobDepartments;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Configuration.GetJobs;
+  Result:= TTMDBJobDepartments.Create(A, FOwner, TTMDBJobDepartment);
+end;
+
+function TTMDBServiceConfiguration.GetLanguages: ITMDBLanguages;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Configuration.GetLanguages;
+  Result:= TTMDBLanguages.Create(A, FOwner, TTMDBLanguage);
+end;
+
+function TTMDBServiceConfiguration.GetPrimaryTranslations: TTMDBStrArray;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Configuration.GetPrimaryTranslations;
+  Result:= JSONToStrArray(A);
+end;
+
+function TTMDBServiceConfiguration.GetTimezones: ITMDBTimezones;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Configuration.GetTimeZones;
+  Result:= TTMDBTimezones.Create(A, FOwner, TTMDBTimezone);
+end;
+
+{ TTMDBServiceFind }
+
+function TTMDBServiceFind.FindByID(const ExternalID, ExternalSource,
+  Language: String): ITMDBFindResults;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Find.GetFindByID(ExternalID, ExternalSource, Language);
+  //Result:= TTMDBFindResults.Create(O);
+end;
+
+{ TTMDBServiceGenres }
+
+function TTMDBServiceGenres.GetMovieList(
+  const Language: WideString): ITMDBGenres;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Genres.GetMovieList(Language);
+  Result:= TTMDBGenres.Create(A, FOwner, TTMDBMediaType.mtMovie);
+end;
+
+function TTMDBServiceGenres.GetTVList(
+  const Language: WideString): ITMDBGenres;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.Genres.GetTVList(Language);
+  Result:= TTMDBGenres.Create(A, FOwner, TTMDBMediaType.mtTV);
+end;
+
+{ TTMDBServiceKeywords }
+
+function TTMDBServiceKeywords.GetDetails(
+  const KeywordID: Integer): ITMDBKeywordDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Keywords.GetDetails(KeywordID);
+  Result:= TTMDBKeywordDetail.Create(O);
+end;
+
+{ TTMDBServiceMovieLists }
+
+function TTMDBServiceMovieLists.GetNowPlaying(const Language: WideString;
+  const Page: Integer; const Region: String): ITMDBDatedMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.MovieLists.GetNowPlaying(Language, Page, Region);
+  Result:= TTMDBDatedMoviePage.Create(O, FOwner);
+end;
+
+function TTMDBServiceMovieLists.GetPopular(const Language: WideString;
+  const Page: Integer; const Region: String): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.MovieLists.GetPopular(Language, Page, Region);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceMovieLists.GetTopRated(const Language: WideString;
+  const Page: Integer; const Region: String): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.MovieLists.GetTopRated(Language, Page, Region);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceMovieLists.GetUpcoming(const Language: WideString;
+  const Page: Integer; const Region: String): ITMDBDatedMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.MovieLists.GetUpcoming(Language, Page, Region);
+  Result:= TTMDBDatedMoviePage.Create(O, FOwner);
+end;
+
+{ TTMDBServiceMovies }
+
+function TTMDBServiceMovies.GetAccountStates(const MovieID: Integer;
+  const SessionID, GuestSessionID: WideString): ITMDBAccountStates;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetAccountStates(MovieID, SessionID, GuestSessionID);
+  Result:= TTMDBAccountStates.Create(O);
+end;
+
+function TTMDBServiceMovies.GetAlternativeTitles(const MovieID: Integer;
+  const Country: WideString): ITMDBAlternativeTitles;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.Movies.GetAlternativeTitles(MovieID, Country);
+  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
+end;
+
+function TTMDBServiceMovies.GetCredits(const MovieID: Integer;
+  const Language: String): ITMDBCredits;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetCredits(MovieID, Language);
+  Result:= TTMDBCredits.Create(O, Owner);
+end;
+
+function TTMDBServiceMovies.GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieRequests = [];
+  const Language: WideString = ''; const SessionID: String = ''): ITMDBMovieDetail;
+var
+  O: ISuperObject;
+  ATR: String;
+begin
+  ATR:= TMDBMovieRequestsToStr(AppendToResponse);
+  O:= FOwner.FAPI.Movies.GetDetails(MovieID, ATR, Language, SessionID);
+  Result:= TTMDBMovieDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceMovies.GetImages(const MovieID: Integer;
+  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetImages(MovieID, IncludeImageLanguage, Language);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+function TTMDBServiceMovies.GetKeywords(
+  const MovieID: Integer): ITMDBKeywords;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.Movies.GetKeywords(MovieID);
+  Result:= TTMDBKeywords.Create(O, FOwner, TTMDBKeyword);
+end;
+
+function TTMDBServiceMovies.GetLatest: ITMDBMovieDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetLatest;
+  Result:= TTMDBMovieDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceMovies.GetReleaseDates(
+  const MovieID: Integer): ITMDBReleaseDateCountries;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.Movies.GetReleaseDates(MovieID);
+  Result:= TTMDBReleaseDateCountries.Create(O);
+end;
+
+function TTMDBServiceMovies.GetSimilar(const MovieID: Integer;
+  const Language: WideString; const Page: Integer): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetSimilar(MovieID, Language, Page);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceMovies.GetTranslations(
+  const MovieID: Integer): ITMDBTranslations;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetTranslations(MovieID);
+  Result:= TTMDBTranslations.Create(O, ttMovie);
+end;
+
+function TTMDBServiceMovies.GetVideos(const MovieID: Integer;
+  const Language: WideString): ITMDBVideos;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetVideos(MovieID, Language);
+  Result:= TTMDBVideos.Create(O.A['results'], FOwner, TTMDBVideo);
+end;
+
+{ TTMDBServiceNetworks }
+
+function TTMDBServiceNetworks.GetAlternativeNames(
+  const NetworkID: Integer): ITMDBAlternativeTitles;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.Networks.GetAlternativeNames(NetworkID);
+  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
+end;
+
+function TTMDBServiceNetworks.GetDetails(
+  const NetworkID: Integer): ITMDBTVNetworkDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Networks.GetDetails(NetworkID);
+  Result:= TTMDBTVNetworkDetail.Create(O);
+end;
+
+function TTMDBServiceNetworks.GetImages(
+  const NetworkID: Integer): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Networks.GetImages(NetworkID);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+{ TTMDBServiceSearch }
+
+function TTMDBServiceSearch.SearchCollections(const Query: WideString;
+  const IncludeAdult: Boolean; const Language, Region: WideString;
+  const Page: Integer): ITMDBCollectionPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchCollections(Query, IncludeAdult, Language,
+    Page, Region);
+  Result:= TTMDBCollectionPage.Create(O, FOwner, TTMDBCollection, TTMDBCollections);
+end;
+
+function TTMDBServiceSearch.SearchCompanies(const Query: WideString;
+  const Page: Integer): ITMDBCompanyPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchCompanies(Query, Page);
+  Result:= TTMDBCompanyPage.Create(O, FOwner, TTMDBCompany, TTMDBCompanies);
+end;
+
+function TTMDBServiceSearch.SearchKeywords(const Query: WideString;
+  const Page: Integer): ITMDBKeywordPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchKeywords(Query, Page);
+  Result:= TTMDBKeywordPage.Create(O, FOwner, TTMDBKeyword, TTMDBKeywords);
+end;
+
+function TTMDBServiceSearch.SearchMovies(const Query: WideString;
+  const IncludeAdult: Boolean; const Language, Region, PrimaryReleaseYear,
+  Year: WideString; const Page: Integer): ITMDBMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchMovies(Query, IncludeAdult, Language, PrimaryReleaseYear,
+    Page, Region, Year);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceSearch.SearchMulti(const Query: WideString;
+  const IncludeAdult: Boolean; const Language: WideString;
+  const Page: Integer): ITMDBMediaPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchMulti(Query, IncludeAdult, Language, Page);
+  Result:= TTMDBMediaPage.Create(O, FOwner, TTMDBMedium, TTMDBMedia);
+end;
+
+function TTMDBServiceSearch.SearchPeople(const Query: WideString;
+  const IncludeAdult: Boolean; const Language: WideString;
+  const Page: Integer): ITMDBPersonPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchPerson(Query, IncludeAdult, Language, Page);
+  Result:= TTMDBPersonPage.Create(O, FOwner, TTMDBPerson, TTMDBPeople);
+end;
+
+function TTMDBServiceSearch.SearchTV(const Query: String;
+  const FirstAirDateYear: Integer; const IncludeAdult: Boolean;
+  const Language: WideString; const Year, Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Search.SearchTV(Query, IntToStr(FirstAirDateYear),
+    IncludeAdult, Language, Page, IntToStr(Year));
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+{ TTMDBServiceCollections }
+
+function TTMDBServiceCollections.GetDetails(const CollectionID: Integer;
+  const Language: WideString): ITMDBCollectionDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetDetails(CollectionID, Language);
+  Result:= TTMDBCollectionDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceCollections.GetImages(const CollectionID: Integer;
+  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetImages(CollectionID, IncludeImageLanguage, Language);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+function TTMDBServiceCollections.GetTranslations(
+  const CollectionID: Integer): ITMDBTranslations;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Collections.GetTranslations(CollectionID);
+  Result:= TTMDBTranslations.Create(O, ttCollection);
+end;
+
+{ TTMDBServiceTrending }
+
+function TTMDBServiceTrending.GetMovies(const TimeWindow: TTMDBTimeWindow;
+  const Language: WideString; const Page: Integer): ITMDBMoviePage;
+var
+  O: ISuperObject;
+  TW: String;
+begin
+  case TimeWindow of
+    twDay:  TW:= 'day';
+    twWeek: TW:= 'week';
+  end;
+  O:= FOwner.FAPI.Trending.GetMovies(TW, Language, Page);
+  Result:= TTMDBMoviePage.Create(O, FOwner, TTMDBMovie, TTMDBMovies);
+end;
+
+function TTMDBServiceTrending.GetTV(const TimeWindow: TTMDBTimeWindow;
+  const Language: WideString; const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+  TW: String;
+begin
+  case TimeWindow of
+    twDay:  TW:= 'day';
+    twWeek: TW:= 'week';
+  end;
+  O:= FOwner.FAPI.Trending.GetTV(TW, Language, Page);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+{ TTMDBServiceTVSeries }
+
+function TTMDBServiceTVSeries.GetAccountStates(
+  const SeriesID: Integer): ITMDBAccountStates;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetAccountStates(SeriesID, FOwner.LoginState.SessionID);
+  Result:= TTMDBAccountStates.Create(O);
+end;
+
+function TTMDBServiceTVSeries.GetAlternativeTitles(
+  const SeriesID: Integer): ITMDBAlternativeTitles;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.TVSeries.GetAlternativeTitles(SeriesID);
+  Result:= TTMDBAlternativeTitles.Create(O, FOwner, TTMDBAlternativeTitle);
+end;
+
+function TTMDBServiceTVSeries.GetDetails(const SeriesID: Integer;
+  const AppendToResponse: TTMDBTVSeriesRequests;
+  const Language: WideString): ITMDBTVSerieDetail;
+var
+  ATR: String;
+  O: ISuperObject;
+begin
+  ATR:= TMDBTVSeriesRequestsToStr(AppendToResponse);
+  O:= FOwner.FAPI.TVSeries.GetDetails(SeriesID, ATR, Language);
+  Result:= TTMDBTVSerieDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceTVSeries.GetCredits(const SeriesID: Integer;
+  const Language: WideString): ITMDBCredits;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetCredits(SeriesID, Language);
+  Result:= TTMDBCredits.Create(O, FOwner);
+end;
+
+function TTMDBServiceTVSeries.GetImages(const SeriesID: Integer;
+  const IncludeImageLanguage, Language: WideString): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetImages(SeriesID, IncludeImageLanguage, Language);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+function TTMDBServiceTVSeries.GetKeywords(
+  const SeriesID: Integer): ITMDBKeywords;
+var
+  O: ISuperArray;
+begin
+  O:= FOwner.FAPI.TVSeries.GetKeywords(SeriesID);
+  Result:= TTMDBKeywords.Create(O, FOwner, TTMDBKeyword);
+end;
+
+function TTMDBServiceTVSeries.GetLatest: ITMDBTVSerieDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetLatest;
+  Result:= TTMDBTVSerieDetail.Create(O, FOwner);
+end;
+
+function TTMDBServiceTVSeries.GetSimilar(const SeriesID: Integer;
+  const Language: WideString; const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetSimilar(SeriesID, Language, Page);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBServiceTVSeries.GetVideos(const SeriesID: Integer;
+  const IncludeVideoLanguage, Language: WideString): ITMDBVideos;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetVideos(SeriesID, IncludeVideoLanguage, Language);
+  Result:= TTMDBVideos.Create(O.A['results'], FOwner, TTMDBVideo);
+end;
+
+{ TTMDBServiceTVEpisodeGroups }
+
+function TTMDBServiceTVEpisodeGroups.GetDetails(
+  const TVEpisodeGroupID: String): ITMDBTVEpisodeGroups;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVEpisodeGroups.GetDetail(TVEpisodeGroupID);
+  Result:= TTMDBTVEpisodeGroups.Create(O, FOwner);
+end;
+
+{ TTMDBServiceWatchProviders }
+
+function TTMDBServiceWatchProviders.GetAvailableRegions(
+  const Language: WideString): ITMDBCountries;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.WatchProviders.GetAvailableRegions(Language);
+  Result:= TTMDBCountries.Create(A, FOwner, TTMDBCountry);
+end;
+
+function TTMDBServiceWatchProviders.GetMovieProviders(const Language,
+  WatchRegion: WideString): ITMDBWatchProviders;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.WatchProviders.GetMovieProviders(Language, WatchRegion);
+  Result:= TTMDBWatchProviders.Create(A, FOwner, TTMDBWatchProvider);
+end;
+
+function TTMDBServiceWatchProviders.GetTVProviders(const Language,
+  WatchRegion: WideString): ITMDBWatchProviders;
+var
+  A: ISuperArray;
+begin
+  A:= FOwner.FAPI.WatchProviders.GetTVProviders(Language, WatchRegion);
+  Result:= TTMDBWatchProviders.Create(A, FOwner, TTMDBWatchProvider);
+end;
+
+{ TTMDBServiceImages }
+
+function TTMDBServiceImages.GetImage(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= FOwner.FAPI.Images.GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetBackdrop(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetLogo(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetPoster(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetProfile(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+function TTMDBServiceImages.GetStill(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+begin
+  Result:= GetImage(Base64, Path, Size);
+end;
+
+{ TTMDBClient }
+
+constructor TTMDBClient.Create;
+begin
+  FAPI:= TTMDBAPI.Create(nil);
+  FLoginState:= TTMDBLoginState.Create(Self);
+
+  { Create Services }
+
+  FAccount:= TTMDBServiceAccount.Create(Self);
+  FAuthentication:= TTMDBServiceAuthentication.Create(Self);
+  FCertifications:= TTMDBServiceCertifications.Create(Self);
+  FChanges:= TTMDBServiceChanges.Create(Self);
+  FCollections:= TTMDBServiceCollections.Create(Self);
+  FCompanies:= TTMDBServiceCompanies.Create(Self);
+  FConfiguration:= TTMDBServiceConfiguration.Create(Self);
+  FCredits:= TTMDBServiceCredits.Create(Self);
+  FDiscover:= TTMDBServiceDiscover.Create(Self);
+  FFind:= TTMDBServiceFind.Create(Self);
+  FGenres:= TTMDBServiceGenres.Create(Self);
+  FGuestSessions:= TTMDBServiceGuestSessions.Create(Self);
+  FKeywords:= TTMDBServiceKeywords.Create(Self);
+  FLists:= TTMDBServiceLists.Create(Self);
+  FMovieLists:= TTMDBServiceMovieLists.Create(Self);
+  FMovies:= TTMDBServiceMovies.Create(Self);
+  FNetworks:= TTMDBServiceNetworks.Create(Self);
+  FPeopleLists:= TTMDBServicePeopleLists.Create(Self);
+  FPeople:= TTMDBServicePeople.Create(Self);
+  FReviews:= TTMDBServiceReviews.Create(Self);
+  FSearch:= TTMDBServiceSearch.Create(Self);
+  FTrending:= TTMDBServiceTrending.Create(Self);
+  FTVSeriesLists:= TTMDBServiceTVSeriesLists.Create(Self);
+  FTVSeries:= TTMDBServiceTVSeries.Create(Self);
+  FTVSeasons:= TTMDBServiceTVSeasons.Create(Self);
+  FTVEpisodes:= TTMDBServiceTVEpisodes.Create(Self);
+  FTVEpisodeGroups:= TTMDBServiceTVEpisodeGroups.Create(Self);
+  FWatchProviders:= TTMDBServiceWatchProviders.Create(Self);
+  FImages:= TTMDBServiceImages.Create(Self);
+end;
+
+destructor TTMDBClient.Destroy;
+begin
+  FAccount:= nil;
+  FAuthentication:= nil;
+  FCertifications:= nil;
+  FChanges:= nil;
+  FCollections:= nil;
+  FCredits:= nil;
+  FDiscover:= nil;
+  FFind:= nil;
+  FGenres:= nil;
+  FGuestSessions:= nil;
+  FKeywords:= nil;
+  FLists:= nil;
+  FMovieLists:= nil;
+  FMovies:= nil;
+  FNetworks:= nil;
+  FPeopleLists:= nil;
+  FPeople:= nil;
+  FReviews:= nil;
+  FSearch:= nil;
+  FTrending:= nil;
+  FTVSeriesLists:= nil;
+  FTVSeries:= nil;
+  FTVSeasons:= nil;
+  FTVEpisodes:= nil;
+  FTVEpisodeGroups:= nil;
+  FWatchProviders:= nil;
+  FImages:= nil;
+
+  FLoginState:= nil;
+  FCache:= nil;
+
+  FreeAndNil(FAPI);
+  inherited;
+end;
+
+function TTMDBClient.GetAccessToken: WideString;
+begin
+  Result:= FAPI.APIReadAccessToken;
+end;
+
+function TTMDBClient.GetAPIKey: WideString;
+begin
+  Result:= FAPI.APIKey;
+end;
+
+function TTMDBClient.GetAuthMethod: TTMDBAuthMethod;
+begin
+  Result:= FAPI.AuthMethod;
+end;
+
+function TTMDBClient.GetCache: ITMDBCache;
+begin
+  if FCache = nil then begin
+    FCache:= TTMDBCache.Create(Self);
+  end;
+  Result:= FCache;
+end;
+
+function TTMDBClient.GetLoginState: ITMDBLoginState;
+begin
+  Result:= FLoginState;
+end;
+
+function TTMDBClient.GetOnUserAuthRequest: TTMDBUserAuthRequestEvent;
+begin
+  Result:= Self.FOnUserAuthRequest;
+end;
+
+function TTMDBClient.GetUserAuth: TTMDBUserAuth;
+begin
+  Result:= FUserAuth;
+end;
+
+procedure TTMDBClient.SetAccessToken(const Value: WideString);
+begin
+  FAPI.APIReadAccessToken:= Value;
+end;
+
+procedure TTMDBClient.SetAPIKey(const Value: WideString);
+begin
+  FAPI.APIKey:= Value;
+end;
+
+procedure TTMDBClient.SetAuthMethod(const Value: TTMDBAuthMethod);
+begin
+  FAPI.AuthMethod:= Value;
+end;
+
+procedure TTMDBClient.SetOnUserAuthRequest(
+  const Value: TTMDBUserAuthRequestEvent);
+begin
+  Self.FOnUserAuthRequest:= Value;
+end;
+
+procedure TTMDBClient.SetUserAuth(const Value: TTMDBUserAuth);
+begin
+  FUserAuth:= Value;
+end;
+
+function TTMDBClient.Account: ITMDBServiceAccount;
+begin
+  Result:= FAccount;
+end;
+
+function TTMDBClient.Authentication: ITMDBServiceAuthentication;
+begin
+  Result:= FAuthentication;
+end;
+
+function TTMDBClient.Certifications: ITMDBServiceCertifications;
+begin
+  Result:= FCertifications;
+end;
+
+function TTMDBClient.Changes: ITMDBServiceChanges;
+begin
+  Result:= FChanges;
+end;
+
+function TTMDBClient.Collections: ITMDBServiceCollections;
+begin
+  Result:= FCollections;
+end;
+
+function TTMDBClient.Companies: ITMDBServiceCompanies;
+begin
+  Result:= FCompanies;
+end;
+
+function TTMDBClient.Configuration: ITMDBServiceConfiguration;
+begin
+  Result:= FConfiguration;
+end;
+
+function TTMDBClient.Credits: ITMDBServiceCredits;
+begin
+  Result:= FCredits;
+end;
+
+function TTMDBClient.Discover: ITMDBServiceDiscover;
+begin
+  Result:= FDiscover;
+end;
+
+procedure TTMDBClient.DoUserAuthRequest(const RequestToken: WideString;
+  var Result: Boolean);
+var
+  U: String;
+begin
+  if Assigned(FOnUserAuthRequest) then begin
+    U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
+    FOnUserAuthRequest(Self, U, Result);
+  end;
+end;
+
+function TTMDBClient.Find: ITMDBServiceFind;
+begin
+  Result:= FFind;
+end;
+
+function TTMDBClient.Genres: ITMDBServiceGenres;
+begin
+  Result:= FGenres;
+end;
+
+function TTMDBClient.GuestSessions: ITMDBServiceGuestSessions;
+begin
+  Result:= FGuestSessions;
+end;
+
+function TTMDBClient.Images: ITMDBServiceImages;
+begin
+  Result:= FImages;
+end;
+
+function TTMDBClient.Keywords: ITMDBServiceKeywords;
+begin
+  Result:= FKeywords;
+end;
+
+function TTMDBClient.Lists: ITMDBServiceLists;
+begin
+  Result:= FLists;
+end;
+
+function TTMDBClient.MovieLists: ITMDBServiceMovieLists;
+begin
+  Result:= FMovieLists;
+end;
+
+function TTMDBClient.Movies: ITMDBServiceMovies;
+begin
+  Result:= FMovies;
+end;
+
+function TTMDBClient.Networks: ITMDBServiceNetworks;
+begin
+  Result:= FNetworks;
+end;
+
+function TTMDBClient.People: ITMDBServicePeople;
+begin
+  Result:= FPeople;
+end;
+
+function TTMDBClient.PeopleLists: ITMDBServicePeopleLists;
+begin
+  Result:= FPeopleLists;
+end;
+
+function TTMDBClient.Reviews: ITMDBServiceReviews;
+begin
+  Result:= FReviews;
+end;
+
+function TTMDBClient.Search: ITMDBServiceSearch;
+begin
+  Result:= FSearch;
+end;
+
+function TTMDBClient.Trending: ITMDBServiceTrending;
+begin
+  Result:= FTrending;
+end;
+
+function TTMDBClient.TVEpisodeGroups: ITMDBServiceTVEpisodeGroups;
+begin
+  Result:= FTVEpisodeGroups;
+end;
+
+function TTMDBClient.TVEpisodes: ITMDBServiceTVEpisodes;
+begin
+  Result:= FTVEpisodes;
+end;
+
+function TTMDBClient.TVSeasons: ITMDBServiceTVSeasons;
+begin
+  Result:= FTVSeasons;
+end;
+
+function TTMDBClient.TVSeries: ITMDBServiceTVSeries;
+begin
+  Result:= FTVSeries;
+end;
+
+function TTMDBClient.TVSeriesLists: ITMDBServiceTVSeriesLists;
+begin
+  Result:= FTVSeriesLists;
+end;
+
+function TTMDBClient.WatchProviders: ITMDBServiceWatchProviders;
+begin
+  Result:= FWatchProviders;
 end;
 
 end.
