@@ -28,11 +28,6 @@ type
     TabSheet4: TTabSheet;
     tabCredits: TTabSheet;
     TabSheet6: TTabSheet;
-    lblIMDB: TLabel;
-    lblWikidata: TLabel;
-    lblFacebook: TLabel;
-    lblInstagram: TLabel;
-    lblTwitter: TLabel;
     tabImages: TTabSheet;
     TabSheet8: TTabSheet;
     lstKeywords: TListBox;
@@ -50,6 +45,7 @@ type
     btnSearch: TJDFontButton;
     lstDetail: TListView;
     Splitter1: TSplitter;
+    lstExternalIDs: TListView;
     procedure FormCreate(Sender: TObject);
     procedure PagesChange(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
@@ -70,6 +66,7 @@ type
     procedure LoadAlternativeTitles;
     procedure LoadCredits;
     procedure LoadDetails;
+    procedure LoadExternalIDs;
     procedure LoadKeywords;
     procedure LoadReleaseDates;
     procedure LoadVideos;
@@ -203,7 +200,7 @@ begin
       2: LoadAlternativeTitles;
       3: ; //Changes
       4: LoadCredits;
-      5: ; //External IDs
+      5: LoadExternalIDs;
       6: LoadImages;
       7: LoadKeywords;
       8: ; //Lists
@@ -299,6 +296,25 @@ begin
   end;
 
   txtOverview.Lines.Text:= FDetail.Overview;
+end;
+
+procedure TfrmContentMovieDetail.LoadExternalIDs;
+var
+  O: ITMDBExternalIDs;
+  function A(const N, V: String): TListItem;
+  begin
+    Result:= lstExternalIDs.Items.Add;
+    Result.Caption:= N;
+    Result.SubItems.Add(V);
+  end;
+begin
+  O:= FDetail.AppendedExternalIDs;
+  lstExternalIDs.Items.Clear;
+  A('IMDB', O.IMDBID);
+  A('WikiData', O.WikiDataID);
+  A('Facebook', O.FacebookID);
+  A('Instagram', O.InstagramID);
+  A('Twitter', O.TwitterID);
 end;
 
 procedure TfrmContentMovieDetail.LoadAccountStates;

@@ -315,8 +315,10 @@ type
   /// <summary>
   /// The details of a given user account.
   /// </summary>
-  ITMDBAccountDetail = interface(ITMDBDetail)
+  ITMDBAccountDetail = interface
     ['{DE0E4519-BED8-4218-BE84-A4C0AC5C6DBD}']
+    function GetID: Integer; stdcall;
+    function GetName: WideString; stdcall;
     function GetUserName: WideString; stdcall;
     function GetIncludeAdult: Boolean; stdcall;
     function GetCountryCode: WideString; stdcall;
@@ -324,6 +326,8 @@ type
     function GetGravatarHash: WideString; stdcall;
     function GetTMDBAvatarPath: WideString; stdcall;
 
+    property ID: Integer read GetID;
+    property Name: WideString read GetName;
     property UserName: WideString read GetUserName;
     property IncludeAdult: Boolean read GetIncludeAdult;
     property CountryCode: WideString read GetCountryCode;
@@ -332,6 +336,9 @@ type
     property TMDBAvatarPath: WideString read GetTMDBAvatarPath;
   end;
 
+  /// <summary>
+  /// The result of adding (or removing) a favorite.
+  /// </summary>
   ITMDBAccountAddFavoriteResult = interface
     ['{03377611-F4BC-4FF1-A446-0AEE7A8878BA}']
     function GetStatusCode: Integer; stdcall;
@@ -341,6 +348,9 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
+  /// <summary>
+  /// The result of adding (or removing) a watchlist.
+  /// </summary>
   ITMDBAccountAddWatchlistResult = interface
     ['{03DDF702-8AE6-48A6-AB10-75468CC9CE51}']
     function GetStatusCode: Integer; stdcall;
@@ -350,6 +360,9 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
+  /// <summary>
+  /// A summary of an item as found on account's favorites, watchlist, and ratings.
+  /// </summary>
   ITMDBAccountStates = interface
     ['{A83C88DC-B507-4825-8338-8DD67B545059}']
     function GetFavorite: Boolean; stdcall;
@@ -463,6 +476,9 @@ type
 
 {$REGION 'Alternative Title Related'}
 
+  /// <summary>
+  /// A single alternative title (or name) as found in TMDB for an item.
+  /// </summary>
   ITMDBAlternativeTitle = interface(ITMDBItem)
     ['{AEB8181D-8409-4834-8515-29EB7651FA7A}']
     function GetISO3166_1: WideString; stdcall;
@@ -474,6 +490,9 @@ type
     property &Type: WideString read GetType;
   end;
 
+  /// <summary>
+  /// A list of alternative titles (or names) as found in TMDB for an item.
+  /// </summary>
   ITMDBAlternativeTitles = interface(ITMDBItems)
     ['{C8AD733E-B9C2-4C41-948E-D9B3F9DE81D4}']
     function GetItem(const Index: Integer): ITMDBAlternativeTitle; stdcall;
@@ -487,6 +506,9 @@ type
 
 {$REGION 'Certification Related'}
 
+  /// <summary>
+  /// A single certification as found in TMDB.
+  /// </summary>
   ITMDBCertification = interface
     ['{02B6525F-7A01-4FDC-B39F-2F276D999827}']
     function GetCertification: WideString; stdcall;
@@ -498,6 +520,9 @@ type
     property Order: Integer read GetOrder;
   end;
 
+  /// <summary>
+  /// A single country and its certifications as found in TMDB.
+  /// </summary>
   ITMDBCertificationCountry = interface
     ['{4BE1C674-3BFE-464D-8595-67567687A7E3}']
     function GetCountryCode: WideString; stdcall;
@@ -511,6 +536,9 @@ type
     property Items[const Index: Integer]: ITMDBCertification read GetItem; default;
   end;
 
+  /// <summary>
+  /// A list of countries and their certifications as found in TMDB.
+  /// </summary>
   ITMDBCertificationCountries = interface
     ['{F907A3E0-B9A4-45B8-A7BC-B10FEC984CEF}']
     function GetCount: Integer; stdcall;
@@ -524,6 +552,7 @@ type
 
 
 
+//TODO
 {$REGION 'Change Related'}
 
   //TODO: This is quite a complex structure, because the data types dynamically differ
@@ -533,6 +562,9 @@ type
   //TODO: Confusion between structure of object in "Chages" namespace and
   //  "Changes" request in specific namespaces...
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChangeValue = interface
     ['{D44D0AA2-5EB9-458F-A0CD-FFCE923C571A}']
     function GetKey: WideString;
@@ -547,6 +579,9 @@ type
     //TODO: Properties...
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChangeRecord = interface
     ['{27B8CA5E-D72C-4298-92D9-012A58450CAA}']
     function GetID: WideString;
@@ -559,6 +594,9 @@ type
     //TODO: Properties...
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChange = interface(ITMDBItem)
     ['{04186AE5-0DFE-4E30-99A8-8B8CBC98E17F}']
     function GetKey: WideString; stdcall;
@@ -568,6 +606,9 @@ type
     property Items[const Index: Integer]: ITMDBChangeRecord read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChanges = interface(ITMDBItems)
     ['{67851829-A928-4C8E-9DED-694E0CE8139B}']
     function GetItem(const Index: Integer): ITMDBChange; stdcall;
@@ -575,6 +616,9 @@ type
     property Items[const Index: Integer]: ITMDBChange read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChangePage = interface(ITMDBPage)
     ['{EEBB8A61-5597-4B56-B8AF-82E3C1F54F75}']
     function GetItems: ITMDBChanges; stdcall;
@@ -582,6 +626,9 @@ type
     property Items: ITMDBChanges read GetItems;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBChangeDetail = interface(ITMDBDetail)
     ['{94256BA1-3101-4B36-A602-F0CCB3564CA6}']
     //TODO
@@ -593,6 +640,9 @@ type
 
 {$REGION 'Company Related'}
 
+  /// <summary>
+  /// A single company as found in TMDB.
+  /// </summary>
   ITMDBCompany = interface(ITMDBItem)
     ['{491A255A-0E29-43B3-8AAC-5F727D74DD98}']
     function GetID: Integer; stdcall;
@@ -606,6 +656,9 @@ type
     property OriginCountry: WideString read GetOriginCountry;
   end;
 
+  /// <summary>
+  /// A list of companies as found in TMDB.
+  /// </summary>
   ITMDBCompanies = interface(ITMDBItems)
     ['{BF6B6EC5-C0E1-4D7B-B987-8F2BE6AD4211}']
     function GetItem(const Index: Integer): ITMDBCompany; stdcall;
@@ -613,6 +666,9 @@ type
     property Items[const Index: Integer]: ITMDBCompany read GetItem; default;
   end;
 
+  /// <summary>
+  /// A list of companies following TMDB's pagination standards.
+  /// </summary>
   ITMDBCompanyPage = interface(ITMDBPage)
     ['{F3D62122-D304-4CA3-BE0C-72B1219E0DD1}']
     function GetItems: ITMDBCompanies; stdcall;
@@ -620,6 +676,9 @@ type
     property Items: ITMDBCompanies read GetItems;
   end;
 
+  /// <summary>
+  /// The details of a specific company as found in TMDB.
+  /// </summary>
   ITMDBCompanyDetail = interface
     ['{B5A7E62D-03AA-481A-BA02-DD4EAB7F6AC3}']
     function GetDescription: WideString; stdcall;
@@ -685,9 +744,11 @@ type
 
 
 
-//TODO: Implement
 {$REGION 'Content Rating Related'}
 
+  /// <summary>
+  /// A specific content rating associated with an item in TMDB.
+  /// </summary>
   ITMDBContentRating = interface(ITMDBItem)
     ['{D6DDA578-E421-4CB9-8436-A24EADEC8D06}']
     function GetDescriptors: TTMDBStrArray; stdcall;
@@ -699,6 +760,9 @@ type
     property Rating: WideString read GetRating;
   end;
 
+  /// <summary>
+  /// A list of content ratings associated with an item in TMDB.
+  /// </summary>
   ITMDBContentRatings = interface(ITMDBItems)
     ['{DBCEC84C-C2A6-4243-90B8-114BEA06A6A3}']
     function GetItem(const Index: Integer): ITMDBContentRating; stdcall;
@@ -742,6 +806,29 @@ type
 
 
 
+{$REGION 'External ID Related'}
+
+  ITMDBExternalIDs = interface
+    ['{6EEFD491-0A1A-49DD-8CA3-6516B2CC9621}']
+    function GetID: Integer;
+    function GetIMDBID: WideString;
+    function GetWikiDataID: WideString;
+    function GetFacebookID: WideString;
+    function GetInstagramID: WideString;
+    function GetTwitterID: WideString;
+
+    property ID: Integer read GetID;
+    property IMDBID: WideString read GetIMDBID;
+    property WikiDataID: WideString read GetWikiDataID;
+    property FacebookID: WideString read GetFacebookID;
+    property InstagramID: WideString read GetInstagramID;
+    property TwitterID: WideString read GetTwitterID;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Genre Related'}
 
   /// <summary>
@@ -774,6 +861,9 @@ type
 
 {$REGION 'Image Related'}
 
+  /// <summary>
+  /// A single reference to an image as found in TMDB.
+  /// </summary>
   ITMDBMediaImage = interface(ITMDBItem)
     ['{5E421D4C-DD05-4F49-84C7-0FC5A3A9BCE6}']
     function GetAspectRatio: Single; stdcall;
@@ -784,6 +874,8 @@ type
     function GetVoteCount: Integer; stdcall;
     function GetWidth: Integer; stdcall;
 
+    //TODO: Method to fetch actual image
+
     property AspectRatio: Single read GetAspectRatio;
     property Height: Integer read GetHeight;
     property ISO639_1: WideString read GetISO639_1;
@@ -793,6 +885,9 @@ type
     property Width: Integer read GetWidth;
   end;
 
+  /// <summary>
+  /// A list of image references as found in TMDB.
+  /// </summary>
   ITMDBMediaImages = interface(ITMDBItems)
     ['{124D54B5-7433-4C5B-8907-C5D5700D970E}']
     function GetItem(const Index: Integer): ITMDBMediaImage; stdcall;
@@ -800,6 +895,9 @@ type
     property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
   end;
 
+  /// <summary>
+  /// A group of various image lists associated with a given item in TMDB.
+  /// </summary>
   ITMDBMediaImageGroup = interface
     ['{FD622861-6E8C-49DE-8151-3E072AF39299}']
     function GetBackdrops: ITMDBMediaImages; stdcall;
@@ -820,7 +918,7 @@ type
 {$REGION 'Job / Department Related'}
 
   /// <summary>
-  ///
+  /// A single department and all related jobs as found in TMDB.
   /// </summary>
   ITMDBJobDepartment = interface(ITMDBItem)
     ['{847352D6-4054-4E62-897C-258305FBEDE2}']
@@ -832,7 +930,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of departments and their jobs as found in TMDB.
   /// </summary>
   ITMDBJobDepartments = interface(ITMDBItems)
     ['{2B9A1DF6-2CA9-48E2-886C-179F7F92383C}']
@@ -847,6 +945,9 @@ type
 
 {$REGION 'Keyword Related'}
 
+  /// <summary>
+  /// A single keyword as found in TMDB.
+  /// </summary>
   ITMDBKeyword = interface(ITMDBItem)
     ['{98460089-3E55-4022-A8AC-863EDBB8567A}']
     function GetID: Integer; stdcall;
@@ -856,6 +957,9 @@ type
     property Name: WideString read GetName;
   end;
 
+  /// <summary>
+  /// A list of keywords as found in TMDB.
+  /// </summary>
   ITMDBKeywords = interface(ITMDBItems)
     ['{3E3016F7-4459-4C65-87E8-DCE6B023EBDF}']
     function GetItem(const Index: Integer): ITMDBKeyword; stdcall;
@@ -863,6 +967,9 @@ type
     property Items[const Index: Integer]: ITMDBKeyword read GetItem; default;
   end;
 
+  /// <summary>
+  /// A list of keywords following TMDB's patination standards.
+  /// </summary>
   ITMDBKeywordPage = interface(ITMDBPage)
     ['{DC679E95-D35E-4361-AF65-D1F10C52B881}']
     function GetItems: ITMDBKeywords; stdcall;
@@ -870,6 +977,9 @@ type
     property Items: ITMDBKeywords read GetItems;
   end;
 
+  /// <summary>
+  /// The details of a specific keyword as found in TMDB.
+  /// </summary>
   ITMDBKeywordDetail = interface
     ['{FEF48832-CA59-4AEF-83D9-8167C136DC4B}']
     function GetID: Integer; stdcall;
@@ -886,7 +996,7 @@ type
 {$REGION 'Language Related'}
 
   /// <summary>
-  ///
+  /// A single language as found in TMDB.
   /// </summary>
   ITMDBLanguage = interface(ITMDBItem)
     ['{CBEECBBE-5CBE-4592-9C65-B82F1D07CCF7}']
@@ -900,7 +1010,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of languages as found in TMDB.
   /// </summary>
   ITMDBLanguages = interface(ITMDBItems)
     ['{B08908B7-3C02-4BF9-8B94-AECF0EEC8D49}']
@@ -917,6 +1027,9 @@ type
 
 {$REGION 'Network Related'}
 
+  /// <summary>
+  /// A single TV network as found in TMDB.
+  /// </summary>
   ITMDBTVNetwork = interface(ITMDBItem)
     ['{BCC9E4A7-07DD-416E-9F04-54CDC2A50DA3}']
     function GetID: Integer; stdcall;
@@ -930,6 +1043,9 @@ type
     property OriginCountry: WideString read GetOriginCountry;
   end;
 
+  /// <summary>
+  /// A list of TV networks as found in TMDB.
+  /// </summary>
   ITMDBTVNetworks = interface(ITMDBItems)
     ['{2569A653-F292-4E48-8FE1-DBBCCE289102}']
     function GetItem(const Index: Integer): ITMDBTVNetwork; stdcall;
@@ -937,6 +1053,9 @@ type
     property Items[const Index: Integer]: ITMDBTVNetwork read GetItem; default;
   end;
 
+  /// <summary>
+  /// The details of a specific network as found in TMDB.
+  /// </summary>
   ITMDBTVNetworkDetail = interface
     ['{B3293FC5-F238-4B3D-B3F2-CF4C894BD0EE}']
     function GetHeadquarters: WideString; stdcall;
@@ -961,7 +1080,7 @@ type
 {$REGION 'Timezone Related'}
 
   /// <summary>
-  ///
+  /// A single timezone as found in TMDB.
   /// </summary>
   ITMDBTimezone = interface(ITMDBItem)
     ['{58364B5B-DC6E-4A66-B3A5-7D812382C720}']
@@ -973,7 +1092,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of timezones as found in TMDB.
   /// </summary>
   ITMDBTimezones = interface(ITMDBItems)
     ['{E120B06B-06AC-4591-9469-1173DA85C199}']
@@ -988,6 +1107,9 @@ type
 
 {$REGION 'Release Date Related'}
 
+  /// <summary>
+  /// A single release date associated with a given item in TMDB.
+  /// </summary>
   ITMDBReleaseDate = interface
     ['{78E9A30C-DCDE-4DF5-A8A7-9BF08C210F90}']
     function GetCertification: WideString; stdcall;
@@ -1005,6 +1127,9 @@ type
     property ReleaseType: TTMDBReleaseType read GetType;
   end;
 
+  /// <summary>
+  /// A single country containing release dates as found in TMDB.
+  /// </summary>
   ITMDBReleaseDateCountry = interface
     ['{E466037A-7C13-4D5C-BE6E-42A49E6C2F8C}']
     function GetCountryCode: WideString; stdcall;
@@ -1018,6 +1143,9 @@ type
     property Items[const Index: Integer]: ITMDBReleaseDate read GetItem; default;
   end;
 
+  /// <summary>
+  /// A list of countries containing release dates as found in TMDB.
+  /// </summary>
   ITMDBReleaseDateCountries = interface
     ['{F93CE7EB-EE02-4107-A412-F6161832333F}']
     function GetCount: Integer; stdcall;
@@ -1031,13 +1159,20 @@ type
 
 
 
+//TODO
 {$REGION 'Translation Related'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTranslationData = interface
     ['{7AD55E8C-BF41-45D1-AEF4-F17E797A4BBD}']
 
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBMovieTranslationData = interface(ITMDBTranslationData)
     ['{09C095D9-4F9A-4E8C-8FA8-F71BA339DCEB}']
     function GetTitle: WideString; stdcall;
@@ -1053,6 +1188,9 @@ type
     property Runtime: Integer read GetRuntime;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollectionTranslationData = interface(ITMDBTranslationData)
     ['{AE77BCCF-6AD8-425D-9FF6-EE387DC5FD34}']
     function GetTitle: WideString; stdcall;
@@ -1064,6 +1202,9 @@ type
     property Homepage: WideString read GetHomepage;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBPersonTranslationData = interface(ITMDBTranslationData)
     ['{BB5C94AD-1FC5-4B2E-9002-8927F803B3A9}']
     function GetBiography: WideString; stdcall;
@@ -1071,6 +1212,9 @@ type
     property Biography: WideString read GetBiography;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVSeriesTranslationData = interface(ITMDBTranslationData)
     ['{E5FC1F22-200A-4952-BE12-A891F08381CA}']
     function GetTitle: WideString; stdcall;
@@ -1084,6 +1228,9 @@ type
     property Tagline: WideString read GetTagline;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVSeasonTranslationData = interface(ITMDBTranslationData)
     ['{3EDACBDD-D5E1-4E88-B46F-3BB871E53A64}']
     function GetName: WideString; stdcall;
@@ -1093,6 +1240,9 @@ type
     property Overview: WideString read GetOverview;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVEpisodeTranslationData = interface(ITMDBTranslationData)
     ['{8D3E5163-C0D7-4102-9DD1-450267F442B5}']
     function GetName: WideString; stdcall;
@@ -1103,6 +1253,9 @@ type
   end;
 
   //TODO: Inherit from item base...
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTranslation = interface
     ['{15A88780-ABF6-4EEA-AFFC-BC63A22A26BE}']
     function GetISO3166_1: WideString; stdcall;
@@ -1129,6 +1282,9 @@ type
   end;
 
   //TODO: Inherit from list base...
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTranslations = interface
     ['{7E5FB55A-B061-43A3-A6F9-DFB7AF75823D}']
     function GetCount: Integer; stdcall;
@@ -1144,6 +1300,9 @@ type
 
 {$REGION 'Video Related'}
 
+  /// <summary>
+  /// A single reference to a video associated with an item in TMDB.
+  /// </summary>
   ITMDBVideo = interface(ITMDBItem)
     ['{EC411DD6-C212-4DA8-9421-688E099079B3}']
     function GetISO639_1: WideString; stdcall;
@@ -1169,6 +1328,9 @@ type
     property ID: WideString read GetID;
   end;
 
+  /// <summary>
+  /// A list of video references associated with an item in TMDB.
+  /// </summary>
   ITMDBVideos = interface(ITMDBItems)
     ['{1346CC9D-5897-4BBB-B140-5FEB6A892552}']
     function GetItem(const Index: Integer): ITMDBVideo; stdcall;
@@ -1180,8 +1342,12 @@ type
 
 
 
+//TODO
 {$REGION 'Collection Related'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollection = interface(ITMDBItem)
     ['{C0911ACB-C909-438A-8DC3-5A67E5F4CB4F}']
     function GetAdult: Boolean; stdcall;
@@ -1203,6 +1369,9 @@ type
     property PosterPath: WideString read GetPosterPath;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollections = interface(ITMDBItems)
     ['{DF22CFAD-33BC-4EF4-AB99-1848AB11E191}']
     function GetItem(const Index: Integer): ITMDBCollection; stdcall;
@@ -1210,6 +1379,9 @@ type
     property Items[const Index: Integer]: ITMDBCollection read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollectionPage = interface(ITMDBPage)
     ['{7A7ADCD0-8062-4CF3-8D07-903DCCDA42E8}']
     function GetItems: ITMDBCollections; stdcall;
@@ -1218,6 +1390,9 @@ type
   end;
 
   //TODO: Change to ITMDBMedium
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollectionPart = interface
     ['{C3706419-47B1-4CD9-879C-16259A116DF5}']
     function GetAdult: Boolean; stdcall;
@@ -1253,6 +1428,9 @@ type
     property VoteCount: Integer read GetVoteCount;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCollectionDetail = interface
     ['{78E5B1AC-0FF3-4472-886E-4A7696BE1E0E}']
     function GetID: Integer; stdcall;
@@ -1280,6 +1458,7 @@ type
 
 
 
+//TODO
 {$REGION 'Person Related'}
 
   /// <summary>
@@ -1299,7 +1478,7 @@ type
   end;
 
   /// <summary>
-  /// A list of people
+  /// A list of people as found in TMDB
   /// </summary>
   ITMDBPeople = interface(ITMDBMedia)
     ['{80B66DAA-C18D-427B-9A0C-B0F070725B83}']
@@ -1309,7 +1488,7 @@ type
   end;
 
   /// <summary>
-  /// A paginated list of ITMDBPersonItem
+  /// A paginated list of people as found in TMDB.
   /// </summary>
   ITMDBPersonPage = interface(ITMDBMediaPage)
     ['{88C5FCB1-50A7-4D3A-AB69-95B542D77FD5}']
@@ -1318,8 +1497,13 @@ type
     property Items: ITMDBPeople read GetItems;
   end;
 
+  /// <summary>
+  /// The details of a specific person as found in TMDB.
+  /// </summary>
   ITMDBPersonDetail = interface(ITMDBDetail)
     ['{2C4F4272-71FB-47EA-926A-FB26C5DFFA18}']
+
+    //TODO
 
   end;
 
@@ -1327,8 +1511,12 @@ type
 
 
 
+//TODO
 {$REGION 'Credit Related'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCastPerson = interface(ITMDBPerson)
     ['{9CCB9511-A5A5-4BE2-9991-D8A388F7439C}']
     function GetCastID: Integer; stdcall;
@@ -1342,6 +1530,9 @@ type
     property Order: Integer read GetOrder;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCastPeople = interface(ITMDBPeople)
     ['{EE41CD2D-6271-48D8-8A5F-646646C44F30}']
     function GetItem(const Index: Integer): ITMDBCastPerson; stdcall;
@@ -1349,6 +1540,9 @@ type
     property Items[const Index: Integer]: ITMDBCastPerson read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCrewPerson = interface(ITMDBPerson)
     ['{51AE4CAA-1698-4AF6-B05C-D55E45BAE4ED}']
     function GetCreditID: WideString; stdcall;
@@ -1360,6 +1554,9 @@ type
     property Job: WideString read GetJob;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCrewPeople = interface(ITMDBPeople)
     ['{1FF0C1A1-EB42-4EF9-8C1B-DEA3AFBD6777}']
     function GetItem(const Index: Integer): ITMDBCrewPerson; stdcall;
@@ -1367,6 +1564,9 @@ type
     property Items[const Index: Integer]: ITMDBCrewPerson read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCredits = interface
     ['{6A1470C6-79DA-4EE8-B43E-F76EEA9015B9}']
     function GetCast: ITMDBCastPeople; stdcall;
@@ -1380,6 +1580,7 @@ type
 
 
 
+//TODO
 {$REGION 'Movie Related'}
 
   /// <summary>
@@ -1454,6 +1655,9 @@ type
 
 
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedMovie = interface(ITMDBMovie)
     ['{8C67545E-20BB-4A32-8FB7-136C642F73A9}']
     function GetRating: Single; stdcall;
@@ -1461,6 +1665,9 @@ type
     property Rating: Single read GetRating;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedMovies = interface(ITMDBMovies)
     ['{F76B28E0-0F0E-45EB-B808-9821549BC755}']
     function GetItem(const Index: Integer): ITMDBRatedMovie; stdcall;
@@ -1468,12 +1675,17 @@ type
     property Items[const Index: Integer]: ITMDBRatedMovie read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedMoviePage = interface(ITMDBMoviePage)
     ['{5E267356-3F72-4C5B-87B6-B1D596FDD037}']
     function GetItems: ITMDBRatedMovies; stdcall;
 
     property Items: ITMDBRatedMovies read GetItems;
   end;
+
+
 
   /// <summary>
   /// Reference to a collection which a movie belongs to.
@@ -1529,7 +1741,7 @@ type
     function AppendedAlternativeTitles: ITMDBAlternativeTitles; stdcall;
     function AppendedChanges: ITMDBChangePage; stdcall;
     function AppendedCredits: ITMDBCredits; stdcall;
-    //function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
+    function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
     function AppendedImages: ITMDBMediaImageGroup; stdcall;
     function AppendedKeywords: ITMDBKeywords; stdcall;
     //function AppendedLists: ITMDBListPage; stdcall;
@@ -1603,6 +1815,9 @@ type
 
 {$REGION 'Movie List Related'}
 
+  /// <summary>
+  /// A range of dates (Min/Max).
+  /// </summary>
   ITMDBDateRange = interface
     ['{CB7698C0-AB5A-4C5D-9043-02E049BAB915}']
     function GetMinimum: TDateTime; stdcall;
@@ -1612,6 +1827,9 @@ type
     property Maximum: TDateTime read GetMaximum;
   end;
 
+  /// <summary>
+  /// A paginated list of movies along with a given date range.
+  /// </summary>
   ITMDBDatedMoviePage = interface(ITMDBMoviePage)
     ['{E1E4F07E-30EE-4D36-946B-621D98F1EBCB}']
     function GetDates: ITMDBDateRange; stdcall;
@@ -1623,11 +1841,11 @@ type
 
 
 
+//TODO
 {$REGION 'TV Series Related'}
 
   /// <summary>
   /// A single TV Show in an ITMDBTVPage.
-  /// [DONE]
   /// </summary>
   ITMDBTVSerie = interface(ITMDBMedium)
     ['{7907FF27-E02F-4270-9AAB-322E6C31516D}']
@@ -1676,8 +1894,9 @@ type
 
 
 
-
-
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVSerie = interface(ITMDBTVSerie)
     ['{D48E190F-3095-452A-AE5C-75E70DB7C709}']
     function GetRating: Single; stdcall;
@@ -1685,6 +1904,9 @@ type
     property Rating: Single read GetRating;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVSeries = interface(ITMDBTVSeries)
     ['{C7614607-9784-4D6A-99C2-66CB135A0736}']
     function GetItem(const Index: Integer): ITMDBRatedTVSerie; stdcall;
@@ -1692,6 +1914,9 @@ type
     property Items[const Index: Integer]: ITMDBRatedTVSerie read GetItem;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVSeriesPage = interface(ITMDBTVSeriesPage)
     ['{AD5E62E1-41CE-4564-8407-DCEE9F2F0756}']
     function GetItems: ITMDBTVSeries; stdcall;
@@ -1699,6 +1924,11 @@ type
     property Items: ITMDBTVSeries read GetItems;
   end;
 
+
+
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVSerieDetail = interface(ITMDBDetail)
     ['{21659C51-7E37-4353-A47E-B1D5C31B456D}']
     function GetAdult: Boolean;
@@ -1768,6 +1998,7 @@ type
 
 
 
+//TODO
 {$REGION 'TV Season Related'}
 
   /// <summary>
@@ -1848,8 +2079,12 @@ type
 
 
 
+//TODO
 {$REGION 'TV Episode Related'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVEpisode = interface(ITMDBMedium)
     ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
     function GetOverview: WideString; stdcall;
@@ -1887,6 +2122,9 @@ type
     property Items[const Index: Integer]: ITMDBTVEpisode read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVEpisodePage = interface(ITMDBMediaPage)
     ['{BB238B34-1BA9-411C-92AF-B43C6DD6702A}']
     function GetItems: ITMDBTVEpisodes; stdcall;
@@ -1896,6 +2134,9 @@ type
 
 
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVEpisode = interface(ITMDBTVEpisode)
     ['{0FDB3732-0EB1-43FF-A006-4E6EFC411C54}']
     function GetRating: Single; stdcall;
@@ -1903,6 +2144,9 @@ type
     property Rating: Single read GetRating;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVEpisodes = interface(ITMDBTVEpisodes)
     ['{B9718FA3-4D61-4E43-BE53-58E28E787CF4}']
     function GetItem(const Index: Integer): ITMDBRatedTVEpisode; stdcall;
@@ -1910,6 +2154,9 @@ type
     property Items[const Index: Integer]: ITMDBRatedTVEpisode read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBRatedTVEpisodePage = interface(ITMDBTVEpisodePage)
     ['{DDC4B9FA-AC4B-4EAC-B9B8-78464034BC68}']
     function GetItems: ITMDBRatedTVEpisodes; stdcall;
@@ -1917,6 +2164,11 @@ type
     property Items: ITMDBRatedTVEpisodes read GetItems;
   end;
 
+
+
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBTVEpisodeDetail = interface(ITMDBDetail)
     ['{54B42FE7-72A4-4D20-B249-F9F987285053}']
 
@@ -1928,6 +2180,9 @@ type
 
 {$REGION 'TV Episode Group Related'}
 
+  /// <summary>
+  /// A list of episode groups as found in TMDB.
+  /// </summary>
   ITMDBTVEpisodeGroups = interface
     ['{14C7DEAF-20B9-4541-BBF8-D9A9A8E8205E}']
     function GetDescription: WideString; stdcall;
@@ -1949,6 +2204,9 @@ type
     property GroupType: TTMDBTVEpisodeGroupType read GetType;
   end;
 
+  /// <summary>
+  /// A single episode group as found in TMDB.
+  /// </summary>
   ITMDBTVEpisodeGroup = interface
     ['{EBECFB23-6043-4830-8497-EAE3A6AD5E6B}']
     function GetID: WideString; stdcall;
@@ -1970,8 +2228,12 @@ type
 
 
 
+//TODO
 {$REGION 'List Related'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBList = interface(ITMDBItem)
     ['{7B153F3B-E562-45AC-8708-6C1F3E6EE6B2}']
     function GetDescription: WideString;
@@ -1991,6 +2253,9 @@ type
     property PosterPath: WideString read GetPosterPath;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBLists = interface(ITMDBItems)
     ['{3E59EB7F-7ACA-4C60-87CF-14D8D57DDA17}']
     function GetItem(const Index: Integer): ITMDBList; stdcall;
@@ -1998,6 +2263,9 @@ type
     property Items[const Index: Integer]: ITMDBList read GetItem; default;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBListPage = interface(ITMDBPage)
     ['{6B0E3282-73BC-4DF8-9097-089F41BEE53B}']
     function GetItems: ITMDBLists; stdcall;
@@ -2005,6 +2273,9 @@ type
     property Items: ITMDBLists read GetItems;
   end;
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBListDetail = interface
     ['{23EA408A-0752-455E-B9CA-0BB1C5BB02A1}']
     function GetID: Integer; stdcall;
@@ -2026,6 +2297,7 @@ type
 
 
 
+//TODO
 {$REGION 'Discover Related'}
 
   ITMDBDiscoverMoviesParams = interface
@@ -2039,7 +2311,7 @@ type
     function GetLanguage: WideString;
     function GetPrimaryReleaseYear: Integer;
     function GetPrimaryReleaseDateGTE: TDateTime;
-    function GetPrimaryReleaseYearLTE: TDateTime;
+    function GetPrimaryReleaseDateLTE: TDateTime;
     function GetRegion: WideString;
     function GetReleaseDateGTE: TDateTime;
     function GetReleaseDateLTE: TDateTime;
@@ -2077,7 +2349,7 @@ type
     procedure SetLanguage(const AValue: WideString);
     procedure SetPrimaryReleaseYear(const AValue: Integer);
     procedure SetPrimaryReleaseDateGTE(const AValue: TDateTime);
-    procedure SetPrimaryReleaseYearLTE(const AValue: TDateTime);
+    procedure SetPrimaryReleaseDateLTE(const AValue: TDateTime);
     procedure SetRegion(const AValue: WideString);
     procedure SetReleaseDateGTE(const AValue: TDateTime);
     procedure SetReleaseDateLTE(const AValue: TDateTime);
@@ -2115,7 +2387,7 @@ type
     property Language: WideString read GetLanguage write SetLanguage;
     property PrimaryReleaseYear: Integer read GetPrimaryReleaseYear write SetPrimaryReleaseYear;
     property PrimaryReleaseDateGTE: TDateTime read GetPrimaryReleaseDateGTE write SetPrimaryReleaseDateGTE;
-    property PrimaryReleaseYearLTE: TDateTime read GetPrimaryReleaseYearLTE write SetPrimaryReleaseYearLTE;
+    property PrimaryReleaseDateLTE: TDateTime read GetPrimaryReleaseDateLTE write SetPrimaryReleaseDateLTE;
     property Region: WideString read GetRegion write SetRegion;
     property ReleaseDateGTE: TDateTime read GetReleaseDateGTE write SetReleaseDateGTE;
     property ReleaseDateLTE: TDateTime read GetReleaseDateLTE write SetReleaseDateLTE;
@@ -2151,7 +2423,7 @@ type
     function GetAirDateLTE: TDateTime;
     function GetFirstAirDateYear: Integer;
     function GetFirstAirDateGTE: TDateTime;
-    function GetFirstAirDateLTE: TDAteTime;
+    function GetFirstAirDateLTE: TDateTime;
     function GetIncludeAdult: Boolean;
     function GetIncludeNullFirstAirDates: Boolean;
     function GetLanguage: WideString;
@@ -2247,12 +2519,12 @@ type
     property WithType: WideString read GetWithType write SetWithType;
   end;
 
-
-
   ITMDBDiscoverMovie = interface(ITMDBMovie)
     ['{183EA5A3-E50B-4002-8B6F-A388C19DDF66}']
 
   end;
+
+
 
   ITMDBDiscoverMovies = interface(ITMDBMovies)
     ['{77D1077D-D1F7-4AC5-B600-D73D41B9FEFD}']
@@ -2319,6 +2591,9 @@ type
 
 {$REGION 'Watch Provider Related'}
 
+  /// <summary>
+  /// A single country and its priority for a given watch provider.
+  /// </summary>
   ITMDBWatchProviderPriority = interface
     ['{9C41902E-4F0B-452E-8B80-40A3B139061B}']
     function GetCountryCode: WideString; stdcall;
@@ -2328,6 +2603,9 @@ type
     property Priority: Integer read GetPriority;
   end;
 
+  /// <summary>
+  /// A list of countries and their priority for a given watch provider.
+  /// </summary>
   ITMDBWatchProviderPriorities = interface
     ['{256F86BF-7470-40AE-B5C6-128960948240}']
     function GetCount: Integer; stdcall;
@@ -2337,6 +2615,9 @@ type
     property Items[const Index: Integer]: ITMDBWatchProviderPriority read GetItem; default;
   end;
 
+  /// <summary>
+  /// A single watch provider as found in TMDB.
+  /// </summary>
   ITMDBWatchProvider = interface(ITMDBItem)
     ['{D94AA552-F436-494D-881B-7FEEBC429068}']
     function GetDisplayPriorities: ITMDBWatchProviderPriorities; stdcall;
@@ -2352,6 +2633,9 @@ type
     property ProviderID: Integer read GetProviderID;
   end;
 
+  /// <summary>
+  /// A list of watch providers as found in TMDB.
+  /// </summary>
   ITMDBWatchProviders = interface(ITMDBItems)
     ['{59B51A31-211F-48CD-BED4-B61E9EAA3EB1}']
     function GetItem(const Index: Integer): ITMDBWatchProvider; stdcall;
@@ -2369,11 +2653,8 @@ type
 
 {$REGION 'API Service Related'}
 
-  { API Services }
-
   /// <summary>
   /// Base interface for each possible TMDB service category.
-  /// [DONE]
   /// </summary>
   ITMDBService = interface
     ['{0E665C12-812B-4B2D-8A48-17A16740290C}']
@@ -2382,7 +2663,6 @@ type
     property Owner: ITMDBClient read GetOwner;
   end;
 
-  /// [DONE]
   ITMDBServiceAccount = interface(ITMDBService)
     ['{E690DF1A-6680-4040-BBC6-ABE0D4CC6916}']
     function GetDetails(AAccountID: Integer;
@@ -2417,7 +2697,6 @@ type
       const SortBy: WideString = ''): ITMDBTVSeriesPage; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceAuthentication = interface(ITMDBService)
     ['{2144056B-54A4-49C4-AE3E-E0701B10E218}']
     function CreateGuestSession: ITMDBAuthGuestSessionResult; stdcall;
@@ -2429,7 +2708,6 @@ type
     function ValidateKey: ITMDBAuthValidateKeyResult; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceCertifications = interface(ITMDBService)
     ['{C6FCB00E-CDCA-46EA-B44B-A3CA2570774B}']
     function GetMovieCertifications: ITMDBCertificationCountries; stdcall;
@@ -2443,7 +2721,6 @@ type
     //TVList
   end;
 
-  /// [DONE]
   ITMDBServiceCollections = interface(ITMDBService)
     ['{C0040473-5A07-493B-9771-2EAF58CD5DB0}']
     function GetDetails(const CollectionID: Integer;
@@ -2454,7 +2731,6 @@ type
     function GetTranslations(const CollectionID: Integer): ITMDBTranslations; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceCompanies = interface(ITMDBService)
     ['{13F92C49-85D1-4C7F-BBA6-8B815B23EDDE}']
     function GetDetails(const CompanyID: Integer): ITMDBCompanyDetail; stdcall;
@@ -2462,7 +2738,6 @@ type
     function GetImages(const CompanyID: Integer): ITMDBMediaImageGroup; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceConfiguration = interface(ITMDBService)
     ['{A459EFE0-D167-4247-8EAD-319021284D10}']
     function GetDetails: ITMDBConfiguration; stdcall;
@@ -2473,13 +2748,11 @@ type
     function GetTimezones: ITMDBTimezones; stdcall;
   end;
 
-  /// [TODO]
   ITMDBServiceCredits = interface(ITMDBService)
     ['{B5BDB2EC-A303-474B-B71F-C329100CC378}']
     //GetDetails
   end;
 
-  /// [TODO]
   ITMDBServiceDiscover = interface(ITMDBService)
     ['{F3D713B4-04D6-48D8-A4C9-6505CD361694}']
     //function DiscoverMovies(Params: ITMDBDiscoverMovieParams;
@@ -2488,21 +2761,18 @@ type
     //  const Page: Integer = 1): ITMDBTVSeries;
   end;
 
-  /// [DONE]
   ITMDBServiceFind = interface(ITMDBService)
     ['{82DB20C9-8E71-4151-9E76-B173CA5F1B97}']
     function FindByID(const ExternalID: String; const ExternalSource: String;
       const Language: String = ''): ITMDBFindResults; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceGenres = interface(ITMDBService)
     ['{E21E59C6-5416-4D9A-B6EB-33E004A5622D}']
     function GetMovieList(const Language: WideString = ''): ITMDBGenres; stdcall;
     function GetTVList(const Language: WideString = ''): ITMDBGenres; stdcall;
   end;
 
-  /// [TODO]
   ITMDBServiceGuestSessions = interface(ITMDBService)
     ['{FDF85071-F2F4-49A6-BAAD-6ECD96BE3CBD}']
     //GetRatedMovies
@@ -2527,7 +2797,6 @@ type
     //RemoveMovie
   end;
 
-  /// [DONE]
   ITMDBServiceMovieLists = interface(ITMDBService)
     ['{FAFB9948-B099-47AD-8C0F-74FE3A1B2E0E}']
     function GetNowPlaying(const Language: WideString = ''; const Page: Integer = 1;
@@ -2543,14 +2812,15 @@ type
   ITMDBServiceMovies = interface(ITMDBService)
     ['{93A8FDCA-9C30-4BC5-BEFC-BB066A5ADE6F}']
     function GetDetails(const MovieID: Integer; const AppendToResponse: TTMDBMovieRequests = [];
-      const Language: WideString = ''; const SessionID: String = ''): ITMDBMovieDetail; stdcall;
+      const Language: WideString = ''; const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBMovieDetail; stdcall;
     function GetAccountStates(const MovieID: Integer; const SessionID: WideString = '';
       const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
     function GetAlternativeTitles(const MovieID: Integer;
       const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
     //function GetChanges(): ITMDBChanges; stdcall;
     function GetCredits(const MovieID: Integer; const Language: String = ''): ITMDBCredits; stdcall;
-    //function GetExternalIDs(const MovieID: Integer): ITMDBExternalIDs; stdcall;
+    function GetExternalIDs(const MovieID: Integer): ITMDBExternalIDs; stdcall;
     function GetImages(const MovieID: Integer; const IncludeImageLanguage: WideString = '';
       const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
     function GetKeywords(const MovieID: Integer): ITMDBKeywords; stdcall;
@@ -2700,13 +2970,11 @@ type
     //DeleteRating
   end;
 
-  /// [DONE]
   ITMDBServiceTVEpisodeGroups = interface(ITMDBService)
     ['{B55FFFC4-7C29-4BA1-89C5-0CF1A8D88943}']
     function GetDetails(const TVEpisodeGroupID: String): ITMDBTVEpisodeGroups; stdcall;
   end;
 
-  /// [DONE]
   //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
   ITMDBServiceWatchProviders = interface(ITMDBService)
     ['{FDB079FA-C25C-4337-BDD7-C4E4A9186A36}']
@@ -2717,7 +2985,6 @@ type
       const WatchRegion: WideString = ''): ITMDBWatchProviders; stdcall;
   end;
 
-  /// [DONE]
   ITMDBServiceImages = interface(ITMDBService)
     ['{AF0467B9-AF78-4007-A521-EC9F362E7380}']
     function GetBackdrop(var Base64: WideString; const Path: WideString;
@@ -2742,6 +3009,9 @@ type
 
 {$REGION 'TMDB Client'}
 
+  /// <summary>
+  ///
+  /// </summary>
   ITMDBCache = interface
     ['{7D0D9646-6136-48D8-8FC1-03A6950B670F}']
     function GetConfig: ITMDBConfiguration; stdcall;
@@ -2773,8 +3043,6 @@ type
 
 
 
-  { User Login State }
-
   /// <summary>
   /// Encapsulates a TMDB user authentication and account info.
   /// </summary>
@@ -2790,7 +3058,6 @@ type
     function GetAccountDetail: ITMDBAccountDetail; stdcall;
 
     function LoginAsGuest: ITMDBAuthGuestSessionResult; stdcall;
-    //TODO: Trigger event to open a link in a browser for user authentication
     function LoginAsUser: ITMDBAuthSessionResult; stdcall;
     function LoginAsCreds(const Username, Password: WideString): ITMDBAuthSessionResult; stdcall;
     function Logout: Boolean; stdcall;
@@ -2806,8 +3073,6 @@ type
   end;
 
 
-
-  { Core API Client }
 
   /// <summary>
   /// The core interface-based implementation of the TMDB API wrapper.

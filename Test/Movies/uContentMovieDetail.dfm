@@ -11,7 +11,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -20,10 +20,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 220
@@ -47,8 +43,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitTop = 110
-        ExplicitHeight = 240
       end
       object lstDetail: TListView
         AlignWithMargins = True
@@ -178,10 +172,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet3: TTabSheet
       Caption = 'Alternative Titles'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lstAltTitles: TListView
         AlignWithMargins = True
         Left = 3
@@ -208,107 +198,46 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet4: TTabSheet
       Caption = 'Changes'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet6: TTabSheet
       Caption = 'External IDs'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object lblIMDB: TLabel
+      object lstExternalIDs: TListView
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'IMDB'
+        Height = 347
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 200
+          end
+          item
+            Caption = 'Value'
+            Width = 600
+          end>
+        HotTrackStyles = [htHandPoint, htUnderlineHot]
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 0
+        ViewStyle = vsReport
         ExplicitLeft = 6
-        ExplicitTop = 11
-        ExplicitWidth = 693
-      end
-      object lblWikidata: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 27
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Wikidata'
-        ExplicitLeft = 19
-        ExplicitTop = 75
-        ExplicitWidth = 693
-      end
-      object lblFacebook: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 51
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Facebook'
-        ExplicitLeft = 19
-        ExplicitTop = 107
-        ExplicitWidth = 693
-      end
-      object lblInstagram: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 75
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Instagram'
-        ExplicitLeft = 19
-        ExplicitTop = 147
-        ExplicitWidth = 693
-      end
-      object lblTwitter: TLabel
-        AlignWithMargins = True
-        Left = 3
-        Top = 99
-        Width = 905
-        Height = 18
-        Align = alTop
-        AutoSize = False
-        Caption = 'Twitter'
-        ExplicitLeft = 27
-        ExplicitTop = 155
-        ExplicitWidth = 693
+        ExplicitTop = 6
       end
     end
     object tabImages: TTabSheet
       Caption = 'Images'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet8: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 7
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lstKeywords: TListBox
         AlignWithMargins = True
         Left = 3
@@ -329,26 +258,14 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet9: TTabSheet
       Caption = 'Lists'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet10: TTabSheet
       Caption = 'Recommendations'
       ImageIndex = 9
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet11: TTabSheet
       Caption = 'Release Dates'
       ImageIndex = 10
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lstReleaseDates: TListView
         AlignWithMargins = True
         Left = 3
@@ -393,34 +310,18 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet12: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 11
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet13: TTabSheet
       Caption = 'Similar'
       ImageIndex = 12
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabSheet14: TTabSheet
       Caption = 'Translations'
       ImageIndex = 13
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
       ImageIndex = 14
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object pTop: TPanel

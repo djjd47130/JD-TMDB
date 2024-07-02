@@ -286,7 +286,8 @@ type
   TTMDBAPIMovies = class(TTMDBAPIService)
   public
     function GetDetails(const MovieID: Integer; const AppendToResponse: String = '';
-      const Language: String = ''; const SessionID: String = ''): ISuperObject;
+      const Language: String = ''; const SessionID: String = '';
+      const GuestSessionID: String = ''): ISuperObject;
     function GetAccountStates(const MovieID: Integer; const SessionID: String = '';
       const GuestSessionID: String = ''): ISuperObject;
     function GetAlternativeTitles(const MovieID: Integer;
@@ -1296,7 +1297,7 @@ end;
 { TTMDBAPIMovies }
 
 function TTMDBAPIMovies.GetDetails(const MovieID: Integer; const AppendToResponse,
-  Language: String; const SessionID: String): ISuperObject;
+  Language: String; const SessionID: String; const GuestSessionID: String): ISuperObject;
 var
   U, P: String;
   S: String;
@@ -1305,6 +1306,7 @@ begin
   AddParam(P, 'append_to_response', AppendToResponse);
   AddParam(P, 'language', Language);
   AddParam(P, 'session_id', SessionID);
+  AddParam(P, 'guest_session_id', GuestSessionID);
 
   //Region test
   AddParam(P, 'region', 'US');

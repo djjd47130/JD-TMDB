@@ -19,6 +19,11 @@ inherited frmCommonCredits: TfrmCommonCredits
         Caption = 'Role'
         Width = 300
       end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
     Groups = <
       item
         Header = 'Cast'
@@ -40,6 +45,7 @@ inherited frmCommonCredits: TfrmCommonCredits
     GroupView = True
     ReadOnly = True
     RowSelect = True
+    ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
   end

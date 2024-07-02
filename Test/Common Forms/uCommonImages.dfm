@@ -71,6 +71,5 @@ inherited frmCommonImages: TfrmCommonImages
     ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitWidth = 876
   end
 end

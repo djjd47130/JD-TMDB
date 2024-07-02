@@ -24,7 +24,7 @@ type
     Label15: TLabel;
     txtYear: TEdit;
   private
-    FDetail: ITMDBTVSeriesDetail;
+    FDetail: ITMDBTVSerieDetail;
   public
     function Page: ITMDBPage; override;
     procedure SetupCols; override;

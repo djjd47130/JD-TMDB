@@ -132,7 +132,8 @@ begin
   FWebServer:= TTMDBLocalWebServer.Create(TMDB);
   FWebServer.Start;
 
-  TMDB.ListPrimaryTranslations(cboLanguage.Items);
+  //TMDB.ListPrimaryTranslations(cboLanguage.Items);
+  TMDB.ListLanguages(cboLanguage.Items);
 
   Services1.Click; //TODO: Why was this necessary?
   Width:= 1200;
@@ -247,9 +248,9 @@ begin
     end else begin
       D:= TMDB.LoginState.AccountDetail;
       lblUserName.Caption:= D.UserName;
-      lblUserFullName.Caption:= D.Title;
-      if D.Title <> '' then
-        btnUser.Text:= D.Title
+      lblUserFullName.Caption:= D.Name;
+      if D.Name <> '' then
+        btnUser.Text:= D.Name
       else
         btnUser.Text:= D.UserName;
       //TODO: Gravatar...
@@ -299,8 +300,6 @@ begin
     end;
     1: begin
       //Normal...
-      //raise Exception.Create('Sorry, this login method is not yet supported.');
-
       US:= TMDB.LoginState.LoginAsUser;
       Success:= US.Success;
     end;
