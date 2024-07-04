@@ -46,11 +46,11 @@ uses
 function TfrmContentSearchMulti.GetData(const APageNum: Integer): ITMDBPage;
 var
   Q, L: String;
-  A: Boolean;
+  A: TTMDBBoolean;
 begin
   inherited;
   Q:= txtQuery.Text;
-  A:= cboIncludeAdult.ItemIndex = 1;
+  A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
   L:= frmTMDBTestMain.cboLanguage.Text;
   Result:= TMDB.Client.Search.SearchMulti(Q, A, L, APageNum);
 end;

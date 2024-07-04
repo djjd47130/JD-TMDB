@@ -30,6 +30,7 @@ type
   private
     FTMDB: ITMDBClient;
     FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
+
     function GetAccessToken: String;
     function GetAPIKey: String;
     function GetAuthMethod: TTMDBAuthMethod;

@@ -110,11 +110,11 @@ end;
 function TfrmContentSearchMovies.GetData(const APageNum: Integer): ITMDBPage;
 var
   Q, L, R, PRY, Y: String;
-  A: Boolean;
+  A: TTMDBBoolean;
 begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
-  A:= cboSearchMoviesAdult.ItemIndex = 1;
+  A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
   L:= frmTMDBTestMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   PRY:= txtSearchMoviesPrimaryReleaseYear.Text;

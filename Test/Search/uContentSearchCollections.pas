@@ -78,11 +78,11 @@ function TfrmContentSearchCollections.GetData(
   const APageNum: Integer): ITMDBPage;
 var
   Q, L, R: String;
-  A: Boolean;
+  A: TTMDBBoolean;
 begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
-  A:= cboSearchMoviesAdult.ItemIndex = 1;
+  A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
   L:= frmTMDBTestMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));

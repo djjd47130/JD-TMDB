@@ -55,10 +55,11 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtQuery: TEdit
         AlignWithMargins = True
@@ -100,8 +101,9 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
         Style = csDropDownList
         ItemIndex = 0
         TabOrder = 0
-        Text = 'False'
+        Text = 'Default'
         Items.Strings = (
+          'Default'
           'False'
           'True')
       end

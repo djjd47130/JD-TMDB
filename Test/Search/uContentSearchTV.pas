@@ -53,11 +53,11 @@ function TfrmContentSearchTV.GetData(const APageNum: Integer): ITMDBPage;
 var
   Q, L: String;
   FADY, Y: Integer;
-  A: Boolean;
+  A: TTMDBBoolean;
 begin
   inherited;
   Q:= txtQuery.Text;
-  A:= cboIncludeAdult.ItemIndex = 1;
+  A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
   L:= frmTMDBTestMain.cboLanguage.Text;
   FADY:= StrToIntDef(txtFirstAirDateYear.Text, 0);
   Y:= StrToIntDef(txtYear.Text, 0);

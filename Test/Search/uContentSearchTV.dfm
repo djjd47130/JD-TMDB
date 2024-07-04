@@ -9,7 +9,6 @@ inherited frmContentSearchTV: TfrmContentSearchTV
     end
     inherited lstResults: TListView
       Height = 171
-      ExplicitTop = 38
       ExplicitHeight = 171
     end
     inherited pDetail: TPanel
@@ -32,10 +31,11 @@ inherited frmContentSearchTV: TfrmContentSearchTV
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtQuery: TEdit
         AlignWithMargins = True
@@ -77,8 +77,9 @@ inherited frmContentSearchTV: TfrmContentSearchTV
         Style = csDropDownList
         ItemIndex = 0
         TabOrder = 0
-        Text = 'False'
+        Text = 'Default'
         Items.Strings = (
+          'Default'
           'False'
           'True')
       end
@@ -95,10 +96,11 @@ inherited frmContentSearchTV: TfrmContentSearchTV
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 140
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'First Air Date Year'
+        ExplicitWidth = 140
       end
       object txtFirstAirDateYear: TEdit
         AlignWithMargins = True
@@ -123,10 +125,11 @@ inherited frmContentSearchTV: TfrmContentSearchTV
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 41
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Year:'
+        ExplicitWidth = 41
       end
       object txtYear: TEdit
         AlignWithMargins = True

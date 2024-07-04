@@ -16,8 +16,6 @@ unit JD.TMDB.API;
 
   TODO:
   - Rename "Service" to "Namespace" in respect to TMDB's docs
-  - User authentication - Requests implemented, but requires more design
-  - Fetching images using standard image sizes
   - Discover requests - very huge concept
   - Change requests - very dynamic and complex concept
   - Rate limiting - enforce time delays between requests
@@ -25,8 +23,12 @@ unit JD.TMDB.API;
   - Implement "TTMDBAPIRequestRec" to use on ALL HTTP requests
 
   REMARKS:
-  - This unit *SHOULD* be fully functional at this point, with the exception
-    of a few specific services and capabilities missing such as images and discover.
+  - This unit is fully functional at this point, with the exception
+    of a few specific services and capabilities missing
+    such as images and discover, as described in the "TODO" above.
+  - Many requests are still untested. The "Intf" / "Impl" layer on the
+    other hand is still a major work in progress, with many TMDB specific
+    interfaces and corresponding implementation.
 
 *)
 
@@ -353,19 +355,19 @@ type
 
   TTMDBAPISearch = class(TTMDBAPIService)
   public
-    function SearchCollections(const Query: String; const IncludeAdult: Boolean = False;
+    function SearchCollections(const Query: String; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: String = ''; const Page: Integer = 1; const Region: String = ''): ISuperObject;
     function SearchCompanies(const Query: String; const Page: Integer = 1): ISuperObject;
     function SearchKeywords(const Query: String; const Page: Integer = 1): ISuperObject;
-    function SearchMovies(const Query: String; const IncludeAdult: Boolean = False;
+    function SearchMovies(const Query: String; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: String = ''; const PrimaryReleaseYear: String = '';
       const Page: Integer = 1; const Region: String = ''; const Year: String = ''): ISuperObject;
-    function SearchMulti(const Query: String; const IncludeAdult: Boolean = False;
+    function SearchMulti(const Query: String; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: String = ''; const Page: Integer = 1): ISuperObject;
-    function SearchPerson(const Query: String; const IncludeAdult: Boolean = False;
+    function SearchPerson(const Query: String; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: String = ''; const Page: Integer = 1): ISuperObject;
     function SearchTV(const Query: String; const FirstAirDateYear: String = '';
-      const IncludeAdult: Boolean = False; const Language: String = '';
+      const IncludeAdult: TTMDBBoolean = bDefault; const Language: String = '';
       const Page: Integer = 1; const Year: String = ''): ISuperObject;
   end;
 
@@ -541,6 +543,7 @@ type
     FTVSeriesLists: TTMDBAPITVSeriesLists;
     FImages: TTMDBAPIImages;
     FAuthMethod: TTMDBAuthMethod;
+    FAgreedToWatchProviderAttribution: Boolean;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
@@ -554,6 +557,7 @@ type
     function GetWatchProviders: TTMDBAPIWatchProviders;
     procedure SetAuthMethod(const Value: TTMDBAuthMethod);
     function GetURL(const Req, Params: String): String;
+    procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -565,6 +569,7 @@ type
     property APIReadAccessToken: String read FAPIReadAccessToken write SetAPIReadAccessToken;
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
     property MsecLimit: Integer read FMsecLimit write SetMsecLimit;
+    property AgreedToWatchProviderAttribution: Boolean read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
     property Account: TTMDBAPIAccount read FAccount;
     property Authentication: TTMDBAPIAuthentication read FAuthentication;
@@ -609,6 +614,7 @@ type
 
   //TODO: A record which contains functionality necessary for a TMDB request URL...
   //  This will be passed with each possible API request instead of URLs and raw data.
+  //NOTE: Is this even worth it?
   TTMDBAPIRequestRec = record
   private
     FProtocol: String;
@@ -1643,17 +1649,14 @@ end;
 { TTMDBAPISearch }
 
 function TTMDBAPISearch.SearchCollections(const Query: String;
-  const IncludeAdult: Boolean; const Language: String; const Page: Integer;
+  const IncludeAdult: TTMDBBoolean; const Language: String; const Page: Integer;
   const Region: String): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'search/collection';
   AddParam(P, 'query', Query);
-  if IncludeAdult then
-    AddParam(P, 'include_adult', 'true')
-  else
-    AddParam(P, 'include_adult', 'false');
+  AddParam(P, 'include_adult', TMDBBoolToStr(IncludeAdult));
   AddParam(P, 'language', Language);
   AddParam(P, 'page', IntToStr(Page));
   AddParam(P, 'region', Region);
@@ -1683,17 +1686,14 @@ begin
 end;
 
 function TTMDBAPISearch.SearchMovies(const Query: String;
-  const IncludeAdult: Boolean; const Language, PrimaryReleaseYear: String;
+  const IncludeAdult: TTMDBBoolean; const Language, PrimaryReleaseYear: String;
   const Page: Integer; const Region, Year: String): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'search/movie';
   AddParam(P, 'query', Query);
-  if IncludeAdult then
-    AddParam(P, 'include_adult', 'true')
-  else
-    AddParam(P, 'include_adult', 'false');
+  AddParam(P, 'include_adult', TMDBBoolToStr(IncludeAdult));
   AddParam(P, 'language', Language);
   AddParam(P, 'primary_release_year', PrimaryReleaseYear);
   AddParam(P, 'page', IntToStr(Page));
@@ -1703,51 +1703,42 @@ begin
 end;
 
 function TTMDBAPISearch.SearchMulti(const Query: String;
-  const IncludeAdult: Boolean; const Language: String;
+  const IncludeAdult: TTMDBBoolean; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'search/multi';
   AddParam(P, 'query', Query);
-  if IncludeAdult then
-    AddParam(P, 'include_adult', 'true')
-  else
-    AddParam(P, 'include_adult', 'false');
+  AddParam(P, 'include_adult', TMDBBoolToStr(IncludeAdult));
   AddParam(P, 'language', Language);
   AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
 
 function TTMDBAPISearch.SearchPerson(const Query: String;
-  const IncludeAdult: Boolean; const Language: String;
+  const IncludeAdult: TTMDBBoolean; const Language: String;
   const Page: Integer): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'search/person';
   AddParam(P, 'query', Query);
-  if IncludeAdult then
-    AddParam(P, 'include_adult', 'true')
-  else
-    AddParam(P, 'include_adult', 'false');
+  AddParam(P, 'include_adult', TMDBBoolToStr(IncludeAdult));
   AddParam(P, 'language', Language);
   AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
 
 function TTMDBAPISearch.SearchTV(const Query, FirstAirDateYear: String;
-  const IncludeAdult: Boolean; const Language: String; const Page: Integer;
+  const IncludeAdult: TTMDBBoolean; const Language: String; const Page: Integer;
   const Year: String): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'search/tv';
   AddParam(P, 'query', Query);
-  if IncludeAdult then
-    AddParam(P, 'include_adult', 'true')
-  else
-    AddParam(P, 'include_adult', 'false');
+  AddParam(P, 'include_adult', TMDBBoolToStr(IncludeAdult));
   AddParam(P, 'language', Language);
   AddParam(P, 'page', IntToStr(Page));
   AddParam(P, 'year', Year);
@@ -2490,9 +2481,7 @@ function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
 begin
   //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
 
-  //TODO: Raise a special exception here which forces developers to
-  //  explicitly handle / hide the exception in order to access features.
-
+  //TODO: Only proceed if watch providers has been explicitly agreed to...
 
 
   Result:= FWatchProviders;
@@ -2503,7 +2492,6 @@ begin
   FHTTP.Request.Accept:= 'application/json';
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
-  //TODO: Conditionally include access token depending on API auth method...
   if FAPIAuth = amAccessToken then
     FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
 end;
@@ -2587,6 +2575,12 @@ begin
     B.Free;
     Res.Free;
   end;
+end;
+
+procedure TTMDBAPI.SetAgreedToWatchProviderAttribution(const Value: Boolean);
+begin
+  //TODO
+  FAgreedToWatchProviderAttribution := Value;
 end;
 
 procedure TTMDBAPI.SetAPIKey(const Value: String);

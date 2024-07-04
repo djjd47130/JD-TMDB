@@ -25,13 +25,6 @@ type
   { Common Types }
 
   /// <summary>
-  /// An event triggered when a login request requires a browser
-  ///   to be opened to a URL to authenticate.
-  /// </summary>
-  TTMDBUserAuthRequestEvent = procedure(Sender: TObject;
-    const URL: WideString; var Result: Boolean) of object;
-
-  /// <summary>
   /// Array of String, as used across TMDB library.
   /// </summary>
   TTMDBStrArray = TArray<WideString>;
@@ -40,6 +33,20 @@ type
   /// Array of Integer, as used across TMDB library.
   /// </summary>
   TTMDBIntArray = TArray<Integer>;
+
+  /// <summary>
+  /// Enum representing a boolean with a default. Used to ensure queries can
+  /// be made without forcing a true/false selection.
+  /// Issue #38
+  /// </summary>
+  TTMDBBoolean = (bDefault, bFalse, bTrue);
+
+  /// <summary>
+  /// An event triggered when a login request requires a browser
+  ///   to be opened to a URL to authenticate.
+  /// </summary>
+  TTMDBUserAuthRequestEvent = procedure(Sender: TObject;
+    const URL: WideString; var Result: Boolean) of object;
 
 
 
@@ -185,6 +192,8 @@ function ConvertDate(const S: String): TDateTime;
 
 function TMDBStrArrayToStr(const AValue: TTMDBStrArray): String;
 
+function TMDBBoolToStr(const AValue: TTMDBBoolean): String;
+
 function TMDBListTypeToStr(const AListType: TTMDBListType): String;
 function TMDBStrToListType(const AListType: String): TTMDBListType;
 
@@ -270,6 +279,15 @@ begin
     if Result <> '' then
       Result:= Result + ', ';
     Result:= Result + AValue[X];
+  end;
+end;
+
+function TMDBBoolToStr(const AValue: TTMDBBoolean): String;
+begin
+  case AValue of
+    bFalse: Result:= 'false';
+    bTrue:  Result:= 'true';
+    else    Result:= ''
   end;
 end;
 

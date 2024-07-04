@@ -1761,25 +1761,28 @@ type
 
     //TODO: Should I share these with "Appended" data?
     //  For example, if (Has Appended Data) then (Use Appended Data) else (Fetch Data)
-    //function GetAccountStates: ITMDBAccountStates; stdcall;
-    //function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
-    //function GetChanges(const StartDate, EndDate: TDateTime;
-    //  const Page: Integer = 1): ITMDBChangePage; stdcall;
-    //function GetCredits: ITMDBCredits; stdcall;
-    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
-    //function GetImages(): ITMDBMediaImages; stdcall;
-    //function GetKeywords: ITMDBKeywordList; stdcall;
-    //function GetLists(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBListPage; stdcall;
-    //function GetRecommendations(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
+    function GetAccountStates(const SessionID: WideString;
+      const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
+    function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
+    function GetChanges(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangePage; stdcall;
+    function GetCredits(const Language: WideString = ''): ITMDBCredits; stdcall;
+    function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    function GetImages(const IncludeImageLanguage: WideString = '';
+      const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    function GetKeywords: ITMDBKeywords; stdcall;
+    function GetLists(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBListPage; stdcall;
+    function GetRecommendations(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
     //function GetReviews(const Language: WideString = '';
     //  const Page: Integer = 1): ITMDBReviewList; stdcall;
-    //function GetSimilar(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetTranslations: ITMDBTranslationList; stdcall;
-    //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
+    function GetSimilar(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    function GetTranslations: ITMDBTranslations; stdcall;
+    function GetVideos(const Language: WideString): ITMDBVideos; stdcall;
+    //function GetWatchProviders: ITMDBMediaWatchProviders; stdcall;
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
@@ -2438,7 +2441,7 @@ type
     function GetWithCompanies: WideString;
     function GetWithGenres: WideString;
     function GetWithKeywords: WideString;
-    function GetWithNetworks: Integer;
+    function GetWithNetworks: WideString;
     function GetWithOriginCountry: WideString;
     function GetWithOriginalLanguage: WideString;
     function GetWithRuntimeGTE: Integer;
@@ -2471,7 +2474,7 @@ type
     procedure SetWithCompanies(const AValue: WideString);
     procedure SetWithGenres(const AValue: WideString);
     procedure SetWithKeywords(const AValue: WideString);
-    procedure SetWithNetworks(const AValue: Integer);
+    procedure SetWithNetworks(const AValue: WideString);
     procedure SetWithOriginCountry(const AValue: WideString);
     procedure SetWithOriginalLanguage(const AValue: WideString);
     procedure SetWithRuntimeGTE(const AValue: Integer);
@@ -2504,7 +2507,7 @@ type
     property WithCompanies: WideString read GetWithCompanies write SetWithCompanies;
     property WithGenres: WideString read GetWithGenres write SetWithGenres;
     property WithKeywords: WideString read GetWithKeywords write SetWithKeywords;
-    property WithNetworks: Integer read GetWithNetworks write SetWithNetworks;
+    property WithNetworks: WideString read GetWithNetworks write SetWithNetworks;
     property WithOriginCountry: WideString read GetWithOriginCountry write SetWithOriginCountry;
     property WithOriginalLanguage: WideString read GetWithOriginalLanguage write SetWithOriginalLanguage;
     property WithRuntimeGTE: Integer read GetWithRuntimeGTE write SetWithRuntimeGTE;
@@ -2875,22 +2878,22 @@ type
 
   ITMDBServiceSearch = interface(ITMDBService)
     ['{D7E9618F-ED5C-4D9A-93FF-CF109294DA0F}']
-    function SearchCollections(const Query: WideString; const IncludeAdult: Boolean = False;
+    function SearchCollections(const Query: WideString; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: WideString = ''; const Region: WideString = '';
       const Page: Integer = 1): ITMDBCollectionPage; stdcall;
     function SearchCompanies(const Query: WideString; const Page: Integer = 1): ITMDBCompanyPage; stdcall;
     function SearchKeywords(const Query: WideString;
       const Page: Integer = 1): ITMDBKeywordPage; stdcall;
-    function SearchMovies(const Query: WideString; const IncludeAdult: Boolean = False;
+    function SearchMovies(const Query: WideString; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: WideString = ''; const Region: WideString = '';
       const PrimaryReleaseYear: WideString = ''; const Year: WideString = '';
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    function SearchMulti(const Query: WideString; const IncludeAdult: Boolean = False;
+    function SearchMulti(const Query: WideString; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: WideString = ''; const Page: Integer = 1): ITMDBMediaPage; stdcall;
-    function SearchPeople(const Query: WideString; const IncludeAdult: Boolean = False;
+    function SearchPeople(const Query: WideString; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: WideString = ''; const Page: Integer = 1): ITMDBPersonPage; stdcall;
     function SearchTV(const Query: String; const FirstAirDateYear: Integer = 0;
-      const IncludeAdult: Boolean = False; const Language: WideString = '';
+      const IncludeAdult: TTMDBBoolean = bDefault; const Language: WideString = '';
       const Year: Integer = 0; const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
   end;
 
