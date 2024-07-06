@@ -214,6 +214,8 @@ function TMDBStrToMovieRequest(const AValue: WideString): TTMDBMovieRequest;
 
 function TMDBReleaseTypeToStr(const AValue: TTMDBReleaseType): String;
 
+function TMDBStrToCreditType(const AValue: WideString): TTMDBCreditType;
+
 //Append to Result Related
 function TMDBMovieRequestsToStr(const AValue: TTMDBMovieRequests): WideString;
 function TMDBTVSeriesRequestsToStr(const AValue: TTMDBTVSeriesRequests): WideString;
@@ -417,6 +419,17 @@ begin
       Result:= TTMDBMovieRequest(X);
     end;
   end;
+end;
+
+function TMDBStrToCreditType(const AValue: WideString): TTMDBCreditType;
+  procedure Chk(const S: String; const T: TTMDBCreditType);
+  begin
+    if SameText(AValue, S) then
+      Result:= T;
+  end;
+begin
+  Chk('cast', ctCast);
+  Chk('crew', ctCrew);
 end;
 
 function URLCombine(P1, P2: String; const Delim: String = '/'): String;

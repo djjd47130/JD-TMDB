@@ -21,7 +21,7 @@ unit JD.TMDB.API;
   - This unit is fully functional at this point, with the exception
     of a few specific Namespaces and capabilities missing
     such as discover, as described in the "TODO" above.
-  - Many requests are still untested. The "Intf" / "Impl" layer on the
+  - Many requests are still untested. The new "Intf" / "Impl" layer on the
     other hand is still a major work in progress, with many TMDB specific
     interfaces and corresponding implementation.
 
@@ -140,7 +140,7 @@ type
 
   TTMDBAPICredits = class(TTMDBAPINamespace)
   public
-    function GetDetails(const CreditID: Integer): ISuperObject;
+    function GetDetails(const CreditID: WideString): ISuperObject;
   end;
 
   TTMDBAPIDiscoverMovieReq = record
@@ -1179,11 +1179,11 @@ end;
 
 { TTMDBAPICredits }
 
-function TTMDBAPICredits.GetDetails(const CreditID: Integer): ISuperObject;
+function TTMDBAPICredits.GetDetails(const CreditID: WideString): ISuperObject;
 var
   U: String;
 begin
-  U:= 'credit/'+IntToStr(CreditID);
+  U:= 'credit/'+CreditID;
   Result:= FOwner.GetJSON(U, '');
 end;
 
