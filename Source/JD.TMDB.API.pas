@@ -650,9 +650,6 @@ type
 
   TTMDBAPIImages = class(TTMDBAPINamespace)
   public
-    function GetImageURL(const Path: WideString; const Size: WideString = ''): WideString;
-    function GetImage(var Base64: WideString; const Path: WideString;
-      const Size: WideString = 'original'): Boolean;
   end;
 
   TTMDBAPI = class(TComponent)
@@ -664,7 +661,7 @@ type
     FAPIReadAccessToken: String;
     FAPIAuth: TTMDBAuthMethod;
     FAppUserAgent: String;
-    FRateLimitMsec: Integer;
+    FRateLimitMsec: DWORD;
     FAuthMethod: TTMDBAuthMethod;
     FAgreedToWatchProviderAttribution: Boolean;
     FRateLimiting: Boolean;
@@ -698,7 +695,6 @@ type
     FTrending: TTMDBAPITrending;
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
-    FImages: TTMDBAPIImages;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
@@ -714,14 +710,16 @@ type
     procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
 
     //Rate Limiting
-    procedure SetRateLimitMsec(const Value: Integer);
+    procedure SetRateLimitMsec(const Value: DWORD);
     procedure SetRateLimiting(const Value: Boolean);
     procedure CheckRateLimit;
-    function GetRatetLimitWaitMsec: Integer;
+    function GetRatetLimitWaitMsec: DWORD;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    function GetImage(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean;
   published
     property AuthMethod: TTMDBAuthMethod read FAuthMethod write SetAuthMethod;
     property APIKey: String read FAPIKey write SetAPIKey;
@@ -731,7 +729,7 @@ type
       read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
     //Rate Limiting
-    property RateLimitMsec: Integer read FRateLimitMsec write SetRateLimitMsec;
+    property RateLimitMsec: DWORD read FRateLimitMsec write SetRateLimitMsec;
     property RateLimiting: Boolean read FRateLimiting write SetRateLimiting;
 
     property Account: TTMDBAPIAccount read FAccount;
@@ -763,7 +761,6 @@ type
     property TVEpisodeGroups: TTMDBAPITVEpisodeGroups read FTVEpisodeGroups;
     //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
     property WatchProviders: TTMDBAPIWatchProviders read GetWatchProviders;
-    property Images: TTMDBAPIImages read FImages;
   end;
 
 implementation
@@ -2516,42 +2513,6 @@ begin
   end;
 end;
 
-{ TTMDBAPIImages }
-
-function TTMDBAPIImages.GetImage(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-var
-  U: String;
-  S: TStringStream;
-  Enc: TBase64Encoding;
-begin
-  //UNTESTED
-  //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
-  //Result:= False;
-  U:= GetImageURL(Path, Size);
-  S:= TStringStream.Create;
-  try
-    FOwner.FHTTP.Get(U, S);
-    S.Position:= 0;
-    Enc:= TBase64Encoding.Create(0);
-    try
-      Base64:= Enc.Encode(S.DataString);
-      Result:= True;
-    finally
-      Enc.Free;
-    end;
-  finally
-    S.Free;
-  end;
-end;
-
-function TTMDBAPIImages.GetImageURL(const Path, Size: WideString): WideString;
-begin
-  Result:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
-  Result:= URLCombine(Result, Size);
-  Result:= URLCombine(Result, Path);
-end;
-
 { TTMDBAPI }
 
 constructor TTMDBAPI.Create(AOwner: TComponent);
@@ -2598,12 +2559,10 @@ begin
   FTVEpisodes:= TTMDBAPITVEpisodes.Create(Self);
   FTVEpisodeGroups:= TTMDBAPITVEpisodeGroups.Create(Self);
   FWatchProviders:= TTMDBAPIWatchProviders.Create(Self);
-  FImages:= TTMDBAPIImages.Create(Self);
 end;
 
 destructor TTMDBAPI.Destroy;
 begin
-  FreeAndNil(FImages);
   FreeAndNil(FWatchProviders);
   FreeAndNil(FTVEpisodeGroups);
   FreeAndNil(FTVEpisodes);
@@ -2638,7 +2597,7 @@ begin
   inherited;
 end;
 
-function TTMDBAPI.GetRatetLimitWaitMsec: Integer;
+function TTMDBAPI.GetRatetLimitWaitMsec: DWORD;
 var
   Cur, Next: DWORD;
 begin
@@ -2698,6 +2657,37 @@ begin
       Result:= Result + '?' + Params;
   end;
   Result:= TIdURI.URLEncode(Result);
+end;
+
+function TTMDBAPI.GetImage(var Base64: WideString; const Path,
+  Size: WideString): Boolean;
+var
+  U: String;
+  S: TStringStream;
+  Enc: TBase64Encoding;
+begin
+  //UNTESTED
+  //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
+  //Result:= False;
+
+  U:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
+  U:= URLCombine(U, Size);
+  U:= URLCombine(U, Path);
+  S:= TStringStream.Create;
+  try
+    //TODO: Setup headers...
+    FHTTP.Get(U, S);
+    S.Position:= 0;
+    Enc:= TBase64Encoding.Create(0);
+    try
+      Base64:= Enc.Encode(S.DataString);
+      Result:= True;
+    finally
+      Enc.Free;
+    end;
+  finally
+    S.Free;
+  end;
 end;
 
 function TTMDBAPI.GetJSON(const Req, Params: String): ISuperObject;
@@ -2789,7 +2779,7 @@ begin
   FAuthMethod := Value;
 end;
 
-procedure TTMDBAPI.SetRateLimitMsec(const Value: Integer);
+procedure TTMDBAPI.SetRateLimitMsec(const Value: DWORD);
 begin
   FRateLimitMsec := Value;
 end;

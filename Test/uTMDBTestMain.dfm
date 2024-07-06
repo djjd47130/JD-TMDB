@@ -520,8 +520,11 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
-    RateLimiting = True
-    RateLimitMsec = 1000
+    AppUserAgent = 
+      'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
+      'TMDB)'
+    RateLimiting = False
+    RateLimitMsec = 10
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 292
     Top = 15

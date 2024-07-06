@@ -46,6 +46,8 @@ type
     function GetRateLimitMsec: DWORD;
     procedure SetRateLimiting(const Value: Boolean);
     procedure SetRateLimitMsec(const Value: DWORD);
+    function GetAppUserAgent: String;
+    procedure SetAppUserAgent(const Value: String);
   protected
     procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
@@ -65,6 +67,7 @@ type
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
     property AccessToken: String read GetAccessToken write SetAccessToken;
+    property AppUserAgent: String read GetAppUserAgent write SetAppUserAgent;
     property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
     property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
 
@@ -111,6 +114,11 @@ begin
   Result:= FTMDB.APIKey;
 end;
 
+function TTMDB.GetAppUserAgent: String;
+begin
+  Result:= FTMDB.AppUserAgent;
+end;
+
 function TTMDB.GetAuthMethod: TTMDBAuthMethod;
 begin
   Result:= FTMDB.AuthMethod;
@@ -144,6 +152,11 @@ end;
 procedure TTMDB.SetAPIKey(const Value: String);
 begin
   FTMDB.APIKey:= Value;
+end;
+
+procedure TTMDB.SetAppUserAgent(const Value: String);
+begin
+  FTMDB.AppUserAgent:= Value;
 end;
 
 procedure TTMDB.SetAuthMethod(const Value: TTMDBAuthMethod);

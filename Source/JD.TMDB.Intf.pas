@@ -60,8 +60,6 @@ type
   ITMDBChangeRecord = interface;
   ITMDBChange = interface;
   ITMDBChanges = interface;
-  ITMDBChangePage = interface;
-  ITMDBChangeDetail = interface;
   ITMDBTranslationData = interface;
   ITMDBMovieTranslationData = interface;
   ITMDBCollectionTranslationData = interface;
@@ -553,11 +551,8 @@ type
   //  depending on the type of change...
   //https://developer.themoviedb.org/docs/tracking-content-changes
 
-  //TODO: Confusion between structure of object in "Chages" namespace and
-  //  "Changes" request in specific namespaces...
-
   /// <summary>
-  ///
+  /// The actual value which has been changed in TMDB.
   /// </summary>
   ITMDBChangeValue = interface
     ['{D44D0AA2-5EB9-458F-A0CD-FFCE923C571A}']
@@ -574,7 +569,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A reference to an action made on an item in TMDB triggering a change.
   /// </summary>
   ITMDBChangeRecord = interface
     ['{27B8CA5E-D72C-4298-92D9-012A58450CAA}']
@@ -589,7 +584,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A single change which has been made to an item in TMDB.
   /// </summary>
   ITMDBChange = interface(ITMDBItem)
     ['{04186AE5-0DFE-4E30-99A8-8B8CBC98E17F}']
@@ -601,7 +596,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of changes which have been made to an item in TMDB.
   /// </summary>
   ITMDBChanges = interface(ITMDBItems)
     ['{67851829-A928-4C8E-9DED-694E0CE8139B}']
@@ -610,22 +605,38 @@ type
     property Items[const Index: Integer]: ITMDBChange read GetItem; default;
   end;
 
-  /// <summary>
-  ///
-  /// </summary>
-  ITMDBChangePage = interface(ITMDBPage)
-    ['{EEBB8A61-5597-4B56-B8AF-82E3C1F54F75}']
-    function GetItems: ITMDBChanges; stdcall;
 
-    property Items: ITMDBChanges read GetItems;
+
+  /// <summary>
+  /// A reference to a change that was made in TMDB.
+  /// </summary>
+  ITMDBChangeRef = interface(ITMDBItem)
+    ['{A99B9531-F7D4-4130-BC26-33AB3E9B6A17}']
+    function GetID: Integer; stdcall;
+    function GetAdult: Boolean; stdcall;
+
+    property ID: Integer read GetID;
+    property Adult: Boolean read GetAdult;
   end;
 
   /// <summary>
-  ///
+  /// A list of references to changes that were made in TMDB.
   /// </summary>
-  ITMDBChangeDetail = interface(ITMDBDetail)
-    ['{94256BA1-3101-4B36-A602-F0CCB3564CA6}']
-    //TODO
+  ITMDBChangeRefs = interface(ITMDBItems)
+    ['{7D64BAA8-37A0-4B05-BEC7-922190611F92}']
+    function GetItem(const Index: Integer): ITMDBChangeRef; stdcall;
+
+    property Items[const Index: Integer]: ITMDBChangeRef read GetItem; default;
+  end;
+
+  /// <summary>
+  /// A page of references to changes that were made in TMDB.
+  /// </summary>
+  ITMDBChangeRefPage = interface(ITMDBPage)
+    ['{AB96A172-0202-4E26-8627-1059D48F3130}']
+    function GetItems: ITMDBChangeRefs; stdcall;
+
+    property Items: ITMDBChangeRefs read GetItems;
   end;
 
 {$ENDREGION}
@@ -3078,6 +3089,8 @@ type
 
     { Authentication }
 
+    function GetAppUserAgent: WideString; stdcall;
+    procedure SetAppUserAgent(const Value: WideString); stdcall;
     function GetAPIKey: WideString; stdcall;
     procedure SetAPIKey(const Value: WideString); stdcall;
     function GetAccessToken: WideString; stdcall;
@@ -3127,6 +3140,7 @@ type
     //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
     function WatchProviders: ITMDBNamespaceWatchProviders; stdcall;
 
+    property AppUserAgent: WideString read GetAppUserAgent write SetAppUserAgent;
     property APIKey: WideString read GetAPIKey write SetAPIKey;
     property AccessToken: WideString read GetAccessToken write SetAccessToken;
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;

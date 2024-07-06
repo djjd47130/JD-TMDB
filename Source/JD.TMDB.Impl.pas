@@ -58,8 +58,6 @@ type
   //TTMDBChangeRecord = class;
   TTMDBChange = class;
   TTMDBChanges = class;
-  TTMDBChangePage = class;
-  //TTMDBChangeDetail = class;
   TTMDBTranslationData = class;
   TTMDBMovieTranslationData = class;
   TTMDBCollectionTranslationData = class;
@@ -682,13 +680,6 @@ type
     constructor Create(AObj: ISuperArray; ATMDB: ITMDBClient); reintroduce;
 
     property Items[const Index: Integer]: ITMDBChange read GetItem; default;
-  end;
-
-  TTMDBChangePage = class(TTMDBPage, ITMDBChangePage)
-  protected
-    function GetItems: ITMDBChanges; stdcall;
-  public
-    property Items: ITMDBChanges read GetItems;
   end;
 
 {$ENDREGION}
@@ -2931,7 +2922,6 @@ type
     destructor Destroy; override;
 
     function LoginAsGuest: ITMDBAuthGuestSessionResult; stdcall;
-    //TODO: Trigger event to open a link in a browser for user authentication
     function LoginAsUser: ITMDBAuthSessionResult; stdcall;
     function LoginAsCreds(const Username, Password: WideString): ITMDBAuthSessionResult; stdcall;
     function Logout: Boolean; stdcall;
@@ -2983,6 +2973,8 @@ type
     FWatchProviders: ITMDBNamespaceWatchProviders;
     FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
   protected
+    function GetAppUserAgent: WideString; stdcall;
+    procedure SetAppUserAgent(const Value: WideString); stdcall;
     function GetAPIKey: WideString; stdcall;
     procedure SetAPIKey(const Value: WideString); stdcall;
     function GetAccessToken: WideString; stdcall;
@@ -3005,6 +2997,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    property AppUserAgent: WideString read GetAppUserAgent write SetAppUserAgent;
     property APIKey: WideString read GetAPIKey write SetAPIKey;
     property AccessToken: WideString read GetAccessToken write SetAccessToken;
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
@@ -3698,13 +3691,6 @@ end;
 function TTMDBChanges.GetItem(const Index: Integer): ITMDBChange;
 begin
   Result:= (inherited GetItem(Index)) as ITMDBChange;
-end;
-
-{ TTMDBChangePage }
-
-function TTMDBChangePage.GetItems: ITMDBChanges;
-begin
-  Result:= (inherited GetItems) as ITMDBChanges;
 end;
 
 { TTMDBConfigurationImages }
@@ -8816,6 +8802,11 @@ begin
   Result:= FAPI.APIKey;
 end;
 
+function TTMDBClient.GetAppUserAgent: WideString;
+begin
+  Result:= FAPI.AppUserAgent;
+end;
+
 function TTMDBClient.GetAuthMethod: TTMDBAuthMethod;
 begin
   Result:= FAPI.AuthMethod;
@@ -8832,7 +8823,7 @@ end;
 function TTMDBClient.GetImage(var Base64: WideString; const Path,
   Size: WideString): Boolean;
 begin
-  Result:= FAPI.Images.GetImage(Base64, Path, Size);
+  Result:= FAPI.GetImage(Base64, Path, Size);
 end;
 
 function TTMDBClient.GetLoginState: ITMDBLoginState;
@@ -8868,6 +8859,11 @@ end;
 procedure TTMDBClient.SetAPIKey(const Value: WideString);
 begin
   FAPI.APIKey:= Value;
+end;
+
+procedure TTMDBClient.SetAppUserAgent(const Value: WideString);
+begin
+  FAPI.AppUserAgent:= Value;
 end;
 
 procedure TTMDBClient.SetAuthMethod(const Value: TTMDBAuthMethod);
