@@ -520,6 +520,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
+    RateLimiting = True
+    RateLimitMsec = 1000
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 292
     Top = 15

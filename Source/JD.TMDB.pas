@@ -20,6 +20,7 @@ interface
 
 uses
   System.Classes, System.SysUtils,
+  Winapi.Windows,
   JD.TMDB.Intf,
   JD.TMDB.Impl,
   JD.TMDB.Common;
@@ -41,6 +42,10 @@ type
     function GetLoginState: ITMDBLoginState;
     procedure UserAuthRequst(Sender: TObject;
       const URL: WideString; var Result: Boolean);
+    function GetRateLimiting: Boolean;
+    function GetRateLimitMsec: DWORD;
+    procedure SetRateLimiting(const Value: Boolean);
+    procedure SetRateLimitMsec(const Value: DWORD);
   protected
     procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
@@ -60,6 +65,8 @@ type
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
     property AccessToken: String read GetAccessToken write SetAccessToken;
+    property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
+    property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
 
     property OnUserAuthRequest: TTMDBUserAuthRequestEvent
       read FOnUserAuthRequest write FOnUserAuthRequest;
@@ -119,6 +126,16 @@ begin
   Result:= FTMDB.LoginState;
 end;
 
+function TTMDB.GetRateLimiting: Boolean;
+begin
+  Result:= FTMDB.RateLimiting;
+end;
+
+function TTMDB.GetRateLimitMsec: DWORD;
+begin
+  Result:= FTMDB.RateLimitMsec;
+end;
+
 procedure TTMDB.SetAccessToken(const Value: String);
 begin
   FTMDB.AccessToken:= Value;
@@ -132,6 +149,16 @@ end;
 procedure TTMDB.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FTMDB.AuthMethod:= Value;
+end;
+
+procedure TTMDB.SetRateLimiting(const Value: Boolean);
+begin
+  FTMDB.RateLimiting:= Value;
+end;
+
+procedure TTMDB.SetRateLimitMsec(const Value: DWORD);
+begin
+  FTMDB.RateLimitMsec:= Value;
 end;
 
 procedure TTMDB.UserAuthRequst(Sender: TObject; const URL: WideString;

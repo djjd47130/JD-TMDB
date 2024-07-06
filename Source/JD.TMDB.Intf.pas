@@ -20,6 +20,7 @@ interface
 
 uses
   System.Classes, System.SysUtils,
+  Winapi.Windows,
   XSuperObject,
   JD.TMDB.Common,
   JD.TMDB.API;
@@ -3089,6 +3090,10 @@ type
     function GetLoginState: ITMDBLoginState; stdcall;
     function GetOnUserAuthRequest: TTMDBUserAuthRequestEvent; stdcall;
     procedure SetOnUserAuthRequest(const Value: TTMDBUserAuthRequestEvent); stdcall;
+    function GetRateLimiting: Boolean; stdcall;
+    procedure SetRateLimiting(const Value: Boolean); stdcall;
+    function GetRateLimitMsec: DWORD; stdcall;
+    procedure SetRateLimitMsec(const Value: DWORD); stdcall;
 
     { Namespaces }
 
@@ -3128,6 +3133,8 @@ type
     property UserAuth: TTMDBUserAuth read GetUserAuth write SetUserAuth;
     property Cache: ITMDBCache read GetCache;
     property LoginState: ITMDBLoginState read GetLoginState;
+    property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
+    property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
 
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean; stdcall;

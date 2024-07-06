@@ -15,7 +15,6 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/reference/intro/getting-started
 
   TODO:
-  - Rate limiting - enforce time delays between requests
   - Images - Use image base URL from configuration instead of hard-coding
 
   REMARKS:
@@ -660,15 +659,18 @@ type
   private
     FHTTP: TIdHTTP;
     FSSEIO: TIdSSLIOHandlerSocketOpenSSL;
-    FReqMsec: DWORD;
+    FLastReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
     FAPIAuth: TTMDBAuthMethod;
     FAppUserAgent: String;
-    FMsecLimit: Integer;
+    FRateLimitMsec: Integer;
+    FAuthMethod: TTMDBAuthMethod;
+    FAgreedToWatchProviderAttribution: Boolean;
+    FRateLimiting: Boolean;
 
+    //TMDB API Namespaces
     FConfiguration: TTMDBAPIConfiguration;
-
     FGenres: TTMDBAPIGenres;
     FMovies: TTMDBAPIMovies;
     FPeople: TTMDBAPIPeople;
@@ -697,13 +699,11 @@ type
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
     FImages: TTMDBAPIImages;
-    FAuthMethod: TTMDBAuthMethod;
-    FAgreedToWatchProviderAttribution: Boolean;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
-    procedure SetMsecLimit(const Value: Integer);
     procedure PrepareJSONRequest;
+    function GetURL(const Req, Params: String): String;
     function GetJSON(const Req: String; const Params: String = ''): ISuperObject;
     function PostJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
@@ -711,21 +711,28 @@ type
       const Body: ISuperObject = nil): ISuperObject;
     function GetWatchProviders: TTMDBAPIWatchProviders;
     procedure SetAuthMethod(const Value: TTMDBAuthMethod);
-    function GetURL(const Req, Params: String): String;
     procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
+
+    //Rate Limiting
+    procedure SetRateLimitMsec(const Value: Integer);
+    procedure SetRateLimiting(const Value: Boolean);
+    procedure CheckRateLimit;
+    function GetRatetLimitWaitMsec: Integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetLimitWaitMsec: Integer;
   published
     property AuthMethod: TTMDBAuthMethod read FAuthMethod write SetAuthMethod;
     property APIKey: String read FAPIKey write SetAPIKey;
     property APIReadAccessToken: String read FAPIReadAccessToken write SetAPIReadAccessToken;
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
-    property MsecLimit: Integer read FMsecLimit write SetMsecLimit;
     property AgreedToWatchProviderAttribution: Boolean
       read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
+
+    //Rate Limiting
+    property RateLimitMsec: Integer read FRateLimitMsec write SetRateLimitMsec;
+    property RateLimiting: Boolean read FRateLimiting write SetRateLimiting;
 
     property Account: TTMDBAPIAccount read FAccount;
     property Authentication: TTMDBAPIAuthentication read FAuthentication;
@@ -2553,7 +2560,8 @@ begin
   FHTTP:= TIdHTTP.Create(nil);
   FAppUserAgent:= TMDB_API_USERAGENT;
 
-  FReqMsec:= GetTickCount;
+  FRateLimitMsec:= 100;
+  FLastReqMsec:= GetTickCount;
 
   FSSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FSSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
@@ -2630,10 +2638,34 @@ begin
   inherited;
 end;
 
-function TTMDBAPI.GetLimitWaitMsec: Integer;
+function TTMDBAPI.GetRatetLimitWaitMsec: Integer;
+var
+  Cur, Next: DWORD;
 begin
-  //TODO: Implement wait time...
-  Result:= 10;
+  //Identify how many MSEC to wait before allowing new request...
+  if FRateLimiting then begin
+    Cur:= GetTickCount;
+    Next:= FLastReqMsec + FRateLimitMsec;
+    if Cur < Next then begin
+      Result:= Next - Cur;
+    end else begin
+      Result:= 0;
+    end;
+  end else begin
+    Result:= 0;
+  end;
+end;
+
+procedure TTMDBAPI.CheckRateLimit;
+var
+  Wait: DWORD;
+begin
+  if FRateLimiting then begin
+    Wait:= GetRatetLimitWaitMsec;
+    if Wait > 0 then
+      Sleep(Wait);
+    FLastReqMsec:= GetTickCount;
+  end;
 end;
 
 function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
@@ -2643,6 +2675,7 @@ end;
 
 procedure TTMDBAPI.PrepareJSONRequest;
 begin
+  CheckRateLimit;
   FHTTP.Request.Accept:= 'application/json';
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
@@ -2756,9 +2789,14 @@ begin
   FAuthMethod := Value;
 end;
 
-procedure TTMDBAPI.SetMsecLimit(const Value: Integer);
+procedure TTMDBAPI.SetRateLimitMsec(const Value: Integer);
 begin
-  FMsecLimit := Value;
+  FRateLimitMsec := Value;
+end;
+
+procedure TTMDBAPI.SetRateLimiting(const Value: Boolean);
+begin
+  FRateLimiting := Value;
 end;
 
 { TTMDBAPIDiscoverMovieReq }

@@ -20,11 +20,11 @@ interface
 
 uses
   System.Classes, System.SysUtils, System.Generics.Collections,
+  Winapi.Windows,
   JD.TMDB.API, JD.TMDB.Intf,
   XSuperObject,
   XSuperJSON,
-  JD.TMDB.Common,
-  Clipbrd;
+  JD.TMDB.Common;
 
 type
 
@@ -2995,6 +2995,10 @@ type
     function GetLoginState: ITMDBLoginState; stdcall;
     function GetOnUserAuthRequest: TTMDBUserAuthRequestEvent; stdcall;
     procedure SetOnUserAuthRequest(const Value: TTMDBUserAuthRequestEvent); stdcall;
+    function GetRateLimiting: Boolean; stdcall;
+    procedure SetRateLimiting(const Value: Boolean); stdcall;
+    function GetRateLimitMsec: DWORD; stdcall;
+    procedure SetRateLimitMsec(const Value: DWORD); stdcall;
 
     procedure DoUserAuthRequest(const RequestToken: WideString; var Result: Boolean); virtual;
   public
@@ -3007,6 +3011,8 @@ type
     property UserAuth: TTMDBUserAuth read GetUserAuth write SetUserAuth;
     property Cache: ITMDBCache read GetCache;
     property LoginState: ITMDBLoginState read GetLoginState;
+    property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
+    property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
 
     function Account: ITMDBNamespaceAccount; stdcall;
     function Authentication: ITMDBNamespaceAuthentication; stdcall;
@@ -4237,7 +4243,6 @@ var
 begin
   Result:= nil;
   O:= FObj.O['images'];
-  Clipboard.AsText:= O.AsJSON(True);
   if O <> nil then begin
     Result:= TTMDBMediaImageGroup.Create(O, FTMDB);
     //TODO: Cache Result...
@@ -8840,6 +8845,16 @@ begin
   Result:= Self.FOnUserAuthRequest;
 end;
 
+function TTMDBClient.GetRateLimiting: Boolean;
+begin
+  Result:= FAPI.RateLimiting;
+end;
+
+function TTMDBClient.GetRateLimitMsec: DWORD;
+begin
+  Result:= FAPI.RateLimitMsec;
+end;
+
 function TTMDBClient.GetUserAuth: TTMDBUserAuth;
 begin
   Result:= FUserAuth;
@@ -8864,6 +8879,16 @@ procedure TTMDBClient.SetOnUserAuthRequest(
   const Value: TTMDBUserAuthRequestEvent);
 begin
   Self.FOnUserAuthRequest:= Value;
+end;
+
+procedure TTMDBClient.SetRateLimiting(const Value: Boolean);
+begin
+  FAPI.RateLimiting:= Value;
+end;
+
+procedure TTMDBClient.SetRateLimitMsec(const Value: DWORD);
+begin
+  FAPI.RateLimitMsec:= Value;
 end;
 
 procedure TTMDBClient.SetUserAuth(const Value: TTMDBUserAuth);
