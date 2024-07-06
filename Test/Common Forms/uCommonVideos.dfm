@@ -14,7 +14,8 @@ inherited frmCommonVideos: TfrmCommonVideos
     Cursor = crVSplit
     Align = alBottom
     ResizeStyle = rsUpdate
-    ExplicitTop = 251
+    ExplicitLeft = -5
+    ExplicitTop = 253
   end
   object lstVideos: TListView
     AlignWithMargins = True
@@ -52,6 +53,8 @@ inherited frmCommonVideos: TfrmCommonVideos
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = lstVideosDblClick
+    ExplicitLeft = -2
+    ExplicitTop = 7
   end
   object Panel1: TPanel
     Left = 0

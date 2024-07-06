@@ -1,7 +1,25 @@
 unit JD.TMDB.LocalWebServer;
 
 (*
-  TODO: Move inside library and inside TTMDB component...
+  TMDB API Wrapper for Delphi
+  Written by Jerry Dodge
+
+  ----------------------------------------------------------------------------
+  Local Web Server for handling specific TMDB functionality
+  ----------------------------------------------------------------------------
+
+  IMPORTANT: This is still a work in progress! No guarantees! Use at your own risk!
+
+  API Documentation:
+  https://developer.themoviedb.org/docs/getting-started
+  https://developer.themoviedb.org/reference/intro/getting-started
+
+  TODO:
+  - Move inside library and inside TTMDB component...
+
+  REMARKS:
+  - Videos - This is used for embedded videos via YouTube, etc.
+  - User Auth - This is used for a redirect upon user authentication in web browser.
 
 *)
 
@@ -20,6 +38,9 @@ uses
 
 type
   TTMDBLocalWebServerContext = class(TIdServerContext)
+  private
+    FSessionID: WideString;
+    FSessionGuest: Boolean;
 
   end;
 
@@ -38,6 +59,8 @@ type
   public
     constructor Create(ATMDB: TTMDB); reintroduce;
     destructor Destroy; override;
+
+    function RootURL: String;
 
     property Port: Integer read FPort write SetPort;
   end;
@@ -83,6 +106,11 @@ begin
   FServer.ContextClass:= TTMDBLocalWebServerContext;
 
   FServer.Active:= True;
+end;
+
+function TTMDBLocalWebServer.RootURL: String;
+begin
+  Result:= 'http://localhost:'+IntToStr(Port);
 end;
 
 procedure TTMDBLocalWebServer.Uninit;
@@ -156,7 +184,7 @@ begin
         hcGET: begin
           AResponseInfo.ContentType:= 'text/html';
           if Doc.Count = 0 then begin
-            //Main page
+            //Main landing page
             AResponseInfo.ContentText:= '<h1>JD TMDB Local Web Server Home Page</h1>';
           end else
           if SameText(Doc[0], 'authgranted') then begin
@@ -170,6 +198,9 @@ begin
           if SameText(Doc[0], 'vimeo') then begin
             //Embedded Vimeo video
             //TODO
+          end else begin
+            //NOT FOUND
+            AResponseInfo.ContentText:= '<h1>RESOURCE NOT FOUND: '+U.Path+U.Document+'</h1>';
           end;
         end;
         hcPOST: ;

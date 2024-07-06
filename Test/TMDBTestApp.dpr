@@ -39,7 +39,10 @@ uses
   uContentSearchPeople in 'Search\uContentSearchPeople.pas' {frmContentSearchPeople},
   uContentSearchMulti in 'Search\uContentSearchMulti.pas' {frmContentSearchMulti},
   uContentSearchKeywords in 'Search\uContentSearchKeywords.pas' {frmContentSearchKeywords},
-  uLoginBrowser in 'uLoginBrowser.pas' {frmLoginBrowser};
+  uLoginBrowser in 'uLoginBrowser.pas' {frmLoginBrowser},
+  uCommonReviews in 'Common Forms\uCommonReviews.pas' {frmCommonReviews},
+  uContentMovieAccountStates in 'Movies\uContentMovieAccountStates.pas' {frmContentMovieAccountStates},
+  uCommonAlternativeTitles in 'Common Forms\uCommonAlternativeTitles.pas' {frmCommonAlternativeTitles};
 
 {$R *.res}
 
@@ -47,6 +50,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
-  Application.CreateForm(TfrmLoginBrowser, frmLoginBrowser);
+  Application.CreateForm(TfrmContentMovieAccountStates, frmContentMovieAccountStates);
+  Application.CreateForm(TfrmCommonAlternativeTitles, frmCommonAlternativeTitles);
   Application.Run;
 end.

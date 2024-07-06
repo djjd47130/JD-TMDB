@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTabBase, Vcl.ComCtrls,
-  uContentMovieDetail;
+  uContentMovieDetail,
+  uContentMovieAccountStates,
+  uCommonAlternativeTitles;
 
 type
   TfrmTabMovies = class(TfrmTabBase)
@@ -42,6 +44,8 @@ begin
   inherited;
 
   EmbedContent(TfrmContentMovieDetail);
+  EmbedContent(TfrmContentMovieAccountStates);
+  //EmbedContent(TfrmCommonAlternativeTitles);
 
 end;
 

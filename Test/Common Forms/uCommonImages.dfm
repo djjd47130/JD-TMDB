@@ -1,17 +1,27 @@
 inherited frmCommonImages: TfrmCommonImages
   Caption = 'Images'
-  ClientHeight = 504
+  ClientHeight = 441
   ClientWidth = 964
   ExplicitWidth = 980
-  ExplicitHeight = 543
+  ExplicitHeight = 480
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 0
+    Top = 201
+    Width = 964
+    Height = 7
+    Cursor = crVSplit
+    Align = alBottom
+    ResizeStyle = rsUpdate
+    ExplicitTop = 231
+  end
   object lstImages: TListView
     AlignWithMargins = True
     Left = 3
     Top = 3
     Width = 958
-    Height = 498
+    Height = 195
     Align = alClient
     Columns = <
       item
@@ -63,6 +73,22 @@ inherited frmCommonImages: TfrmCommonImages
         HeaderAlign = taLeftJustify
         FooterAlign = taLeftJustify
         TitleImage = -1
+      end
+      item
+        Header = 'Profiles'
+        GroupID = 3
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taLeftJustify
+        TitleImage = -1
+      end
+      item
+        Header = 'Stills'
+        GroupID = 4
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taLeftJustify
+        TitleImage = -1
       end>
     HotTrackStyles = [htHandPoint, htUnderlineHot]
     GroupView = True
@@ -71,5 +97,34 @@ inherited frmCommonImages: TfrmCommonImages
     ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
+    OnSelectItem = lstImagesSelectItem
+    ExplicitHeight = 234
+  end
+  object pDetail: TPanel
+    Left = 0
+    Top = 208
+    Width = 964
+    Height = 233
+    Align = alBottom
+    TabOrder = 1
+    object Img: TImage
+      AlignWithMargins = True
+      Left = 21
+      Top = 21
+      Width = 922
+      Height = 191
+      Margins.Left = 20
+      Margins.Top = 20
+      Margins.Right = 20
+      Margins.Bottom = 20
+      Align = alClient
+      Center = True
+      Proportional = True
+      Stretch = True
+      ExplicitLeft = 200
+      ExplicitTop = 32
+      ExplicitWidth = 441
+      ExplicitHeight = 97
+    end
   end
 end

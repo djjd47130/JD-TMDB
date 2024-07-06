@@ -12,7 +12,8 @@ uses
   uCommonFormBase,
   uCommonVideos,
   uCommonCredits,
-  uCommonImages;
+  uCommonImages,
+  uCommonReviews;
 
 type
   TfrmContentMovieDetail = class(TfrmContentBase)
@@ -35,7 +36,7 @@ type
     TabSheet10: TTabSheet;
     TabSheet11: TTabSheet;
     lstReleaseDates: TListView;
-    TabSheet12: TTabSheet;
+    tabReviews: TTabSheet;
     TabSheet13: TTabSheet;
     TabSheet14: TTabSheet;
     tabVideos: TTabSheet;
@@ -58,6 +59,7 @@ type
     FCredits: TfrmCommonCredits;
     FImages: TfrmCommonImages;
     FVideos: TfrmCommonVideos;
+    FReviews: TfrmCommonReviews;
 
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
     procedure LoadTabContent;
@@ -69,6 +71,7 @@ type
     procedure LoadExternalIDs;
     procedure LoadKeywords;
     procedure LoadReleaseDates;
+    procedure LoadReviews;
     procedure LoadVideos;
     procedure LoadImages;
     function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
@@ -98,7 +101,7 @@ begin
   FVideos:= TfrmCommonVideos(EmbedFormIntoTab(TfrmCommonVideos, tabVideos));
   FImages:= TfrmCommonImages(EmbedFormIntoTab(TfrmCommonImages, tabImages));
   FCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCredits));
-
+  FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
 end;
 
 function TfrmContentMovieDetail.EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
@@ -206,7 +209,7 @@ begin
       8: ; //Lists
       9: ; //Recommendations
       10: LoadReleaseDAtes;
-      11: ; //Reviews
+      11: LoadReviews;
       12: ; //Similar
       13: ; //Translations
       14: LoadVideos;
@@ -482,6 +485,11 @@ begin
     lstReleaseDates.Groups.EndUpdate;
     lstReleaseDates.Items.EndUpdate;
   end;
+end;
+
+procedure TfrmContentMovieDetail.LoadReviews;
+begin
+  FReviews.LoadReviewList(FDetail.AppendedReviews);
 end;
 
 procedure TfrmContentMovieDetail.LoadVideos;

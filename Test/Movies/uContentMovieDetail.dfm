@@ -1,4 +1,5 @@
 inherited frmContentMovieDetail: TfrmContentMovieDetail
+  ActiveControl = txtID
   Caption = 'Movie Detail'
   ClientWidth = 919
   OnCreate = FormCreate
@@ -11,7 +12,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -227,8 +228,6 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitLeft = 6
-        ExplicitTop = 6
       end
     end
     object tabImages: TTabSheet
@@ -307,7 +306,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         ViewStyle = vsReport
       end
     end
-    object TabSheet12: TTabSheet
+    object tabReviews: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 11
     end

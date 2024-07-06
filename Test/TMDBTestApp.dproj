@@ -221,6 +221,18 @@
             <Form>frmLoginBrowser</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Common Forms\uCommonReviews.pas">
+            <Form>frmCommonReviews</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Movies\uContentMovieAccountStates.pas">
+            <Form>frmContentMovieAccountStates</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonAlternativeTitles.pas">
+            <Form>frmCommonAlternativeTitles</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

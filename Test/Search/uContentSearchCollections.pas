@@ -203,15 +203,15 @@ procedure TfrmContentSearchCollections.LoadParts;
 var
   X: Integer;
   I: TListItem;
-  O: ITMDBCollectionPart;
+  O: ITMDBMovie;
 begin
   lstParts.Items.BeginUpdate;
   try
     lstParts.Items.Clear;
-    for X := 0 to FDetail.PartCount-1 do begin
-      O:= FDetail[X];
+    for X := 0 to FDetail.Parts.Count-1 do begin
+      O:= FDetail.Parts[X];
       I:= lstParts.Items.Add;
-      I.Caption:= O.Title; //TODO: ACCESS VIOLATION - treated as TSuperObject???!!!
+      I.Caption:= O.Title;
       I.SubItems.Add(FormatFloat('0.0', O.Popularity));
       I.SubItems.Add(TMDBMediaTypeToStr(O.MediaType));
       if O.Genres.Count > 0 then

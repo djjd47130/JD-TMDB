@@ -15,17 +15,13 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/reference/intro/getting-started
 
   TODO:
-  - Rename "Service" to "Namespace" in respect to TMDB's docs
-  - Discover requests - very huge concept
-  - Change requests - very dynamic and complex concept
   - Rate limiting - enforce time delays between requests
-  - Watch Providers - enforce attribution to "JustWatch"
-  - Implement "TTMDBAPIRequestRec" to use on ALL HTTP requests
+  - Images - Use image base URL from configuration instead of hard-coding
 
   REMARKS:
   - This unit is fully functional at this point, with the exception
-    of a few specific services and capabilities missing
-    such as images and discover, as described in the "TODO" above.
+    of a few specific Namespaces and capabilities missing
+    such as discover, as described in the "TODO" above.
   - Many requests are still untested. The "Intf" / "Impl" layer on the
     other hand is still a major work in progress, with many TMDB specific
     interfaces and corresponding implementation.
@@ -37,7 +33,7 @@ interface
 uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   Winapi.Windows,
-  XSuperObject,
+  XSuperObject, XSuperJSON,
   JD.TMDB.Common,
   IdURI, IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL,
@@ -46,7 +42,7 @@ uses
 type
   TTMDBAPI = class;
 
-  TTMDBAPIService = class(TPersistent)
+  TTMDBAPINamespace = class(TPersistent)
   private
     FOwner: TTMDBAPI;
     procedure AddParam(var S: String; const N, V: String);
@@ -55,7 +51,7 @@ type
     destructor Destroy; override;
   end;
 
-  TTMDBAPIAccount = class(TTMDBAPIService)
+  TTMDBAPIAccount = class(TTMDBAPINamespace)
   public
     function GetDetails(const AccountID: Integer; const SessionID: String = ''): ISuperObject;
     function GetDetailsBySession(const SessionID: String): ISuperObject;
@@ -90,7 +86,7 @@ type
       const SortBy: String = ''): ISuperObject;
   end;
 
-  TTMDBAPIAuthentication = class(TTMDBAPIService)
+  TTMDBAPIAuthentication = class(TTMDBAPINamespace)
   public
     function CreateGuestSession: ISuperObject;
     function CreateRequestToken: ISuperObject;
@@ -102,13 +98,13 @@ type
     function GetValidateKey: ISuperObject;
   end;
 
-  TTMDBAPICertifications = class(TTMDBAPIService)
+  TTMDBAPICertifications = class(TTMDBAPINamespace)
   public
     function GetMovieCertifications: ISuperObject;
     function GetTVCertifications: ISuperObject;
   end;
 
-  TTMDBAPIChanges = class(TTMDBAPIService)
+  TTMDBAPIChanges = class(TTMDBAPINamespace)
   public
     function GetMovieList(const StartDate: TDateTime = 0; const EndDate: TDateTime = 0;
       const Page: Integer = 1): ISuperObject;
@@ -118,7 +114,7 @@ type
       const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPICollections = class(TTMDBAPIService)
+  TTMDBAPICollections = class(TTMDBAPINamespace)
   public
     function GetDetails(const CollectionID: Integer; const Language: String = ''): ISuperObject;
     function GetImages(const CollectionID: Integer; const IncludeImageLanguage: String = '';
@@ -126,14 +122,14 @@ type
     function GetTranslations(const CollectionID: Integer): ISuperObject;
   end;
 
-  TTMDBAPICompanies = class(TTMDBAPIService)
+  TTMDBAPICompanies = class(TTMDBAPINamespace)
   public
     function GetDetails(const CompanyID: Integer): ISuperObject;
     function GetAlternativeNames(const CompanyID: Integer): ISuperObject;
     function GetImages(const CompanyID: Integer): ISuperObject;
   end;
 
-  TTMDBAPIConfiguration = class(TTMDBAPIService)
+  TTMDBAPIConfiguration = class(TTMDBAPINamespace)
   public
     function GetDetails: ISuperObject;
     function GetCountries: ISuperArray;
@@ -143,105 +139,263 @@ type
     function GetTimeZones: ISuperArray;
   end;
 
-  TTMDBAPICredits = class(TTMDBAPIService)
+  TTMDBAPICredits = class(TTMDBAPINamespace)
   public
     function GetDetails(const CreditID: Integer): ISuperObject;
   end;
 
   TTMDBAPIDiscoverMovieReq = record
-    Certification: WideString;
-    CertificationGTE: WideString;
-    CertificationLTE: WideString;
-    CertificationCountry: WideString;
-    IncludeAdult: Boolean;
-    IncludeVideo: Boolean;
-    Language: WideString;
-    PrimaryReleaseYear: Integer;
-    PrimaryReleaseDateGTE: TDateTime;
-    PrimaryReleaseYearLTE: TDateTime;
-    Region: WideString;
-    ReleaseDateGTE: TDateTime;
-    ReleaseDateLTE: TDateTime;
-    SortBy: WideString;
-    VoteAverageGTE: Single;
-    VoteAverageLTE: Single;
-    VoteCountGTE: Single;
-    VoteCountLTE: Single;
-    WatchRegion: WideString;
-    WithCast: WideString;
-    WithCompanies: WideString;
-    WithCrew: WideString;
-    WithGenres: WideString;
-    WithKeywords: WideString;
-    WithOriginCountry: WideString;
-    WithOriginalLanguage: WideString;
-    WithPeople: WideString;
-    WithReleaseType: WideString;
-    WithRuntimeGTE: Integer;
-    WithRuntimeLTE: Integer;
-    WithWatchMonetizationTypes: WideString;
-    WithWatchProviders: WideString;
-    WithoutCompanies: WideString;
-    WithoutGenres: WideString;
-    WithoutKeywords: WideString;
-    WithoutWatchProviders: WideString;
-    Year: Integer;
+  private
+    FObj: ISuperObject;
+    procedure EnsureObj;
+
+    function GetCertification: WideString;
+    function GetCertificationGTE: WideString;
+    function GetCertificationLTE: WideString;
+    function GetCertificationCountry: WideString;
+    function GetIncludeAdult: TTMDBBoolean;
+    function GetIncludeVideo: TTMDBBoolean;
+    function GetLanguage: WideString;
+    function GetPrimaryReleaseYear: Integer;
+    function GetPrimaryReleaseDateGTE: TDateTime;
+    function GetPrimaryReleaseDateLTE: TDateTime;
+    function GetRegion: WideString;
+    function GetReleaseDateGTE: TDateTime;
+    function GetReleaseDateLTE: TDateTime;
+    function GetSortBy: WideString;
+    function GetVoteAverageGTE: Single;
+    function GetVoteAverageLTE: Single;
+    function GetVoteCountGTE: Single;
+    function GetVoteCountLTE: Single;
+    function GetWatchRegion: WideString;
+    function GetWithCast: WideString;
+    function GetWithCompanies: WideString;
+    function GetWithCrew: WideString;
+    function GetWithGenres: WideString;
+    function GetWithKeywords: WideString;
+    function GetWithOriginCountry: WideString;
+    function GetWithOriginalLanguage: WideString;
+    function GetWithPeople: WideString;
+    function GetWithReleaseType: WideString;
+    function GetWithRuntimeGTE: Integer;
+    function GetWithRuntimeLTE: Integer;
+    function GetWithWatchMonetizationTypes: WideString;
+    function GetWithWatchProviders: WideString;
+    function GetWithoutCompanies: WideString;
+    function GetWithoutGenres: WideString;
+    function GetWithoutKeywords: WideString;
+    function GetWithoutWatchProviders: WideString;
+    function GetYear: Integer;
+
+    procedure SetCertification(const AValue: WideString);
+    procedure SetCertificationGTE(const AValue: WideString);
+    procedure SetCertificationLTE(const AValue: WideString);
+    procedure SetCertificationCountry(const AValue: WideString);
+    procedure SetIncludeAdult(const AValue: TTMDBBoolean);
+    procedure SetIncludeVideo(const AValue: TTMDBBoolean);
+    procedure SetLanguage(const AValue: WideString);
+    procedure SetPrimaryReleaseYear(const AValue: Integer);
+    procedure SetPrimaryReleaseDateGTE(const AValue: TDateTime);
+    procedure SetPrimaryReleaseDateLTE(const AValue: TDateTime);
+    procedure SetRegion(const AValue: WideString);
+    procedure SetReleaseDateGTE(const AValue: TDateTime);
+    procedure SetReleaseDateLTE(const AValue: TDateTime);
+    procedure SetSortBy(const AValue: WideString);
+    procedure SetVoteAverageGTE(const AValue: Single);
+    procedure SetVoteAverageLTE(const AValue: Single);
+    procedure SetVoteCountGTE(const AValue: Single);
+    procedure SetVoteCountLTE(const AValue: Single);
+    procedure SetWatchRegion(const AValue: WideString);
+    procedure SetWithCast(const AValue: WideString);
+    procedure SetWithCompanies(const AValue: WideString);
+    procedure SetWithCrew(const AValue: WideString);
+    procedure SetWithGenres(const AValue: WideString);
+    procedure SetWithKeywords(const AValue: WideString);
+    procedure SetWithOriginCountry(const AValue: WideString);
+    procedure SetWithOriginalLanguage(const AValue: WideString);
+    procedure SetWithPeople(const AValue: WideString);
+    procedure SetWithReleaseType(const AValue: WideString);
+    procedure SetWithRuntimeGTE(const AValue: Integer);
+    procedure SetWithRuntimeLTE(const AValue: Integer);
+    procedure SetWithWatchMonetizationTypes(const AValue: WideString);
+    procedure SetWithWatchProviders(const AValue: WideString);
+    procedure SetWithoutCompanies(const AValue: WideString);
+    procedure SetWithoutGenres(const AValue: WideString);
+    procedure SetWithoutKeywords(const AValue: WideString);
+    procedure SetWithoutWatchProviders(const AValue: WideString);
+    procedure SetYear(const AValue: Integer);
+  public
+    constructor Create(AObj: ISuperObject);
+
+    function GetParamStr: WideString;
+
+    property Certification: WideString read GetCertification write SetCertification;
+    property CertificationGTE: WideString read GetCertificationGTE write SetCertificationGTE;
+    property CertificationLTE: WideString read GetCertificationLTE write SetCertificationLTE;
+    property CertificationCountry: WideString read GetCertificationCountry write SetCertificationCountry;
+    property IncludeAdult: TTMDBBoolean read GetIncludeAdult write SetIncludeAdult;
+    property IncludeVideo: TTMDBBoolean read GetIncludeVideo write SetIncludeVideo;
+    property Language: WideString read GetLanguage write SetLanguage;
+    property PrimaryReleaseYear: Integer read GetPrimaryReleaseYear write SetPrimaryReleaseYear;
+    property PrimaryReleaseDateGTE: TDateTime read GetPrimaryReleaseDateGTE write SetPrimaryReleaseDateGTE;
+    property PrimaryReleaseDateLTE: TDateTime read GetPrimaryReleaseDateLTE write SetPrimaryReleaseDateLTE;
+    property Region: WideString read GetRegion write SetRegion;
+    property ReleaseDateGTE: TDateTime read GetReleaseDateGTE write SetReleaseDateGTE;
+    property ReleaseDateLTE: TDateTime read GetReleaseDateLTE write SetReleaseDateLTE;
+    property SortBy: WideString read GetSortBy write SetSortBy;
+    property VoteAverageGTE: Single read GetVoteAverageGTE write SetVoteAverageGTE;
+    property VoteAverageLTE: Single read GetVoteAverageLTE write SetVoteAverageLTE;
+    property VoteCountGTE: Single read GetVoteCountGTE write SetVoteCountGTE;
+    property VoteCountLTE: Single read GetVoteCountLTE write SetVoteCountLTE;
+    property WatchRegion: WideString read GetWatchRegion write SetWatchRegion;
+    property WithCast: WideString read GetWithCast write SetWithCast;
+    property WithCompanies: WideString read GetWithCompanies write SetWithCompanies;
+    property WithCrew: WideString read GetWithCrew write SetWithCrew;
+    property WithGenres: WideString read GetWithGenres write SetWithGenres;
+    property WithKeywords: WideString read GetWithKeywords write SetWithKeywords;
+    property WithOriginCountry: WideString read GetWithOriginCountry write SetWithOriginCountry;
+    property WithOriginalLanguage: WideString read GetWithOriginalLanguage write SetWithOriginalLanguage;
+    property WithPeople: WideString read GetWithPeople write SetWithPeople;
+    property WithReleaseType: WideString read GetWithReleaseType write SetWithReleaseType;
+    property WithRuntimeGTE: Integer read GetWithRuntimeGTE write SetWithRuntimeGTE;
+    property WithRuntimeLTE: Integer read GetWithRuntimeLTE write SetWithRuntimeLTE;
+    property WithWatchMonetizationTypes: WideString read GetWithWatchMonetizationTypes write SetWithWatchMonetizationTypes;
+    property WithWatchProviders: WideString read GetWithWatchProviders write SetWithWatchProviders;
+    property WithoutCompanies: WideString read GetWithoutCompanies write SetWithoutCompanies;
+    property WithoutGenres: WideString read GetWithoutGenres write SetWithoutGenres;
+    property WithoutKeywords: WideString read GetWithoutKeywords write SetWithoutKeywords;
+    property WithoutWatchProviders: WideString read GetWithoutWatchProviders write SetWithoutWatchProviders;
+    property Year: Integer read GetYear write SetYear;
   end;
 
   TTMDBAPIDiscoverTVReq = record
-    AirDateGTE: TDateTime;
-    AirDateLTE: TDateTime;
-    FirstAirDateYear: Integer;
-    FirstAirDateGTE: TDateTime;
-    FirstAirDateLTE: TDAteTime;
-    IncludeAdult: Boolean;
-    IncludeNullFirstAirDates: Boolean;
-    Language: WideString;
-    ScreenedTheatrically: Boolean;
-    SortBy: WideString;
-    Timezone: WideString;
-    VoteAverageGTE: Single;
-    VoteAverageLTE: Single;
-    VoteCountGTE: Single;
-    VoteCountLTE: Single;
-    WatchRegion: WideString;
-    WithCompanies: WideString;
-    WithGenres: WideString;
-    WithKeywords: WideString;
-    WithNetworks: Integer;
-    WithOriginCountry: WideString;
-    WithOriginalLanguage: WideString;
-    WithRuntimeGTE: Integer;
-    WithRuntimeLTE: Integer;
-    WithStatus: WideString;
-    WithWatchMonetizationTypes: WideString;
-    WithWatchProviders: WideString;
-    WithoutCompoanies: WideString;
-    WithoutGenres: WideString;
-    WithoutKeywords: WideString;
-    WithoutWatchProviders: WideString;
-    WithType: WideString;
+  private
+    FObj: ISuperObject;
+    procedure EnsureObj;
+
+    function GetAirDateGTE: TDateTime;
+    function GetAirDateLTE: TDateTime;
+    function GetFirstAirDateYear: Integer;
+    function GetFirstAirDateGTE: TDateTime;
+    function GetFirstAirDateLTE: TDateTime;
+    function GetIncludeAdult: TTMDBBoolean;
+    function GetIncludeNullFirstAirDates: TTMDBBoolean;
+    function GetLanguage: WideString;
+    function GetScreenedTheatrically: TTMDBBoolean;
+    function GetSortBy: WideString;
+    function GetTimezone: WideString;
+    function GetVoteAverageGTE: Single;
+    function GetVoteAverageLTE: Single;
+    function GetVoteCountGTE: Single;
+    function GetVoteCountLTE: Single;
+    function GetWatchRegion: WideString;
+    function GetWithCompanies: WideString;
+    function GetWithGenres: WideString;
+    function GetWithKeywords: WideString;
+    function GetWithNetworks: WideString;
+    function GetWithOriginCountry: WideString;
+    function GetWithOriginalLanguage: WideString;
+    function GetWithRuntimeGTE: Integer;
+    function GetWithRuntimeLTE: Integer;
+    function GetWithStatus: WideString;
+    function GetWithWatchMonetizationTypes: WideString;
+    function GetWithWatchProviders: WideString;
+    function GetWithoutCompoanies: WideString;
+    function GetWithoutGenres: WideString;
+    function GetWithoutKeywords: WideString;
+    function GetWithoutWatchProviders: WideString;
+    function GetWithType: WideString;
+
+    procedure SetAirDateGTE(const AValue: TDateTime);
+    procedure SetAirDateLTE(const AValue: TDateTime);
+    procedure SetFirstAirDateYear(const AValue: Integer);
+    procedure SetFirstAirDateGTE(const AValue: TDateTime);
+    procedure SetFirstAirDateLTE(const AValue: TDateTime);
+    procedure SetIncludeAdult(const AValue: TTMDBBoolean);
+    procedure SetIncludeNullFirstAirDates(const AValue: TTMDBBoolean);
+    procedure SetLanguage(const AValue: WideString);
+    procedure SetScreenedTheatrically(const AValue: TTMDBBoolean);
+    procedure SetSortBy(const AValue: WideString);
+    procedure SetTimezone(const AValue: WideString);
+    procedure SetVoteAverageGTE(const AValue: Single);
+    procedure SetVoteAverageLTE(const AValue: Single);
+    procedure SetVoteCountGTE(const AValue: Single);
+    procedure SetVoteCountLTE(const AValue: Single);
+    procedure SetWatchRegion(const AValue: WideString);
+    procedure SetWithCompanies(const AValue: WideString);
+    procedure SetWithGenres(const AValue: WideString);
+    procedure SetWithKeywords(const AValue: WideString);
+    procedure SetWithNetworks(const AValue: WideString);
+    procedure SetWithOriginCountry(const AValue: WideString);
+    procedure SetWithOriginalLanguage(const AValue: WideString);
+    procedure SetWithRuntimeGTE(const AValue: Integer);
+    procedure SetWithRuntimeLTE(const AValue: Integer);
+    procedure SetWithStatus(const AValue: WideString);
+    procedure SetWithWatchMonetizationTypes(const AValue: WideString);
+    procedure SetWithWatchProviders(const AValue: WideString);
+    procedure SetWithoutCompoanies(const AValue: WideString);
+    procedure SetWithoutGenres(const AValue: WideString);
+    procedure SetWithoutKeywords(const AValue: WideString);
+    procedure SetWithoutWatchProviders(const AValue: WideString);
+    procedure SetWithType(const AValue: WideString);
+  public
+    constructor Create(AObj: ISuperObject);
+
+    function GetParamStr: WideString;
+
+    property AirDateGTE: TDateTime read GetAirDateGTE write SetAirDateGTE;
+    property AirDateLTE: TDateTime read GetAirDateLTE write SetAirDateLTE;
+    property FirstAirDateYear: Integer read GetFirstAirDateYear write SetFirstAirDateYear;
+    property FirstAirDateGTE: TDateTime read GetFirstAirDateGTE write SetFirstAirDateGTE;
+    property FirstAirDateLTE: TDAteTime read GetFirstAirDateLTE write SetFirstAirDateLTE;
+    property IncludeAdult: TTMDBBoolean read GetIncludeAdult write SetIncludeAdult;
+    property IncludeNullFirstAirDates: TTMDBBoolean read GetIncludeNullFirstAirDates write SetIncludeNullFirstAirDates;
+    property Language: WideString read GetLanguage write SetLanguage;
+    property ScreenedTheatrically: TTMDBBoolean read GetScreenedTheatrically write SetScreenedTheatrically;
+    property SortBy: WideString read GetSortBy write SetSortBy;
+    property Timezone: WideString read GetTimezone write SetTimezone;
+    property VoteAverageGTE: Single read GetVoteAverageGTE write SetVoteAverageGTE;
+    property VoteAverageLTE: Single read GetVoteAverageLTE write SetVoteAverageLTE;
+    property VoteCountGTE: Single read GetVoteCountGTE write SetVoteCountGTE;
+    property VoteCountLTE: Single read GetVoteCountLTE write SetVoteCountLTE;
+    property WatchRegion: WideString read GetWatchRegion write SetWatchRegion;
+    property WithCompanies: WideString read GetWithCompanies write SetWithCompanies;
+    property WithGenres: WideString read GetWithGenres write SetWithGenres;
+    property WithKeywords: WideString read GetWithKeywords write SetWithKeywords;
+    property WithNetworks: WideString read GetWithNetworks write SetWithNetworks;
+    property WithOriginCountry: WideString read GetWithOriginCountry write SetWithOriginCountry;
+    property WithOriginalLanguage: WideString read GetWithOriginalLanguage write SetWithOriginalLanguage;
+    property WithRuntimeGTE: Integer read GetWithRuntimeGTE write SetWithRuntimeGTE;
+    property WithRuntimeLTE: Integer read GetWithRuntimeLTE write SetWithRuntimeLTE;
+    property WithStatus: WideString read GetWithStatus write SetWithStatus;
+    property WithWatchMonetizationTypes: WideString read GetWithWatchMonetizationTypes write SetWithWatchMonetizationTypes;
+    property WithWatchProviders: WideString read GetWithWatchProviders write SetWithWatchProviders;
+    property WithoutCompoanies: WideString read GetWithoutCompoanies write SetWithoutCompoanies;
+    property WithoutGenres: WideString read GetWithoutGenres write SetWithoutGenres;
+    property WithoutKeywords: WideString read GetWithoutKeywords write SetWithoutKeywords;
+    property WithoutWatchProviders: WideString read GetWithoutWatchProviders write SetWithoutWatchProviders;
+    property WithType: WideString read GetWithType write SetWithType;
   end;
 
-  TTMDBAPIDiscover = class(TTMDBAPIService)
+  TTMDBAPIDiscover = class(TTMDBAPINamespace)
   public
     function GetMovie(Params: TTMDBAPIDiscoverMovieReq; const Page: Integer = 1): ISuperObject;
     function GetTV(Params: TTMDBAPIDiscoverTVReq; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPIFind = class(TTMDBAPIService)
+  TTMDBAPIFind = class(TTMDBAPINamespace)
   public
     function GetFindByID(const ExternalID: String; const ExternalSource: String;
       const Language: String = ''): ISuperObject;
   end;
 
-  TTMDBAPIGenres = class(TTMDBAPIService)
+  TTMDBAPIGenres = class(TTMDBAPINamespace)
   public
     function GetMovieList(const Language: String = ''): ISuperArray;
     function GetTVList(const Language: String = ''): ISuperArray;
   end;
 
-  TTMDBAPIGuestSessions = class(TTMDBAPIService)
+  TTMDBAPIGuestSessions = class(TTMDBAPINamespace)
   public
     function GetRatedMovies(const GuestSessionID: String; const Language: String = '';
       const Page: Integer = 1; const SortBy: String = ''): ISuperObject;
@@ -251,13 +405,13 @@ type
       const Page: Integer = 1; const SortBy: String = ''): ISuperObject;
   end;
 
-  TTMDBAPIKeywords = class(TTMDBAPIService)
+  TTMDBAPIKeywords = class(TTMDBAPINamespace)
   public
     function GetDetails(const KeywordID: Integer): ISuperObject;
     //DEPRECATED function GetMovies(): ISuperObject;
   end;
 
-  TTMDBAPILists = class(TTMDBAPIService)
+  TTMDBAPILists = class(TTMDBAPINamespace)
   public
     function AddMovie(const ListID: Integer; const SessionID: String;
       const MediaID: Integer): ISuperObject;
@@ -273,7 +427,7 @@ type
       const MediaID: Integer): ISuperObject;
   end;
 
-  TTMDBAPIMovieLists = class(TTMDBAPIService)
+  TTMDBAPIMovieLists = class(TTMDBAPINamespace)
   public
     function GetNowPlaying(const Language: String = ''; const Page: Integer = 1;
       const Region: String = ''): ISuperObject;
@@ -285,7 +439,7 @@ type
       const Region: String = ''): ISuperObject;
   end;
 
-  TTMDBAPIMovies = class(TTMDBAPIService)
+  TTMDBAPIMovies = class(TTMDBAPINamespace)
   public
     function GetDetails(const MovieID: Integer; const AppendToResponse: String = '';
       const Language: String = ''; const SessionID: String = '';
@@ -295,7 +449,7 @@ type
     function GetAlternativeTitles(const MovieID: Integer;
       const Country: String = ''): ISuperArray;
     function GetChanges(const MovieID: Integer; const StartDate: TDateTime = 0;
-      const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperObject;
+      const EndDate: TDateTime = 0): ISuperObject;
     function GetCredits(const MovieID: Integer; const Language: String = ''): ISuperObject;
     function GetExternalIDs(const MovieID: Integer): ISuperObject;
     function GetImages(const MovieID: Integer; const IncludeImageLanguage: String = '';
@@ -320,19 +474,19 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBAPINetworks = class(TTMDBAPIService)
+  TTMDBAPINetworks = class(TTMDBAPINamespace)
   public
     function GetDetails(const NetworkID: Integer): ISuperObject;
     function GetAlternativeNames(const NetworkID: Integer): ISuperArray;
     function GetImages(const NetworkID: Integer): ISuperObject;
   end;
 
-  TTMDBAPIPeopleLists = class(TTMDBAPIService)
+  TTMDBAPIPeopleLists = class(TTMDBAPINamespace)
   public
     function GetPopular(const Language: String = ''; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPIPeople = class(TTMDBAPIService)
+  TTMDBAPIPeople = class(TTMDBAPINamespace)
   public
     function GetDetails(const PersonID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
@@ -348,12 +502,12 @@ type
     function GetTranslations(const PersonID: Integer): ISuperArray;
   end;
 
-  TTMDBAPIReviews = class(TTMDBAPIService)
+  TTMDBAPIReviews = class(TTMDBAPINamespace)
   public
     function GetDetails(const ReviewID: Integer): ISuperObject;
   end;
 
-  TTMDBAPISearch = class(TTMDBAPIService)
+  TTMDBAPISearch = class(TTMDBAPINamespace)
   public
     function SearchCollections(const Query: String; const IncludeAdult: TTMDBBoolean = bDefault;
       const Language: String = ''; const Page: Integer = 1; const Region: String = ''): ISuperObject;
@@ -371,7 +525,7 @@ type
       const Page: Integer = 1; const Year: String = ''): ISuperObject;
   end;
 
-  TTMDBAPITrending = class(TTMDBAPIService)
+  TTMDBAPITrending = class(TTMDBAPINamespace)
   public
     function GetAll(const TimeWindow: String = 'day'; const Language: String = '';
       const Page: Integer = 1): ISuperObject;
@@ -383,7 +537,7 @@ type
       const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPITVSeriesLists = class(TTMDBAPIService)
+  TTMDBAPITVSeriesLists = class(TTMDBAPINamespace)
   public
     function GetAiringToday(const Language: String = ''; const Page: Integer = 1;
       const Timezone: String = ''): ISuperObject;
@@ -393,7 +547,7 @@ type
     function GetTopRated(const Language: String = ''; const Page: Integer = 1): ISuperObject;
   end;
 
-  TTMDBAPITVSeries = class(TTMDBAPIService)
+  TTMDBAPITVSeries = class(TTMDBAPINamespace)
   public
     function GetDetails(const SeriesID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
@@ -430,7 +584,7 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBAPITVSeasons = class(TTMDBAPIService)
+  TTMDBAPITVSeasons = class(TTMDBAPINamespace)
   public
     function GetDetails(const SeriesID: Integer; const SeasonNumber: Integer;
       const AppendToResponse: String = ''; const Language: String = ''): ISuperObject;
@@ -452,7 +606,7 @@ type
       const Language: String = ''): ISuperObject;
   end;
 
-  TTMDBAPITVEpisodes = class(TTMDBAPIService)
+  TTMDBAPITVEpisodes = class(TTMDBAPINamespace)
   public
     function GetDetails(const SeriesID: Integer; const SeasonNumber: Integer;
       const EpisodeNumber: Integer; const AppendToResponse: String = '';
@@ -479,13 +633,14 @@ type
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
   end;
 
-  TTMDBAPITVEpisodeGroups = class(TTMDBAPIService)
+  TTMDBAPITVEpisodeGroups = class(TTMDBAPINamespace)
   public
     function GetDetail(const TVEpisodeGroupID: String): ISuperObject;
   end;
 
-  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
-  TTMDBAPIWatchProviders = class(TTMDBAPIService)
+  TTMDBAPIWatchProviders = class(TTMDBAPINamespace)
+  private
+    function CheckAttribution: Boolean;
   public
     function GetAvailableRegions(const Language: String = ''): ISuperArray;
     function GetMovieProviders(const Language: String = '';
@@ -494,9 +649,9 @@ type
       const WatchRegion: String = ''): ISuperArray;
   end;
 
-  TTMDBAPIImages = class(TTMDBAPIService)
+  TTMDBAPIImages = class(TTMDBAPINamespace)
   public
-    //TODO
+    function GetImageURL(const Path: WideString; const Size: WideString = ''): WideString;
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean;
   end;
@@ -510,7 +665,7 @@ type
     FAPIReadAccessToken: String;
     FAPIAuth: TTMDBAuthMethod;
     FAppUserAgent: String;
-    FMsecLimit: Integer; //TODO: Number of milliseconds allowed between requests
+    FMsecLimit: Integer;
 
     FConfiguration: TTMDBAPIConfiguration;
 
@@ -569,7 +724,8 @@ type
     property APIReadAccessToken: String read FAPIReadAccessToken write SetAPIReadAccessToken;
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
     property MsecLimit: Integer read FMsecLimit write SetMsecLimit;
-    property AgreedToWatchProviderAttribution: Boolean read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
+    property AgreedToWatchProviderAttribution: Boolean
+      read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
     property Account: TTMDBAPIAccount read FAccount;
     property Authentication: TTMDBAPIAuthentication read FAuthentication;
@@ -610,45 +766,20 @@ type
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
-  TTMDBAPICommand = (hcGet, hcPost, hcDelete);
+{ TTMDBAPINamespace }
 
-  //TODO: A record which contains functionality necessary for a TMDB request URL...
-  //  This will be passed with each possible API request instead of URLs and raw data.
-  //NOTE: Is this even worth it?
-  TTMDBAPIRequestRec = record
-  private
-    FProtocol: String;
-    FRoot: String;
-    FRequest: String;
-    FParams: String;
-    FBody: String;
-  public
-    constructor Create(const ARequest: String);
-    property Protocol: String read FProtocol write FProtocol;
-    property Root: String read FRoot write FRoot;
-    property Request: String read FRequest write FRequest;
-    property Params: String read FParams write FParams;
-    property Body: String read FBody write FBody;
-
-    procedure AddParam(const Name: String; const Value: String);
-
-    function GetURL: String;
-  end;
-
-{ TTMDBAPIService }
-
-procedure TTMDBAPIService.AddParam(var S: String; const N, V: String);
+procedure TTMDBAPINamespace.AddParam(var S: String; const N, V: String);
 begin
   if V <> '' then
     S:= S + '&'+N+'='+V;
 end;
 
-constructor TTMDBAPIService.Create(AOwner: TTMDBAPI);
+constructor TTMDBAPINamespace.Create(AOwner: TTMDBAPI);
 begin
   FOwner:= AOwner;
 end;
 
-destructor TTMDBAPIService.Destroy;
+destructor TTMDBAPINamespace.Destroy;
 begin
 
   inherited;
@@ -1056,16 +1187,26 @@ end;
 
 function TTMDBAPIDiscover.GetMovie(Params: TTMDBAPIDiscoverMovieReq;
   const Page: Integer): ISuperObject;
+var
+  P: String;
+  U: String;
 begin
-    //TODO: HUGE - COME BACK TO THIS LATER!!!
-
+  P:= Params.GetParamStr;
+  U:= 'discover/movie';
+  AddParam(P, 'page', IntToStr(Page));
+  Result:= FOwner.GetJSON(U, P);
 end;
 
 function TTMDBAPIDiscover.GetTV(Params: TTMDBAPIDiscoverTVReq;
   const Page: Integer): ISuperObject;
+var
+  P: String;
+  U: String;
 begin
-    //TODO: HUGE - COME BACK TO THIS LATER!!!
-
+  P:= Params.GetParamStr;
+  U:= 'discover/tv';
+  AddParam(P, 'page', IntToStr(Page));
+  Result:= FOwner.GetJSON(U, P);
 end;
 
 { TTMDBAPIFind }
@@ -1343,7 +1484,7 @@ begin
 end;
 
 function TTMDBAPIMovies.GetChanges(const MovieID: Integer; const StartDate,
-  EndDate: TDateTime; const Page: Integer): ISuperObject;
+  EndDate: TDateTime): ISuperObject;
 var
   S, E: String;
   U, P: String;
@@ -1353,7 +1494,6 @@ begin
   if EndDate = 0 then E:= '' else E:= FormatDateTime('yyyy-mm-dd', EndDate);
   AddParam(P, 'start_date', S);
   AddParam(P, 'end_date', E);
-  AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
 
@@ -2323,14 +2463,24 @@ end;
 
 { TTMDBAPIWatchProviders }
 
+function TTMDBAPIWatchProviders.CheckAttribution: Boolean;
+begin
+  Result:= FOwner.FAgreedToWatchProviderAttribution;
+  if not Result then begin
+    raise Exception.Create('You must first agree to attribute "JustWatch" in order to use Watch Providers.');
+  end;
+end;
+
 function TTMDBAPIWatchProviders.GetAvailableRegions(
   const Language: String): ISuperArray;
 var
   U, P: String;
 begin
-  U:= 'watch/providers/regions';
-  AddParam(P, 'language', Language);
-  Result:= FOwner.GetJSON(U, P).A['results'];
+  if CheckAttribution then begin
+    U:= 'watch/providers/regions';
+    AddParam(P, 'language', Language);
+    Result:= FOwner.GetJSON(U, P).A['results'];
+  end;
 end;
 
 function TTMDBAPIWatchProviders.GetMovieProviders(const Language,
@@ -2338,10 +2488,12 @@ function TTMDBAPIWatchProviders.GetMovieProviders(const Language,
 var
   U, P: String;
 begin
-  U:= 'watch/providers/movie';
-  AddParam(P, 'language', Language);
-  AddParam(P, 'watch_region', WatchRegion);
-  Result:= FOwner.GetJSON(U, P).A['results'];
+  if CheckAttribution then begin
+    U:= 'watch/providers/movie';
+    AddParam(P, 'language', Language);
+    AddParam(P, 'watch_region', WatchRegion);
+    Result:= FOwner.GetJSON(U, P).A['results'];
+  end;
 end;
 
 function TTMDBAPIWatchProviders.GetTVProviders(const Language,
@@ -2349,10 +2501,12 @@ function TTMDBAPIWatchProviders.GetTVProviders(const Language,
 var
   U, P: String;
 begin
-  U:= 'watch/providers/tv';
-  AddParam(P, 'language', Language);
-  AddParam(P, 'watch_region', WatchRegion);
-  Result:= FOwner.GetJSON(U, P).A['results'];
+  if CheckAttribution then begin
+    U:= 'watch/providers/tv';
+    AddParam(P, 'language', Language);
+    AddParam(P, 'watch_region', WatchRegion);
+    Result:= FOwner.GetJSON(U, P).A['results'];
+  end;
 end;
 
 { TTMDBAPIImages }
@@ -2367,9 +2521,7 @@ begin
   //UNTESTED
   //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
   //Result:= False;
-  U:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
-  U:= URLCombine(U, Size);
-  U:= URLCombine(U, Path);
+  U:= GetImageURL(Path, Size);
   S:= TStringStream.Create;
   try
     FOwner.FHTTP.Get(U, S);
@@ -2384,6 +2536,13 @@ begin
   finally
     S.Free;
   end;
+end;
+
+function TTMDBAPIImages.GetImageURL(const Path, Size: WideString): WideString;
+begin
+  Result:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
+  Result:= URLCombine(Result, Size);
+  Result:= URLCombine(Result, Path);
 end;
 
 { TTMDBAPI }
@@ -2479,11 +2638,6 @@ end;
 
 function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
 begin
-  //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
-
-  //TODO: Only proceed if watch providers has been explicitly agreed to...
-
-
   Result:= FWatchProviders;
 end;
 
@@ -2579,7 +2733,6 @@ end;
 
 procedure TTMDBAPI.SetAgreedToWatchProviderAttribution(const Value: Boolean);
 begin
-  //TODO
   FAgreedToWatchProviderAttribution := Value;
 end;
 
@@ -2608,28 +2761,997 @@ begin
   FMsecLimit := Value;
 end;
 
-{ TTMDBAPIRequestRec }
+{ TTMDBAPIDiscoverMovieReq }
 
-constructor TTMDBAPIRequestRec.Create(const ARequest: String);
+constructor TTMDBAPIDiscoverMovieReq.Create(AObj: ISuperObject);
 begin
-  FProtocol:= 'https';
-  FRoot:= 'api.themoviedb.org/3';
-  FRequest:= ARequest;
+  FObj:= AObj;
+  EnsureObj;
 end;
 
-procedure TTMDBAPIRequestRec.AddParam(const Name, Value: String);
+procedure TTMDBAPIDiscoverMovieReq.EnsureObj;
 begin
-  if FParams <> '' then
-    FParams:= FParams + '&';
-  FParams:= FParams + Name + '=' + Value;
+  if FObj = nil then
+    FObj:= SO;
 end;
 
-function TTMDBAPIRequestRec.GetURL: String;
+function TTMDBAPIDiscoverMovieReq.GetParamStr: WideString;
+var
+  M: IMember;
+  procedure A(const V: String); overload;
+  begin
+    if V <> '' then begin
+      if Result <> '' then
+        Result:= Result + '&';
+      Result:= Result + M.Name + '=' + V;
+    end;
+  end;
+  procedure A(const V: Integer); overload;
+  begin
+    if V <> 0 then
+      A(IntToStr(V));
+  end;
+  procedure A(const V: Single); overload;
+  begin
+    if V <> 0 then
+      A(FormatFloat('#,###,##0.####', M.AsFloat))
+  end;
+  procedure A(const V: TDateTime); overload;
+  begin
+    if V <> 0 then
+      A(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', M.AsDateTime));
+  end;
+  function IsField(const N: String): Boolean;
+  begin
+    Result:= SameText(N, M.Name);
+  end;
 begin
-  Result:= FProtocol + '://';
-  Result:= Result + URLCombine(FRoot, FRequest);
-  if FParams <> '' then
-    Result:= Result + '?' + FParams;
+  EnsureObj;
+  for M in FObj do begin
+    case M.DataType of
+      dtNil:      ;
+      dtNull:     ;
+      dtObject:   ;
+      dtArray:    ;
+      dtString:   A(M.AsString);
+      dtInteger: begin
+        if IsField('include_adult') or IsField('include_vide') then
+        begin
+          case M.AsInteger of
+            1: A('true');
+            2: A('false');
+          end;
+        end else begin
+          A(M.AsInteger);
+        end;
+      end;
+      dtFloat:    A(M.AsFloat);
+      dtBoolean:  ;
+      dtDateTime: A(M.AsDateTime);
+      dtDate:     A(FormatDateTime('yyyy-mm-dd', M.AsDate));
+      dtTime:     A(FormatDateTime('hh:nn:ss.zzz', M.AsTime));
+    end;
+  end;
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetCertification: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['certification'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetCertificationCountry: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['certification_country'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetCertificationGTE: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['certification.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetCertificationLTE: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['certification.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetIncludeAdult: TTMDBBoolean;
+begin
+  EnsureObj;
+  Result:= TTMDBBoolean(FObj.I['include_adult']);
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetIncludeVideo: TTMDBBoolean;
+begin
+  EnsureObj;
+  Result:= TTMDBBoolean(FObj.I['include_video']);
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetLanguage: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['language'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetPrimaryReleaseDateGTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['primary_release_date.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetPrimaryReleaseYear: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['primary_release_year'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetPrimaryReleaseDateLTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['primary_release_date.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetRegion: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['region'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetReleaseDateGTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['release_date.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetReleaseDateLTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['release_date.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetSortBy: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['sort_by'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetVoteAverageGTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_average.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetVoteAverageLTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_average.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetVoteCountGTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_count.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetVoteCountLTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_count.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWatchRegion: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['watch_region'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithCast: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_cast'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithCompanies: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_companies'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithCrew: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_crew'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithGenres: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_genres'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithKeywords: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_keywords'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithOriginalLanguage: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_original_language'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithOriginCountry: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_origin_country'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithoutCompanies: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_companies'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithoutGenres: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_genres'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithoutKeywords: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_keywords'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithoutWatchProviders: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_watch_providers'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithPeople: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_people'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithReleaseType: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_release_type'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithRuntimeGTE: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['with_runtime.gte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithRuntimeLTE: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['with_runtime.lte'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithWatchMonetizationTypes: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_watch_monetization_types'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetWithWatchProviders: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_watch_providers'];
+end;
+
+function TTMDBAPIDiscoverMovieReq.GetYear: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['year'];
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetCertification(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['certifications']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetCertificationCountry(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['certification_country']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetCertificationGTE(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['certification.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetCertificationLTE(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['certification.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetIncludeAdult(const AValue: TTMDBBoolean);
+begin
+  EnsureObj;
+  FObj.I['include_adult']:= Integer(AValue);
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetIncludeVideo(const AValue: TTMDBBoolean);
+begin
+  EnsureObj;
+  FObj.I['include_video']:= Integer(AValue);
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetLanguage(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['language']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetPrimaryReleaseDateGTE(
+  const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['primary_release_date.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetPrimaryReleaseYear(
+  const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['primary_release_year']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetPrimaryReleaseDateLTE(
+  const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['primary_release_date.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetRegion(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['region']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetReleaseDateGTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['release_date.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetReleaseDateLTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['release_date.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetSortBy(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['sort_by']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetVoteAverageGTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_average.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetVoteAverageLTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_average.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetVoteCountGTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_count.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetVoteCountLTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_count.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWatchRegion(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['watch_region']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithCast(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_cast']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithCompanies(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_companies']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithCrew(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_crew']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithGenres(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_genres']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithKeywords(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_keywords']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithOriginalLanguage(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_original_language']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithOriginCountry(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_origin_country']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithoutCompanies(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_companies']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithoutGenres(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_genres']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithoutKeywords(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_keywords']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithoutWatchProviders(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_watch_providers']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithPeople(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_people']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithReleaseType(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_release_type']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithRuntimeGTE(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['with_runtime.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithRuntimeLTE(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['with_runtime.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithWatchMonetizationTypes(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_watch_monetization_types']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetWithWatchProviders(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_watch_providers']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverMovieReq.SetYear(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['year']:= AValue;
+end;
+
+{ TTMDBAPIDiscoverTVReq }
+
+constructor TTMDBAPIDiscoverTVReq.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+  EnsureObj;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.EnsureObj;
+begin
+  if FObj = nil then
+    FObj:= SO;
+end;
+
+function TTMDBAPIDiscoverTVReq.GetParamStr: WideString;
+var
+  M: IMember;
+  procedure A(const V: String); overload;
+  begin
+    if V <> '' then begin
+      if Result <> '' then
+        Result:= Result + '&';
+      Result:= Result + M.Name + '=' + V;
+    end;
+  end;
+  procedure A(const V: Integer); overload;
+  begin
+    if V <> 0 then
+      A(IntToStr(V));
+  end;
+  procedure A(const V: Single); overload;
+  begin
+    if V <> 0 then
+      A(FormatFloat('#,###,##0.####', M.AsFloat))
+  end;
+  procedure A(const V: TDateTime); overload;
+  begin
+    if V <> 0 then
+      A(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', M.AsDateTime));
+  end;
+  function IsField(const N: String): Boolean;
+  begin
+    Result:= SameText(N, M.Name);
+  end;
+begin
+  EnsureObj;
+  for M in FObj do begin
+    case M.DataType of
+      dtNil:      ;
+      dtNull:     ;
+      dtObject:   ;
+      dtArray:    ;
+      dtString:   A(M.AsString);
+      dtInteger: begin
+        if IsField('include_adult') or IsField('include_null_first_air_dates') or
+          IsField('include_screened_theatrically') then
+        begin
+          case M.AsInteger of
+            1: A('true');
+            2: A('false');
+          end;
+        end else begin
+          A(M.AsInteger);
+        end;
+      end;
+      dtFloat:    A(M.AsFloat);
+      dtBoolean:  ;
+      dtDateTime: A(M.AsDateTime);
+      dtDate:     A(FormatDateTime('yyyy-mm-dd', M.AsDate));
+      dtTime:     A(FormatDateTime('hh:nn:ss.zzz', M.AsTime));
+    end;
+  end;
+end;
+
+function TTMDBAPIDiscoverTVReq.GetAirDateGTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['air_date.gte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetAirDateLTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['air_date.lte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetFirstAirDateGTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['first_air_date.gte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetFirstAirDateLTE: TDateTime;
+begin
+  EnsureObj;
+  Result:= FObj.D['first_air_date.lte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetFirstAirDateYear: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['first_air_date_year'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetIncludeAdult: TTMDBBoolean;
+begin
+  EnsureObj;
+  Result:= TTMDBBoolean(FObj.I['include_adult']);
+end;
+
+function TTMDBAPIDiscoverTVReq.GetIncludeNullFirstAirDates: TTMDBBoolean;
+begin
+  EnsureObj;
+  Result:= TTMDBBoolean(FObj.I['include_null_first_air_dates']);
+end;
+
+function TTMDBAPIDiscoverTVReq.GetLanguage: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['language'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetScreenedTheatrically: TTMDBBoolean;
+begin
+  EnsureObj;
+  Result:= TTMDBBoolean(FObj.I['screened_theatrically']);
+end;
+
+function TTMDBAPIDiscoverTVReq.GetSortBy: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['sort_by'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetTimezone: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['timezone'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetVoteAverageGTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_average.gte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetVoteAverageLTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_average.lte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetVoteCountGTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_count.gte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetVoteCountLTE: Single;
+begin
+  EnsureObj;
+  Result:= FObj.F['vote_count.lte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWatchRegion: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['watch_region'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithCompanies: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_companies'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithGenres: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_genres'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithKeywords: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_keywords'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithNetworks: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_networks'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithOriginalLanguage: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_original_language'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithOriginCountry: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_origin_country'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithoutCompoanies: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_companies'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithoutGenres: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_genres'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithoutKeywords: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_keywords'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithoutWatchProviders: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['without_watch_providers'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithRuntimeGTE: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['with_runtime.gte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithRuntimeLTE: Integer;
+begin
+  EnsureObj;
+  Result:= FObj.I['with_runtime.lte'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithStatus: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_status'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithType: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_type'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithWatchMonetizationTypes: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_watch_monetization_types'];
+end;
+
+function TTMDBAPIDiscoverTVReq.GetWithWatchProviders: WideString;
+begin
+  EnsureObj;
+  Result:= FObj.S['with_watch_providers'];
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetAirDateGTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['air_date.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetAirDateLTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['air_date.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetFirstAirDateGTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['first_air_date.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetFirstAirDateLTE(const AValue: TDateTime);
+begin
+  EnsureObj;
+  FObj.D['first_air_date.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetFirstAirDateYear(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['first_air_date_year']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetIncludeAdult(const AValue: TTMDBBoolean);
+begin
+  EnsureObj;
+  FObj.I['include_adult']:= Integer(AValue);
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetIncludeNullFirstAirDates(
+  const AValue: TTMDBBoolean);
+begin
+  EnsureObj;
+  FObj.I['include_null_first_air_dates']:= Integer(AValue);
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetLanguage(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['language']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetScreenedTheatrically(const AValue: TTMDBBoolean);
+begin
+  EnsureObj;
+  FObj.I['screened_theatrically']:= Integer(AValue);
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetSortBy(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['sort_by']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetTimezone(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['timezone']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetVoteAverageGTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_average.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetVoteAverageLTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_average.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetVoteCountGTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_count.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetVoteCountLTE(const AValue: Single);
+begin
+  EnsureObj;
+  FObj.F['vote_count.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWatchRegion(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['watch_region']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithCompanies(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_companies']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithGenres(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_genres']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithKeywords(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_keywords']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithNetworks(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_networks']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithOriginalLanguage(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_original_language']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithOriginCountry(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_origin_country']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithoutCompoanies(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_companies']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithoutGenres(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_genres']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithoutKeywords(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_keywords']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithoutWatchProviders(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['without_watch_providers']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithRuntimeGTE(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['with_runtime.gte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithRuntimeLTE(const AValue: Integer);
+begin
+  EnsureObj;
+  FObj.I['with_runtime.lte']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithStatus(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_status']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithType(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_type']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithWatchMonetizationTypes(
+  const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_watch_monetization_types']:= AValue;
+end;
+
+procedure TTMDBAPIDiscoverTVReq.SetWithWatchProviders(const AValue: WideString);
+begin
+  EnsureObj;
+  FObj.S['with_watch_providers']:= AValue;
 end;
 
 end.
