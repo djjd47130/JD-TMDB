@@ -663,14 +663,73 @@ type
 
 {$REGION 'Change Related'}
 
+  TTMDBChangeValue = class(TInterfacedObject, ITMDBChangeValue)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetS: WideString; stdcall;
+    function GetI: Integer; stdcall;
+    function GetB: Boolean; stdcall;
+    function GetF: Double; stdcall;
+    function GetD: TDateTime; stdcall;
+    function GetO: ISuperObject; stdcall;
+    function GetA: ISuperArray; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property S: WideString read GetS;
+    property I: Integer read GetI;
+    property B: Boolean read GetB;
+    property F: Double read GetF;
+    property D: TDateTime read GetD;
+    property O: ISuperObject read GetO;
+    property A: ISuperArray read GetA;
+  end;
+
+  TTMDBChangeRecord = class(TInterfacedObject, ITMDBChangeRecord)
+  private
+    FObj: ISuperObject;
+    FValue: ITMDBChangeValue;
+    FOriginalValue: ITMDBChangeValue;
+  protected
+    function GetID: WideString; stdcall;
+    function GetAction: WideString; stdcall; //TODO: Change to enum...
+    function GetTime: TDateTime; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetISO3166_1: WideString; stdcall;
+    function GetValue: ITMDBChangeValue; stdcall;
+    function GetOriginalValue: ITMDBChangeValue; stdcall;
+  public
+    constructor Create(AObj: ISuperObject);
+    destructor Destroy; override;
+
+    property ID: WideString read GetID;
+    property Action: WideString read GetAction; //TODO
+    property Time: TDateTime read GetTime;
+    property ISO639_1: WideString read GetISO639_1;
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Value: ITMDBChangeValue read GetValue;
+    property OriginalValue: ITMDBChangeValue read GetOriginalValue;
+  end;
+
   TTMDBChange = class(TTMDBItem, ITMDBChange)
+  private
+    FItems: TInterfaceList;
+    procedure ClearItems;
+    procedure PopulateItems;
   protected
     function GetKey: WideString; stdcall;
+    function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBChangeRecord; stdcall;
   public
     constructor Create(AOwner: ITMDBItems; AObj: ISuperObject;
       const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
+
+    property Key: WideString read GetKey;
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBChangeRecord read GetItem; default;
   end;
 
   TTMDBChanges = class(TTMDBItems, ITMDBChanges)
@@ -680,6 +739,31 @@ type
     constructor Create(AObj: ISuperArray; ATMDB: ITMDBClient); reintroduce;
 
     property Items[const Index: Integer]: ITMDBChange read GetItem; default;
+  end;
+
+
+
+  TTMDBChangeRef = class(TTMDBItem, ITMDBChangeRef)
+  protected
+    function GetID: Integer; stdcall;
+    function GetAdult: Boolean; stdcall;
+  public
+    property ID: Integer read GetID;
+    property Adult: Boolean read GetAdult;
+  end;
+
+  TTMDBChangeRefs = class(TTMDBItems, ITMDBChangeRefs)
+  protected
+    function GetItem(const Index: Integer): ITMDBChangeRef; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBChangeRef read GetItem; default;
+  end;
+
+  TTMDBChangeRefPage = class(TTMDBPage, ITMDBChangeRefPage)
+  protected
+    function GetItems: ITMDBChangeRefs; stdcall;
+  public
+    property Items: ITMDBChangeRefs read GetItems;
   end;
 
 {$ENDREGION}
@@ -2577,9 +2661,12 @@ type
 
   TTMDBNamespaceChanges = class(TTMDBNamespace, ITMDBNamespaceChanges)
   protected
-    //MovieList
-    //PeopleList
-    //TVList
+    function MovieList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
+    function PeopleList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
+    function TVList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
   end;
 
   TTMDBNamespaceCollections = class(TTMDBNamespace, ITMDBNamespaceCollections)
@@ -3662,23 +3749,49 @@ constructor TTMDBChange.Create(AOwner: ITMDBItems; AObj: ISuperObject;
   const AIndex: Integer; ATMDB: ITMDBClient);
 begin
   inherited;
-
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
 end;
 
 destructor TTMDBChange.Destroy;
 begin
-
+  ClearItems;
+  FItems.Clear;
   inherited;
+end;
+
+function TTMDBChange.GetCount: Integer;
+begin
+  Result:= FItems.Count;
 end;
 
 function TTMDBChange.GetItem(const Index: Integer): ITMDBChangeRecord;
 begin
-  //Result:= (inherited GetItem(Index)) as ITMDBChangeRecord; //TODO
+  Result:= FItems[Index] as ITMDBChangeRecord;
 end;
 
 function TTMDBChange.GetKey: WideString;
 begin
   Result:= FObj.S['key'];
+end;
+
+procedure TTMDBChange.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+procedure TTMDBChange.PopulateItems;
+var
+  X: Integer;
+  O: ISuperObject;
+  I: ITMDBChangeRecord;
+begin
+  ClearItems;
+  for X := 0 to FObj.A['items'].Length-1 do begin
+    O:= FObj.A['items'].O[X];
+    I:= TTMDBChangeRecord.Create(O);
+    FItems.Add(I);
+  end;
 end;
 
 { TTMDBChanges }
@@ -9248,6 +9361,165 @@ var
 begin
   O:= FOwner.FAPI.Discover.GetTV(Params.GetRec, Page);
   Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+{ TTMDBNamespaceChanges }
+
+function TTMDBNamespaceChanges.MovieList(const StartDate, EndDate: TDateTime;
+  const Page: Integer): ITMDBChangeRefPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Changes.GetMovieList(StartDate, EndDate, Page);
+  Result:= TTMDBChangeRefPage.Create(O, FOwner, TTMDBChangeRef, TTMDBChangeRefs);
+end;
+
+function TTMDBNamespaceChanges.PeopleList(const StartDate, EndDate: TDateTime;
+  const Page: Integer): ITMDBChangeRefPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Changes.GetPeopleList(StartDate, EndDate, Page);
+  Result:= TTMDBChangeRefPage.Create(O, FOwner, TTMDBChangeRef, TTMDBChangeRefs);
+end;
+
+function TTMDBNamespaceChanges.TVList(const StartDate, EndDate: TDateTime;
+  const Page: Integer): ITMDBChangeRefPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Changes.GetTVList(StartDate, EndDate, Page);
+  Result:= TTMDBChangeRefPage.Create(O, FOwner, TTMDBChangeRef, TTMDBChangeRefs);
+end;
+
+{ TTMDBChangeRef }
+
+function TTMDBChangeRef.GetAdult: Boolean;
+begin
+  Result:= FObj.B['adult'];
+end;
+
+function TTMDBChangeRef.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+{ TTMDBChangeRefs }
+
+function TTMDBChangeRefs.GetItem(const Index: Integer): ITMDBChangeRef;
+begin
+  Result:= inherited GetItem(Index) as ITMDBChangeRef;
+end;
+
+{ TTMDBChangeRefPage }
+
+function TTMDBChangeRefPage.GetItems: ITMDBChangeRefs;
+begin
+  Result:= inherited GetItems as ITMDBChangeRefs;
+end;
+
+{ TTMDBChangeValue }
+
+constructor TTMDBChangeValue.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+
+end;
+
+destructor TTMDBChangeValue.Destroy;
+begin
+
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBChangeValue.GetA: ISuperArray;
+begin
+  Result:= FObj.Cast.AsArray;
+end;
+
+function TTMDBChangeValue.GetB: Boolean;
+begin
+  Result:= FObj.Cast.AsBoolean;
+end;
+
+function TTMDBChangeValue.GetD: TDateTime;
+begin
+  Result:= FObj.Cast.AsDateTime;
+end;
+
+function TTMDBChangeValue.GetF: Double;
+begin
+  Result:= FObj.Cast.AsFloat;
+end;
+
+function TTMDBChangeValue.GetI: Integer;
+begin
+  Result:= FObj.Cast.AsInteger;
+end;
+
+function TTMDBChangeValue.GetO: ISuperObject;
+begin
+  Result:= FObj.Cast.AsObject;
+end;
+
+function TTMDBChangeValue.GetS: WideString;
+begin
+  Result:= FObj.Cast.AsString;
+end;
+
+{ TTMDBChangeRecord }
+
+constructor TTMDBChangeRecord.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+
+end;
+
+destructor TTMDBChangeRecord.Destroy;
+begin
+
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBChangeRecord.GetAction: WideString;
+begin
+  Result:= FObj.S['action'];
+end;
+
+function TTMDBChangeRecord.GetID: WideString;
+begin
+  Result:= FObj.S['id'];
+end;
+
+function TTMDBChangeRecord.GetISO3166_1: WideString;
+begin
+  Result:= FObj.S['iso_3166_1'];
+end;
+
+function TTMDBChangeRecord.GetISO639_1: WideString;
+begin
+  Result:= FObj.S['iso_639_1'];
+end;
+
+function TTMDBChangeRecord.GetOriginalValue: ITMDBChangeValue;
+begin
+  if FOriginalValue = nil then
+    FOriginalValue:= TTMDBChangeValue.Create(FObj.O['original_value']);
+  Result:= FOriginalValue;
+end;
+
+function TTMDBChangeRecord.GetTime: TDateTime;
+begin
+  Result:= Fobj.D['time'];
+end;
+
+function TTMDBChangeRecord.GetValue: ITMDBChangeValue;
+begin
+  if FValue = nil then
+    FValue:= TTMDBChangeValue.Create(FObj.O['value']);
+  Result:= FValue;
 end;
 
 end.

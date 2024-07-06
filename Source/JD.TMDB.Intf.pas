@@ -556,16 +556,21 @@ type
   /// </summary>
   ITMDBChangeValue = interface
     ['{D44D0AA2-5EB9-458F-A0CD-FFCE923C571A}']
-    function GetKey: WideString;
-    function GetS: WideString;
-    function GetI: Integer;
-    function GetB: Boolean;
-    function GetF: Double;
-    function GetD: TDateTime;
-    function GetO: ISuperObject;
-    function GetA: ISuperArray;
+    function GetS: WideString; stdcall;
+    function GetI: Integer; stdcall;
+    function GetB: Boolean; stdcall;
+    function GetF: Double; stdcall;
+    function GetD: TDateTime; stdcall;
+    function GetO: ISuperObject; stdcall;
+    function GetA: ISuperArray; stdcall;
 
-    //TODO: Properties...
+    property S: WideString read GetS;
+    property I: Integer read GetI;
+    property B: Boolean read GetB;
+    property F: Double read GetF;
+    property D: TDateTime read GetD;
+    property O: ISuperObject read GetO;
+    property A: ISuperArray read GetA;
   end;
 
   /// <summary>
@@ -573,14 +578,21 @@ type
   /// </summary>
   ITMDBChangeRecord = interface
     ['{27B8CA5E-D72C-4298-92D9-012A58450CAA}']
-    function GetID: WideString;
-    function GetAction: WideString; //TODO: Change to enum...
-    function GetTime: TDateTime;
-    function GetISO639_1: WideString;
-    function GetISO3166_1: WideString;
-    function GetValue: ITMDBChangeValue;
+    function GetID: WideString; stdcall;
+    function GetAction: WideString; stdcall; //TODO: Change to enum...
+    function GetTime: TDateTime; stdcall;
+    function GetISO639_1: WideString; stdcall;
+    function GetISO3166_1: WideString; stdcall;
+    function GetValue: ITMDBChangeValue; stdcall;
+    function GetOriginalValue: ITMDBChangeValue; stdcall;
 
-    //TODO: Properties...
+    property ID: WideString read GetID;
+    property Action: WideString read GetAction; //TODO
+    property Time: TDateTime read GetTime;
+    property ISO639_1: WideString read GetISO639_1;
+    property ISO3166_1: WideString read GetISO3166_1;
+    property Value: ITMDBChangeValue read GetValue;
+    property OriginalValue: ITMDBChangeValue read GetOriginalValue;
   end;
 
   /// <summary>
@@ -589,9 +601,11 @@ type
   ITMDBChange = interface(ITMDBItem)
     ['{04186AE5-0DFE-4E30-99A8-8B8CBC98E17F}']
     function GetKey: WideString; stdcall;
+    function GetCount: Integer; stdcall;
     function GetItem(const Index: Integer): ITMDBChangeRecord; stdcall;
 
     property Key: WideString read GetKey;
+    property Count: Integer read GetCount;
     property Items[const Index: Integer]: ITMDBChangeRecord read GetItem; default;
   end;
 
@@ -2731,9 +2745,12 @@ type
 
   ITMDBNamespaceChanges = interface(ITMDBNamespace)
     ['{944AE998-E4B0-49DA-924E-2272AEF9F8A0}']
-    //MovieList
-    //PeopleList
-    //TVList
+    function MovieList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
+    function PeopleList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
+    function TVList(const StartDate, EndDate: TDateTime;
+      const Page: Integer = 1): ITMDBChangeRefPage; stdcall;
   end;
 
   ITMDBNamespaceCollections = interface(ITMDBNamespace)
