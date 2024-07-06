@@ -51,5 +51,6 @@ The test applications uses controls from [JDLib, a separate repository of mine](
 3. Assign your key(s) via the component's `APIKey` and/or `AccessToken` properties.
    - NOTE: Another property `AuthMethod` controls which key gets used.
 4. You're ready to use a majority of the API functions now.
-5. You may additionally login using `LoginState` in runtime to access account-related functionality.
+   - Access each possible namespace with its corresponding function, such as `Search`, `Movies`, `Account`, etc.
+6. You may additionally login using `LoginState` in runtime to access account-related functionality.
 
