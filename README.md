@@ -20,21 +20,31 @@ You are required to obtain your own [API key from TMDB](https://www.themoviedb.o
 
 ## TMDB User Login
 
-While the TMDB API supports several authentication methods for users to login and access their favorites, ratings, etc, the current state of this library does not yet support user authentication. Currently, everything is supported anonymously, until the user login methods have been solidified.
+You are able to login to a TMDB user account in the API through a variety of authentication methods:
+
+- Embedded Browser - Opens the TMDB auth page dynamically and feeds a callback URL
+- Credentials - Provide username and password directly
+- Guest- Login as a guest with a guest sesion ID
 
 ## Delphi Wrapper
 
-The goal of this library is to have 3 layers of wrappers - Raw JSON API (in `JD.TMDB.API.pas`), Interface Translation (in `JD.TMDB.Intf.pas` and `JD.TMDB.Impl.pas`), and Delphi Component (in `JD.TMDB.pas`).
+The goal of this library is to have 3 layers of wrappers - Raw JSON API (in `JD.TMDB.API.pas`), Interface/Implementation Translation (in `JD.TMDB.Intf.pas` and `JD.TMDB.Impl.pas`), and Delphi Component (in `JD.TMDB.pas`).
 
 At the heart of this project is the unit `JD.TMDB.API.pas` which wraps the entire TMDB API. This is encapsulated in the `TTMDBAPI` component. This provides raw access to all possible services / requests, and returns raw JSON data via `ISuperObject` or `ISuperArray`, parts of the [`X-SuperObject` JSON library for Delphi](https://github.com/onryldz/x-superobject). 
 
-A second-level wrapper is being written which further adds an abstract layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. The base interface is `ITMDBClient`.
+A second-level wrapper is being written which further adds an interface-oriented layer around the API. All possible services and objects are implemented via interfaces in `JD.TMDB.Intf.pas`, and implemented in `JD.TMDB.Impl.pas`. The base API interface is `ITMDBClient`.
 
 A final third-level wrapper is a component you can install into the Delphi IDE. It is reponsible for everything necessary, including pre-fetching configuration data, API authentication, user authentication, language and locale options, etc.  This will ultimately be the main component to integrate your Delphi project with the TMDB API. 
 
 ## Test Application
 
-There is a test application to demonstrate the usage of the TMDB API wrapper. Note that this app is in very active development at this time, and is far from ready. 
+There is a test application to demonstrate the usage of the TMDB API wrapper. Note that this app is in very active development at this time, and is far from ready. However, it does feature a few major features, such as:
+
+- User Authentication
+- Search (All media types)
+- Movie Detail
+- Genres (Movie and TV)
+- Certifications (Movie and TV)
 
 ### JDLib
 
@@ -50,7 +60,7 @@ The test applications uses controls from [JDLib, a separate repository of mine](
 2. Create an instance of the `TTMDB` component. This may be installed in your component palette.
 3. Assign your key(s) via the component's `APIKey` and/or `AccessToken` properties.
    - NOTE: Another property `AuthMethod` controls which key gets used.
-4. You're ready to use a majority of the API functions now.
+4. You're ready to use a majority of the API functions now via the `Client` property.
    - Access each possible namespace with its corresponding function, such as `Search`, `Movies`, `Account`, etc.
 6. You may additionally login using `LoginState` in runtime to access account-related functionality.
 
