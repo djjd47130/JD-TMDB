@@ -3048,6 +3048,52 @@ type
     property Items[const Index: Integer]: ITMDBWatchProvider read GetItem; default;
   end;
 
+
+
+  ITMDBMediaWatchProvider = interface(ITMDBItem)
+    ['{DF1CF54E-5E56-4BB7-8EB6-C385B7845289}']
+    function GetLogoPath: WideString; stdcall;
+    function GetProviderID: Integer; stdcall;
+    function GetProviderName: WideString; stdcall;
+    function GetDisplayPriority: Integer; stdcall;
+
+    property LogoPath: WideString read GetLogoPath;
+    property ProviderID: Integer read GetProviderID;
+    property ProviderName: WideString read GetProviderName;
+    property DisplayPriority: Integer read GetDisplayPriority;
+  end;
+
+  ITMDBMediaWatchProviders = interface(ITMDBItems)
+    ['{9B0CA949-7FAC-4F35-97AD-89847AAD501B}']
+    function GetItem(const Index: Integer): ITMDBMediaWatchProvider; stdcall;
+
+    property Items[const Index: Integer]: ITMDBMediaWatchProvider read GetItem; default;
+  end;
+
+  ITMDBMediaWatchProviderCountry = interface
+    ['{705496C5-CCDE-40C0-B660-920B44518A9A}']
+    function GetLink: WideString; stdcall;
+    function GetCountryCode: WideString; stdcall;
+    function GetBuy: ITMDBMediaWatchProviders; stdcall;
+    function GetRent: ITMDBMediaWatchProviders; stdcall;
+    function GetFlatrate: ITMDBMediaWatchProviders; stdcall;
+
+    property Link: WideString read GetLink;
+    property CountryCode: WideString read GetCountryCode;
+    property Buy: ITMDBMediaWatchProviders read GetBuy;
+    property Rent: ITMDBMediaWatchProviders read GetRent;
+    property Flatrate: ITMDBMediaWatchProviders read GetFlatrate;
+  end;
+
+  ITMDBMediaWatchProviderCountries = interface
+    ['{FCB23E8C-5FA7-4C27-B6BC-1EEF522A2ED2}']
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBMediaWatchProviderCountry; stdcall;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBMediaWatchProviderCountry read GetItem; default;
+  end;
+
 {$ENDREGION}
 
 
@@ -3255,7 +3301,7 @@ type
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
     function GetTranslations(const MovieID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
     //function AddRating(const MovieID: Integer; const Rating: Single;
     //  const SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
@@ -3373,7 +3419,7 @@ type
     function GetTranslations(const SeriesID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
     //function AddRating(const SeriesID: Integer; const Rating: Single;
     //  cosnt SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
@@ -3403,8 +3449,8 @@ type
     function GetVideos(const SeriesID, SeasonNumber: Integer;
       const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const SeriesID, SeasonNumber: Integer;
-    //  const Language: WideString = ''): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const SeriesID, SeasonNumber: Integer;
+      const Language: WideString = ''): ITMDBMediaWatchProviderCountries; stdcall;
   end;
 
   ITMDBNamespaceTVEpisodes = interface(ITMDBNamespace)

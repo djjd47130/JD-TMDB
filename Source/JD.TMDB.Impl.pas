@@ -3095,6 +3095,72 @@ type
     property Items[const Index: Integer]: ITMDBWatchProvider read GetItem; default;
   end;
 
+
+
+  TTMDBMediaWatchProvider = class(TTMDBItem, ITMDBMediaWatchProvider)
+  protected
+    function GetLogoPath: WideString; stdcall;
+    function GetProviderID: Integer; stdcall;
+    function GetProviderName: WideString; stdcall;
+    function GetDisplayPriority: Integer; stdcall;
+  public
+    property LogoPath: WideString read GetLogoPath;
+    property ProviderID: Integer read GetProviderID;
+    property ProviderName: WideString read GetProviderName;
+    property DisplayPriority: Integer read GetDisplayPriority;
+  end;
+
+  TTMDBMediaWatchProviders = class(TTMDBItems, ITMDBMediaWatchProviders)
+  protected
+    function GetItem(const Index: Integer): ITMDBMediaWatchProvider; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBMediaWatchProvider read GetItem; default;
+  end;
+
+  TTMDBMediaWatchProviderCountry = class(TInterfacedObject, ITMDBMediaWatchProviderCountry)
+  private
+    FCountryCode: WideString;
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FBuy: ITMDBMediaWatchProviders;
+    FRent: ITMDBMediaWatchProviders;
+    FFlatrate: ITMDBMediaWatchProviders;
+  protected
+    function GetLink: WideString; stdcall;
+    function GetCountryCode: WideString; stdcall;
+    function GetBuy: ITMDBMediaWatchProviders; stdcall;
+    function GetRent: ITMDBMediaWatchProviders; stdcall;
+    function GetFlatrate: ITMDBMediaWatchProviders; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; const ACountryCode: WideString;
+      const ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property Link: WideString read GetLink;
+    property CountryCode: WideString read GetCountryCode;
+    property Buy: ITMDBMediaWatchProviders read GetBuy;
+    property Rent: ITMDBMediaWatchProviders read GetRent;
+    property Flatrate: ITMDBMediaWatchProviders read GetFlatrate;
+  end;
+
+  TTMDBMediaWatchProviderCountries = class(TInterfacedObject, ITMDBMediaWatchProviderCountries)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FItems: TInterfaceList;
+    procedure PopulateItems;
+    procedure ClearItems;
+  protected
+    function GetCount: Integer; stdcall;
+    function GetItem(const Index: Integer): ITMDBMediaWatchProviderCountry; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property Count: Integer read GetCount;
+    property Items[const Index: Integer]: ITMDBMediaWatchProviderCountry read GetItem; default;
+  end;
+
 {$ENDREGION}
 
 
@@ -3303,7 +3369,7 @@ type
       const Page: Integer = 1): ITMDBMoviePage; stdcall;
     function GetTranslations(const MovieID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
     //function AddRating(const MovieID: Integer; const Rating: Single;
     //  const SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
@@ -3420,7 +3486,7 @@ type
     function GetTranslations(const SeriesID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
     //function AddRating(const SeriesID: Integer; const Rating: Single;
     //  cosnt SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
@@ -3450,8 +3516,8 @@ type
     function GetVideos(const SeriesID, SeasonNumber: Integer;
       const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function GetWatchProviders(const SeriesID, SeasonNumber: Integer;
-    //  const Language: WideString = ''): ITMDBMediaWatchProviders; stdcall;
+    function GetWatchProviders(const SeriesID, SeasonNumber: Integer;
+      const Language: WideString = ''): ITMDBMediaWatchProviderCountries; stdcall;
   end;
 
   TTMDBNamespaceTVEpisodes = class(TTMDBNamespace, ITMDBNamespaceTVEpisodes)
@@ -9052,6 +9118,15 @@ begin
   Result:= TTMDBVideos.Create(O.A['results'], FOwner);
 end;
 
+function TTMDBNamespaceMovies.GetWatchProviders(
+  const MovieID: Integer): ITMDBMediaWatchProviderCountries;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.GetWatchProviders(MovieID);
+  Result:= TTMDBMediaWatchProviderCountries.Create(O, FOwner);
+end;
+
 { TTMDBNamespaceNetworks }
 
 function TTMDBNamespaceNetworks.GetAlternativeNames(
@@ -9416,6 +9491,15 @@ begin
   Result:= TTMDBVideos.Create(O.A['results'], FOwner);
 end;
 
+function TTMDBNamespaceTVSeries.GetWatchProviders(
+  const SeriesID: Integer): ITMDBMediaWatchProviderCountries;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetWatchProviders(SeriesID);
+  Result:= TTMDBMediaWatchProviderCountries.Create(O, FOwner);
+end;
+
 { TTMDBNamespaceTVEpisodeGroups }
 
 function TTMDBNamespaceTVEpisodeGroups.GetDetails(
@@ -9592,6 +9676,15 @@ var
 begin
   O:= FOwner.FAPI.TVSeasons.GetVideos(SeriesID, SeasonNumber, IncludeVideoLanguage, Language);
   Result:= TTMDBVideos.Create(O.A['results'], FOwner);
+end;
+
+function TTMDBNamespaceTVSeasons.GetWatchProviders(const SeriesID, SeasonNumber: Integer;
+  const Language: WideString): ITMDBMediaWatchProviderCountries;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeasons.GetWatchProviders(SeriesID, SeasonNumber);
+  Result:= TTMDBMediaWatchProviderCountries.Create(O, FOwner);
 end;
 
 { TTMDBNamespaceWatchProviders }
@@ -11721,6 +11814,129 @@ begin
   if FCrew = nil then
     FCrew:= TTMDBCombinedCrewCredits.Create(FObj.A['crew'], FTMDB, TTMDBCombinedCrewCredit);
   Result:= FCrew;
+end;
+
+{ TTMDBMediaWatchProvider }
+
+function TTMDBMediaWatchProvider.GetDisplayPriority: Integer;
+begin
+  Result:= FObj.I['display_priority'];
+end;
+
+function TTMDBMediaWatchProvider.GetLogoPath: WideString;
+begin
+  Result:= FObj.S['logo_path'];
+end;
+
+function TTMDBMediaWatchProvider.GetProviderID: Integer;
+begin
+  Result:= FObj.I['provider_id'];
+end;
+
+function TTMDBMediaWatchProvider.GetProviderName: WideString;
+begin
+  Result:= FObj.S['provider_name'];
+end;
+
+{ TTMDBMediaWatchProviders }
+
+function TTMDBMediaWatchProviders.GetItem(
+  const Index: Integer): ITMDBMediaWatchProvider;
+begin
+  Result:= inherited GetItem(Index) as ITMDBMediaWatchProvider;
+end;
+
+{ TTMDBMediaWatchProviderCountry }
+
+constructor TTMDBMediaWatchProviderCountry.Create(AObj: ISuperObject;
+  const ACountryCode: WideString; const ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FCountryCode:= ACountryCode;
+  FTMDB:= ATMDB;
+end;
+
+destructor TTMDBMediaWatchProviderCountry.Destroy;
+begin
+
+  inherited;
+end;
+
+function TTMDBMediaWatchProviderCountry.GetBuy: ITMDBMediaWatchProviders;
+begin
+  if FBuy = nil then
+    FBuy:= TTMDBMediaWatchProviders.Create(FObj.A['buy'], FTMDB, TTMDBMediaWatchProvider);
+  Result:= FBuy;
+end;
+
+function TTMDBMediaWatchProviderCountry.GetCountryCode: WideString;
+begin
+  Result:= FCountryCode;
+end;
+
+function TTMDBMediaWatchProviderCountry.GetFlatrate: ITMDBMediaWatchProviders;
+begin
+  if FFlatrate = nil then
+    FFlatrate:= TTMDBMediaWatchProviders.Create(FObj.A['flatrate'], FTMDB, TTMDBMediaWatchProvider);
+  Result:= FFlatrate;
+end;
+
+function TTMDBMediaWatchProviderCountry.GetLink: WideString;
+begin
+  Result:= FObj.S['link'];
+end;
+
+function TTMDBMediaWatchProviderCountry.GetRent: ITMDBMediaWatchProviders;
+begin
+  if FRent = nil then
+    FRent:= TTMDBMediaWatchProviders.Create(FObj.A['rent'], FTMDB, TTMDBMediaWatchProvider);
+  Result:= FRent;
+end;
+
+{ TTMDBMediaWatchProviderCountries }
+
+procedure TTMDBMediaWatchProviderCountries.ClearItems;
+begin
+  FItems.Clear;
+end;
+
+constructor TTMDBMediaWatchProviderCountries.Create(AObj: ISuperObject;
+  ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FItems:= TInterfaceList.Create;
+  PopulateItems;
+end;
+
+destructor TTMDBMediaWatchProviderCountries.Destroy;
+begin
+  ClearItems;
+  FreeAndNil(FItems);
+  inherited;
+end;
+
+function TTMDBMediaWatchProviderCountries.GetCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TTMDBMediaWatchProviderCountries.GetItem(
+  const Index: Integer): ITMDBMediaWatchProviderCountry;
+begin
+  Result:= FItems[Index] as ITMDBMediaWatchProviderCountry;
+end;
+
+procedure TTMDBMediaWatchProviderCountries.PopulateItems;
+var
+  M: IMember;
+  I: ITMDBMediaWatchProviderCountry;
+begin
+  ClearItems;
+  for M in FObj.O['results'] do begin
+    I:= TTMDBMediaWatchProviderCountry.Create(M.AsObject, M.Name, FTMDB);
+    FItems.Add(I);
+  end;
 end;
 
 end.
