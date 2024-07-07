@@ -13,7 +13,8 @@ uses
   uCommonVideos,
   uCommonCredits,
   uCommonImages,
-  uCommonReviews;
+  uCommonReviews,
+  uCommonAlternativeTitles;
 
 type
   TfrmContentMovieDetail = class(TfrmContentBase)
@@ -48,11 +49,11 @@ type
     Splitter1: TSplitter;
     lstExternalIDs: TListView;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
     procedure btnFavoriteClick(Sender: TObject);
     procedure btnWatchlistClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
 
@@ -60,14 +61,17 @@ type
     FImages: TfrmCommonImages;
     FVideos: TfrmCommonVideos;
     FReviews: TfrmCommonReviews;
+    FAlternativeTitles: TfrmCommonAlternativeTitles;
 
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
-    procedure LoadTabContent;
     procedure DisplayAccountStates(const Value: ITMDBAccountStates);
+
+    procedure LoadTabContent;
+
+    procedure LoadDetails;
     procedure LoadAccountStates;
     procedure LoadAlternativeTitles;
     procedure LoadCredits;
-    procedure LoadDetails;
     procedure LoadExternalIDs;
     procedure LoadKeywords;
     procedure LoadReleaseDates;
@@ -104,6 +108,12 @@ begin
   FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
 end;
 
+procedure TfrmContentMovieDetail.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FDetail:= nil;
+end;
+
 function TfrmContentMovieDetail.EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
   ATab: TTabSheet): TfrmCommonFormBase;
 begin
@@ -112,12 +122,6 @@ begin
   Result.BorderStyle:= bsNone;
   Result.Align:= alClient;
   Result.Show;
-end;
-
-procedure TfrmContentMovieDetail.FormDestroy(Sender: TObject);
-begin
-  inherited;
-  FDetail:= nil;
 end;
 
 function TfrmContentMovieDetail.GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
@@ -208,7 +212,7 @@ begin
       7: LoadKeywords;
       8: ; //Lists
       9: ; //Recommendations
-      10: LoadReleaseDAtes;
+      10: LoadReleaseDates;
       11: LoadReviews;
       12: ; //Similar
       13: ; //Translations
@@ -326,7 +330,6 @@ var
 begin
   S:= FDetail.AppendedAccountStates;
   DisplayAccountStates(S);
-
 end;
 
 procedure TfrmContentMovieDetail.DisplayAccountStates(const Value: ITMDBAccountStates);

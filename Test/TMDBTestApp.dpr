@@ -43,7 +43,9 @@ uses
   uCommonReviews in 'Common Forms\uCommonReviews.pas' {frmCommonReviews},
   uContentMovieAccountStates in 'Movies\uContentMovieAccountStates.pas' {frmContentMovieAccountStates},
   uCommonAlternativeTitles in 'Common Forms\uCommonAlternativeTitles.pas' {frmCommonAlternativeTitles},
-  uContentConfigLanguages in 'Configuration\uContentConfigLanguages.pas' {frmContentConfigLanguages};
+  uContentConfigLanguages in 'Configuration\uContentConfigLanguages.pas' {frmContentConfigLanguages},
+  uContentTVSerieDetail in 'TVSeries\uContentTVSerieDetail.pas' {frmContentTVSerieDetail},
+  uTabTVSeries in 'TVSeries\uTabTVSeries.pas' {frmTabTVSeries};
 
 {$R *.res}
 
@@ -54,5 +56,7 @@ begin
   Application.CreateForm(TfrmContentMovieAccountStates, frmContentMovieAccountStates);
   Application.CreateForm(TfrmCommonAlternativeTitles, frmCommonAlternativeTitles);
   Application.CreateForm(TfrmContentConfigLanguages, frmContentConfigLanguages);
+  Application.CreateForm(TfrmContentTVSerieDetail, frmContentTVSerieDetail);
+  Application.CreateForm(TfrmTabTVSeries, frmTabTVSeries);
   Application.Run;
 end.

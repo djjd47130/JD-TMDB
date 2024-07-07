@@ -550,7 +550,7 @@ type
   TTMDBAPITVSeries = class(TTMDBAPINamespace)
   public
     function GetDetails(const SeriesID: Integer; const AppendToResponse: String = '';
-      const Language: String = ''): ISuperObject;
+      const Language: String = ''; const SessionID: WideString = ''): ISuperObject;
     function GetAccountStates(const SeriesID: Integer; const SessionID: String = '';
       const GuestSessionID: String = ''): ISuperObject;
     function GetAggregateCredits(const SeriesID: Integer; const Language: String = ''): ISuperObject;
@@ -559,7 +559,7 @@ type
       const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperObject;
     function GetContentRatings(const SeriesID: Integer): ISuperArray;
     function GetCredits(const SeriesID: Integer; const Language: String = ''): ISuperObject;
-    function GetEpisodeGroups(const SeriesID: Integer): ISuperArray;
+    function GetEpisodeGroups(const SeriesID: Integer): ISuperObject;
     function GetExternalIDs(const SeriesID: Integer): ISuperObject;
     function GetImages(const SeriesID: Integer; const IncludeImageLanguage: String = '';
       const Language: String = ''): ISuperObject;
@@ -593,13 +593,13 @@ type
     function GetAggregateCredits(const SeriesID: Integer; const SeasonNumber: Integer;
       const Language: String = ''): ISuperObject;
     function GetChanges(const SeasonID: Integer; const StartDate: TDateTime = 0;
-      const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperObject;
+      const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperArray;
     function GetCredits(const SeriesID: Integer; const SeasonNumber: Integer;
       const Language: String = ''): ISuperObject;
     function GetExternalIDs(const SeriesID: Integer; const SeasonNumber: Integer): ISuperObject;
     function GetImages(const SeriesID: Integer; const SeasonNumber: Integer;
       const IncludeImageLanguage: String = ''; const Language: String = ''): ISuperObject;
-    function GetTranslations(const SeriesID: Integer; const SeasonNumber: Integer): ISuperArray;
+    function GetTranslations(const SeriesID: Integer; const SeasonNumber: Integer): ISuperObject;
     function GetVideos(const SeriesID: Integer; const SeasonNumber: Integer;
       const IncludeVideoLanguage: String = ''; const Language: String = ''): ISuperObject;
     function GetWatchProviders(const SeriesID: Integer; const SeasonNumber: Integer;
@@ -614,7 +614,7 @@ type
     function GetAccountStates(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
       const SessionID: String = ''; const GuestSessionID: String = ''): ISuperObject;
     function GetChanges(const EpisodeID: Integer; const StartDate: TDateTime = 0;
-      const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperObject;
+      const EndDate: TDateTime = 0): ISuperArray;
     function GetCredits(const SeriesID: Integer; const SeasonNumber: Integer;
       const EpisodeNumber: Integer; const Language: String = ''): ISuperObject;
     function GetExternalIDs(const SeriesID: Integer; const SeasonNumber: Integer;
@@ -623,10 +623,10 @@ type
       const EpisodeNumber: Integer; const IncludeImageLanguage: String = '';
       const Language: String = ''): ISuperObject;
     function GetTranslations(const SeriesID: Integer; const SeasonNumber: Integer;
-      const EpisodeNumber: Integer): ISuperArray;
+      const EpisodeNumber: Integer): ISuperObject;
     function GetVideos(const SeriesID: Integer; const SeasonNumber: Integer;
       const EpisodeNumber: Integer; const IncludeVideoLanguage: String = '';
-      const Language: String = ''): ISuperArray;
+      const Language: String = ''): ISuperObject;
     function AddRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer; const Rating: Single;
       const GuestSessionID: String = ''; const SessionID: String = ''): ISuperObject;
     function DeleteRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
@@ -1986,13 +1986,14 @@ end;
 { TTMDBAPITVSeries }
 
 function TTMDBAPITVSeries.GetDetails(const SeriesID: Integer;
-  const AppendToResponse, Language: String): ISuperObject;
+  const AppendToResponse, Language: String; const SessionID: WideString): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID);
   AddParam(P, 'append_to_response', AppendToResponse);
   AddParam(P, 'language', Language);
+  AddParam(P, 'session_id', SessionID);
   Result:= FOwner.GetJSON(U, P);
 end;
 
@@ -2059,12 +2060,12 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAPITVSeries.GetEpisodeGroups(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetEpisodeGroups(const SeriesID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID)+'/episode_groups';
-  Result:= FOwner.GetJSON(U, '').A['results'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPITVSeries.GetExternalIDs(const SeriesID: Integer): ISuperObject;
@@ -2247,7 +2248,7 @@ begin
 end;
 
 function TTMDBAPITVSeasons.GetChanges(const SeasonID: Integer; const StartDate,
-  EndDate: TDateTime; const Page: Integer): ISuperObject;
+  EndDate: TDateTime; const Page: Integer): ISuperArray;
 var
   S, E: String;
   U, P: String;
@@ -2258,7 +2259,7 @@ begin
   AddParam(P, 'start_date', S);
   AddParam(P, 'end_date', E);
   AddParam(P, 'page', IntToStr(Page));
-  Result:= FOwner.GetJSON(U, P);
+  Result:= FOwner.GetJSON(U, P).A['changes'];
 end;
 
 function TTMDBAPITVSeasons.GetCredits(const SeriesID, SeasonNumber: Integer;
@@ -2292,12 +2293,12 @@ begin
 end;
 
 function TTMDBAPITVSeasons.GetTranslations(const SeriesID,
-  SeasonNumber: Integer): ISuperArray;
+  SeasonNumber: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID)+'/season/'+IntToStr(SeasonNumber)+'/translations';
-  Result:= FOwner.GetJSON(U, '').A['translations'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPITVSeasons.GetVideos(const SeriesID, SeasonNumber: Integer;
@@ -2349,7 +2350,7 @@ begin
 end;
 
 function TTMDBAPITVEpisodes.GetChanges(const EpisodeID: Integer; const StartDate,
-  EndDate: TDateTime; const Page: Integer): ISuperObject;
+  EndDate: TDateTime): ISuperArray;
 var
   S, E: String;
   U, P: String;
@@ -2359,8 +2360,7 @@ begin
   if EndDate = 0 then E:= '' else E:= FormatDateTime('yyyy-mm-dd', EndDate);
   AddParam(P, 'start_date', S);
   AddParam(P, 'end_date', E);
-  AddParam(P, 'page', IntToStr(Page));
-  Result:= FOwner.GetJSON(U, P);
+  Result:= FOwner.GetJSON(U, P).A['changes'];
 end;
 
 function TTMDBAPITVEpisodes.GetCredits(const SeriesID, SeasonNumber,
@@ -2398,18 +2398,18 @@ begin
 end;
 
 function TTMDBAPITVEpisodes.GetTranslations(const SeriesID, SeasonNumber,
-  EpisodeNumber: Integer): ISuperArray;
+  EpisodeNumber: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID)+'/season/'+IntToStr(SeasonNumber)+'/episode/'+
     IntToStr(EpisodeNumber)+'/translations';
-  Result:= FOwner.GetJSON(U, '').A['translations'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPITVEpisodes.GetVideos(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const IncludeVideoLanguage,
-  Language: String): ISuperArray;
+  Language: String): ISuperObject;
 var
   U, P: String;
 begin
@@ -2417,7 +2417,7 @@ begin
     IntToStr(EpisodeNumber)+'/videos';
   AddParam(P, 'include_video_language', IncludeVideoLanguage);
   AddParam(P, 'language', Language);
-  Result:= FOwner.GetJSON(U, P).A['results'];
+  Result:= FOwner.GetJSON(U, P);
 end;
 
 function TTMDBAPITVEpisodes.AddRating(const SeriesID, SeasonNumber,

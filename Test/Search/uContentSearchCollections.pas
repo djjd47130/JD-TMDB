@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, Vcl.StdCtrls,
   Vcl.ComCtrls, Vcl.ExtCtrls, JD.Common, JD.Ctrls, JD.Ctrls.FontButton,
-  JD.TMDB.Common, JD.TMDB.Intf;
+  JD.TMDB.Common, JD.TMDB.Intf,
+  uCommonImages;
 
 type
   TfrmContentSearchCollections = class(TfrmContentPageBase)
@@ -22,7 +23,7 @@ type
     Pages: TPageControl;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
+    tabImages: TTabSheet;
     TabSheet4: TTabSheet;
     lblTitle: TLabel;
     txtOverview: TMemo;
@@ -32,12 +33,15 @@ type
     procedure PagesChange(Sender: TObject);
   private
     FDetail: ITMDBCollectionDetail;
-    //FImages: ITMDBImageList;
-    //FTranslations: ITMDBTranslationList;
+    FImages: ITMDBMediaImageGroup;
+    FTranslations: ITMDBTranslations;
+    FDetailImages: TfrmCommonImages;
     function GetCollectionDetail(const ID: Integer): ITMDBCollectionDetail;
     procedure DisplayCollectionDetail(const Value: ITMDBCollectionDetail);
     procedure LoadDetails;
     procedure LoadParts;
+    procedure LoadImages;
+    procedure LoadTranslations;
   protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -66,6 +70,13 @@ procedure TfrmContentSearchCollections.FormCreate(Sender: TObject);
 begin
   inherited;
   Pages.ActivePageIndex:= 0;
+
+  FDetailImages:= TfrmCommonImages.Create(tabImages);
+  FDetailImages.Parent:= tabImages;
+  FDetailImages.BorderStyle:= bsNone;
+  FDetailImages.Align:= alClient;
+  FDetailImages.Show;
+
 end;
 
 procedure TfrmContentSearchCollections.FormDestroy(Sender: TObject);
@@ -183,9 +194,8 @@ begin
     case Pages.ActivePageIndex of
       0: LoadDetails;
       1: LoadParts;
-      2: ; //LoadImages
-      3: ; //LoadTranslations
-      //TODO
+      2: LoadImages;
+      3: LoadTranslations;
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -197,6 +207,12 @@ begin
   lblTitle.Caption:= FDetail.Name;
   txtOverview.Lines.Text:= FDetail.Overview;
 
+end;
+
+procedure TfrmContentSearchCollections.LoadImages;
+begin
+  FImages:= FDetail.GetImages(frmTMDBTestMain.cboLanguage.Text);
+  FDetailImages.LoadImages(FImages);
 end;
 
 procedure TfrmContentSearchCollections.LoadParts;
@@ -227,6 +243,12 @@ begin
   finally
     lstParts.Items.EndUpdate;
   end;
+end;
+
+procedure TfrmContentSearchCollections.LoadTranslations;
+begin
+  //TODO
+
 end;
 
 end.

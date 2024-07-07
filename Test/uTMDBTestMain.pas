@@ -18,6 +18,7 @@ uses
   uTabGenres,
   uTabCertifications,
   uTabMovies,
+  uTabTVSeries,
   uLoginBrowser,
   Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB;
 
@@ -327,6 +328,7 @@ begin
   EmbedTab(TfrmTabGenres);
   EmbedTab(TfrmTabMovies);
   EmbedTab(TfrmTabSearch);
+  EmbedTab(TfrmTabTVSeries);
 
   //Hide all taps and reset to first tab...
   for X := 0 to Pages.PageCount-1 do

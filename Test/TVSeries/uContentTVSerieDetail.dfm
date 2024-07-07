@@ -1,56 +1,44 @@
-inherited frmContentMovieDetail: TfrmContentMovieDetail
-  ActiveControl = txtID
-  Caption = 'Movie Detail'
-  ClientWidth = 919
+inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
+  Caption = 'TV Serie Detail'
+  ClientHeight = 537
+  ClientWidth = 985
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 935
+  ExplicitWidth = 1001
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 18
   object Pages: TPageControl
     Left = 0
-    Top = 64
-    Width = 919
-    Height = 409
-    ActivePage = TabSheet2
+    Top = 104
+    Width = 985
+    Height = 433
+    ActivePage = TabSheet1
     Align = alBottom
-    Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
     TabOrder = 0
-    Visible = False
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
+      ExplicitTop = 29
+      ExplicitWidth = 746
+      ExplicitHeight = 360
       object Splitter1: TSplitter
         Left = 0
-        Top = 220
-        Width = 911
+        Top = 286
+        Width = 977
         Height = 7
         Cursor = crVSplit
         Align = alBottom
         ResizeStyle = rsUpdate
-        ExplicitLeft = 24
-        ExplicitTop = 146
-      end
-      object txtOverview: TMemo
-        AlignWithMargins = True
-        Left = 3
-        Top = 230
-        Width = 905
-        Height = 120
-        Align = alBottom
-        BorderStyle = bsNone
-        Color = clBtnFace
-        ReadOnly = True
-        ScrollBars = ssVertical
-        TabOrder = 0
+        ExplicitTop = -126
       end
       object lstDetail: TListView
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 905
-        Height = 214
+        Width = 971
+        Height = 280
         Align = alClient
         Columns = <
           item
@@ -64,30 +52,48 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         HotTrackStyles = [htHandPoint, htUnderlineHot]
         ReadOnly = True
         RowSelect = True
-        TabOrder = 1
+        TabOrder = 0
         ViewStyle = vsReport
+        ExplicitWidth = 905
+        ExplicitHeight = 214
+      end
+      object txtOverview: TMemo
+        AlignWithMargins = True
+        Left = 3
+        Top = 296
+        Width = 971
+        Height = 78
+        Align = alBottom
+        BorderStyle = bsNone
+        Color = clBtnFace
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 1
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Account States'
       ImageIndex = 1
+      ExplicitTop = 29
+      ExplicitWidth = 746
+      ExplicitHeight = 360
       object lblRating: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 905
+        Width = 971
         Height = 18
         Align = alTop
         AutoSize = False
         Caption = 'Rating'
-        ExplicitTop = 123
-        ExplicitWidth = 693
+        ExplicitLeft = 6
+        ExplicitTop = 11
       end
       object btnFavorite: TJDFontButton
         AlignWithMargins = True
         Left = 3
         Top = 27
-        Width = 905
+        Width = 971
         Height = 38
         Cursor = crHandPoint
         Align = alTop
@@ -124,13 +130,13 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Add to Favorites'
-        OnClick = btnFavoriteClick
+        ExplicitWidth = 905
       end
       object btnWatchlist: TJDFontButton
         AlignWithMargins = True
         Left = 3
         Top = 71
-        Width = 905
+        Width = 971
         Height = 38
         Cursor = crHandPoint
         Align = alTop
@@ -167,169 +173,124 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Add to Watchlist'
-        OnClick = btnWatchlistClick
+        ExplicitWidth = 905
       end
     end
     object TabSheet3: TTabSheet
-      Caption = 'Alternative Titles'
+      Caption = 'Aggregate Credits'
       ImageIndex = 2
-      object lstAltTitles: TListView
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 905
-        Height = 347
-        Align = alClient
-        Columns = <
-          item
-            Caption = 'Title'
-            Width = 350
-          end
-          item
-            Caption = 'Country'
-            Width = 250
-          end>
-        HotTrackStyles = [htHandPoint, htUnderlineHot]
-        ReadOnly = True
-        RowSelect = True
-        TabOrder = 0
-        ViewStyle = vsReport
-      end
+      ExplicitTop = 29
+      ExplicitWidth = 746
+      ExplicitHeight = 360
     end
-    object TabSheet4: TTabSheet
-      Caption = 'Changes'
+    object tabAlternativeTitles: TTabSheet
+      Caption = 'Alternative Titles'
       ImageIndex = 3
+      ExplicitTop = 29
+      ExplicitWidth = 746
+      ExplicitHeight = 360
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'Changes'
+      ImageIndex = 4
+      ExplicitTop = 29
+      ExplicitWidth = 746
+      ExplicitHeight = 360
+    end
+    object TabSheet6: TTabSheet
+      Caption = 'Content Ratings'
+      ImageIndex = 5
+      ExplicitTop = 29
+      ExplicitWidth = 963
+      ExplicitHeight = 360
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
-      ImageIndex = 4
+      ImageIndex = 6
+      ExplicitTop = 29
+      ExplicitWidth = 963
+      ExplicitHeight = 360
     end
-    object TabSheet6: TTabSheet
+    object TabSheet8: TTabSheet
+      Caption = 'Episode Groups'
+      ImageIndex = 7
+      ExplicitTop = 29
+      ExplicitWidth = 963
+      ExplicitHeight = 360
+    end
+    object TabSheet9: TTabSheet
       Caption = 'External IDs'
-      ImageIndex = 5
-      object lstExternalIDs: TListView
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 905
-        Height = 347
-        Align = alClient
-        Columns = <
-          item
-            Caption = 'Name'
-            Width = 200
-          end
-          item
-            Caption = 'Value'
-            Width = 600
-          end>
-        HotTrackStyles = [htHandPoint, htUnderlineHot]
-        ReadOnly = True
-        RowSelect = True
-        TabOrder = 0
-        ViewStyle = vsReport
-      end
+      ImageIndex = 8
+      ExplicitTop = 29
+      ExplicitWidth = 963
+      ExplicitHeight = 360
     end
     object tabImages: TTabSheet
       Caption = 'Images'
-      ImageIndex = 6
-    end
-    object TabSheet8: TTabSheet
-      Caption = 'Keywords'
-      ImageIndex = 7
-      object lstKeywords: TListBox
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 326
-        Height = 347
-        Align = alLeft
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -19
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        ItemHeight = 23
-        ParentFont = False
-        TabOrder = 0
-      end
-    end
-    object TabSheet9: TTabSheet
-      Caption = 'Lists'
-      ImageIndex = 8
-    end
-    object TabSheet10: TTabSheet
-      Caption = 'Recommendations'
       ImageIndex = 9
+      ExplicitWidth = 963
+      ExplicitHeight = 337
     end
     object TabSheet11: TTabSheet
-      Caption = 'Release Dates'
+      Caption = 'Keywords'
       ImageIndex = 10
-      object lstReleaseDates: TListView
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 905
-        Height = 347
-        Align = alClient
-        BorderStyle = bsNone
-        Columns = <
-          item
-            Caption = 'Release Date'
-            Width = 130
-          end
-          item
-            Caption = 'Type'
-            Width = 180
-          end
-          item
-            Caption = 'Note'
-            Width = 150
-          end
-          item
-            Caption = 'Certification'
-            Width = 120
-          end
-          item
-            Caption = 'Descriptors'
-            Width = 200
-          end
-          item
-            Caption = 'Language'
-            Width = 150
-          end>
-        HotTrackStyles = [htHandPoint, htUnderlineHot]
-        GroupView = True
-        ReadOnly = True
-        RowSelect = True
-        TabOrder = 0
-        ViewStyle = vsReport
-      end
+      ExplicitWidth = 963
+      ExplicitHeight = 337
+    end
+    object TabSheet12: TTabSheet
+      Caption = 'Lists'
+      ImageIndex = 11
+      ExplicitWidth = 963
+      ExplicitHeight = 337
+    end
+    object TabSheet13: TTabSheet
+      Caption = 'Recommendations'
+      ImageIndex = 12
+      ExplicitWidth = 963
+      ExplicitHeight = 337
     end
     object tabReviews: TTabSheet
       Caption = 'Reviews'
-      ImageIndex = 11
-    end
-    object TabSheet13: TTabSheet
-      Caption = 'Similar'
-      ImageIndex = 12
-    end
-    object TabSheet14: TTabSheet
-      Caption = 'Translations'
       ImageIndex = 13
+      ExplicitLeft = 0
+      ExplicitTop = 56
+      ExplicitWidth = 963
+      ExplicitHeight = 337
+    end
+    object TabSheet15: TTabSheet
+      Caption = 'Screened Theatrically'
+      ImageIndex = 14
+      ExplicitWidth = 963
+      ExplicitHeight = 337
+    end
+    object TabSheet16: TTabSheet
+      Caption = 'Similar'
+      ImageIndex = 15
+      ExplicitWidth = 963
+      ExplicitHeight = 337
+    end
+    object TabSheet17: TTabSheet
+      Caption = 'Translations'
+      ImageIndex = 16
+      ExplicitWidth = 963
+      ExplicitHeight = 337
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
-      ImageIndex = 14
+      ImageIndex = 17
+      ExplicitTop = 75
+      ExplicitWidth = 963
+      ExplicitHeight = 314
     end
   end
   object pTop: TPanel
     Left = 0
     Top = 0
-    Width = 919
+    Width = 985
     Height = 33
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 919
     object Label1: TLabel
       AlignWithMargins = True
       Left = 4

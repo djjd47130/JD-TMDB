@@ -29,9 +29,6 @@ inherited frmCommonAlternativeTitles: TfrmCommonAlternativeTitles
     ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -2
-    ExplicitTop = -2
-    ExplicitHeight = 439
   end
   object pTop: TPanel
     Left = 0
@@ -40,8 +37,6 @@ inherited frmCommonAlternativeTitles: TfrmCommonAlternativeTitles
     Height = 33
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -140
-    ExplicitWidth = 919
     object Label1: TLabel
       AlignWithMargins = True
       Left = 4

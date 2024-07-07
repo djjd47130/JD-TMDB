@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, JD.Common, JD.Ctrls,
   JD.Ctrls.FontButton, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
   JD.TMDB.Intf,
-  JD.TMDB.Common;
+  JD.TMDB.Common,
+  uContentTVSerieDetail;
 
 type
   TfrmContentSearchTV = class(TfrmContentPageBase)
@@ -23,8 +24,13 @@ type
     Panel14: TPanel;
     Label15: TLabel;
     txtYear: TEdit;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FDetail: ITMDBTVSerieDetail;
+    FDetailForm: TfrmContentTVSerieDetail;
+    function GetSeriesDetail(const ID: Integer): ITMDBTVSerieDetail;
+    procedure DisplaySeriesDetail(const Value: ITMDBTVSerieDetail);
   public
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -48,6 +54,23 @@ uses
   uTMDBTestMain;
 
 { TfrmContentSearchTV }
+
+procedure TfrmContentSearchTV.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FDetailForm:= TfrmContentTVSerieDetail.Create(pDetail);
+  FDetailForm.Parent:= pDetail;
+  FDetailForm.BorderStyle:= bsNone;
+  FDetailForm.Align:= alClient;
+  FDetailForm.pTop.Visible:= False;
+  FDetailForm.Show;
+end;
+
+procedure TfrmContentSearchTV.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FDetail:= nil;
+end;
 
 function TfrmContentSearchTV.GetData(const APageNum: Integer): ITMDBPage;
 var
@@ -126,11 +149,50 @@ begin
   AddCol('Description', 700);
 end;
 
+function TfrmContentSearchTV.GetSeriesDetail(const ID: Integer): ITMDBTVSerieDetail;
+var
+  Inc: TTMDBTVSeriesRequests;
+begin
+  PrepAPI;
+  Inc:= [trAccountStates, trAggregateCredits, trAlternativeTitles,
+    trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
+    trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
+    trSimilar, trTranslations, trVideos];
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+    TMDB.LoginState.SessionID);
+end;
+
 procedure TfrmContentSearchTV.ShowDetail(const Index: Integer; Item: TListItem;
   Obj: ITMDBItem);
+var
+  ID: Integer;
+  O: ITMDBTVSerie;
 begin
+  Screen.Cursor:= crHourglass;
+  try
+    FDetail:= nil;
+    PrepAPI;
+    O:= (Obj) as ITMDBTVSerie;
+    ID:= O.ID;
+    FDetail:= GetSeriesDetail(ID);
+  finally
+    Screen.Cursor:= crDefault;
+  end;
+  DisplaySeriesDetail(FDetail);
   inherited;
+end;
 
+procedure TfrmContentSearchTV.DisplaySeriesDetail(const Value: ITMDBTVSerieDetail);
+begin
+  //Refresh detail of selected tab...
+  FDetail:= Value;
+  Screen.Cursor:= crHourglass;
+  try
+    FDetailForm.LoadSeries(Value);
+
+  finally
+    Screen.Cursor:= crDefault;
+  end;
 end;
 
 end.
