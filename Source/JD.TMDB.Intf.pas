@@ -2967,17 +2967,17 @@ type
     ['{7A209CC2-3BB0-4AC7-AD28-9466ACC666EA}']
     function GetDetails(const PersonID: Integer; const AppendToResult: TTMDBPersonRequests = [];
       const Language: WideString = ''): ITMDBPersonDetail; stdcall;
-    //function GetChanges(const PersonID: Integer;
-    //  const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    function GetChanges(const PersonID: Integer;
+      const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
     //function GetCombinedCredits(const PersonID: Integer;
     //  const Language: WideString = ''): ITMDBCombinedCredits; stdcall;
-    //function GetExternalIDs(const PersonID: Integer): ITMDBExternalIDs; stdcall;
-    //function GetImages(const PersonID: Integer): ITMDBMediaImageGroup; stdcall;
-    //function GetLatest: ITMDBPersonDetail; stdcall;
+    function GetExternalIDs(const PersonID: Integer): ITMDBExternalIDs; stdcall;
+    function GetImages(const PersonID: Integer): ITMDBMediaImageGroup; stdcall;
+    function GetLatest: ITMDBPersonDetail; stdcall;
     //function GetMovieCredits(const PersonID: Integer): ITMDB???; stdcall;
     //function GetTVCredits(const PersonID: Integer): ITMDB???; stdcall;
     //function GetTaggedImages(const PersonID: Integer): ITMDB???; stdcall; [DEPRECATED]
-    //function GetTranslations(const PersonID: Integer): ITMDBTranslations; stdcall;
+    function GetTranslations(const PersonID: Integer): ITMDBTranslations; stdcall;
   end;
 
   ITMDBNamespaceReviews = interface(ITMDBNamespace)

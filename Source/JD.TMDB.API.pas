@@ -491,15 +491,15 @@ type
     function GetDetails(const PersonID: Integer; const AppendToResponse: String = '';
       const Language: String = ''): ISuperObject;
     function GetChanges(const PersonID: Integer; const StartDate: TDateTime = 0;
-      const EndDate: TDateTime = 0; const Page: Integer = 1): ISuperObject;
+      const EndDate: TDateTime = 0): ISuperObject;
     function GetCombinedCredits(const PersonID: Integer; const Language: String = ''): ISuperObject;
     function GetExternalIDs(const PersonID: Integer): ISuperObject;
-    function GetImages(const PersonID: Integer): ISuperArray;
+    function GetImages(const PersonID: Integer): ISuperObject;
     function GetLatest: ISuperObject;
     function GetMovieCredits(const PersonID: Integer; const Language: String = ''): ISuperObject;
     function GetTVCredits(const PersonID: Integer; const Language: String = ''): ISuperObject;
     //DEPRECATED function GetTaggedImages(): ISuperObject;
-    function GetTranslations(const PersonID: Integer): ISuperArray;
+    function GetTranslations(const PersonID: Integer): ISuperObject;
   end;
 
   TTMDBAPIReviews = class(TTMDBAPINamespace)
@@ -1708,7 +1708,7 @@ begin
 end;
 
 function TTMDBAPIPeople.GetChanges(const PersonID: Integer; const StartDate,
-  EndDate: TDateTime; const Page: Integer): ISuperObject;
+  EndDate: TDateTime): ISuperObject;
 var
   S, E: String;
   U, P: String;
@@ -1718,7 +1718,6 @@ begin
   if EndDate = 0 then E:= '' else E:= FormatDateTime('yyyy-mm-dd', EndDate);
   AddParam(P, 'start_date', S);
   AddParam(P, 'end_date', E);
-  AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
 
@@ -1740,12 +1739,12 @@ begin
   Result:= FOwner.GetJSON(U, '');
 end;
 
-function TTMDBAPIPeople.GetImages(const PersonID: Integer): ISuperArray;
+function TTMDBAPIPeople.GetImages(const PersonID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'person/'+IntToStr(PersonID)+'/images';
-  Result:= FOwner.GetJSON(U, '').A['profiles'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPIPeople.GetLatest: ISuperObject;
@@ -1773,12 +1772,12 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAPIPeople.GetTranslations(const PersonID: Integer): ISuperArray;
+function TTMDBAPIPeople.GetTranslations(const PersonID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'person/'+IntToStr(PersonID)+'/translations';
-  Result:= FOwner.GetJSON(U, '').A['translations'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 { TTMDBAPIReviews }

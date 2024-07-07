@@ -2930,17 +2930,17 @@ type
   public
     function GetDetails(const PersonID: Integer; const AppendToResult: TTMDBPersonRequests = [];
       const Language: WideString = ''): ITMDBPersonDetail; stdcall;
-    //function GetChanges(const PersonID: Integer;
-    //  const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    function GetChanges(const PersonID: Integer;
+      const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
     //function GetCombinedCredits(const PersonID: Integer;
     //  const Language: WideString = ''): ITMDBCombinedCredits; stdcall;
-    //function GetExternalIDs(const PersonID: Integer): ITMDBExternalIDs; stdcall;
-    //function GetImages(const PersonID: Integer): ITMDBMediaImageGroup; stdcall;
-    //function GetLatest: ITMDBPersonDetail; stdcall;
+    function GetExternalIDs(const PersonID: Integer): ITMDBExternalIDs; stdcall;
+    function GetImages(const PersonID: Integer): ITMDBMediaImageGroup; stdcall;
+    function GetLatest: ITMDBPersonDetail; stdcall;
     //function GetMovieCredits(const PersonID: Integer): ITMDB???; stdcall;
     //function GetTVCredits(const PersonID: Integer): ITMDB???; stdcall;
     //function GetTaggedImages(const PersonID: Integer): ITMDB???; stdcall; [DEPRECATED]
-    //function GetTranslations(const PersonID: Integer): ITMDBTranslations; stdcall;
+    function GetTranslations(const PersonID: Integer): ITMDBTranslations; stdcall;
   end;
 
   TTMDBNamespaceReviews = class(TTMDBNamespace, ITMDBNamespaceReviews)
@@ -9899,6 +9899,15 @@ end;
 
 { TTMDBNamespacePeople }
 
+function TTMDBNamespacePeople.GetChanges(const PersonID: Integer;
+  const StartDate, EndDate: TDateTime): ITMDBChanges;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.People.GetChanges(PersonID, Startdate, EndDate);
+  Result:= TTMDBChanges.Create(O.A['changes'], FOwner);
+end;
+
 function TTMDBNamespacePeople.GetDetails(
   const PersonID: Integer; const AppendToResult: TTMDBPersonRequests = [];
   const Language: WideString = ''): ITMDBPersonDetail;
@@ -9909,6 +9918,41 @@ begin
   ATR:= TMDBPersonRequestsToStr(AppendToResult);
   O:= FOwner.FAPI.People.GetDetails(PersonID, ATR, Language);
   Result:= TTMDBPersonDetail.Create(O, FOwner);
+end;
+
+function TTMDBNamespacePeople.GetExternalIDs(
+  const PersonID: Integer): ITMDBExternalIDs;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.People.GetExternalIDs(PersonID);
+  Result:= TTMDBExternalIDs.Create(O);
+end;
+
+function TTMDBNamespacePeople.GetImages(
+  const PersonID: Integer): ITMDBMediaImageGroup;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.People.GetImages(PersonID);
+  Result:= TTMDBMediaImageGroup.Create(O, FOwner);
+end;
+
+function TTMDBNamespacePeople.GetLatest: ITMDBPersonDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.People.GetLatest;
+  Result:= TTMDBPersonDetail.Create(O, FOwner);
+end;
+
+function TTMDBNamespacePeople.GetTranslations(
+  const PersonID: Integer): ITMDBTranslations;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.People.GetTranslations(PersonID);
+  Result:= TTMDBTranslations.Create(O, TTMDBTranslationType.ttPerson);
 end;
 
 { TTMDBFindResults }
