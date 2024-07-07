@@ -1,6 +1,6 @@
 # JD-TMDB
 
-TMDB API Wrapper for Delphi - Written by Jerry Dodge 
+TMDB (The Movie DataBase) API Wrapper for Delphi - Written by Jerry Dodge 
 
 ## IMPORTANT NOTE
 
