@@ -18,12 +18,13 @@ unit JD.TMDB.API;
   - Images - Use image base URL from configuration instead of hard-coding
 
   REMARKS:
-  - This unit is fully functional at this point, with the exception
-    of a few specific Namespaces and capabilities missing
-    such as discover, as described in the "TODO" above.
-  - Many requests are still untested. The new "Intf" / "Impl" layer on the
-    other hand is still a major work in progress, with many TMDB specific
-    interfaces and corresponding implementation.
+  - This unit is fully functional at this point, with the exception of a few
+    specific Namespaces and capabilities missing as described above.
+  - Many requests are still untested.
+  - The new "Intf" / "Impl" layer is still a major work in progress, with many
+    TMDB specific interfaces and corresponding implementation objects.
+    That is meant to be the primary means of using this library - this unit
+    shouldn't have to be referenced in practical usage at all.
 
 *)
 
@@ -503,7 +504,7 @@ type
 
   TTMDBAPIReviews = class(TTMDBAPINamespace)
   public
-    function GetDetails(const ReviewID: Integer): ISuperObject;
+    function GetDetails(const ReviewID: String): ISuperObject;
   end;
 
   TTMDBAPISearch = class(TTMDBAPINamespace)
@@ -573,7 +574,7 @@ type
     function GetScreenedTheatrically(const SeriesID: Integer): ISuperArray;
     function GetSimilar(const SeriesID: Integer; const Language: String = '';
       const Page: Integer= 1): ISuperObject;
-    function GetTranslations(const SeriesID: Integer): ISuperArray;
+    function GetTranslations(const SeriesID: Integer): ISuperObject;
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: String = '';
       const Language: String = ''): ISuperObject;
     function GetWatchProviders(const SeriesID: Integer): ISuperObject;
@@ -1782,11 +1783,11 @@ end;
 
 { TTMDBAPIReviews }
 
-function TTMDBAPIReviews.GetDetails(const ReviewID: Integer): ISuperObject;
+function TTMDBAPIReviews.GetDetails(const ReviewID: String): ISuperObject;
 var
   U: String;
 begin
-  U:= 'review/'+IntToStr(ReviewID);
+  U:= 'review/'+ReviewID;
   Result:= FOwner.GetJSON(U, '');
 end;
 
@@ -2155,12 +2156,12 @@ begin
   Result:= FOwner.GetJSON(U, P);
 end;
 
-function TTMDBAPITVSeries.GetTranslations(const SeriesID: Integer): ISuperArray;
+function TTMDBAPITVSeries.GetTranslations(const SeriesID: Integer): ISuperObject;
 var
   U: String;
 begin
   U:= 'tv/'+IntToStr(SeriesID)+'/translations';
-  Result:= FOwner.GetJSON(U, '').A['translations'];
+  Result:= FOwner.GetJSON(U, '');
 end;
 
 function TTMDBAPITVSeries.GetVideos(const SeriesID: Integer;

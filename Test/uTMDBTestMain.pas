@@ -37,7 +37,7 @@ type
     rAuthToken: TRadioButton;
     rAuthKey: TRadioButton;
     MM: TMainMenu;
-    Services1: TMenuItem;
+    mNamespaces: TMenuItem;
     Setup1: TMenuItem;
     AppSetup1: TMenuItem;
     btnValidateKey: TButton;
@@ -73,7 +73,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure AppSetup1Click(Sender: TObject);
-    procedure Services1Click(Sender: TObject);
+    procedure mNamespacesClick(Sender: TObject);
     procedure UserAuthMethodClick(Sender: TObject);
     procedure btnValidateKeyClick(Sender: TObject);
     procedure Setup1Click(Sender: TObject);
@@ -91,7 +91,7 @@ type
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
-    procedure ServiceClicked(Sender: TObject);
+    procedure NamespaceClicked(Sender: TObject);
     function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     procedure EmbedTabs;
     function GetAPIAuth: TTMDBAuthMethod;
@@ -135,7 +135,7 @@ begin
   //TMDB.ListPrimaryTranslations(cboLanguage.Items);
   TMDB.ListLanguages(cboLanguage.Items);
 
-  Services1.Click; //TODO: Why was this necessary?
+  mNamespaces.Click; //TODO: Why was this necessary?
   Width:= 1200;
   Height:= 800;
 end;
@@ -229,7 +229,7 @@ end;
 
 procedure TfrmTMDBTestMain.AppSetup1Click(Sender: TObject);
 begin
-  ServiceClicked(AppSetup1);
+  NamespaceClicked(AppSetup1);
 end;
 
 procedure TfrmTMDBTestMain.ShowUserInfo;
@@ -417,27 +417,27 @@ begin
   end;
 end;
 
-procedure TfrmTMDBTestMain.Services1Click(Sender: TObject);
+procedure TfrmTMDBTestMain.mNamespacesClick(Sender: TObject);
 var
   X: Integer;
   T: TTabSheet;
   I: TMenuItem;
 begin
-  Services1.Clear;
+  mNamespaces.Clear;
   //Skip the first SETUP tab...
   for X := 1 to Pages.PageCount-1 do begin
     T:= Pages.Pages[X];
 
-    I:= TMenuItem.Create(Services1);
+    I:= TMenuItem.Create(mNamespaces);
     try
       I.Caption:= T.Caption;
       I.RadioItem:= True;
       I.Tag:= T.PageIndex;
       if I.Tag = Pages.ActivePageIndex then
         I.Checked:= True;
-      I.OnClick:= ServiceClicked;
+      I.OnClick:= NamespaceClicked;
     finally
-      Services1.Add(I);
+      mNamespaces.Add(I);
     end;
   end;
 end;
@@ -488,7 +488,7 @@ begin
   end;
 end;
 
-procedure TfrmTMDBTestMain.ServiceClicked(Sender: TObject);
+procedure TfrmTMDBTestMain.NamespaceClicked(Sender: TObject);
 var
   I: Integer;
   M: TMenuItem;

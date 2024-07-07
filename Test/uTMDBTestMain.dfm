@@ -504,9 +504,9 @@ object frmTMDBTestMain: TfrmTMDBTestMain
   object MM: TMainMenu
     Left = 240
     Top = 16
-    object Services1: TMenuItem
-      Caption = 'Services'
-      OnClick = Services1Click
+    object mNamespaces: TMenuItem
+      Caption = 'Namespaces'
+      OnClick = mNamespacesClick
     end
     object Setup1: TMenuItem
       Caption = 'Setup'

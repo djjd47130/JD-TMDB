@@ -17,7 +17,8 @@ const
   TMDB_ERR_INVALID_SERVICE = 2;
   TMDB_ERR_AUTH_FAILED = 3;
   TMDB_ERR_INVALID_FORMAT = 4;
-  //TODO: All the way to code 47...
+  //TODO: All the way to code 47... Issue #44
+  //https://developer.themoviedb.org/docs/errors
 
 
 type

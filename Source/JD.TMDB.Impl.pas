@@ -1583,6 +1583,38 @@ type
 
 
 
+{$REGION 'Find Related'}
+
+  TTMDBFindResults = class(TInterfacedObject, ITMDBFindResults)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FMovies: ITMDBMovies;
+    FPeople: ITMDBPeople;
+    FTVSeries: ITMDBTVSeries;
+    FTVSeasons: ITMDBTVSeasons;
+    FTVEpisodes: ITMDBTVEpisodes;
+  protected
+    function GetMovieResults: ITMDBMovies;
+    function GetPersonResults: ITMDBPeople;
+    function GetTVResults: ITMDBTVSeries;
+    function GetTVEpisodeResults: ITMDBTVEpisodes;
+    function GetTVSeasonResults: ITMDBTVSeasons;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+    destructor Destroy; override;
+
+    property MovieResults: ITMDBMovies read GetMovieResults;
+    property PersonResults: ITMDBPeople read GetPersonResults;
+    property TVResults: ITMDBTVSeries read GetTVResults;
+    property TVEpisodeResults: ITMDBTVEpisodes read GetTVEpisodeResults;
+    property TVSeasonResults: ITMDBTVSeasons read GetTVSeasonResults;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Person Related'}
 
   TTMDBPerson = class(TTMDBMedium, ITMDBPerson)
@@ -1616,6 +1648,56 @@ type
     function GetItems: ITMDBPeople; stdcall;
   public
     property Items: ITMDBPeople read GetItems;
+  end;
+
+  TTMDBPersonDetail = class(TTMDBDetail, ITMDBPersonDetail)
+  protected
+    function GetAdult: Boolean; stdcall;
+    function GetAlsoKnownAs: TTMDBStrArray; stdcall;
+    function GetBiography: WideString; stdcall;
+    function GetBirthday: TDateTime; stdcall;
+    function GetDeathday: TDateTime; stdcall;
+    function GetGender: TTMDBGender; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetIMDBID: WideString; stdcall;
+    function GetKnownForDepartment: WideString; stdcall;
+    function GetPlaceOfBirth: WideString; stdcall;
+    function GetPopularity: Single; stdcall;
+    function GetProfilePath: WideString; stdcall;
+
+  public
+
+
+    //TODO: Appended data...
+    //function AppendedChanges: ITMDBChanges; stdcall;
+    //function AppendedCombinedCredits: ITMDBCombinedCredits; stdcall;
+    //function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
+    //function AppendedImages: ITMDBMediaImageGroup; stdcall;
+    //function AppendedMovieCredits: ???
+    //function AppendedTVCredits: ???
+    //function AppendedTranslations: ITMDBTranslations; stdcall;
+
+    //TODO: Shortcut functions...
+    //function GetChanges(): ITMDBChanges; stdcall;
+    //function GetCombinedCredits(): ITMDBCombinedCredits; stdcall;
+    //function GetExternalIDs(): ITMDBCombinedCredits; stdcall;
+    //function GetImages(): ITMDBMediaImageGroup; stdcall;
+    //function GetMovieCredits
+    //function GetTVCredits
+    //function GetTranslations(): ITMDBTranslations; stdcall;
+
+    property Adult: Boolean read GetAdult;
+    property AlsoKnownAs: TTMDBStrArray read GetAlsoKnownAs;
+    property Biography: WideString read GetBiography;
+    property Birthday: TDateTime read GetBirthday;
+    property Deathday: TDateTime read GetDeathday;
+    property Gender: TTMDBGender read GetGender;
+    property Homepage: WideString read GetHomepage;
+    property IMDBID: WideString read GetIMDBID;
+    property KnownForDepartment: WideString read GetKnownForDepartment;
+    property PlaceOfBirth: WideString read GetPlaceOfBirth;
+    property Popularity: Single read GetPopularity;
+    property ProfilePath: WideString read GetProfilePath;
   end;
 
 {$ENDREGION}
@@ -1765,7 +1847,7 @@ type
 
 
 
- {$REGION 'Review Related'}
+{$REGION 'Review Related'}
 
   TTMDBReviewAuthor = class(TInterfacedObject, ITMDBReviewAuthor)
   private
@@ -2753,9 +2835,15 @@ type
 
   TTMDBNamespaceGuestSessions = class(TTMDBNamespace, ITMDBNamespaceGuestSessions)
   public
-    //GetRatedMovies
-    //GetRatedTV
-    //GetRatedTVEpisodes
+    function GetRatedMovies(const GuestSessionID: WideString;
+      const Language: WideString = ''; const SortBy: WideString = '';
+      const Page: Integer = 1): ITMDBRatedMoviePage;
+    function GetRatedTV(const GuestSessionID: WideString;
+      const Language: WideString = ''; const SortBy: WideString = '';
+      const Page: Integer = 1): ITMDBRatedTVSeriesPage;
+    function GetRatedTVEpisodes(const GuestSessionID: WideString;
+      const Language: WideString = ''; const SortBy: WideString = '';
+      const Page: Integer = 1): ITMDBRatedTVEpisodePage;
   end;
 
   TTMDBNamespaceKeywords = class(TTMDBNamespace, ITMDBNamespaceKeywords)
@@ -2766,13 +2854,15 @@ type
 
   TTMDBNamespaceLists = class(TTMDBNamespace, ITMDBNamespaceLists)
   public
-    //AddMovie
-    //CheckItemStatus
-    //Clear
-    //Create
-    //Delete
-    //GetDetails
-    //RemoveMovie
+    //function AddMovie
+    //function CheckItemStatus(const ListID: Integer; const MovieID: Integer;
+    //  const Language: WideString = ''): ITMDBListItemStatus; stdcall;
+    //function Clear
+    //function Create
+    //function Delete
+    //function GetDetails(const ListID: Integer; const Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBListDetail; stdcall;
+    //function RemoveMovie
   end;
 
   TTMDBNamespaceMovieLists = class(TTMDBNamespace, ITMDBNamespaceMovieLists)
@@ -2838,9 +2928,12 @@ type
 
   TTMDBNamespacePeople = class(TTMDBNamespace, ITMDBNamespacePeople)
   public
-    //function GetDetails(const PersonID: Integer): ITMDBPersonDetail; stdcall;
-    //function GetChanges(const PersonID: Integer): ITMDBChanges; stdcall;
-    //function GetCombinedCredits(const PersonID: Integer): ITMDBCombinedCredits; stdcall;
+    function GetDetails(const PersonID: Integer; const AppendToResult: TTMDBPersonRequests = [];
+      const Language: WideString = ''): ITMDBPersonDetail; stdcall;
+    //function GetChanges(const PersonID: Integer;
+    //  const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    //function GetCombinedCredits(const PersonID: Integer;
+    //  const Language: WideString = ''): ITMDBCombinedCredits; stdcall;
     //function GetExternalIDs(const PersonID: Integer): ITMDBExternalIDs; stdcall;
     //function GetImages(const PersonID: Integer): ITMDBMediaImageGroup; stdcall;
     //function GetLatest: ITMDBPersonDetail; stdcall;
@@ -2852,7 +2945,7 @@ type
 
   TTMDBNamespaceReviews = class(TTMDBNamespace, ITMDBNamespaceReviews)
   public
-    //function GetDetail(const ReviewID: WideString): ITMDBReviewDetail; stdcall;
+    function GetDetail(const ReviewID: WideString): ITMDBReviewDetail; stdcall;
   end;
 
   TTMDBNamespaceSearch = class(TTMDBNamespace, ITMDBNamespaceSearch)
@@ -2890,12 +2983,12 @@ type
 
   TTMDBNamespaceTVSeriesLists = class(TTMDBNamespace, ITMDBNamespaceTVSeriesLists)
   public
-    //function GetAiringToday(const Language: WideString = ''; const Timezone: WideString  = '';
-    //  const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
-    //function GetOnTheAir(const Language: WideString = ''; const Timezone: WideString  = '';
-    //  const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
-    //function GetPopular(const Language: WideString = ''; const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
-    //function GetTopRated(const Language: WideString = ''; const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    function GetAiringToday(const Language: WideString = ''; const Timezone: WideString  = '';
+      const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    function GetOnTheAir(const Language: WideString = ''; const Timezone: WideString  = '';
+      const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    function GetPopular(const Language: WideString = ''; const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    function GetTopRated(const Language: WideString = ''; const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
   end;
 
   TTMDBNamespaceTVSeries = class(TTMDBNamespace, ITMDBNamespaceTVSeries)
@@ -2903,12 +2996,13 @@ type
     function GetDetails(const SeriesID: Integer; const AppendToResponse: TTMDBTVSeriesRequests = [];
       const Language: WideString = ''): ITMDBTVSerieDetail; stdcall;
     function GetAccountStates(const SeriesID: Integer): ITMDBAccountStates; stdcall;
-    //GetAggregateCredits
+    //function GetAggregateCredits(const SeriesID: Integer;
+    //  const Language: WideString = ''): ITMDBAggregateCredits; stdcall; //TODO: Different than normal credits (includes more)...
     function GetAlternativeTitles(const SeriesID: Integer): ITMDBAlternativeTitles; stdcall;
     function GetChanges(const SeriesID: Integer; const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
     function GetContentRatings(const SeriesID: Integer): ITMDBContentRatings; stdcall;
     function GetCredits(const SeriesID: Integer; const Language: WideString = ''): ITMDBCredits; stdcall;
-    //GetEpisodeGroups
+    //function GetEpisodeGroups(const SeriesID: Integer): ITMDBEpisodeGroups; stdcall;
     function GetExternalIDs(const SeriesID: Integer): ITMDBExternalIDs; stdcall;
     function GetImages(const SeriesID: Integer; const IncludeImageLanguage: WideString ='';
       const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
@@ -2920,43 +3014,69 @@ type
       const Language: WideString = ''; const Page: Integer = 1): ITMDBMediaPage; stdcall;
     function GetReviews(const SeriesID: Integer; const Language: WideString = '';
       const Page: Integer = 1): ITMDBReviewPage; stdcall;
-    //GetScreenedTheatrically
+    //function GetScreenedTheatrically(const SeriesID: Integer): ITMDBScreenedTheatricallyItems; stdcall;
     function GetSimilar(const SeriesID: Integer; const Language: WideString = '';
       const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
-    //GetTranslations
+    function GetTranslations(const SeriesID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //GetWatchProviders
-    //AddRating
-    //DeleteRating
+    //function GetWatchProviders(const SeriesID: Integer): ITMDB???; stdcall;
+    //function AddRating(const SeriesID: Integer; const Rating: Single;
+    //  cosnt SessionID: WideString = '';
+    //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
+    //function DeleteRating(const SeriesID: Integer;
+    //  cosnt SessionID: WideString = '';
+    //  const GuestSessionID: WideString = ''): ITMDBDeleteRatingResult; stdcall;
   end;
 
   TTMDBNamespaceTVSeasons = class(TTMDBNamespace, ITMDBNamespaceTVSeasons)
   public
-    //GetDetails
-    //GetAccountStates
-    //GetAggregateCredits
-    //GetChanges
-    //GetCredits
-    //GetExternalIDs
-    //GetImages
-    //GetTranslations
-    //GetVideos
-    //GetWatchProviders
+    //function GetDetails(const SeriesID, SeasonNumber: Integer;
+    //  const AppendToResponse: TTMDBTVSeasonRequests = [];
+    //  const Language: WideString = ''): ITMDBTVSeasonDetail; stdcall;
+    //function GetAccountStates(const SeriesID, SeasonNumber: Integer;
+    //  const SessionID: WideString = '';
+    //  const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
+    //function GetAggregateCredits(const SeriesID, SeasonNumber: Integer;
+    //  const Language: WideString = ''): ITMDBAggregateCredits; stdcall;
+    //function GetChanges(const SeasonID: Integer; const StartDate, EndDate: TDateTime;
+    //  const Page: Integer = 1): ITMDBChanges; stdcall;
+    //function GetCredits(const SeriesID, SeasonNumber: Integer;
+    //  const Language: WideString = ''): ITMDBCredits; stdcall;
+    //function GetExternalIDs(const SeriesID, SeasonNumber: Integer): ITMDBExternalIDs; stdcall;
+    //function GetImages(const SeriesID, SeasonNumber: Integer;
+    //  const IncludeImageLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    //function GetTranslations(const SeriesID, SeasonNumber: Integer): ITMDBTranslations; stdcall;
+    //function GetVideos(const SeriesID, SeasonNumber: Integer;
+    //  const IncludeVideoLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBVideos; stdcall;
+    //function GetWatchProviders(const SeriesID, SeasonNumber: Integer;
+    //  const Language: WideString = ''): ITMDB???; stdcall;
   end;
 
   TTMDBNamespaceTVEpisodes = class(TTMDBNamespace, ITMDBNamespaceTVEpisodes)
   public
-    //GetDetails
-    //GetAccountStates
-    //GetChanges
-    //GetCredits
-    //GetExternalIDs
-    //GetImages
-    //GetTranslations
-    //GetVideos
-    //AddRating
-    //DeleteRating
+    //function GetDetails(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+    //  const AppendToResponse: TTMDBTVEpisodeReqeusts;
+    //  const Language: WideString = ''): ITMDBTVEpisodeDetail; stdcall;
+    //function GetAccountStates(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+    //  const SessionID: WideString = '';
+    //  const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
+    //function GetChanges(const EpisodeID: Integer;
+    //  const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    //function GetCredits(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+    //  const Language: WideString = ''): ITMDBCredits; stdcall;
+    //function GetExternalIDs(const SeriesID, SeasonNumber, EpisodeNumber: Integer): ITMDBExternalIDs; stdcall;
+    //function GetImages(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+    //  const IncludeImageLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    //function GetTranslations(const SeriesID, SeasonNumber, EpisodeNumber: Integer): ITMDBTranslations: stdcall;
+    //function GetVideos(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+    //  cosnt IncludeVideoLanguage: WideString ==;
+    //  const Language: WideString = ''): ITMDBVideos; stdcall;
+    //function AddRating
+    //function DeleteRating
   end;
 
   TTMDBNamespaceTVEpisodeGroups = class(TTMDBNamespace, ITMDBNamespaceTVEpisodeGroups)
@@ -8049,7 +8169,7 @@ var
   O: ISuperObject;
 begin
   O:= FOwner.FAPI.Find.GetFindByID(ExternalID, ExternalSource, Language);
-  //Result:= TTMDBFindResults.Create(O);
+  Result:= TTMDBFindResults.Create(O, FOwner);
 end;
 
 { TTMDBNamespaceGenres }
@@ -8587,6 +8707,15 @@ var
 begin
   O:= FOwner.FAPI.TVSeries.GetSimilar(SeriesID, Language, Page);
   Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBNamespaceTVSeries.GetTranslations(
+  const SeriesID: Integer): ITMDBTranslations;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.GetTranslations(SeriesID);
+  Result:= TTMDBTranslations.Create(O, TTMDBTranslationType.ttTVSeries);
 end;
 
 function TTMDBNamespaceTVSeries.GetVideos(const SeriesID: Integer;
@@ -9704,6 +9833,220 @@ var
 begin
   O:= FOwner.FAPI.Credits.GetDetails(CreditID);
   Result:= TTMDBCreditDetail.Create(O, FOwner);
+end;
+
+{ TTMDBPersonDetail }
+
+function TTMDBPersonDetail.GetAdult: Boolean;
+begin
+  Result:= FObj.B['adult'];
+end;
+
+function TTMDBPersonDetail.GetAlsoKnownAs: TTMDBStrArray;
+begin
+  Result:= JSONToStrArray(FObj.A['also_known_as']);
+end;
+
+function TTMDBPersonDetail.GetBiography: WideString;
+begin
+  Result:= FObj.S['biography'];
+end;
+
+function TTMDBPersonDetail.GetBirthday: TDateTime;
+begin
+  Result:= FObj.D['birthday'];
+end;
+
+function TTMDBPersonDetail.GetDeathday: TDateTime;
+begin
+  Result:= FObj.D['deathday'];
+end;
+
+function TTMDBPersonDetail.GetGender: TTMDBGender;
+begin
+  Result:= TTMDBGender(FObj.I['gender']);
+end;
+
+function TTMDBPersonDetail.GetHomepage: WideString;
+begin
+  Result:= FObj.S['homepage'];
+end;
+
+function TTMDBPersonDetail.GetIMDBID: WideString;
+begin
+  Result:= FObj.S['imdg_id'];
+end;
+
+function TTMDBPersonDetail.GetKnownForDepartment: WideString;
+begin
+  Result:= FObj.S['known_for_department'];
+end;
+
+function TTMDBPersonDetail.GetPlaceOfBirth: WideString;
+begin
+  Result:= FObj.S['place_of_birth'];
+end;
+
+function TTMDBPersonDetail.GetPopularity: Single;
+begin
+  Result:= FObj.F['popularity'];
+end;
+
+function TTMDBPersonDetail.GetProfilePath: WideString;
+begin
+  Result:= FObj.S['profile_path'];
+end;
+
+{ TTMDBNamespacePeople }
+
+function TTMDBNamespacePeople.GetDetails(
+  const PersonID: Integer; const AppendToResult: TTMDBPersonRequests = [];
+  const Language: WideString = ''): ITMDBPersonDetail;
+var
+  O: ISuperObject;
+  ATR: String;
+begin
+  ATR:= TMDBPersonRequestsToStr(AppendToResult);
+  O:= FOwner.FAPI.People.GetDetails(PersonID, ATR, Language);
+  Result:= TTMDBPersonDetail.Create(O, FOwner);
+end;
+
+{ TTMDBFindResults }
+
+constructor TTMDBFindResults.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FMovies:= nil;
+  FPeople:= nil;
+  FTVSeries:= nil;
+  FTVSeasons:= nil;
+  FTVEpisodes:= nil;
+end;
+
+destructor TTMDBFindResults.Destroy;
+begin
+  FMovies:= nil;
+  FPeople:= nil;
+  FTVSeries:= nil;
+  FTVSeasons:= nil;
+  FTVEpisodes:= nil;
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBFindResults.GetMovieResults: ITMDBMovies;
+begin
+  if FMovies = nil then
+    FMovies:= TTMDBMovies.Create(FObj.A['movie_results'], FTMDB, TTMDBMovie);
+  Result:= FMovies;
+end;
+
+function TTMDBFindResults.GetPersonResults: ITMDBPeople;
+begin
+  if FPeople = nil then
+    FPeople:= TTMDBPeople.Create(FObj.A['person_results'], FTMDB, TTMDBPerson);
+  Result:= FPeople;
+end;
+
+function TTMDBFindResults.GetTVEpisodeResults: ITMDBTVEpisodes;
+begin
+  if FTVEpisodes = nil then
+    FTVEpisodes:= TTMDBTVEpisodes.Create(FObj.A['tv_episode_results'], FTMDB, TTMDBTVEpisode);
+  Result:= FTVEpisodes;
+end;
+
+function TTMDBFindResults.GetTVResults: ITMDBTVSeries;
+begin
+  if FTVSeries = nil then
+    FTVSeries:= TTMDBTVSeries.Create(FObj.A['tv_results'], FTMDB, TTMDBTVSerie);
+  Result:= FTVSeries;
+end;
+
+function TTMDBFindResults.GetTVSeasonResults: ITMDBTVSeasons;
+begin
+  //if FTVSeasons = nil then
+    //FTVSeasons:= TTMDBTVSeasons.
+  //TODO
+end;
+
+{ TTMDBNamespaceTVSeriesLists }
+
+function TTMDBNamespaceTVSeriesLists.GetAiringToday(const Language,
+  Timezone: WideString; const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeriesLists.GetAiringToday(Language, Page, Timezone);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBNamespaceTVSeriesLists.GetOnTheAir(const Language,
+  Timezone: WideString; const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeriesLists.GetOnTheAir(Language, Page, Timezone);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBNamespaceTVSeriesLists.GetPopular(const Language: WideString;
+  const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeriesLists.GetPopular(Language, Page);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+function TTMDBNamespaceTVSeriesLists.GetTopRated(const Language: WideString;
+  const Page: Integer): ITMDBTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeriesLists.GetTopRated(Language, Page);
+  Result:= TTMDBTVSeriesPage.Create(O, FOwner, TTMDBTVSerie, TTMDBTVSeries);
+end;
+
+{ TTMDBNamespaceReviews }
+
+function TTMDBNamespaceReviews.GetDetail(
+  const ReviewID: WideString): ITMDBReviewDetail;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Reviews.GetDetails(ReviewID);
+  Result:= TTMDBReviewDetail.Create(O);
+end;
+
+{ TTMDBNamespaceGuestSessions }
+
+function TTMDBNamespaceGuestSessions.GetRatedMovies(const GuestSessionID,
+  Language, SortBy: WideString; const Page: Integer): ITMDBRatedMoviePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.GuestSessions.GetRatedMovies(GuestSessionID, Language, Page, SortBy);
+  Result:= TTMDBRatedMoviePage.Create(O, FOwner, TTMDBRatedMovie, TTMDBRatedMovies);
+end;
+
+function TTMDBNamespaceGuestSessions.GetRatedTV(const GuestSessionID, Language,
+  SortBy: WideString; const Page: Integer): ITMDBRatedTVSeriesPage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.GuestSessions.GetRatedTV(GuestSessionID, Language, Page, SortBy);
+  Result:= TTMDBRatedTVSeriesPage.Create(O, FOwner, TTMDBRatedTVSerie, TTMDBRatedTVSeries);
+end;
+
+function TTMDBNamespaceGuestSessions.GetRatedTVEpisodes(const GuestSessionID,
+  Language, SortBy: WideString; const Page: Integer): ITMDBRatedTVEpisodePage;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.GuestSessions.GetRatedTVEpisodes(GuestSessionID, Language, Page, SortBy);
+  Result:= TTMDBRatedTVEpisodePage.Create(O, FOwner, TTMDBRatedTVEpisode, TTMDBRatedTVEpisodes);
 end;
 
 end.
