@@ -145,12 +145,12 @@ type
   TTMDBRatedTVSeries = class;
   TTMDBRatedTVSeriesPage = class;
   TTMDBTVSerieDetail = class;
-  //TTMDBTVSeason = class;
-  //TTMDBTVSeasons = class;
-  //TTMDBTVSeasonPage = class;
-  //TTMDBTVSeasonDetail = class;
-  //TTMDBTVSeasonEpisode = class;
-  //TTMDBTVSeasonEpisodes = class;
+  TTMDBTVSeason = class;
+  TTMDBTVSeasons = class;
+  TTMDBTVSeasonPage = class;
+  TTMDBTVSeasonDetail = class;
+  TTMDBTVSeasonEpisode = class;
+  TTMDBTVSeasonEpisodes = class;
   TTMDBTVEpisode = class;
   TTMDBTVEpisodes = class;
   TTMDBTVEpisodePage = class;
@@ -2426,12 +2426,6 @@ type
 
 
 
-{$REGION 'TV Season Related'}
-
-{$ENDREGION}
-
-
-
 {$REGION 'TV Episode Related'}
 
   TTMDBTVEpisode = class(TTMDBMedium, ITMDBTVEpisode)
@@ -2505,6 +2499,90 @@ type
   TTMDBTVEpisodeDetail = class(TTMDBDetail, ITMDBTVEpisodeDetail)
   protected
     //TODO
+  end;
+
+{$ENDREGION}
+
+
+
+{$REGION 'TV Season Related'}
+
+  TTMDBTVSeason = class(TTMDBMedium, ITMDBTVSeason)
+  protected
+    function GetAirDate: TDateTime; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetSeasonNumber: Integer; stdcall;
+    function GetVoteAverage: Single; stdcall;
+  public
+    property AirDate: TDateTime read GetAirDate;
+    property Overview: WideString read GetOverview;
+    property PosterPath: WideString read GetPosterPath;
+    property SeasonNumber: Integer read GetSeasonNumber;
+    property VoteAverage: Single read GetVoteAverage;
+  end;
+
+  TTMDBTVSeasons = class(TTMDBMedia, ITMDBTVSeasons)
+  protected
+    function GetItem(const Index: Integer): ITMDBTVSeason; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBTVSeason read GetItem; default;
+  end;
+
+  TTMDBTVSeasonPage = class(TTMDBMediaPage, ITMDBTVSeasonPage)
+  protected
+    function GetItems: ITMDBTVSeasons; stdcall;
+  public
+    property Items: ITMDBTVSeasons read GetItems;
+  end;
+
+  TTMDBTVSeasonEpisode = class(TTMDBTVEpisode, ITMDBTVSeasonEpisode)
+  private
+    FCrew: ITMDBCrewPeople;
+    FGuestStars: ITMDBCastPeople;
+  protected
+    function GetCrew: ITMDBCrewPeople; stdcall;
+    function GetGuestStars: ITMDBCastPeople; stdcall;
+  public
+    property Crew: ITMDBCrewPeople read GetCrew;
+    property GuestStarts: ITMDBCastPeople read GetGuestStars;
+  end;
+
+  TTMDBTVSeasonEpisodes = class(TTMDBTVEpisodes, ITMDBTVSeasonEpisodes)
+  protected
+    function GetItem(const Index: Integer): ITMDBTVSeasonEpisode; stdcall;
+  public
+    property Items[const Index: Integer]: ITMDBTVSeasonEpisode read GetItem; default;
+  end;
+
+  TTMDBTVSeasonDetail = class(TInterfacedObject, ITMDBTVSeasonDetail)
+  private
+    FObj: ISuperObject;
+    FTMDB: ITMDBClient;
+    FEpisodes: ITMDBTVSeasonEpisodes;
+  protected
+    function Get_ID: WideString; stdcall;
+    function GetAirDate: TDateTime; stdcall;
+    function GetEpisodes: ITMDBTVSeasonEpisodes; stdcall;
+    function GetName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetID: Integer; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetSeasonNumber: Integer; stdcall;
+    function GetVoteAverage: Single; stdcall;
+  public
+    constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient); virtual;
+    destructor Destroy; override;
+
+    property _ID: WideString read Get_ID;
+    property AirDate: TDateTime read GetAirDate;
+    property Episodes: ITMDBTVSeasonEpisodes read GetEpisodes;
+    property Name: WideString read GetName;
+    property Overview: WideString read GetOverview;
+    property ID: Integer read GetID;
+    property PosterPath: WideString read GetPosterPath;
+    property SeasonNumber: Integer read GetSeasonNumber;
+    property VoteAverage: Single read GetVoteAverage;
   end;
 
 {$ENDREGION}
@@ -10096,6 +10174,135 @@ var
 begin
   O:= FOwner.FAPI.GuestSessions.GetRatedTVEpisodes(GuestSessionID, Language, Page, SortBy);
   Result:= TTMDBRatedTVEpisodePage.Create(O, FOwner, TTMDBRatedTVEpisode, TTMDBRatedTVEpisodes);
+end;
+
+{ TTMDBTVSeason }
+
+function TTMDBTVSeason.GetAirDate: TDateTime;
+begin
+  Result:= FObj.D['air_date'];
+end;
+
+function TTMDBTVSeason.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBTVSeason.GetPosterPath: WideString;
+begin
+  Result:= FObj.S['poster_path'];
+end;
+
+function TTMDBTVSeason.GetSeasonNumber: Integer;
+begin
+  Result:= FObj.I['season_number'];
+end;
+
+function TTMDBTVSeason.GetVoteAverage: Single;
+begin
+  Result:= FObj.F['vote_average'];
+end;
+
+{ TTMDBTVSeasons }
+
+function TTMDBTVSeasons.GetItem(const Index: Integer): ITMDBTVSeason;
+begin
+  Result:= inherited GetItem(Index) as ITMDBTVSeason;
+end;
+
+{ TTMDBTVSeasonPage }
+
+function TTMDBTVSeasonPage.GetItems: ITMDBTVSeasons;
+begin
+  Result:= inherited GetItems as ITMDBTVSeasons;
+end;
+
+{ TTMDBTVSeasonEpisode }
+
+function TTMDBTVSeasonEpisode.GetCrew: ITMDBCrewPeople;
+begin
+  if FCrew = nil then
+    FCrew:= TTMDBCrewPeople.Create(FObj.A['crew'], FTMDB, TTMDBCrewPerson);
+  Result:= FCrew;
+end;
+
+function TTMDBTVSeasonEpisode.GetGuestStars: ITMDBCastPeople;
+begin
+  if FGuestStars = nil then
+    FGuestStars:= TTMDBCastPeople.Create(FObj.A['cast'], FTMDB, TTMDBCastPerson);
+  Result:= FGuestStars;
+end;
+
+{ TTMDBTVSeasonEpisodes }
+
+function TTMDBTVSeasonEpisodes.GetItem(
+  const Index: Integer): ITMDBTVSeasonEpisode;
+begin
+  Result:= inherited GetItem(Index) as ITMDBTVSeasonEpisode;
+end;
+
+{ TTMDBTVSeasonDetail }
+
+constructor TTMDBTVSeasonDetail.Create(AObj: ISuperObject; ATMDB: ITMDBClient);
+begin
+  FObj:= AObj;
+  FTMDB:= ATMDB;
+  FEpisodes:= nil;
+end;
+
+destructor TTMDBTVSeasonDetail.Destroy;
+begin
+  FEpisodes:= nil;
+  FTMDB:= nil;
+  FObj:= nil;
+  inherited;
+end;
+
+function TTMDBTVSeasonDetail.GetAirDate: TDateTime;
+begin
+  Result:= FObj.D['air_date'];
+end;
+
+function TTMDBTVSeasonDetail.GetEpisodes: ITMDBTVSeasonEpisodes;
+begin
+  if FEpisodes = nil then
+    FEpisodes:= TTMDBTVSeasonEpisodes.Create(FObj.A['episodes'], FTMDB, TTMDBTVSeasonEpisode);
+  Result:= FEpisodes;
+end;
+
+function TTMDBTVSeasonDetail.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
+end;
+
+function TTMDBTVSeasonDetail.GetName: WideString;
+begin
+  Result:= FObj.S['name'];
+end;
+
+function TTMDBTVSeasonDetail.GetOverview: WideString;
+begin
+  Result:= FObj.S['overview'];
+end;
+
+function TTMDBTVSeasonDetail.GetPosterPath: WideString;
+begin
+  Result:= FObj.S['poster_path'];
+end;
+
+function TTMDBTVSeasonDetail.GetSeasonNumber: Integer;
+begin
+  Result:= FObj.I['season_number'];
+end;
+
+function TTMDBTVSeasonDetail.GetVoteAverage: Single;
+begin
+  Result:= FObj.F['vote_average'];
+end;
+
+function TTMDBTVSeasonDetail.Get_ID: WideString;
+begin
+  Result:= FObj.S['_id'];
 end;
 
 end.

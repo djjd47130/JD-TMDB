@@ -42,7 +42,8 @@ uses
   uLoginBrowser in 'uLoginBrowser.pas' {frmLoginBrowser},
   uCommonReviews in 'Common Forms\uCommonReviews.pas' {frmCommonReviews},
   uContentMovieAccountStates in 'Movies\uContentMovieAccountStates.pas' {frmContentMovieAccountStates},
-  uCommonAlternativeTitles in 'Common Forms\uCommonAlternativeTitles.pas' {frmCommonAlternativeTitles};
+  uCommonAlternativeTitles in 'Common Forms\uCommonAlternativeTitles.pas' {frmCommonAlternativeTitles},
+  uContentConfigLanguages in 'Configuration\uContentConfigLanguages.pas' {frmContentConfigLanguages};
 
 {$R *.res}
 
@@ -52,5 +53,6 @@ begin
   Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
   Application.CreateForm(TfrmContentMovieAccountStates, frmContentMovieAccountStates);
   Application.CreateForm(TfrmCommonAlternativeTitles, frmCommonAlternativeTitles);
+  Application.CreateForm(TfrmContentConfigLanguages, frmContentConfigLanguages);
   Application.Run;
 end.

@@ -15,13 +15,13 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/reference/intro/getting-started
 
   TODO:
-  - Images - Use image base URL from configuration instead of hard-coding
+  - Images - Use image base URL from configuration instead of hard-coding - Issue #43
 
   REMARKS:
   - This unit is fully functional at this point, with the exception of a few
     specific Namespaces and capabilities missing as described above.
   - Many requests are still untested.
-  - The new "Intf" / "Impl" layer is still a major work in progress, with many
+  - The "Intf" / "Impl" layer is still a major work in progress, with many
     TMDB specific interfaces and corresponding implementation objects.
     That is meant to be the primary means of using this library - this unit
     shouldn't have to be referenced in practical usage at all.

@@ -268,7 +268,7 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     Height = 188
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
@@ -285,12 +285,13 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       TabOrder = 0
       object Panel3: TPanel
         Left = 2
-        Top = 15
+        Top = 18
         Width = 265
         Height = 24
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitTop = 15
         object RadioButton3: TRadioButton
           Tag = 1
           AlignWithMargins = True
@@ -331,66 +332,70 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       end
       object pAuthUser: TPanel
         Left = 2
-        Top = 39
+        Top = 42
         Width = 265
         Height = 51
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitTop = 39
         object Label2: TLabel
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 259
-          Height = 18
+          Height = 15
           Align = alClient
           Caption = 'Username:'
           Layout = tlCenter
-          ExplicitWidth = 61
-          ExplicitHeight = 13
+          ExplicitWidth = 69
+          ExplicitHeight = 16
         end
         object txtAuthUser: TEdit
           AlignWithMargins = True
           Left = 3
-          Top = 27
+          Top = 24
           Width = 259
-          Height = 21
+          Height = 24
           Align = alBottom
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
+          ExplicitTop = 27
         end
       end
       object pAuthPass: TPanel
         Left = 2
-        Top = 90
+        Top = 93
         Width = 265
         Height = 50
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitTop = 90
         object Label4: TLabel
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 247
-          Height = 17
+          Height = 14
           Margins.Right = 15
           Align = alClient
           Caption = 'Password:'
           Layout = tlCenter
-          ExplicitWidth = 57
-          ExplicitHeight = 13
+          ExplicitWidth = 68
+          ExplicitHeight = 16
         end
         object txtAuthPass: TEdit
           AlignWithMargins = True
           Left = 3
-          Top = 26
+          Top = 23
           Width = 259
-          Height = 21
+          Height = 24
           Align = alBottom
           PasswordChar = '*'
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
+          ExplicitTop = 26
         end
       end
       object btnLogin: TButton
@@ -427,12 +432,14 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       object Panel4: TPanel
         AlignWithMargins = True
         Left = 127
-        Top = 18
+        Top = 21
         Width = 102
-        Height = 123
+        Height = 120
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitTop = 18
+        ExplicitHeight = 123
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
@@ -462,18 +469,20 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       object Panel5: TPanel
         AlignWithMargins = True
         Left = 5
-        Top = 18
+        Top = 21
         Width = 116
-        Height = 123
+        Height = 120
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitTop = 18
+        ExplicitHeight = 123
         object imgUserAvatar: TImage
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 110
-          Height = 117
+          Height = 114
           Align = alClient
           ExplicitWidth = 22
           ExplicitHeight = 102
@@ -523,8 +532,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
     AppUserAgent = 
       'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
       'TMDB)'
-    RateLimiting = False
-    RateLimitMsec = 10
+    RateLimiting = True
+    RateLimitMsec = 20
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 292
     Top = 15

@@ -24,7 +24,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uContentConfigCountries;
+  uContentConfigCountries,
+  uContentConfigLanguages;
 
 { TfrmTabConfiguration }
 
@@ -44,7 +45,12 @@ procedure TfrmTabConfiguration.EmbedAllContent;
 begin
   inherited;
 
+  //Details
   EmbedContent(TfrmContentConfigCountries);
+  //Jobs
+  EmbedContent(TfrmContentConfigLanguages);
+  //Primary Translations
+  //Timezones
 
 end;
 
