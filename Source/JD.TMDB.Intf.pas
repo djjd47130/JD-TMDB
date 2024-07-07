@@ -1985,7 +1985,7 @@ type
 {$REGION 'TV Series Related'}
 
   /// <summary>
-  /// A single TV Show in an ITMDBTVPage.
+  /// A single TV Series as found in TMDB.
   /// </summary>
   ITMDBTVSerie = interface(ITMDBMedium)
     ['{7907FF27-E02F-4270-9AAB-322E6C31516D}']
@@ -2000,6 +2000,35 @@ type
     function GetVoteAverage: Single; stdcall;
     function GetVoteCount: Integer; stdcall;
 
+    //TODO: Shortcut Functions...
+    //function GetDetail(const AppendToResponse: TTMDBTVSeriesRequests = [];
+    //  const Language: WideString = ''): ITMDBTVSerieDetail; stdcall;
+    //function GetAccountStates(const SessionID: WideString = '';
+    //  const GuestSessionID: WideString = '': ITMDBAccountStates; stdcall;
+    //function GetAggregateCredits(const Language: WideString = ''): ITMDBAggregateCredits; stdcall;
+    //function GetAlternativeTitles: ITMDBAlternativeTitles; stdcall;
+    //function GetChanges(const StartDate, EndDate: TDateTime): ITMDBChanges; s tdcall;
+    //function GetContentRatings: ITMDBContentRatings; stdcall;
+    //function GetCredits(const Language: WideString = ''): ITMDBCredits; stdcall;
+    //function GetEpisodeGroups: ITMDBEpisodeGroups; stdcall;
+    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    //function GetImages(const IncludeImageLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    //function GetKeywords: ITMDBKeywords; stdcall;
+    //function GetLists(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBLists; stdcall;
+    //function GetRecommendations(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMediaPage;
+    //function GetReviews(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBReviewPage;
+    //function GetScreenedTheatrically: ???
+    //function GetSimilar(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    //function GetTranslations: ITMDTTranslations; stdcall;
+    //function GetVideos(const IncludeVideoLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBVideos; stdcall;
+    //function GetWatchProviders: ITMDBMediaWatchProviders; stdcall;
+
     property BackdropPath: WideString read GetBackdropPath;
     property Genres: ITMDBGenres read GetGenres;
     property OriginCountry: TTMDBStrArray read GetOriginCountry;
@@ -2013,7 +2042,7 @@ type
   end;
 
   /// <summary>
-  /// A list of TV series
+  /// A list of TV series as found in TMDB.
   /// </summary>
   ITMDBTVSeries = interface(ITMDBMedia)
     ['{13D059E8-BC04-423B-AA5B-8590DFA6E97F}']
@@ -2035,7 +2064,7 @@ type
 
 
   /// <summary>
-  ///
+  /// A TV Series which has been rated.
   /// </summary>
   ITMDBRatedTVSerie = interface(ITMDBTVSerie)
     ['{D48E190F-3095-452A-AE5C-75E70DB7C709}']
@@ -2045,7 +2074,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of TV Series which have been rated.
   /// </summary>
   ITMDBRatedTVSeries = interface(ITMDBTVSeries)
     ['{C7614607-9784-4D6A-99C2-66CB135A0736}']
@@ -2055,7 +2084,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A paginated list of TV Series which have been rated.
   /// </summary>
   ITMDBRatedTVSeriesPage = interface(ITMDBTVSeriesPage)
     ['{AD5E62E1-41CE-4564-8407-DCEE9F2F0756}']
@@ -2067,40 +2096,86 @@ type
 
 
   /// <summary>
-  ///
+  /// The details of a specific TV Series.
   /// </summary>
   ITMDBTVSerieDetail = interface(ITMDBDetail)
     ['{21659C51-7E37-4353-A47E-B1D5C31B456D}']
-    function GetAdult: Boolean;
-    function GetBackdropPath: WideString;
-    function GetCreatedBy: ITMDBPeople;
-    function GetEpisodeRunTime: TTMDBIntArray;
-    function GetFirstAirDate: TDateTime;
-    function GetGenres: ITMDBGenres;
-    function GetHomepage: WideString;
-    function GetInProduction: Boolean;
-    function GetLanguages: TTMDBStrArray;
-    function GetLastAirDate: TDateTime;
-    function GetLastEpisodeToAir: ITMDBTVEpisode;
-    function GetNextEpisodeToAir: ITMDBTVEpisode;
-    function GetNetworks: ITMDBTVNetworks;
-    function GetNumberOfEpisodes: Integer;
-    function GetNumberOfSeasons: Integer;
-    function GetOriginCountry: TTMDBStrArray;
-    function GetOriginalLanguage: WideString;
-    function GetOriginalName: WideString;
-    function GetOverview: WideString;
-    function GetPopularity: Single;
-    function GetPosterPath: WideString;
-    function GetProductionCompanies: ITMDBCompanies;
-    function GetProductionCountries: ITMDBCountries;
-    //function GetSeasons: ITMDBTVSeasons;
-    function GetSpokenLanguages: ITMDBLanguages;
-    function GetStatus: WideString;
-    function GetTagline: WideString;
-    function GetType: WideString;
-    function GetVoteAverage: Single;
-    function GetVoteCount: Integer;
+    function GetAdult: Boolean; stdcall;
+    function GetBackdropPath: WideString; stdcall;
+    function GetCreatedBy: ITMDBPeople; stdcall;
+    function GetEpisodeRunTime: TTMDBIntArray; stdcall;
+    function GetFirstAirDate: TDateTime; stdcall;
+    function GetGenres: ITMDBGenres; stdcall;
+    function GetHomepage: WideString; stdcall;
+    function GetInProduction: Boolean; stdcall;
+    function GetLanguages: TTMDBStrArray; stdcall;
+    function GetLastAirDate: TDateTime; stdcall;
+    function GetLastEpisodeToAir: ITMDBTVEpisode; stdcall;
+    function GetNextEpisodeToAir: ITMDBTVEpisode; stdcall;
+    function GetNetworks: ITMDBTVNetworks; stdcall;
+    function GetNumberOfEpisodes: Integer; stdcall;
+    function GetNumberOfSeasons: Integer; stdcall;
+    function GetOriginCountry: TTMDBStrArray; stdcall;
+    function GetOriginalLanguage: WideString; stdcall;
+    function GetOriginalName: WideString; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetPopularity: Single; stdcall;
+    function GetPosterPath: WideString; stdcall;
+    function GetProductionCompanies: ITMDBCompanies; stdcall;
+    function GetProductionCountries: ITMDBCountries; stdcall;
+    function GetSeasons: ITMDBTVSeasons; stdcall;
+    function GetSpokenLanguages: ITMDBLanguages; stdcall;
+    function GetStatus: WideString; stdcall;
+    function GetTagline: WideString; stdcall;
+    function GetType: WideString; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
+
+    //TODO: Appended Data...
+    //function AppendedAccountStates: ITMDBAccountStates; stdcall;
+    //function AppendedAggregateCredits: ITMDBAggregateCredits; stdcall;
+    //function AppendedAlternativeTitles: ITMDBAlternativeTitles; stdcall;
+    //function AppendedChanges: ITMDBChanges; s tdcall;
+    //function AppendedContentRatings: ITMDBContentRatings; stdcall;
+    //function AppendedCredits: ITMDBCredits; stdcall;
+    //function AppendedEpisodeGroups: ITMDBEpisodeGroups; stdcall;
+    //function AppendedExternalIDs: ITMDBExternalIDs; stdcall;
+    //function AppendedImages: ITMDBMediaImageGroup; stdcall;
+    //function AppendedKeywords: ITMDBKeywords; stdcall;
+    //function AppendedLists: ITMDBLists; stdcall;
+    //function AppendedRecommendations: ITMDBMediaPage;
+    //function AppendedReviews: ITMDBReviewPage;
+    //function AppendedScreenedTheatrically: ITMDBScreenedTheatricallyItems; stdcall;
+    //function AppendedSimilar: ITMDBTVSeriesPage; stdcall;
+    //function AppendedTranslations: ITMDTTranslations; stdcall;
+    //function AppendedVideos: ITMDBVideos; stdcall;
+
+    //TODO: Shortcut Functions...
+    //function GetAccountStates(const SessionID: WideString = '';
+    //  const GuestSessionID: WideString = '': ITMDBAccountStates; stdcall;
+    //function GetAggregateCredits(const Language: WideString = ''): ITMDBAggregateCredits; stdcall;
+    //function GetAlternativeTitles: ITMDBAlternativeTitles; stdcall;
+    //function GetChanges(const StartDate, EndDate: TDateTime): ITMDBChanges; s tdcall;
+    //function GetContentRatings: ITMDBContentRatings; stdcall;
+    //function GetCredits(const Language: WideString = ''): ITMDBCredits; stdcall;
+    //function GetEpisodeGroups: ITMDBEpisodeGroups; stdcall;
+    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    //function GetImages(const IncludeImageLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBMediaImageGroup; stdcall;
+    //function GetKeywords: ITMDBKeywords; stdcall;
+    //function GetLists(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBLists; stdcall;
+    //function GetRecommendations(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBMediaPage;
+    //function GetReviews(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBReviewPage;
+    //function GetScreenedTheatrically: ???
+    //function GetSimilar(cosnt Language: WideString = '';
+    //  const Page: Integer = 1): ITMDBTVSeriesPage; stdcall;
+    //function GetTranslations: ITMDTTranslations; stdcall;
+    //function GetVideos(const IncludeVideoLanguage: WideString = '';
+    //  const Language: WideString = ''): ITMDBVideos; stdcall;
+    //function GetWatchProviders: ITMDBMediaWatchProviders; stdcall;
 
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
@@ -2125,7 +2200,7 @@ type
     property PosterPath: WideString read GetPosterPath;
     property ProductionCompanies: ITMDBCompanies read GetProductionCompanies;
     property ProductionCountries: ITMDBCountries read GetProductionCountries;
-    //TODO: Seasons
+    property Seasons: ITMDBTVSeasons read GetSeasons;
     property SpokenLanguages: ITMDBLanguages read GetSpokenLanguages;
     property Status: WideString read GetStatus;
     property Tagline: WideString read GetTagline;
@@ -2142,7 +2217,7 @@ type
 {$REGION 'TV Episode Related'}
 
   /// <summary>
-  ///
+  /// A single TV episode as found in TMDB.
   /// </summary>
   ITMDBTVEpisode = interface(ITMDBMedium)
     ['{2B2377B6-CEB0-47E0-9B64-D259600DECB4}']
@@ -2172,7 +2247,7 @@ type
   end;
 
   /// <summary>
-  /// A list of TV episodes
+  /// A list of TV episodes as found in TMDB.
   /// </summary>
   ITMDBTVEpisodes = interface(ITMDBMedia)
     ['{C574FEB8-2F01-408A-95B5-6B80E218EECD}']
@@ -2182,7 +2257,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A page of TV episodes as found in TMDB.
   /// </summary>
   ITMDBTVEpisodePage = interface(ITMDBMediaPage)
     ['{BB238B34-1BA9-411C-92AF-B43C6DD6702A}']
@@ -2194,7 +2269,7 @@ type
 
 
   /// <summary>
-  ///
+  /// A TV Episode which has been rated.
   /// </summary>
   ITMDBRatedTVEpisode = interface(ITMDBTVEpisode)
     ['{0FDB3732-0EB1-43FF-A006-4E6EFC411C54}']
@@ -2204,7 +2279,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A list of TV Episodes which have been rated.
   /// </summary>
   ITMDBRatedTVEpisodes = interface(ITMDBTVEpisodes)
     ['{B9718FA3-4D61-4E43-BE53-58E28E787CF4}']
@@ -2214,7 +2289,7 @@ type
   end;
 
   /// <summary>
-  ///
+  /// A page of TV Episodes which have been rated.
   /// </summary>
   ITMDBRatedTVEpisodePage = interface(ITMDBTVEpisodePage)
     ['{DDC4B9FA-AC4B-4EAC-B9B8-78464034BC68}']
@@ -2226,11 +2301,37 @@ type
 
 
   /// <summary>
-  ///
+  /// The details of a specific TV Episode.
   /// </summary>
   ITMDBTVEpisodeDetail = interface(ITMDBDetail)
     ['{54B42FE7-72A4-4D20-B249-F9F987285053}']
+    function GetAirDate: TDateTime; stdcall;
+    function GetEpisodeNumber: Integer; stdcall;
+    function GetCrew: ITMDBCrewPeople; stdcall;
+    function GetGuestStars: ITMDBCastPeople; stdcall;
+    function GetOverview: WideString; stdcall;
+    function GetProductionCode: WideString; stdcall;
+    function GetRuntime: Integer; stdcall;
+    function GetSeasonNumber: Integer; stdcall;
+    function GetStillPath: WideString; stdcall;
+    function GetVoteAverage: Single; stdcall;
+    function GetVoteCount: Integer; stdcall;
 
+    //TODO: Appended Data...
+
+    //TODO: Shortcut Functions...
+
+    property AirDate: TDateTime read GetAirDate;
+    property EpisodeNumber: Integer read GetEpisodeNumber;
+    property Crew: ITMDBCrewPeople read GetCrew;
+    property GuestStars: ITMDBCastPeople read GetGuestStars;
+    property Overview: WideString read GetOverview;
+    property ProductionCode: WideString read GetProductionCode;
+    property Runtime: Integer read GetRuntime;
+    property SeasonNumber: Integer read GetSeasonNumber;
+    property StillPath: WideString read GetStillPath;
+    property VoteAverage: Single read GetVoteAverage;
+    property VoteCount: Integer read GetVoteCount;
   end;
 
 {$ENDREGION}
@@ -2246,12 +2347,14 @@ type
   ITMDBTVSeason = interface(ITMDBMedium)
     ['{A3291740-EB50-467E-8B82-ED5F3463A882}']
     function GetAirDate: TDateTime; stdcall;
+    function GetEpisodeCount: Integer; stdcall;
     function GetOverview: WideString; stdcall;
     function GetPosterPath: WideString; stdcall;
     function GetSeasonNumber: Integer; stdcall;
     function GetVoteAverage: Single; stdcall;
 
     property AirDate: TDateTime read GetAirDate;
+    property EpisodeCount: Integer read GetEpisodeCount;
     property Overview: WideString read GetOverview;
     property PosterPath: WideString read GetPosterPath;
     property SeasonNumber: Integer read GetSeasonNumber;
@@ -2318,6 +2421,10 @@ type
     function GetPosterPath: WideString; stdcall;
     function GetSeasonNumber: Integer; stdcall;
     function GetVoteAverage: Single; stdcall;
+
+    //TODO: Appended Data...
+
+    //TODO: Shortcut Functions...
 
     property _ID: WideString read Get_ID;
     property AirDate: TDateTime read GetAirDate;
@@ -3098,9 +3205,9 @@ type
 
   ITMDBNamespaceTVSeasons = interface(ITMDBNamespace)
     ['{89A1F3C8-F032-4B36-8481-DFE5291EBDA3}']
-    //function GetDetails(const SeriesID, SeasonNumber: Integer;
-    //  const AppendToResponse: TTMDBTVSeasonRequests = [];
-    //  const Language: WideString = ''): ITMDBTVSeasonDetail; stdcall;
+    function GetDetails(const SeriesID, SeasonNumber: Integer;
+      const AppendToResponse: TTMDBTVSeasonRequests = [];
+      const Language: WideString = ''): ITMDBTVSeasonDetail; stdcall;
     //function GetAccountStates(const SeriesID, SeasonNumber: Integer;
     //  const SessionID: WideString = '';
     //  const GuestSessionID: WideString = ''): ITMDBAccountStates; stdcall;
@@ -3261,6 +3368,8 @@ type
     procedure SetRateLimiting(const Value: Boolean); stdcall;
     function GetRateLimitMsec: DWORD; stdcall;
     procedure SetRateLimitMsec(const Value: DWORD); stdcall;
+    function GetAgreedToWatchProviderAttribution: Boolean; stdcall;
+    procedure SetAgreedToWatchProviderAttribution(const Value: Boolean); stdcall;
 
     { Namespaces }
 
@@ -3291,7 +3400,6 @@ type
     function TVSeasons: ITMDBNamespaceTVSeasons; stdcall;
     function TVEpisodes: ITMDBNamespaceTVEpisodes; stdcall;
     function TVEpisodeGroups: ITMDBNamespaceTVEpisodeGroups; stdcall;
-    //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
     function WatchProviders: ITMDBNamespaceWatchProviders; stdcall;
 
     property AppUserAgent: WideString read GetAppUserAgent write SetAppUserAgent;
@@ -3303,6 +3411,8 @@ type
     property LoginState: ITMDBLoginState read GetLoginState;
     property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
     property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
+    property AgreedToWatchProviderAttribution: Boolean
+      read GetAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean; stdcall;

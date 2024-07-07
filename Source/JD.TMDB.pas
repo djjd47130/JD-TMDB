@@ -48,6 +48,8 @@ type
     procedure SetRateLimitMsec(const Value: DWORD);
     function GetAppUserAgent: String;
     procedure SetAppUserAgent(const Value: String);
+    function GetAgreedToWatchProviderAttribution: Boolean;
+    procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
   protected
     procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
@@ -63,6 +65,38 @@ type
     procedure ListLanguages(AList: TStrings);
     procedure ListCountries(AList: TStrings);
     procedure ListPrimaryTranslations(AList: TStrings);
+
+    { Namespaces }
+
+    function Account: ITMDBNamespaceAccount; stdcall;
+    function Authentication: ITMDBNamespaceAuthentication; stdcall;
+    function Certifications: ITMDBNamespaceCertifications; stdcall;
+    function Changes: ITMDBNamespaceChanges; stdcall;
+    function Collections: ITMDBNamespaceCollections; stdcall;
+    function Companies: ITMDBNamespaceCompanies; stdcall;
+    function Configuration: ITMDBNamespaceConfiguration; stdcall;
+    function Credits: ITMDBNamespaceCredits; stdcall;
+    function Discover: ITMDBNamespaceDiscover; stdcall;
+    function Find: ITMDBNamespaceFind; stdcall;
+    function Genres: ITMDBNamespaceGenres; stdcall;
+    function GuestSessions: ITMDBNamespaceGuestSessions; stdcall;
+    function Keywords: ITMDBNamespaceKeywords; stdcall;
+    function Lists: ITMDBNamespaceLists; stdcall;
+    function MovieLists: ITMDBNamespaceMovieLists; stdcall;
+    function Movies: ITMDBNamespaceMovies; stdcall;
+    function Networks: ITMDBNamespaceNetworks; stdcall;
+    function PeopleLists: ITMDBNamespacePeopleLists; stdcall;
+    function People: ITMDBNamespacePeople; stdcall;
+    function Reviews: ITMDBNamespaceReviews; stdcall;
+    function Search: ITMDBNamespaceSearch; stdcall;
+    function Trending: ITMDBNamespaceTrending; stdcall;
+    function TVSeriesLists: ITMDBNamespaceTVSeriesLists; stdcall;
+    function TVSeries: ITMDBNamespaceTVSeries; stdcall;
+    function TVSeasons: ITMDBNamespaceTVSeasons; stdcall;
+    function TVEpisodes: ITMDBNamespaceTVEpisodes; stdcall;
+    function TVEpisodeGroups: ITMDBNamespaceTVEpisodeGroups; stdcall;
+    function WatchProviders: ITMDBNamespaceWatchProviders; stdcall;
+
   published
     property AuthMethod: TTMDBAuthMethod read GetAuthMethod write SetAuthMethod;
     property APIKey: String read GetAPIKey write SetAPIKey;
@@ -70,6 +104,8 @@ type
     property AppUserAgent: String read GetAppUserAgent write SetAppUserAgent;
     property RateLimiting: Boolean read GetRateLimiting write SetRateLimiting;
     property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
+    property AgreedToWatchProviderAttribution: Boolean
+      read GetAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
     property OnUserAuthRequest: TTMDBUserAuthRequestEvent
       read FOnUserAuthRequest write FOnUserAuthRequest;
@@ -87,11 +123,21 @@ begin
   FTMDB.OnUserAuthRequest:= UserAuthRequst;
 end;
 
+function TTMDB.Credits: ITMDBNamespaceCredits;
+begin
+  Result:= FTMDB.Credits;
+end;
+
 destructor TTMDB.Destroy;
 begin
   FTMDB._Release;
   FTMDB:= nil;
   inherited;
+end;
+
+function TTMDB.Discover: ITMDBNamespaceDiscover;
+begin
+  Result:= FTMDB.Discover;
 end;
 
 procedure TTMDB.DoUserAuthRequest(const URL: WideString; var Result: Boolean);
@@ -104,9 +150,24 @@ begin
   end;
 end;
 
+function TTMDB.Find: ITMDBNamespaceFind;
+begin
+  Result:= FTMDB.Find;
+end;
+
+function TTMDB.Genres: ITMDBNamespaceGenres;
+begin
+  Result:= FTMDB.Genres;
+end;
+
 function TTMDB.GetAccessToken: String;
 begin
   Result:= FTMDB.AccessToken;
+end;
+
+function TTMDB.GetAgreedToWatchProviderAttribution: Boolean;
+begin
+  Result:= FTMDB.AgreedToWatchProviderAttribution;
 end;
 
 function TTMDB.GetAPIKey: String;
@@ -144,9 +205,29 @@ begin
   Result:= FTMDB.RateLimitMsec;
 end;
 
+function TTMDB.GuestSessions: ITMDBNamespaceGuestSessions;
+begin
+  Result:= FTMDB.GuestSessions;
+end;
+
+function TTMDB.Keywords: ITMDBNamespaceKeywords;
+begin
+  Result:= FTMDB.Keywords;
+end;
+
+function TTMDB.Search: ITMDBNamespaceSearch;
+begin
+  Result:= FTMDB.Search;
+end;
+
 procedure TTMDB.SetAccessToken(const Value: String);
 begin
   FTMDB.AccessToken:= Value;
+end;
+
+procedure TTMDB.SetAgreedToWatchProviderAttribution(const Value: Boolean);
+begin
+  FTMDB.AgreedToWatchProviderAttribution:= Value;
 end;
 
 procedure TTMDB.SetAPIKey(const Value: String);
@@ -174,10 +255,80 @@ begin
   FTMDB.RateLimitMsec:= Value;
 end;
 
+function TTMDB.Trending: ITMDBNamespaceTrending;
+begin
+  Result:= FTMDB.Trending;
+end;
+
+function TTMDB.TVEpisodeGroups: ITMDBNamespaceTVEpisodeGroups;
+begin
+  Result:= FTMDB.TVEpisodeGroups;
+end;
+
+function TTMDB.TVEpisodes: ITMDBNamespaceTVEpisodes;
+begin
+  Result:= FTMDB.TVEpisodes;
+end;
+
+function TTMDB.TVSeasons: ITMDBNamespaceTVSeasons;
+begin
+  Result:= FTMDB.TVSeasons;
+end;
+
+function TTMDB.TVSeries: ITMDBNamespaceTVSeries;
+begin
+  Result:= FTMDB.TVSeries;
+end;
+
+function TTMDB.TVSeriesLists: ITMDBNamespaceTVSeriesLists;
+begin
+  Result:= FTMDB.TVSeriesLists;
+end;
+
 procedure TTMDB.UserAuthRequst(Sender: TObject; const URL: WideString;
   var Result: Boolean);
 begin
   DoUserAuthRequest(URL, Result);
+end;
+
+function TTMDB.Account: ITMDBNamespaceAccount;
+begin
+  Result:= FTMDB.Account;
+end;
+
+function TTMDB.Authentication: ITMDBNamespaceAuthentication;
+begin
+  Result:= FTMDB.Authentication;
+end;
+
+function TTMDB.Certifications: ITMDBNamespaceCertifications;
+begin
+  Result:= FTMDB.Certifications;
+end;
+
+function TTMDB.Changes: ITMDBNamespaceChanges;
+begin
+  Result:= FTMDB.Changes;
+end;
+
+function TTMDB.Collections: ITMDBNamespaceCollections;
+begin
+  Result:= FTMDB.Collections;
+end;
+
+function TTMDB.Companies: ITMDBNamespaceCompanies;
+begin
+  Result:= FTMDB.Companies;
+end;
+
+function TTMDB.Configuration: ITMDBNamespaceConfiguration;
+begin
+  Result:= FTMDB.Configuration;
+end;
+
+function TTMDB.WatchProviders: ITMDBNamespaceWatchProviders;
+begin
+  Result:= FTMDB.WatchProviders;
 end;
 
 function TTMDB.CountryName(const Code: String): String;
@@ -234,6 +385,41 @@ begin
   for X := 0 to Length(A)-1 do begin
     AList.Append(A[X]);
   end;
+end;
+
+function TTMDB.Lists: ITMDBNamespaceLists;
+begin
+  Result:= FTMDB.Lists;
+end;
+
+function TTMDB.MovieLists: ITMDBNamespaceMovieLists;
+begin
+  Result:= FTMDB.MovieLists;
+end;
+
+function TTMDB.Movies: ITMDBNamespaceMovies;
+begin
+  Result:= FTMDB.Movies;
+end;
+
+function TTMDB.Networks: ITMDBNamespaceNetworks;
+begin
+  Result:= FTMDB.Networks;
+end;
+
+function TTMDB.People: ITMDBNamespacePeople;
+begin
+  Result:= FTMDB.People;
+end;
+
+function TTMDB.PeopleLists: ITMDBNamespacePeopleLists;
+begin
+  Result:= FTMDB.PeopleLists;
+end;
+
+function TTMDB.Reviews: ITMDBNamespaceReviews;
+begin
+  Result:= FTMDB.Reviews;
 end;
 
 end.
