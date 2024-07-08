@@ -67,10 +67,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtSearchMoviesQuery: TEdit
         AlignWithMargins = True
@@ -131,10 +132,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 57
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Region:'
+        ExplicitWidth = 57
       end
       object cboSearchMoviesRegion: TComboBox
         AlignWithMargins = True
@@ -159,10 +161,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 169
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Primary Release Year:'
+        ExplicitWidth = 169
       end
       object txtSearchMoviesPrimaryReleaseYear: TEdit
         AlignWithMargins = True
@@ -187,10 +190,11 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 41
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Year:'
+        ExplicitWidth = 41
       end
       object txtSearchMoviesYear: TEdit
         AlignWithMargins = True

@@ -57,7 +57,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uMain;
+  uMain,
+  JD.TabController;
 
 { TfrmContentSearchMovies }
 
@@ -183,10 +184,16 @@ end;
 
 procedure TfrmContentSearchMovies.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
+var
+  T: TJDTabRef;
+  M: ITMDBMovie;
 begin
   inherited;
   //TODO: Navigate to movie details tab within app...
-
+  M:= Obj as ITMDBMovie;
+  T:= TabController.CreateTab(TfrmContentMovieDetail);
+  (T.Content as TfrmContentMovieDetail).pTop.Visible:= False;
+  (T.Content as TfrmContentMovieDetail).LoadMovie(M.ID);
 end;
 
 function TfrmContentSearchMovies.Page: ITMDBPage;

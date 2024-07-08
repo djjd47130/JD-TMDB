@@ -33,6 +33,13 @@ type
 
     function GetID: Int64;
     function GetCaption: String;
+
+    property Owner: TJDTabController read FOwner;
+    property FormClass: TfrmContentBaseClass read FClass;
+    property ID: Int64 read FID;
+    property Content: TfrmContentBase read FContent;
+    property Tab: TTabSheet read FTab;
+    property ChromeTab: TChromeTab read FChromeTab;
   end;
 
   TJDTabController = class(TComponent)
