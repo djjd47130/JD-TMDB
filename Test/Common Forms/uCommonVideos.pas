@@ -30,7 +30,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmCommonVideos }
 
@@ -63,7 +63,7 @@ var
   U: String;
   function GetLocalBaseURL: String;
   begin
-    Result:= 'http://localhost:'+IntToStr(frmTMDBTestMain.WebServer.Port);
+    Result:= 'http://localhost:'+IntToStr(frmMain.WebServer.Port);
   end;
 begin
   inherited;

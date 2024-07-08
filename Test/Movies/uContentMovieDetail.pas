@@ -93,7 +93,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 procedure TfrmContentMovieDetail.FormCreate(Sender: TObject);
 begin
@@ -136,7 +136,7 @@ begin
   Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
     mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
-  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
     TMDB.LoginState.SessionID);
 end;
 

@@ -64,7 +64,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 procedure TfrmContentSearchCollections.FormCreate(Sender: TObject);
 begin
@@ -94,7 +94,7 @@ begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
   A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
-  L:= frmTMDBTestMain.cboLanguage.Text;
+  L:= frmMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));
 end;
@@ -162,7 +162,7 @@ end;
 function TfrmContentSearchCollections.GetCollectionDetail(const ID: Integer): ITMDBCollectionDetail;
 begin
   PrepAPI;
-  Result:= TMDB.Client.Collections.GetDetails(ID, frmTMDBTestMain.cboLanguage.Text);
+  Result:= TMDB.Client.Collections.GetDetails(ID, frmMain.cboLanguage.Text);
 end;
 
 procedure TfrmContentSearchCollections.ShowDetail(const Index: Integer;
@@ -211,7 +211,7 @@ end;
 
 procedure TfrmContentSearchCollections.LoadImages;
 begin
-  FImages:= FDetail.GetImages(frmTMDBTestMain.cboLanguage.Text);
+  FImages:= FDetail.GetImages(frmMain.cboLanguage.Text);
   FDetailImages.LoadImages(FImages);
 end;
 

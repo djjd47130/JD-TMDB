@@ -20,6 +20,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 746
       ExplicitHeight = 360
@@ -74,9 +75,6 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet2: TTabSheet
       Caption = 'Account States'
       ImageIndex = 1
-      ExplicitTop = 29
-      ExplicitWidth = 746
-      ExplicitHeight = 360
       object lblRating: TLabel
         AlignWithMargins = True
         Left = 3
@@ -130,7 +128,6 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Add to Favorites'
-        ExplicitWidth = 905
       end
       object btnWatchlist: TJDFontButton
         AlignWithMargins = True
@@ -173,12 +170,12 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Add to Watchlist'
-        ExplicitWidth = 905
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'Aggregate Credits'
       ImageIndex = 2
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 746
       ExplicitHeight = 360
@@ -186,6 +183,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object tabAlternativeTitles: TTabSheet
       Caption = 'Alternative Titles'
       ImageIndex = 3
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 746
       ExplicitHeight = 360
@@ -193,6 +191,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet5: TTabSheet
       Caption = 'Changes'
       ImageIndex = 4
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 746
       ExplicitHeight = 360
@@ -200,6 +199,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet6: TTabSheet
       Caption = 'Content Ratings'
       ImageIndex = 5
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 963
       ExplicitHeight = 360
@@ -207,6 +207,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 6
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 963
       ExplicitHeight = 360
@@ -214,6 +215,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet8: TTabSheet
       Caption = 'Episode Groups'
       ImageIndex = 7
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 963
       ExplicitHeight = 360
@@ -221,6 +223,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet9: TTabSheet
       Caption = 'External IDs'
       ImageIndex = 8
+      ExplicitLeft = 0
       ExplicitTop = 29
       ExplicitWidth = 963
       ExplicitHeight = 360
@@ -228,24 +231,32 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object tabImages: TTabSheet
       Caption = 'Images'
       ImageIndex = 9
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object TabSheet11: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 10
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object TabSheet12: TTabSheet
       Caption = 'Lists'
       ImageIndex = 11
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object TabSheet13: TTabSheet
       Caption = 'Recommendations'
       ImageIndex = 12
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
@@ -260,24 +271,31 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet15: TTabSheet
       Caption = 'Screened Theatrically'
       ImageIndex = 14
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object TabSheet16: TTabSheet
       Caption = 'Similar'
       ImageIndex = 15
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object TabSheet17: TTabSheet
       Caption = 'Translations'
       ImageIndex = 16
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 963
       ExplicitHeight = 337
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
       ImageIndex = 17
+      ExplicitLeft = 0
       ExplicitTop = 75
       ExplicitWidth = 963
       ExplicitHeight = 314
@@ -290,7 +308,6 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     Height = 33
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 919
     object Label1: TLabel
       AlignWithMargins = True
       Left = 4

@@ -77,7 +77,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
-        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
@@ -103,8 +102,8 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="uTMDBTestMain.pas">
-            <Form>frmTMDBTestMain</Form>
+        <DCCReference Include="uMain.pas">
+            <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Source\JD.TMDB.API.pas"/>
@@ -243,6 +242,11 @@
         </DCCReference>
         <DCCReference Include="TVSeries\uTabTVSeries.pas">
             <Form>frmTabTVSeries</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="JD.TabController.pas"/>
+        <DCCReference Include="uTMDBHome.pas">
+            <Form>frmTMDBHome</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

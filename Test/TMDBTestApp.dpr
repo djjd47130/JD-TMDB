@@ -4,7 +4,7 @@ program TMDBTestApp;
 
 uses
   Vcl.Forms,
-  uTMDBTestMain in 'uTMDBTestMain.pas' {frmTMDBTestMain},
+  uMain in 'uMain.pas' {frmMain},
   JD.TMDB.API in '..\Source\JD.TMDB.API.pas',
   Vcl.Themes,
   Vcl.Styles,
@@ -45,18 +45,21 @@ uses
   uCommonAlternativeTitles in 'Common Forms\uCommonAlternativeTitles.pas' {frmCommonAlternativeTitles},
   uContentConfigLanguages in 'Configuration\uContentConfigLanguages.pas' {frmContentConfigLanguages},
   uContentTVSerieDetail in 'TVSeries\uContentTVSerieDetail.pas' {frmContentTVSerieDetail},
-  uTabTVSeries in 'TVSeries\uTabTVSeries.pas' {frmTabTVSeries};
+  uTabTVSeries in 'TVSeries\uTabTVSeries.pas' {frmTabTVSeries},
+  JD.TabController in 'JD.TabController.pas',
+  uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TfrmTMDBTestMain, frmTMDBTestMain);
+  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmContentMovieAccountStates, frmContentMovieAccountStates);
   Application.CreateForm(TfrmCommonAlternativeTitles, frmCommonAlternativeTitles);
   Application.CreateForm(TfrmContentConfigLanguages, frmContentConfigLanguages);
   Application.CreateForm(TfrmContentTVSerieDetail, frmContentTVSerieDetail);
   Application.CreateForm(TfrmTabTVSeries, frmTabTVSeries);
+  Application.CreateForm(TfrmTMDBHome, frmTMDBHome);
   Application.Run;
 end.

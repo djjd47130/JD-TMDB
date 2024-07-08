@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmContentSearchPeople }
 
@@ -51,7 +51,7 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmTMDBTestMain.cboLanguage.Text;
+  L:= frmMain.cboLanguage.Text;
   Result:= TMDB.Client.Search.SearchPeople(Q, A, L, APageNum);
 end;
 

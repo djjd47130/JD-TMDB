@@ -57,7 +57,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmContentSearchMovies }
 
@@ -115,7 +115,7 @@ begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
   A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
-  L:= frmTMDBTestMain.cboLanguage.Text;
+  L:= frmMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
   Y:= txtSearchMoviesYear.Text;
@@ -143,7 +143,7 @@ begin
   Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
     mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
-  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
     TMDB.LoginState.SessionID);
 end;
 

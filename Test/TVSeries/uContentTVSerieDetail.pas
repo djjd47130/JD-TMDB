@@ -90,7 +90,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 procedure TfrmContentTVSerieDetail.btnSearchClick(Sender: TObject);
 var
@@ -177,7 +177,7 @@ begin
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos];
-  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
     TMDB.LoginState.SessionID);
 end;
 

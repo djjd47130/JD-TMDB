@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmContentSearchTV }
 
@@ -81,7 +81,7 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmTMDBTestMain.cboLanguage.Text;
+  L:= frmMain.cboLanguage.Text;
   FADY:= StrToIntDef(txtFirstAirDateYear.Text, 0);
   Y:= StrToIntDef(txtYear.Text, 0);
   Result:= TMDB.Client.Search.SearchTV(Q, FADY, A, L, Y, APageNum);
@@ -158,7 +158,7 @@ begin
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos];
-  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
     TMDB.LoginState.SessionID);
 end;
 

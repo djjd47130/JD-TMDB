@@ -14,14 +14,17 @@ type
 
 
   TfrmContentBase = class(TForm)
-  private
-    { Private declarations }
   protected
     function TMDB: TTMDB;
+    function Client: ITMDBClient;
     procedure PrepAPI;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    procedure RefreshData; virtual;
+    function CloseQuery: Boolean; virtual;
+
   end;
 
 var
@@ -32,7 +35,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain,
+  JD.TabController;
 
 { TfrmContentBase }
 
@@ -48,14 +52,29 @@ begin
   inherited;
 end;
 
+function TfrmContentBase.CloseQuery: Boolean;
+begin
+  Result:= True;
+end;
+
 procedure TfrmContentBase.PrepAPI;
 begin
-  frmTMDBTestMain.PrepAPI;
+  frmMain.PrepAPI;
+end;
+
+procedure TfrmContentBase.RefreshData;
+begin
+
 end;
 
 function TfrmContentBase.TMDB: TTMDB;
 begin
-  Result:= frmTMDBTestMain.TMDB;
+  Result:= frmMain.TMDB;
+end;
+
+function TfrmContentBase.Client: ITMDBClient;
+begin
+  Result:= TMDB.Client;
 end;
 
 end.
