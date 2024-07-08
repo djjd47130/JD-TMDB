@@ -421,8 +421,7 @@ type
       const Confirm: Boolean = False): ISuperObject;
     function CreateList(const SessionID: String; const Name, Description, Language: String): ISuperObject;
     function Delete(const ListID: Integer; const SessionID: String): ISuperObject;
-    function GetDetails(const ListID: Integer; const Language: String = '';
-      const Page: Integer = 1): ISuperObject;
+    function GetDetails(const ListID: Integer; const Language: String = ''): ISuperObject;
     function RemoveMovie(const ListID: Integer; const SessionID: String;
       const MediaID: Integer): ISuperObject;
   end;
@@ -696,6 +695,7 @@ type
     FTrending: TTMDBAPITrending;
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
+    FImageBaseURL: String;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
@@ -715,6 +715,7 @@ type
     procedure SetRateLimiting(const Value: Boolean);
     procedure CheckRateLimit;
     function GetRatetLimitWaitMsec: DWORD;
+    procedure SetImageBaseURL(const Value: String);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -728,6 +729,7 @@ type
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
     property AgreedToWatchProviderAttribution: Boolean
       read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
+    property ImageBaseURL: String read FImageBaseURL write SetImageBaseURL;
 
     //Rate Limiting
     property RateLimitMsec: DWORD read FRateLimitMsec write SetRateLimitMsec;
@@ -1369,14 +1371,12 @@ begin
   Result:= FOwner.DeleteJSON(U, P, nil);
 end;
 
-function TTMDBAPILists.GetDetails(const ListID: Integer; const Language: String;
-  const Page: Integer): ISuperObject;
+function TTMDBAPILists.GetDetails(const ListID: Integer; const Language: String): ISuperObject;
 var
   U, P: String;
 begin
   U:= 'list/'+IntToStr(ListID);
   AddParam(P, 'language', Language);
-  AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
 
@@ -2523,6 +2523,7 @@ begin
 
   FRateLimitMsec:= 100;
   FLastReqMsec:= GetTickCount;
+  FImageBaseURL:= 'https://image.tmdb.org/t/p/';
 
   FSSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FSSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
@@ -2670,7 +2671,7 @@ begin
   //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
   //Result:= False;
 
-  U:= 'https://image.tmdb.org/t/p/'; // FOwner.FConfiguration. //TODO: GET BASE URL FROM CONFIGURATION
+  U:= FImageBaseURL;
   U:= URLCombine(U, Size);
   U:= URLCombine(U, Path);
   S:= TStringStream.Create;
@@ -2777,6 +2778,11 @@ end;
 procedure TTMDBAPI.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FAuthMethod := Value;
+end;
+
+procedure TTMDBAPI.SetImageBaseURL(const Value: String);
+begin
+  FImageBaseURL := Value;
 end;
 
 procedure TTMDBAPI.SetRateLimitMsec(const Value: DWORD);

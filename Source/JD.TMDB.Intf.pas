@@ -3261,7 +3261,6 @@ type
   ITMDBNamespaceKeywords = interface(ITMDBNamespace)
     ['{8FE0FEB6-511B-4704-A71A-BA8B5C8E912C}']
     function GetDetails(const KeywordID: Integer): ITMDBKeywordDetail; stdcall;
-    //function GetMovies [DEPRECATED]
   end;
 
   ITMDBNamespaceLists = interface(ITMDBNamespace)
@@ -3272,8 +3271,8 @@ type
     //function Clear
     //function Create
     //function Delete
-    //function GetDetails(const ListID: Integer; const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBListDetail; stdcall;
+    function GetDetails(const ListID: Integer; const Language: WideString = '';
+      const Page: Integer = 1): ITMDBListDetail; stdcall;
     //function RemoveMovie
   end;
 
@@ -3353,7 +3352,6 @@ type
       const Language: WideString = ''): ITMDBCombinedCredits; stdcall;
     function GetTVCredits(const PersonID: Integer;
       const Language: WideString = ''): ITMDBCombinedCredits; stdcall;
-    //function GetTaggedImages(const PersonID: Integer): ITMDB???; stdcall; [DEPRECATED]
     function GetTranslations(const PersonID: Integer): ITMDBTranslations; stdcall;
   end;
 
