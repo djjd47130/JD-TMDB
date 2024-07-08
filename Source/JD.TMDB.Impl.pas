@@ -7819,15 +7819,13 @@ end;
 procedure TTMDBWatchProviderPriorities.PopulateItems;
 var
   M: IMember;
-  X: Integer;
   I: ITMDBWatchProviderPriority;
 begin
   ClearItems;
   for M in FObj do begin
     I:= TTMDBWatchProviderPriority.Create(M.Name, M.AsInteger);
-    Inc(X);
+    FItems.Add(I);
   end;
-
 end;
 
 

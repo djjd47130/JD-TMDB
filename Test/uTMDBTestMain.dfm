@@ -291,7 +291,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitTop = 15
         object RadioButton3: TRadioButton
           Tag = 1
           AlignWithMargins = True
@@ -338,7 +337,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 39
         object Label2: TLabel
           AlignWithMargins = True
           Left = 3
@@ -360,7 +358,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           Align = alBottom
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
-          ExplicitTop = 27
         end
       end
       object pAuthPass: TPanel
@@ -371,7 +368,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 90
         object Label4: TLabel
           AlignWithMargins = True
           Left = 3
@@ -395,7 +391,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
           PasswordChar = '*'
           TabOrder = 0
           OnKeyUp = txtAuthPassKeyUp
-          ExplicitTop = 26
         end
       end
       object btnLogin: TButton
@@ -438,8 +433,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitTop = 18
-        ExplicitHeight = 123
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
@@ -475,8 +468,6 @@ object frmTMDBTestMain: TfrmTMDBTestMain
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 18
-        ExplicitHeight = 123
         object imgUserAvatar: TImage
           AlignWithMargins = True
           Left = 3
@@ -533,7 +524,8 @@ object frmTMDBTestMain: TfrmTMDBTestMain
       'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
       'TMDB)'
     RateLimiting = True
-    RateLimitMsec = 20
+    RateLimitMsec = 50
+    AgreedToWatchProviderAttribution = False
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 292
     Top = 15
