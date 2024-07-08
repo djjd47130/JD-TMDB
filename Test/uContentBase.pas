@@ -22,6 +22,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    function GetCaption: String; virtual;
     procedure RefreshData; virtual;
     function CloseQuery: Boolean; virtual;
 
@@ -50,6 +51,11 @@ destructor TfrmContentBase.Destroy;
 begin
 
   inherited;
+end;
+
+function TfrmContentBase.GetCaption: String;
+begin
+  Result:= Caption;
 end;
 
 function TfrmContentBase.CloseQuery: Boolean;

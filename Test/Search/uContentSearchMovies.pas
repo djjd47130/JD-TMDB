@@ -38,6 +38,8 @@ type
     procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
   protected
+    function GetCaption: String; override;
+  protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
     procedure PrepSearch; override;
@@ -105,6 +107,18 @@ begin
     if Result <> '' then
       Result:= Result + ', ';
     Result:= Result + O.Genres[X].Name;
+  end;
+end;
+
+function TfrmContentSearchMovies.GetCaption: String;
+var
+  S: String;
+begin
+  S:= txtSearchMoviesQuery.Text;
+  if S <> '' then begin
+    Result:= 'Search Movies - ' + S;
+  end else begin
+    Result:= 'Search Movies';
   end;
 end;
 

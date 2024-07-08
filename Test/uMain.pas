@@ -7,11 +7,19 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
+  JD.Common, JD.Ctrls, JD.Ctrls.FontButton,
+  JD.TMDB,
   JD.TMDB.Intf,
   JD.TMDB.Impl,
   JD.TMDB.Common,
   JD.TMDB.LocalWebServer,
+  JD.TabController,
+
   XSuperObject, XSuperJSON,
+
+  Vcl.Styles.Utils,
+  Vcl.Styles.Fixes,
+
   uTabBase, uContentBase,
   uTabConfiguration,
   uTabSearch,
@@ -20,32 +28,18 @@ uses
   uTabMovies,
   uTabTVSeries,
   uLoginBrowser,
-  Clipbrd, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Ctrls.SideMenu, JD.TMDB,
   ChromeTabs,
   ChromeTabsClasses,
-  JD.TabController,
-  uTMDBHome;
+  uTMDBHome,
+  uTMDBAppSetup;
 
 type
   TfrmMain = class(TForm)
     Pages: TPageControl;
-    tabSetup: TTabSheet;
-    Panel1: TPanel;
-    gbAPIAuthMethod: TGroupBox;
-    gbAPIAuthMethodAPIKey: TPanel;
-    Label1: TLabel;
-    txtAPIKey: TEdit;
-    gbAPIAuthMethodAccessToken: TPanel;
-    Label3: TLabel;
-    txtAccessToken: TEdit;
-    Panel2: TPanel;
-    rAuthToken: TRadioButton;
-    rAuthKey: TRadioButton;
     MM: TMainMenu;
     mNamespaces: TMenuItem;
     Setup1: TMenuItem;
     AppSetup1: TMenuItem;
-    btnValidateKey: TButton;
     pTop: TPanel;
     btnUser: TJDFontButton;
     pUser: TPanel;
@@ -69,11 +63,23 @@ type
     imgUserAvatar: TImage;
     btnLogout: TButton;
     TMDB: TTMDB;
+    Tabs: TChromeTabs;
+    Panel1: TPanel;
+    gbAPIAuthMethod: TGroupBox;
+    gbAPIAuthMethodAPIKey: TPanel;
+    Label1: TLabel;
+    txtAPIKey: TEdit;
+    gbAPIAuthMethodAccessToken: TPanel;
+    Label3: TLabel;
+    txtAccessToken: TEdit;
+    Panel2: TPanel;
+    rAuthToken: TRadioButton;
+    rAuthKey: TRadioButton;
+    btnValidateKey: TButton;
     gbLocaleOptions: TGroupBox;
     Panel6: TPanel;
     Label5: TLabel;
     cboLanguage: TComboBox;
-    Tabs: TChromeTabs;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -144,7 +150,6 @@ begin
   //TMDB.ListPrimaryTranslations(cboLanguage.Items);
   TMDB.ListLanguages(cboLanguage.Items);
 
-  mNamespaces.Click; //TODO: Why was this necessary?
   Width:= 1200;
   Height:= 800;
 end;
@@ -162,6 +167,8 @@ var
   T: TJDTabRef;
 begin
   T:= TabController.CreateTab(TfrmTMDBHome);
+  T.ChromeTab.HideCloseButton:= True;
+  Pages.ActivePageIndex:= 0;
 
 end;
 
@@ -185,6 +192,7 @@ begin
   APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
   cboLanguage.Text:= FAppSetup.S['default_language'];
   //TODO: Default Country...
+  //TODO: Timezone...
   PrepAPI;
   V:= FAppSetup.I['current_tab'];
   if V <= Pages.PageCount-1 then begin
@@ -215,6 +223,7 @@ begin
     FAppSetup.I['api_auth']:= Integer(APIAuth);
     FAppSetup.S['default_language']:= cboLanguage.Text;
     //TODO: Default Country...
+    //TODO: Timezone...
     FAppSetup.S['session_id']:= TMDB.LoginState.SessionID;
     FAppSetup.B['session_guest']:= TMDB.LoginState.IsGuest;
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;

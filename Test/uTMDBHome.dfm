@@ -11,7 +11,6 @@ inherited frmTMDBHome: TfrmTMDBHome
     Top = 0
     Width = 366
     Height = 539
-    VertScrollBar.Position = 378
     VertScrollBar.Tracking = True
     Align = alClient
     BevelOuter = bvNone
@@ -25,7 +24,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     ParentBackground = True
     TabOrder = 0
     object CategoryPanel22: TCategoryPanel
-      Top = 311
+      Top = 689
       Height = 224
       Caption = 'Search'
       TabOrder = 0
@@ -73,6 +72,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Search Collections'
+        OnClick = JDFontButton42Click
       end
       object JDFontButton43: TJDFontButton
         AlignWithMargins = True
@@ -118,6 +118,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Search TV'
+        OnClick = JDFontButton43Click
       end
       object JDFontButton44: TJDFontButton
         AlignWithMargins = True
@@ -163,6 +164,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'Search Companies'
+        OnClick = JDFontButton44Click
       end
       object JDFontButton45: TJDFontButton
         AlignWithMargins = True
@@ -208,6 +210,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 3
         Text = 'Search Keywords'
+        OnClick = JDFontButton45Click
       end
       object JDFontButton46: TJDFontButton
         AlignWithMargins = True
@@ -299,6 +302,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 5
         Text = 'Search Multi'
+        OnClick = JDFontButton47Click
       end
       object JDFontButton48: TJDFontButton
         AlignWithMargins = True
@@ -344,10 +348,11 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 6
         Text = 'Search People'
+        OnClick = JDFontButton48Click
       end
     end
     object CategoryPanel21: TCategoryPanel
-      Top = 281
+      Top = 659
       Height = 30
       Caption = 'Reviews'
       Collapsed = True
@@ -355,14 +360,14 @@ inherited frmTMDBHome: TfrmTMDBHome
       ExpandedHeight = 95
     end
     object CategoryPanel20: TCategoryPanel
-      Top = 251
+      Top = 629
       Height = 30
       Caption = 'People'
       Collapsed = True
       TabOrder = 2
     end
     object CategoryPanel19: TCategoryPanel
-      Top = 221
+      Top = 599
       Height = 30
       Caption = 'People Lists'
       Collapsed = True
@@ -370,7 +375,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       ExpandedHeight = 143
     end
     object CategoryPanel18: TCategoryPanel
-      Top = 191
+      Top = 569
       Height = 30
       Caption = 'Networks'
       Collapsed = True
@@ -378,7 +383,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       ExpandedHeight = 120
     end
     object CategoryPanel17: TCategoryPanel
-      Top = 161
+      Top = 539
       Height = 30
       Caption = 'Movies'
       Collapsed = True
@@ -566,7 +571,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel16: TCategoryPanel
-      Top = 131
+      Top = 509
       Height = 30
       Caption = 'Movie Lists'
       Collapsed = True
@@ -754,7 +759,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel15: TCategoryPanel
-      Top = 101
+      Top = 479
       Height = 30
       Caption = 'Lists'
       Collapsed = True
@@ -807,7 +812,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel14: TCategoryPanel
-      Top = 71
+      Top = 449
       Height = 30
       Caption = 'Keywords'
       Collapsed = True
@@ -860,7 +865,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel13: TCategoryPanel
-      Top = 41
+      Top = 419
       Height = 30
       Caption = 'Guest Sessions'
       Collapsed = True
@@ -1003,7 +1008,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel12: TCategoryPanel
-      Top = 11
+      Top = 389
       Height = 30
       Caption = 'Genres'
       Collapsed = True
@@ -1101,7 +1106,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel11: TCategoryPanel
-      Top = -19
+      Top = 359
       Height = 30
       Caption = 'Find'
       Collapsed = True
@@ -1154,7 +1159,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel10: TCategoryPanel
-      Top = -49
+      Top = 329
       Height = 30
       Caption = 'Discover'
       Collapsed = True
@@ -1252,7 +1257,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel9: TCategoryPanel
-      Top = -79
+      Top = 299
       Height = 30
       Caption = 'Credits'
       Collapsed = True
@@ -1305,7 +1310,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel8: TCategoryPanel
-      Top = -109
+      Top = 269
       Height = 30
       Caption = 'Configuration'
       Collapsed = True
@@ -1583,7 +1588,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel7: TCategoryPanel
-      Top = -139
+      Top = 239
       Height = 30
       Caption = 'Companies'
       Collapsed = True
@@ -1591,7 +1596,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       ExpandedHeight = 106
     end
     object CategoryPanel6: TCategoryPanel
-      Top = -169
+      Top = 209
       Height = 30
       Caption = 'Collections'
       Collapsed = True
@@ -1599,7 +1604,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       ExpandedHeight = 106
     end
     object CategoryPanel5: TCategoryPanel
-      Top = -199
+      Top = 179
       Height = 30
       Caption = 'Changes'
       Collapsed = True
@@ -1742,7 +1747,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel4: TCategoryPanel
-      Top = -229
+      Top = 149
       Height = 30
       Caption = 'Certifications'
       Collapsed = True
@@ -1840,7 +1845,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel3: TCategoryPanel
-      Top = -259
+      Top = 119
       Height = 30
       Caption = 'Authentication'
       Collapsed = True
@@ -1892,7 +1897,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel2: TCategoryPanel
-      Top = -289
+      Top = 89
       Height = 30
       Caption = 'Account'
       Collapsed = True
@@ -2304,7 +2309,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel1: TCategoryPanel
-      Top = -378
+      Top = 0
       Height = 89
       Caption = 'Application Setup'
       TabOrder = 21
@@ -2396,6 +2401,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Application Setup'
+        OnClick = JDFontButton49Click
       end
     end
   end

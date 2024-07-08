@@ -6,7 +6,15 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, JD.Common, JD.Ctrls,
   JD.Ctrls.FontButton, Vcl.ExtCtrls,
-  uContentSearchMovies;
+
+  uTMDBAppSetup,
+  uContentSearchCollections,
+  uContentSearchCompanies,
+  uContentSearchKeywords,
+  uContentSearchMovies,
+  uContentSearchMulti,
+  uContentSearchPeople,
+  uContentSearchTV;
 
 type
   TfrmTMDBHome = class(TfrmContentBase)
@@ -83,6 +91,13 @@ type
     JDFontButton48: TJDFontButton;
     JDFontButton49: TJDFontButton;
     procedure JDFontButton46Click(Sender: TObject);
+    procedure JDFontButton42Click(Sender: TObject);
+    procedure JDFontButton44Click(Sender: TObject);
+    procedure JDFontButton45Click(Sender: TObject);
+    procedure JDFontButton47Click(Sender: TObject);
+    procedure JDFontButton48Click(Sender: TObject);
+    procedure JDFontButton43Click(Sender: TObject);
+    procedure JDFontButton49Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -100,11 +115,52 @@ uses
   uMain,
   JD.TabController;
 
+procedure TfrmTMDBHome.JDFontButton42Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchCollections);
+end;
+
+procedure TfrmTMDBHome.JDFontButton43Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchTV);
+end;
+
+procedure TfrmTMDBHome.JDFontButton44Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchCompanies);
+end;
+
+procedure TfrmTMDBHome.JDFontButton45Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchKeywords);
+end;
+
 procedure TfrmTMDBHome.JDFontButton46Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchMovies);
+end;
 
+procedure TfrmTMDBHome.JDFontButton47Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchMulti);
+end;
+
+procedure TfrmTMDBHome.JDFontButton48Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentSearchPeople);
+end;
+
+procedure TfrmTMDBHome.JDFontButton49Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmTMDBAppSetup);
 end;
 
 end.

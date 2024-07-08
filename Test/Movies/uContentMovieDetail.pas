@@ -80,6 +80,8 @@ type
     procedure LoadImages;
     function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
       ATab: TTabSheet): TfrmCommonFormBase;
+  protected
+    function GetCaption: String; override;
   public
     procedure LoadMovie(const MovieID: Integer); overload;
     procedure LoadMovie(const Movie: ITMDBMovieDetail); overload;
@@ -122,6 +124,14 @@ begin
   Result.BorderStyle:= bsNone;
   Result.Align:= alClient;
   Result.Show;
+end;
+
+function TfrmContentMovieDetail.GetCaption: String;
+begin
+  if FDetail = nil then
+    Result:= 'Movie Detail'
+  else
+    Result:= 'Movie: ' + FDetail.Title;
 end;
 
 function TfrmContentMovieDetail.GetMovieDetail(const ID: Integer): ITMDBMovieDetail;

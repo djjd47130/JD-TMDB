@@ -47,7 +47,8 @@ uses
   uContentTVSerieDetail in 'TVSeries\uContentTVSerieDetail.pas' {frmContentTVSerieDetail},
   uTabTVSeries in 'TVSeries\uTabTVSeries.pas' {frmTabTVSeries},
   JD.TabController in 'JD.TabController.pas',
-  uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome};
+  uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome},
+  uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup};
 
 {$R *.res}
 
@@ -61,5 +62,6 @@ begin
   Application.CreateForm(TfrmContentTVSerieDetail, frmContentTVSerieDetail);
   Application.CreateForm(TfrmTabTVSeries, frmTabTVSeries);
   Application.CreateForm(TfrmTMDBHome, frmTMDBHome);
+  Application.CreateForm(TfrmTMDBAppSetup, frmTMDBAppSetup);
   Application.Run;
 end.

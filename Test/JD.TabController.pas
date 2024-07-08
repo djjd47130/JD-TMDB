@@ -34,6 +34,8 @@ type
     function GetID: Int64;
     function GetCaption: String;
 
+    procedure UpdateCaption; virtual;
+
     property Owner: TJDTabController read FOwner;
     property FormClass: TfrmContentBaseClass read FClass;
     property ID: Int64 read FID;
@@ -101,8 +103,6 @@ begin
   FTab.Tag:= FID;
   FTab.TabVisible:= False;
 
-  Application.ProcessMessages;
-
   FContent:= FClass.Create(FTab);
   FContent.Parent:= FTab;
   FContent.BorderStyle:= bsNone;
@@ -110,12 +110,11 @@ begin
   FContent.Tag:= FID;
   FContent.Show;
 
-  Application.ProcessMessages;
-
   FChromeTab:= FOwner.ChromeTabs.Tabs.Add;
   FChromeTab.Tag:= FID;
   FChromeTab.Caption:= FContent.Caption;
 
+  UpdateCaption;
 end;
 
 destructor TJDTabRef.Destroy;
@@ -132,12 +131,17 @@ end;
 
 function TJDTabRef.GetCaption: String;
 begin
-  Result:= FContent.Caption;
+  Result:= FContent.GetCaption;
 end;
 
 function TJDTabRef.GetID: Int64;
 begin
   Result:= FID;
+end;
+
+procedure TJDTabRef.UpdateCaption;
+begin
+  FChromeTab.Caption:= GetCaption;
 end;
 
 { TJDTabController }
@@ -177,6 +181,8 @@ begin
   if AIndex > -1 then begin
     FItems.Move(I, AIndex);
   end;
+
+  Result.UpdateCaption;
 end;
 
 function TJDTabController.GetTab(const Index: Integer): TJDTabRef;
