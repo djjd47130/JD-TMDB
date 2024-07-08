@@ -2185,6 +2185,25 @@ type
 
 
 
+{$REGION 'Rating Related'}
+
+  TTMDBRatingResult = class(TInterfacedObject, ITMDBRatingResult)
+  private
+    FObj: ISuperObject;
+  protected
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
+  public
+    constructor Create(AObj: ISuperObject); virtual;
+
+    property StatusCode: Integer read GetStatusCode;
+    property StatusMessage: WideString read GetStatusMessage;
+  end;
+
+{$ENDREGION}
+
+
+
 {$REGION 'Movie List Related'}
 
   TTMDBDateRange = class(TInterfacedObject, ITMDBDateRange)
@@ -3370,12 +3389,12 @@ type
     function GetTranslations(const MovieID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideos; stdcall;
     function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
-    //function AddRating(const MovieID: Integer; const Rating: Single;
-    //  const SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
-    //function DeleteRating(const MovieID: Integer;
-    //  const SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBDeleteRatingResult; stdcall;
+    function AddRating(const MovieID: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const MovieID: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   TTMDBNamespaceNetworks = class(TTMDBNamespace, ITMDBNamespaceNetworks)
@@ -3487,12 +3506,12 @@ type
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
     function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
-    //function AddRating(const SeriesID: Integer; const Rating: Single;
-    //  cosnt SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
-    //function DeleteRating(const SeriesID: Integer;
-    //  cosnt SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBDeleteRatingResult; stdcall;
+    function AddRating(const SeriesID: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const SeriesID: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   TTMDBNamespaceTVSeasons = class(TTMDBNamespace, ITMDBNamespaceTVSeasons)
@@ -3540,8 +3559,12 @@ type
     function GetVideos(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
       const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function AddRating
-    //function DeleteRating
+    function AddRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   TTMDBNamespaceTVEpisodeGroups = class(TTMDBNamespace, ITMDBNamespaceTVEpisodeGroups)
@@ -8971,6 +8994,25 @@ end;
 
 { TTMDBNamespaceMovies }
 
+function TTMDBNamespaceMovies.AddRating(const MovieID: Integer;
+  const Rating: Single; const SessionID,
+  GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.AddRating(MovieID, Rating, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
+
+function TTMDBNamespaceMovies.DeleteRating(const MovieID: Integer;
+  const SessionID, GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.Movies.DeleteRating(MovieID, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
+
 function TTMDBNamespaceMovies.GetAccountStates(const MovieID: Integer;
   const SessionID, GuestSessionID: WideString): ITMDBAccountStates;
 var
@@ -9317,6 +9359,25 @@ begin
 end;
 
 { TTMDBNamespaceTVSeries }
+
+function TTMDBNamespaceTVSeries.AddRating(const SeriesID: Integer;
+  const Rating: Single; const SessionID,
+  GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.AddRating(SeriesID, Rating, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
+
+function TTMDBNamespaceTVSeries.DeleteRating(const SeriesID: Integer;
+  const SessionID, GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVSeries.DeleteRating(SeriesID, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
 
 function TTMDBNamespaceTVSeries.GetAccountStates(
   const SeriesID: Integer): ITMDBAccountStates;
@@ -11666,6 +11727,26 @@ end;
 
 { TTMDBNamespaceTVEpisodes }
 
+function TTMDBNamespaceTVEpisodes.AddRating(const SeriesID, SeasonNumber,
+  EpisodeNumber: Integer; const Rating: Single; const SessionID,
+  GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVEpisodes.AddRating(SeriesID, SeasonNumber, EpisodeNumber, Rating, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
+
+function TTMDBNamespaceTVEpisodes.DeleteRating(const SeriesID, SeasonNumber,
+  EpisodeNumber: Integer; const SessionID,
+  GuestSessionID: WideString): ITMDBRatingResult;
+var
+  O: ISuperObject;
+begin
+  O:= FOwner.FAPI.TVEpisodes.DeleteRating(SeriesID, SeasonNumber, EpisodeNumber, GuestSessionID, SessionID);
+  Result:= TTMDBRatingResult.Create(O);
+end;
+
 function TTMDBNamespaceTVEpisodes.GetAccountStates(const SeriesID, SeasonNumber,
   EpisodeNumber: Integer; const SessionID,
   GuestSessionID: WideString): ITMDBAccountStates;
@@ -11937,6 +12018,23 @@ begin
     I:= TTMDBMediaWatchProviderCountry.Create(M.AsObject, M.Name, FTMDB);
     FItems.Add(I);
   end;
+end;
+
+{ TTMDBRatingResult }
+
+constructor TTMDBRatingResult.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+end;
+
+function TTMDBRatingResult.GetStatusCode: Integer;
+begin
+  Result:= FObj.I['status_code'];
+end;
+
+function TTMDBRatingResult.GetStatusMessage: WideString;
+begin
+  Result:= FObj.S['status_message'];
 end;
 
 end.

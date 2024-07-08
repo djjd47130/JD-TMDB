@@ -1452,6 +1452,21 @@ type
 
 
 
+{$REGION 'Rating Related'}
+
+  ITMDBRatingResult = interface
+    ['{CEC0D889-C652-4A74-8111-723F8F785851}']
+    function GetStatusCode: Integer; stdcall;
+    function GetStatusMessage: WideString; stdcall;
+
+    property StatusCode: Integer read GetStatusCode;
+    property StatusMessage: WideString read GetStatusMessage;
+  end;
+
+{$ENDREGION}
+
+
+
 //TODO
 {$REGION 'Person Related'}
 
@@ -3302,12 +3317,12 @@ type
     function GetTranslations(const MovieID: Integer): ITMDBTranslations; stdcall;
     function GetVideos(const MovieID: Integer; const Language: WideString = ''): ITMDBVideos; stdcall;
     function GetWatchProviders(const MovieID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
-    //function AddRating(const MovieID: Integer; const Rating: Single;
-    //  const SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
-    //function DeleteRating(const MovieID: Integer;
-    //  const SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBDeleteRatingResult; stdcall;
+    function AddRating(const MovieID: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const MovieID: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   ITMDBNamespaceNetworks = interface(ITMDBNamespace)
@@ -3420,12 +3435,12 @@ type
     function GetVideos(const SeriesID: Integer; const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
     function GetWatchProviders(const SeriesID: Integer): ITMDBMediaWatchProviderCountries; stdcall;
-    //function AddRating(const SeriesID: Integer; const Rating: Single;
-    //  cosnt SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBAddRatingResult; stdcall;
-    //function DeleteRating(const SeriesID: Integer;
-    //  cosnt SessionID: WideString = '';
-    //  const GuestSessionID: WideString = ''): ITMDBDeleteRatingResult; stdcall;
+    function AddRating(const SeriesID: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const SeriesID: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   ITMDBNamespaceTVSeasons = interface(ITMDBNamespace)
@@ -3473,8 +3488,12 @@ type
     function GetVideos(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
       const IncludeVideoLanguage: WideString = '';
       const Language: WideString = ''): ITMDBVideos; stdcall;
-    //function AddRating
-    //function DeleteRating
+    function AddRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer; const Rating: Single;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
+    function DeleteRating(const SeriesID, SeasonNumber, EpisodeNumber: Integer;
+      const SessionID: WideString = '';
+      const GuestSessionID: WideString = ''): ITMDBRatingResult; stdcall;
   end;
 
   ITMDBNamespaceTVEpisodeGroups = interface(ITMDBNamespace)
