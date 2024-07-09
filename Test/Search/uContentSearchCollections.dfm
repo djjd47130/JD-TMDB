@@ -35,11 +35,10 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         Top = 3
         Width = 639
         Height = 246
-        ActivePage = tabImages
+        ActivePage = TabSheet2
         Align = alClient
         TabOrder = 0
         OnChange = PagesChange
-        ExplicitTop = 6
         object TabSheet1: TTabSheet
           Caption = 'Details'
           ExplicitLeft = 0
@@ -82,10 +81,6 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         object TabSheet2: TTabSheet
           Caption = 'Parts'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object lstParts: TListView
             AlignWithMargins = True
             Left = 3
@@ -125,6 +120,7 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
             RowSelect = True
             TabOrder = 0
             ViewStyle = vsReport
+            OnDblClick = lstPartsDblClick
           end
         end
         object tabImages: TTabSheet
@@ -159,10 +155,11 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtSearchMoviesQuery: TEdit
         AlignWithMargins = True
@@ -223,10 +220,11 @@ inherited frmContentSearchCollections: TfrmContentSearchCollections
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 57
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Region:'
+        ExplicitWidth = 57
       end
       object cboSearchMoviesRegion: TComboBox
         AlignWithMargins = True

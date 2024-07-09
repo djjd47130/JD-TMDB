@@ -1,18 +1,21 @@
 inherited frmTMDBHome: TfrmTMDBHome
-  Caption = 'TMDB Home'
+  Caption = 'Main Menu'
   ClientHeight = 539
-  ClientWidth = 366
-  ExplicitWidth = 382
+  ClientWidth = 790
+  OnCreate = FormCreate
+  ExplicitWidth = 806
   ExplicitHeight = 578
   PixelsPerInch = 96
   TextHeight = 18
   object CategoryPanelGroup1: TCategoryPanelGroup
     Left = 0
     Top = 0
-    Width = 366
+    Width = 790
     Height = 539
+    VertScrollBar.Position = 1364
     VertScrollBar.Tracking = True
     Align = alClient
+    BevelInner = bvNone
     BevelOuter = bvNone
     GradientBaseColor = 16639705
     GradientColor = 16500908
@@ -23,17 +26,20 @@ inherited frmTMDBHome: TfrmTMDBHome
     HeaderFont.Style = [fsBold]
     ParentBackground = True
     TabOrder = 0
+    OnMouseWheelDown = CategoryPanelGroup1MouseWheelDown
+    OnMouseWheelUp = CategoryPanelGroup1MouseWheelUp
+    ExplicitWidth = 366
     object CategoryPanel22: TCategoryPanel
-      Top = 689
-      Height = 224
+      Top = 1396
+      Height = 279
       Caption = 'Search'
       TabOrder = 0
       object JDFontButton42: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -43,14 +49,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61451
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -65,6 +71,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -77,9 +85,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton43: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 169
-        Width = 303
-        Height = 26
+        Top = 205
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -89,14 +97,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -111,6 +119,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -123,9 +133,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton44: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -135,14 +145,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61687
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -157,6 +167,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -169,9 +181,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton45: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -181,14 +193,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61483
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -203,6 +215,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -215,9 +229,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton46: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 85
-        Width = 303
-        Height = 26
+        Top = 103
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -227,14 +241,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -249,6 +263,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -261,9 +277,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton47: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 113
-        Width = 303
-        Height = 26
+        Top = 137
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -273,14 +289,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61486
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -295,6 +311,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -307,9 +325,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton48: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 141
-        Width = 303
-        Height = 26
+        Top = 171
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -319,14 +337,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61447
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -341,6 +359,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -352,49 +372,44 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel21: TCategoryPanel
-      Top = 659
-      Height = 30
+      Top = 1301
+      Height = 95
       Caption = 'Reviews'
-      Collapsed = True
       TabOrder = 1
-      ExpandedHeight = 95
+      Visible = False
     end
     object CategoryPanel20: TCategoryPanel
-      Top = 629
-      Height = 30
+      Top = 1101
       Caption = 'People'
-      Collapsed = True
       TabOrder = 2
+      Visible = False
     end
     object CategoryPanel19: TCategoryPanel
-      Top = 599
-      Height = 30
+      Top = 958
+      Height = 143
       Caption = 'People Lists'
-      Collapsed = True
       TabOrder = 3
-      ExpandedHeight = 143
+      Visible = False
     end
     object CategoryPanel18: TCategoryPanel
-      Top = 569
-      Height = 30
+      Top = 838
+      Height = 120
       Caption = 'Networks'
-      Collapsed = True
       TabOrder = 4
-      ExpandedHeight = 120
+      Visible = False
     end
     object CategoryPanel17: TCategoryPanel
-      Top = 539
-      Height = 30
+      Top = 524
+      Height = 314
       Caption = 'Movies'
-      Collapsed = True
       TabOrder = 5
-      ExpandedHeight = 314
+      Visible = False
       object JDFontButton38: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -404,14 +419,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -426,6 +441,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -437,9 +454,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton39: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -449,14 +466,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61447
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -471,6 +488,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -482,9 +501,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton40: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -494,14 +513,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61473
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -516,6 +535,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -527,9 +548,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton41: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 85
-        Width = 303
-        Height = 26
+        Top = 103
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -539,14 +560,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61504
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -561,6 +582,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -571,18 +594,16 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel16: TCategoryPanel
-      Top = 509
-      Height = 30
+      Top = 356
+      Height = 168
       Caption = 'Movie Lists'
-      Collapsed = True
       TabOrder = 6
-      ExpandedHeight = 146
       object JDFontButton34: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -592,14 +613,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -614,6 +635,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -625,9 +648,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton35: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -637,14 +660,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -659,6 +682,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcGreen
         Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -670,9 +695,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton36: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -682,14 +707,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -704,6 +729,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcOrange
         Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -715,9 +742,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton37: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 85
-        Width = 303
-        Height = 26
+        Top = 103
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -727,14 +754,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -749,6 +776,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcOrange
         Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -759,18 +788,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel15: TCategoryPanel
-      Top = 479
-      Height = 30
+      Top = 254
+      Height = 102
       Caption = 'Lists'
-      Collapsed = True
       TabOrder = 7
-      ExpandedHeight = 80
+      Visible = False
       object JDFontButton33: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -780,14 +808,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61498
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -802,6 +830,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -812,18 +842,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel14: TCategoryPanel
-      Top = 449
-      Height = 30
+      Top = 190
+      Height = 64
       Caption = 'Keywords'
-      Collapsed = True
       TabOrder = 8
-      ExpandedHeight = 60
+      Visible = False
       object JDFontButton32: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -833,14 +862,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61484
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -855,6 +884,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -865,18 +896,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel13: TCategoryPanel
-      Top = 419
-      Height = 30
+      Top = 57
+      Height = 133
       Caption = 'Guest Sessions'
-      Collapsed = True
       TabOrder = 9
-      ExpandedHeight = 119
+      Visible = False
       object JDFontButton29: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -886,14 +916,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -908,6 +938,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foBottomRight
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -919,9 +951,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton30: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -931,14 +963,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -953,6 +985,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foBottomRight
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -964,9 +998,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton31: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -976,14 +1010,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -998,6 +1032,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foBottomRight
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1008,18 +1044,16 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel12: TCategoryPanel
-      Top = 389
-      Height = 30
+      Top = -39
+      Height = 96
       Caption = 'Genres'
-      Collapsed = True
       TabOrder = 10
-      ExpandedHeight = 87
       object JDFontButton27: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1029,14 +1063,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1051,6 +1085,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1058,13 +1094,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Movie Genres'
+        OnClick = JDFontButton27Click
       end
       object JDFontButton28: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1074,14 +1111,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1096,6 +1133,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1103,21 +1142,21 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'TV Genres'
+        OnClick = JDFontButton28Click
       end
     end
     object CategoryPanel11: TCategoryPanel
-      Top = 359
-      Height = 30
+      Top = -103
+      Height = 64
       Caption = 'Find'
-      Collapsed = True
       TabOrder = 11
-      ExpandedHeight = 64
+      Visible = False
       object JDFontButton26: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1127,14 +1166,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61483
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1149,6 +1188,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1159,18 +1200,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel10: TCategoryPanel
-      Top = 329
-      Height = 30
+      Top = -198
+      Height = 95
       Caption = 'Discover'
-      Collapsed = True
       TabOrder = 12
-      ExpandedHeight = 88
+      Visible = False
       object JDFontButton24: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1180,14 +1220,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1202,6 +1242,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1213,9 +1255,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton25: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1225,14 +1267,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1247,6 +1289,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1257,18 +1301,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel9: TCategoryPanel
-      Top = 299
-      Height = 30
+      Top = -261
+      Height = 63
       Caption = 'Credits'
-      Collapsed = True
       TabOrder = 13
-      ExpandedHeight = 63
+      Visible = False
       object JDFontButton23: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1278,14 +1321,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61485
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1300,6 +1343,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1310,18 +1355,17 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel8: TCategoryPanel
-      Top = 269
-      Height = 30
+      Top = -500
+      Height = 239
       Caption = 'Configuration'
-      Collapsed = True
       TabOrder = 14
-      ExpandedHeight = 204
+      Visible = False
       object JDFontButton17: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1331,14 +1375,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61573
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1353,6 +1397,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1364,9 +1410,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton18: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1376,14 +1422,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61612
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1398,6 +1444,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1409,9 +1457,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton19: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1421,14 +1469,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61617
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1443,6 +1491,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1454,9 +1504,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton20: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 85
-        Width = 303
-        Height = 26
+        Top = 103
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1466,14 +1516,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61612
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1488,6 +1538,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1499,9 +1551,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton21: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 113
-        Width = 303
-        Height = 26
+        Top = 137
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1511,14 +1563,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61612
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1533,6 +1585,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1544,9 +1598,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton22: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 141
-        Width = 303
-        Height = 26
+        Top = 171
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1556,14 +1610,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61463
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1578,6 +1632,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1588,34 +1644,31 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel7: TCategoryPanel
-      Top = 239
-      Height = 30
+      Top = -606
+      Height = 106
       Caption = 'Companies'
-      Collapsed = True
       TabOrder = 15
-      ExpandedHeight = 106
+      Visible = False
     end
     object CategoryPanel6: TCategoryPanel
-      Top = 209
-      Height = 30
+      Top = -712
+      Height = 106
       Caption = 'Collections'
-      Collapsed = True
       TabOrder = 16
-      ExpandedHeight = 106
+      Visible = False
     end
     object CategoryPanel5: TCategoryPanel
-      Top = 179
-      Height = 30
+      Top = -840
+      Height = 128
       Caption = 'Changes'
-      Collapsed = True
       TabOrder = 17
-      ExpandedHeight = 127
+      Visible = False
       object JDFontButton14: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1625,14 +1678,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1647,6 +1700,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1658,9 +1713,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton15: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1670,14 +1725,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61447
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1692,6 +1747,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1703,9 +1760,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton16: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1715,14 +1772,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1737,6 +1794,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1747,18 +1806,16 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel4: TCategoryPanel
-      Top = 149
-      Height = 30
+      Top = -937
+      Height = 97
       Caption = 'Certifications'
-      Collapsed = True
       TabOrder = 18
-      ExpandedHeight = 92
       object JDFontButton12: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1768,14 +1825,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1790,6 +1847,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1797,13 +1856,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Movie Certifications'
+        OnClick = JDFontButton12Click
       end
       object JDFontButton13: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1813,14 +1873,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1835,6 +1895,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1842,73 +1904,21 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'TV Certifications'
-      end
-    end
-    object CategoryPanel3: TCategoryPanel
-      Top = 119
-      Height = 30
-      Caption = 'Authentication'
-      Collapsed = True
-      TabOrder = 19
-      ExpandedHeight = 58
-      object JDFontButton11: TJDFontButton
-        AlignWithMargins = True
-        Left = 20
-        Top = 1
-        Width = 303
-        Height = 26
-        Cursor = crHandPoint
-        Margins.Left = 20
-        Margins.Top = 1
-        Margins.Right = 20
-        Margins.Bottom = 1
-        Align = alTop
-        DrawStyle = fdTransparent
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -15
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        Image.AutoSize = False
-        Image.Text = #61452
-        Image.Font.Charset = DEFAULT_CHARSET
-        Image.Font.Color = clWindowText
-        Image.Font.Height = -21
-        Image.Font.Name = 'FontAwesome'
-        Image.Font.Style = []
-        Image.Font.Quality = fqAntialiased
-        Image.StandardColor = fcBlue
-        Overlay.Text = #57715
-        Overlay.Font.Charset = DEFAULT_CHARSET
-        Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -7
-        Overlay.Font.Name = 'FontAwesome'
-        Overlay.Font.Style = []
-        Overlay.Font.Quality = fqAntialiased
-        Overlay.Position = foNone
-        Overlay.Margin = 3
-        SubTextFont.Charset = DEFAULT_CHARSET
-        SubTextFont.Color = clGray
-        SubTextFont.Height = -11
-        SubTextFont.Name = 'Tahoma'
-        SubTextFont.Style = []
-        TabOrder = 0
-        Text = 'Validate Key'
+        OnClick = JDFontButton13Click
       end
     end
     object CategoryPanel2: TCategoryPanel
-      Top = 89
-      Height = 30
+      Top = -1275
+      Height = 338
       Caption = 'Account'
-      Collapsed = True
-      TabOrder = 20
-      ExpandedHeight = 286
+      TabOrder = 19
+      Visible = False
       object JDFontButton1: TJDFontButton
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1918,14 +1928,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61447
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1933,12 +1943,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #57715
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -7
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = []
         Overlay.Font.Quality = fqAntialiased
+        Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1950,9 +1963,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton2: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -1962,14 +1975,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -1977,13 +1990,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61444
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -9
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
         Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -1995,9 +2010,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton4: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 57
-        Width = 303
-        Height = 26
+        Top = 69
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2007,14 +2022,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2022,13 +2037,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61444
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -9
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
         Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2040,9 +2057,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton5: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 85
-        Width = 303
-        Height = 26
+        Top = 103
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2052,14 +2069,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61643
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2067,13 +2084,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61444
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -9
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
         Overlay.StandardColor = fcRed
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2085,9 +2104,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton6: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 113
-        Width = 303
-        Height = 26
+        Top = 137
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2097,14 +2116,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2112,13 +2131,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61738
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -11
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
-        Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.StandardColor = fcGreen
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2130,9 +2151,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton7: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 141
-        Width = 303
-        Height = 26
+        Top = 171
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2142,14 +2163,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2157,13 +2178,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61738
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -11
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
-        Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.StandardColor = fcGreen
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2175,9 +2198,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton8: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 169
-        Width = 303
-        Height = 26
+        Top = 205
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2187,14 +2210,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2202,13 +2225,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61738
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -11
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
-        Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.StandardColor = fcGreen
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2220,9 +2245,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton9: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 197
-        Width = 303
-        Height = 26
+        Top = 239
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2232,14 +2257,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61448
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2247,13 +2272,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61550
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -9
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
-        Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.StandardColor = fcOrange
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2265,9 +2292,9 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton10: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 225
-        Width = 303
-        Height = 26
+        Top = 273
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2277,14 +2304,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61704
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2292,13 +2319,15 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Text = #61550
         Overlay.Font.Charset = DEFAULT_CHARSET
         Overlay.Font.Color = clWindowText
-        Overlay.Font.Height = -9
+        Overlay.Font.Height = -16
         Overlay.Font.Name = 'FontAwesome'
         Overlay.Font.Style = [fsBold]
         Overlay.Font.Quality = fqAntialiased
-        Overlay.StandardColor = fcRed
-        Overlay.Position = foBottomRight
+        Overlay.StandardColor = fcOrange
+        Overlay.Position = foCenter
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2309,16 +2338,16 @@ inherited frmTMDBHome: TfrmTMDBHome
       end
     end
     object CategoryPanel1: TCategoryPanel
-      Top = 0
+      Top = -1364
       Height = 89
       Caption = 'Application Setup'
-      TabOrder = 21
+      TabOrder = 20
       object JDFontButton3: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 29
-        Width = 303
-        Height = 26
+        Top = 35
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2328,14 +2357,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61451
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2349,6 +2378,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Font.Quality = fqAntialiased
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11
@@ -2362,8 +2393,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         AlignWithMargins = True
         Left = 20
         Top = 1
-        Width = 303
-        Height = 26
+        Width = 727
+        Height = 32
         Cursor = crHandPoint
         Margins.Left = 20
         Margins.Top = 1
@@ -2373,14 +2404,14 @@ inherited frmTMDBHome: TfrmTMDBHome
         DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -15
+        Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
         Image.Text = #61459
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
-        Image.Font.Height = -21
+        Image.Font.Height = -29
         Image.Font.Name = 'FontAwesome'
         Image.Font.Style = []
         Image.Font.Quality = fqAntialiased
@@ -2394,6 +2425,8 @@ inherited frmTMDBHome: TfrmTMDBHome
         Overlay.Font.Quality = fqAntialiased
         Overlay.Position = foNone
         Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
         SubTextFont.Charset = DEFAULT_CHARSET
         SubTextFont.Color = clGray
         SubTextFont.Height = -11

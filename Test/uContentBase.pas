@@ -11,21 +11,20 @@ type
 
   TfrmContentBaseClass = class of TfrmContentBase;
 
-
-
   TfrmContentBase = class(TForm)
   protected
     function TMDB: TTMDB;
     function Client: ITMDBClient;
     procedure PrepAPI;
+    function GetTabCaption: String;
+    procedure SetTabCaption(const Value: String);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetCaption: String; virtual;
+    property TabCaption: String read GetTabCaption write SetTabCaption;
     procedure RefreshData; virtual;
-    function CloseQuery: Boolean; virtual;
-
+    function CanClose: Boolean; virtual;
   end;
 
 var
@@ -44,7 +43,7 @@ uses
 constructor TfrmContentBase.Create(AOwner: TComponent);
 begin
   inherited;
-
+  TabCaption:= Caption;
 end;
 
 destructor TfrmContentBase.Destroy;
@@ -53,12 +52,16 @@ begin
   inherited;
 end;
 
-function TfrmContentBase.GetCaption: String;
+function TfrmContentBase.GetTabCaption: String;
+var
+  T: TJDTabRef;
 begin
-  Result:= Caption;
+  T:= TabController.RefByForm(Self);
+  if T <> nil then
+    Result:= T.Caption;
 end;
 
-function TfrmContentBase.CloseQuery: Boolean;
+function TfrmContentBase.CanClose: Boolean;
 begin
   Result:= True;
 end;
@@ -71,6 +74,15 @@ end;
 procedure TfrmContentBase.RefreshData;
 begin
 
+end;
+
+procedure TfrmContentBase.SetTabCaption(const Value: String);
+var
+  T: TJDTabRef;
+begin
+  T:= TabController.RefByForm(Self);
+  if T <> nil then
+    T.Caption:= Value;
 end;
 
 function TfrmContentBase.TMDB: TTMDB;

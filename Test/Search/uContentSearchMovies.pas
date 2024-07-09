@@ -38,8 +38,6 @@ type
     procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
   protected
-    function GetCaption: String; override;
-  protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
     procedure PrepSearch; override;
@@ -110,18 +108,6 @@ begin
   end;
 end;
 
-function TfrmContentSearchMovies.GetCaption: String;
-var
-  S: String;
-begin
-  S:= txtSearchMoviesQuery.Text;
-  if S <> '' then begin
-    Result:= 'Search Movies - ' + S;
-  end else begin
-    Result:= 'Search Movies';
-  end;
-end;
-
 function TfrmContentSearchMovies.GetData(const APageNum: Integer): ITMDBPage;
 var
   Q, L, R, PRY, Y: String;
@@ -135,6 +121,9 @@ begin
   PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
   Y:= txtSearchMoviesYear.Text;
   Result:= TMDB.Client.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
+
+  TabCaption:= 'Search Movies - ' + Q;
+
 end;
 
 procedure TfrmContentSearchMovies.DisplayMovieDetail(const Value: ITMDBMovieDetail);

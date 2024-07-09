@@ -31,10 +31,11 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
+    procedure lstPartsDblClick(Sender: TObject);
   private
     FDetail: ITMDBCollectionDetail;
     FImages: ITMDBMediaImageGroup;
-    FTranslations: ITMDBTranslations;
+    //FTranslations: ITMDBTranslations;
     FDetailImages: TfrmCommonImages;
     function GetCollectionDetail(const ID: Integer): ITMDBCollectionDetail;
     procedure DisplayCollectionDetail(const Value: ITMDBCollectionDetail);
@@ -64,7 +65,9 @@ implementation
 {$R *.dfm}
 
 uses
-  uMain;
+  uMain,
+  JD.TabController,
+  uContentMovieDetail;
 
 procedure TfrmContentSearchCollections.FormCreate(Sender: TObject);
 begin
@@ -97,6 +100,8 @@ begin
   L:= frmMain.cboLanguage.Text;
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));
+
+  TabCaption:= 'Search Collections - ' + Q;
 end;
 
 function TfrmContentSearchCollections.GetItem(
@@ -248,6 +253,19 @@ end;
 procedure TfrmContentSearchCollections.LoadTranslations;
 begin
   //TODO
+
+end;
+
+procedure TfrmContentSearchCollections.lstPartsDblClick(Sender: TObject);
+var
+  M: ITMDBMovie;
+  T: TJDTabRef;
+begin
+  inherited;
+  M:= FDetail.Parts[lstParts.ItemIndex];
+  T:= TabController.CreateTab(TfrmContentMovieDetail);
+  (T.Content as TfrmContentMovieDetail).pTop.Visible:= False;
+  (T.Content as TfrmContentMovieDetail).LoadMovie(M.ID);
 
 end;
 

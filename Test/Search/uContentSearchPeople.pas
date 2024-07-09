@@ -53,6 +53,8 @@ begin
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
   L:= frmMain.cboLanguage.Text;
   Result:= TMDB.Client.Search.SearchPeople(Q, A, L, APageNum);
+
+  TabCaption:= 'Search People - ' + Q;
 end;
 
 function TfrmContentSearchPeople.GetItem(const Index: Integer): ITMDBItem;

@@ -6,7 +6,7 @@ uses
   System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
   System.UITypes,
   Winapi.Windows, Winapi.Messages,
-  Vcl.Controls, Vcl.ComCtrls, Vcl.Forms,
+  Vcl.Controls, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Forms,
   ChromeTabs, ChromeTabsClasses,
 
   uContentBase
@@ -25,33 +25,34 @@ type
     FClass: TfrmContentBaseClass;
     FID: Int64;
     FContent: TfrmContentBase;
-    FTab: TTabSheet;
     FChromeTab: TChromeTab;
+    function GetCaption: String;
+    procedure SetCaption(const Value: String);
   public
     constructor Create(AOwner: TJDTabController; AClass: TfrmContentBaseClass); virtual;
     destructor Destroy; override;
 
-    function GetID: Int64;
-    function GetCaption: String;
-
-    procedure UpdateCaption; virtual;
+    procedure Show;
 
     property Owner: TJDTabController read FOwner;
     property FormClass: TfrmContentBaseClass read FClass;
+    property Caption: String read GetCaption write SetCaption;
     property ID: Int64 read FID;
     property Content: TfrmContentBase read FContent;
-    property Tab: TTabSheet read FTab;
     property ChromeTab: TChromeTab read FChromeTab;
   end;
 
   TJDTabController = class(TComponent)
   private
     FItems: TObjectList<TJDTabRef>;
-    FPageControl: TPageControl;
     FChromeTabs: TChromeTabs;
+    FContainer: TPanel;
     function GetTab(const Index: Integer): TJDTabRef;
     procedure SetChromeTabs(const Value: TChromeTabs);
-    procedure SetPageControl(const Value: TPageControl);
+    procedure SetContainer(const Value: TPanel);
+    function GetActiveTabIndex: Integer;
+    procedure SetActiveTabIndex(const Value: Integer);
+    procedure HideAll;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -59,15 +60,21 @@ type
     function CreateTab(AClass: TfrmContentBaseClass;
       const AIndex: Integer = -1): TJDTabRef;
 
+    function RefByID(const ID: Integer): TJDTabRef;
+    function RefByForm(AForm: TfrmContentBase): TJDTabRef;
+
     procedure DeleteTab(const Index: Integer);
     function Count: Integer;
     property Tabs[const Index: Integer]: TJDTabRef read GetTab; default;
 
   published
+    property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
     property ChromeTabs: TChromeTabs read FChromeTabs write SetChromeTabs;
-    property PageControl: TPageControl read FPageControl write SetPageControl;
+    property Container: TPanel read FContainer write SetContainer;
   end;
 
+procedure InitTabController;
+procedure UninitTabController;
 function TabController: TJDTabController;
 
 implementation
@@ -76,10 +83,20 @@ var
   _TabController: TJDTabController;
   _TabLastID: Int64;
 
+procedure InitTabController;
+begin
+  _TabController:= TJDTabController.Create(nil);
+end;
+
+procedure UninitTabController;
+begin
+  FreeAndNil(_TabController);
+end;
+
 function TabController: TJDTabController;
 begin
   if _TabController = nil then
-    _TabController:= TJDTabController.Create(nil);
+    InitTabController;
   Result:= _TabController;
 end;
 
@@ -98,13 +115,8 @@ begin
 
   FID:= NewTabID;
 
-  FTab:= TTabSheet.Create(FOwner.PageControl);
-  FTab.PageControl:= FOwner.PageControl;
-  FTab.Tag:= FID;
-  FTab.TabVisible:= False;
-
-  FContent:= FClass.Create(FTab);
-  FContent.Parent:= FTab;
+  FContent:= FClass.Create(nil);
+  FContent.Parent:= FOwner.FContainer;
   FContent.BorderStyle:= bsNone;
   FContent.Align:= alClient;
   FContent.Tag:= FID;
@@ -112,36 +124,40 @@ begin
 
   FChromeTab:= FOwner.ChromeTabs.Tabs.Add;
   FChromeTab.Tag:= FID;
-  FChromeTab.Caption:= FContent.Caption;
+  FChromeTab.Caption:= Caption;
 
-  UpdateCaption;
 end;
 
 destructor TJDTabRef.Destroy;
+var
+  I: Integer;
 begin
-
-  FOwner.ChromeTabs.Tabs.Delete(FChromeTab.Index);
-
+  I:= FChromeTab.Index;
+  FOwner.ChromeTabs.Tabs.Delete(I);
   FreeAndNil(FContent);
-
-  FreeAndNil(FTab);
+  FOwner.ChromeTabs.ActiveTabIndex:= I-1;
 
   inherited;
 end;
 
 function TJDTabRef.GetCaption: String;
 begin
-  Result:= FContent.GetCaption;
+  if FContent <> nil then
+    Result:= FContent.Caption
+  else
+    Result:= '';
 end;
 
-function TJDTabRef.GetID: Int64;
+procedure TJDTabRef.SetCaption(const Value: String);
 begin
-  Result:= FID;
+  FContent.Caption:= Value;
+  FChromeTab.Caption:= Value;
 end;
 
-procedure TJDTabRef.UpdateCaption;
+procedure TJDTabRef.Show;
 begin
-  FChromeTab.Caption:= GetCaption;
+  FContent.Show;
+  FContent.BringToFront;
 end;
 
 { TJDTabController }
@@ -168,6 +184,7 @@ end;
 procedure TJDTabController.DeleteTab(const Index: Integer);
 begin
   FItems.Delete(Index);
+  Self.ActiveTabIndex:= Index-1;
 end;
 
 function TJDTabController.CreateTab(AClass: TfrmContentBaseClass;
@@ -182,7 +199,11 @@ begin
     FItems.Move(I, AIndex);
   end;
 
-  Result.UpdateCaption;
+end;
+
+function TJDTabController.GetActiveTabIndex: Integer;
+begin
+  Result:= FChromeTabs.ActiveTabIndex;
 end;
 
 function TJDTabController.GetTab(const Index: Integer): TJDTabRef;
@@ -190,19 +211,52 @@ begin
   Result:= FItems[Index];
 end;
 
+function TJDTabController.RefByForm(AForm: TfrmContentBase): TJDTabRef;
+begin
+  Result:= RefByID(AForm.Tag);
+end;
+
+function TJDTabController.RefByID(const ID: Integer): TJDTabRef;
+var
+  X: Integer;
+begin
+  Result:= nil;
+  for X := 0 to FItems.Count-1 do begin
+    if FItems[X].ID = ID then begin
+      Result:= FItems[X];
+      Break;
+    end;
+  end;
+end;
+
+procedure TJDTabController.HideAll;
+var
+  X: Integer;
+begin
+  for X := 0 to FItems.Count-1 do
+    FItems[X].FContent.Hide;
+end;
+
+procedure TJDTabController.SetActiveTabIndex(const Value: Integer);
+var
+  T: TJDTabRef;
+begin
+  if (Value >= 0) and (Value < FItems.Count) then  begin
+    FChromeTabs.ActiveTabIndex:= Value;
+    HideAll;
+    FItems[Value].FContent.Show;
+    FItems[Value].FContent.BringToFront;
+  end;
+end;
+
 procedure TJDTabController.SetChromeTabs(const Value: TChromeTabs);
 begin
   FChromeTabs := Value;
 end;
 
-procedure TJDTabController.SetPageControl(const Value: TPageControl);
+procedure TJDTabController.SetContainer(const Value: TPanel);
 begin
-  FPageControl := Value;
+  FContainer := Value;
 end;
 
-initialization
-  _TabController:= nil;
-  _TabLastID:= 0;
-finalization
-  FreeAndNil(_TabController);
 end.

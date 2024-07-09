@@ -14,32 +14,21 @@ uses
   JD.TMDB.Common,
   JD.TMDB.LocalWebServer,
   JD.TabController,
+  uContentBase,
 
   XSuperObject, XSuperJSON,
+
+  ChromeTabs, ChromeTabsClasses,
 
   Vcl.Styles.Utils,
   Vcl.Styles.Fixes,
 
-  uTabBase, uContentBase,
-  uTabConfiguration,
-  uTabSearch,
-  uTabGenres,
-  uTabCertifications,
-  uTabMovies,
-  uTabTVSeries,
   uLoginBrowser,
-  ChromeTabs,
-  ChromeTabsClasses,
   uTMDBHome,
   uTMDBAppSetup;
 
 type
   TfrmMain = class(TForm)
-    Pages: TPageControl;
-    MM: TMainMenu;
-    mNamespaces: TMenuItem;
-    Setup1: TMenuItem;
-    AppSetup1: TMenuItem;
     pTop: TPanel;
     btnUser: TJDFontButton;
     pUser: TPanel;
@@ -80,15 +69,13 @@ type
     Panel6: TPanel;
     Label5: TLabel;
     cboLanguage: TComboBox;
+    pContent: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure APIAuthMethodRadioClick(Sender: TObject);
-    procedure AppSetup1Click(Sender: TObject);
-    procedure mNamespacesClick(Sender: TObject);
     procedure UserAuthMethodClick(Sender: TObject);
     procedure btnValidateKeyClick(Sender: TObject);
-    procedure Setup1Click(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -98,6 +85,9 @@ type
       var Result: Boolean);
     procedure FormShow(Sender: TObject);
     procedure TabsActiveTabChanged(Sender: TObject; ATab: TChromeTab);
+    procedure TabsButtonCloseTabClick(Sender: TObject; ATab: TChromeTab;
+      var Close: Boolean);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     FAppSetup: ISuperObject;
     FAuthMethod: Integer;
@@ -105,8 +95,6 @@ type
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
-    procedure NamespaceClicked(Sender: TObject);
-    function EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
     function GetAPIAuth: TTMDBAuthMethod;
     procedure SetAPIAuth(const Value: TTMDBAuthMethod);
     procedure ShowUserInfo;
@@ -133,15 +121,18 @@ begin
   ReportMemoryLeaksOnShutdown:= True;
   {$ENDIF}
 
+  InitTabController;
   TabController.ChromeTabs:= Tabs;
-  TabController.PageControl:= Pages;
+  TabController.Container:= pContent;
 
-  TStyleManager.TrySetStyle('Light', False);
+  //TStyleManager.TrySetStyle('Light', False);
+  TStyleManager.TrySetStyle('Windows10 Dark', False);
 
-  Pages.Align:= alClient;
+  pContent.Align:= alClient;
   gbUserInfo.Align:= alClient;
   gbUserLogin.Align:= alClient;
   FAuthMethod:= 2;
+
   LoadSetup;
 
   FWebServer:= TTMDBLocalWebServer.Create(TMDB);
@@ -160,6 +151,8 @@ begin
   FreeAndNil(FWebServer);
 
   FAppSetup:= nil;
+
+  UninitTabController;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -168,13 +161,18 @@ var
 begin
   T:= TabController.CreateTab(TfrmTMDBHome);
   T.ChromeTab.HideCloseButton:= True;
-  Pages.ActivePageIndex:= 0;
 
 end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   SaveSetup;
+end;
+
+procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  //TODO: Query all open tabs...
+
 end;
 
 procedure TfrmMain.LoadSetup;
@@ -194,6 +192,7 @@ begin
   //TODO: Default Country...
   //TODO: Timezone...
   PrepAPI;
+  {
   V:= FAppSetup.I['current_tab'];
   if V <= Pages.PageCount-1 then begin
     Pages.ActivePageIndex:= V;
@@ -206,6 +205,7 @@ begin
     end;
   end;
   Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
+  }
   if (FAppSetup.S['session_id'] <> '') and (FAppSetup.B['session_guest'] = False) then begin
     if TMDB.LoginState.RestoreSession(FAppSetup.S['session_id']) then begin
       ShowUserInfo;
@@ -226,6 +226,7 @@ begin
     //TODO: Timezone...
     FAppSetup.S['session_id']:= TMDB.LoginState.SessionID;
     FAppSetup.B['session_guest']:= TMDB.LoginState.IsGuest;
+    {
     FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
     if Pages.ActivePage.ControlCount > 0 then begin
       C:= Pages.ActivePage.Controls[0];
@@ -236,6 +237,7 @@ begin
         FAppSetup.I['current_sub_tab']:= TPageControl(C).ActivePageIndex;
       end;
     end;
+    }
     FAppSetup.SaveTo(SetupFilename);
   end;
 end;
@@ -255,11 +257,6 @@ begin
     0: gbAPIAuthMethodAPIKey.Visible:= True;
     1: gbAPIAuthMethodAccessToken.Visible:= True;
   end;
-end;
-
-procedure TfrmMain.AppSetup1Click(Sender: TObject);
-begin
-  NamespaceClicked(AppSetup1);
 end;
 
 procedure TfrmMain.ShowUserInfo;
@@ -297,7 +294,14 @@ end;
 
 procedure TfrmMain.TabsActiveTabChanged(Sender: TObject; ATab: TChromeTab);
 begin
-  Pages.ActivePageIndex:= ATab.Index;
+  TabController.ActiveTabIndex:= ATab.Index;
+end;
+
+procedure TfrmMain.TabsButtonCloseTabClick(Sender: TObject; ATab: TChromeTab;
+  var Close: Boolean);
+begin
+  Close:= False;
+  TabController.DeleteTab(ATab.Index);
 end;
 
 procedure TfrmMain.TMDBUserAuthRequest(Sender: TObject;
@@ -347,24 +351,7 @@ begin
   if Success then begin
     pUser.Visible:= False;
     ShowUserInfo;
-  end else begin
-    //TODO: Login failed...
   end;
-end;
-
-function TfrmMain.EmbedTab(ATabClass: TfrmTabBaseClass): TfrmTabBase;
-var
-  T: TTabSheet;
-begin
-  T:= TTabSheet.Create(Pages);
-  T.PageControl:= Pages;
-  Result:= ATabClass.Create(T);
-  Result.Parent:= T;
-  Result.Align:= alClient;
-  Result.BorderStyle:= bsNone;
-  Result.Show;
-  T.Caption:= Result.Caption;
-  T.TabVisible:= False;
 end;
 
 function TfrmMain.GetAPIAuth: TTMDBAuthMethod;
@@ -392,7 +379,6 @@ begin
   TMDB.APIKey:= txtAPIKey.Text;
   TMDB.AccessToken:= txtAccessToken.Text;
   TMDB.AuthMethod:= GetAPIAuth;
-  //TODO: Test connection and authentication...
 
 end;
 
@@ -435,40 +421,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.mNamespacesClick(Sender: TObject);
-var
-  X: Integer;
-  T: TTabSheet;
-  I: TMenuItem;
-begin
-  mNamespaces.Clear;
-  //Skip the first SETUP tab...
-  for X := 1 to Pages.PageCount-1 do begin
-    T:= Pages.Pages[X];
-
-    I:= TMenuItem.Create(mNamespaces);
-    try
-      I.Caption:= T.Caption;
-      I.RadioItem:= True;
-      I.Tag:= T.PageIndex;
-      if I.Tag = Pages.ActivePageIndex then
-        I.Checked:= True;
-      I.OnClick:= NamespaceClicked;
-    finally
-      mNamespaces.Add(I);
-    end;
-  end;
-end;
-
-procedure TfrmMain.Setup1Click(Sender: TObject);
-var
-  X: Integer;
-begin
-  for X := 0 to Setup1.Count-1 do begin
-    Setup1[X].Checked:= Setup1[X].Tag = Pages.ActivePageIndex;
-  end;
-end;
-
 function TfrmMain.SetupFilename: String;
 begin
   Result:= ExtractFilePath(ParamStr(0));
@@ -504,18 +456,6 @@ begin
       pAuthPass.Visible:= False;
     end;
   end;
-end;
-
-procedure TfrmMain.NamespaceClicked(Sender: TObject);
-var
-  I: Integer;
-  M: TMenuItem;
-begin
-  M:= TMenuItem(Sender);
-  M.Checked:= True;
-  I:= M.Tag;
-  Pages.ActivePageIndex:= I;
-  Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
 end;
 
 end.

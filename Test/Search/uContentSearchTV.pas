@@ -51,7 +51,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uMain;
+  uMain,
+  JD.TabController;
 
 { TfrmContentSearchTV }
 
@@ -85,6 +86,8 @@ begin
   FADY:= StrToIntDef(txtFirstAirDateYear.Text, 0);
   Y:= StrToIntDef(txtYear.Text, 0);
   Result:= TMDB.Client.Search.SearchTV(Q, FADY, A, L, Y, APageNum);
+
+  TabCaption:= 'Search TV - ' + Q;
 end;
 
 function TfrmContentSearchTV.GetItem(const Index: Integer): ITMDBItem;
@@ -103,9 +106,16 @@ end;
 
 procedure TfrmContentSearchTV.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
+var
+  T: TJDTabRef;
+  M: ITMDBTVSerie;
 begin
   inherited;
-
+  //TODO: Navigate to series details tab within app...
+  M:= Obj as ITMDBTVSerie;
+  T:= TabController.CreateTab(TfrmContentTVSerieDetail);
+  (T.Content as TfrmContentTVSerieDetail).pTop.Visible:= False;
+  (T.Content as TfrmContentTVSerieDetail).LoadSeries(M.ID);
 end;
 
 function TfrmContentSearchTV.Page: ITMDBPage;

@@ -8,6 +8,10 @@ uses
   JD.Ctrls.FontButton, Vcl.ExtCtrls,
 
   uTMDBAppSetup,
+  uContentCertsMovies,
+  uContentCertsTV,
+  uContentGenresMovie,
+  uContentGenresTV,
   uContentSearchCollections,
   uContentSearchCompanies,
   uContentSearchKeywords,
@@ -22,7 +26,6 @@ type
     CategoryPanel1: TCategoryPanel;
     CategoryPanel2: TCategoryPanel;
     JDFontButton1: TJDFontButton;
-    CategoryPanel3: TCategoryPanel;
     JDFontButton2: TJDFontButton;
     JDFontButton3: TJDFontButton;
     JDFontButton4: TJDFontButton;
@@ -32,7 +35,6 @@ type
     JDFontButton8: TJDFontButton;
     JDFontButton9: TJDFontButton;
     JDFontButton10: TJDFontButton;
-    JDFontButton11: TJDFontButton;
     CategoryPanel4: TCategoryPanel;
     JDFontButton12: TJDFontButton;
     JDFontButton13: TJDFontButton;
@@ -90,6 +92,7 @@ type
     JDFontButton47: TJDFontButton;
     JDFontButton48: TJDFontButton;
     JDFontButton49: TJDFontButton;
+    procedure FormCreate(Sender: TObject);
     procedure JDFontButton46Click(Sender: TObject);
     procedure JDFontButton42Click(Sender: TObject);
     procedure JDFontButton44Click(Sender: TObject);
@@ -98,6 +101,14 @@ type
     procedure JDFontButton48Click(Sender: TObject);
     procedure JDFontButton43Click(Sender: TObject);
     procedure JDFontButton49Click(Sender: TObject);
+    procedure CategoryPanelGroup1MouseWheelDown(Sender: TObject;
+      Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    procedure CategoryPanelGroup1MouseWheelUp(Sender: TObject;
+      Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    procedure JDFontButton12Click(Sender: TObject);
+    procedure JDFontButton13Click(Sender: TObject);
+    procedure JDFontButton27Click(Sender: TObject);
+    procedure JDFontButton28Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -114,6 +125,50 @@ implementation
 uses
   uMain,
   JD.TabController;
+
+procedure TfrmTMDBHome.FormCreate(Sender: TObject);
+begin
+  inherited;
+  TabCaption:= 'Main Menu';
+end;
+
+procedure TfrmTMDBHome.CategoryPanelGroup1MouseWheelDown(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  inherited;
+  CategoryPanelGroup1.VertScrollBar.Position:= CategoryPanelGroup1.VertScrollBar.Position + 20;
+end;
+
+procedure TfrmTMDBHome.CategoryPanelGroup1MouseWheelUp(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  inherited;
+  CategoryPanelGroup1.VertScrollBar.Position:= CategoryPanelGroup1.VertScrollBar.Position - 20;
+end;
+
+procedure TfrmTMDBHome.JDFontButton12Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentCertsMovies);
+end;
+
+procedure TfrmTMDBHome.JDFontButton13Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentCertsTV);
+end;
+
+procedure TfrmTMDBHome.JDFontButton27Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentGenresMovie);
+end;
+
+procedure TfrmTMDBHome.JDFontButton28Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentGenresTV);
+end;
 
 procedure TfrmTMDBHome.JDFontButton42Click(Sender: TObject);
 begin

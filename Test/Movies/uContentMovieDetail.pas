@@ -61,7 +61,7 @@ type
     FImages: TfrmCommonImages;
     FVideos: TfrmCommonVideos;
     FReviews: TfrmCommonReviews;
-    FAlternativeTitles: TfrmCommonAlternativeTitles;
+    //FAlternativeTitles: TfrmCommonAlternativeTitles;
 
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
     procedure DisplayAccountStates(const Value: ITMDBAccountStates);
@@ -80,8 +80,6 @@ type
     procedure LoadImages;
     function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
       ATab: TTabSheet): TfrmCommonFormBase;
-  protected
-    function GetCaption: String; override;
   public
     procedure LoadMovie(const MovieID: Integer); overload;
     procedure LoadMovie(const Movie: ITMDBMovieDetail); overload;
@@ -124,14 +122,6 @@ begin
   Result.BorderStyle:= bsNone;
   Result.Align:= alClient;
   Result.Show;
-end;
-
-function TfrmContentMovieDetail.GetCaption: String;
-begin
-  if FDetail = nil then
-    Result:= 'Movie Detail'
-  else
-    Result:= 'Movie: ' + FDetail.Title;
 end;
 
 function TfrmContentMovieDetail.GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
@@ -434,8 +424,11 @@ begin
     Pages.Visible:= False;
     FDetail:= Movie;
     if FDetail <> nil then begin
+      TabCaption:= FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'Movie Detail';
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -449,8 +442,11 @@ begin
     Pages.Visible:= False;
     FDetail:= GetMovieDetail(MovieID);
     if FDetail <> nil then begin
+      TabCaption:= FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'Movie Detail';
     end;
   finally
     Screen.Cursor:= crDefault;
