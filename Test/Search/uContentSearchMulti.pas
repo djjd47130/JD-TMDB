@@ -51,7 +51,7 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   Result:= TMDB.Client.Search.SearchMulti(Q, A, L, APageNum);
 
   TabCaption:= 'Search Multi - "'+Q+'"';

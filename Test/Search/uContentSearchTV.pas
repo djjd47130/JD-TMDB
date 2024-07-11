@@ -63,7 +63,6 @@ begin
   FDetailForm.Parent:= pDetail;
   FDetailForm.BorderStyle:= bsNone;
   FDetailForm.Align:= alClient;
-  FDetailForm.pTop.Visible:= False;
   FDetailForm.Show;
 end;
 
@@ -82,7 +81,7 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   FADY:= StrToIntDef(txtFirstAirDateYear.Text, 0);
   Y:= StrToIntDef(txtYear.Text, 0);
   Result:= TMDB.Client.Search.SearchTV(Q, FADY, A, L, Y, APageNum);
@@ -114,7 +113,6 @@ begin
   //TODO: Navigate to series details tab within app...
   M:= Obj as ITMDBTVSerie;
   T:= TabController.CreateTab(TfrmContentTVSerieDetail);
-  (T.Content as TfrmContentTVSerieDetail).pTop.Visible:= False;
   (T.Content as TfrmContentTVSerieDetail).LoadSeries(M.ID);
 end;
 
@@ -168,7 +166,7 @@ begin
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos];
-  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, AppSetup.Language,
     TMDB.LoginState.SessionID);
 end;
 

@@ -118,7 +118,7 @@ begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
   A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
-  L:= frmMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   R:= cboSearchMoviesRegion.Text;
   PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
   Y:= txtSearchMoviesYear.Text;
@@ -202,7 +202,6 @@ begin
   //TODO: Navigate to movie details tab within app...
   M:= Obj as ITMDBMovie;
   T:= TabController.CreateTab(TfrmContentMovieDetail);
-  (T.Content as TfrmContentMovieDetail).pTop.Visible:= False;
   (T.Content as TfrmContentMovieDetail).LoadMovie(M.ID);
 end;
 

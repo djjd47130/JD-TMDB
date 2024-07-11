@@ -1,5 +1,6 @@
 inherited frmTMDBAppSetup: TfrmTMDBAppSetup
   Caption = 'App Setup'
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object Panel1: TPanel
@@ -9,8 +10,6 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
     Height = 187
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = -209
-    ExplicitWidth = 963
     object gbAPIAuthMethod: TGroupBox
       AlignWithMargins = True
       Left = 4
@@ -45,6 +44,7 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Height = 26
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
+          OnChange = txtAPIKeyChange
         end
       end
       object gbAPIAuthMethodAccessToken: TPanel
@@ -74,6 +74,7 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Height = 26
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
+          OnChange = txtAccessTokenChange
         end
       end
       object Panel2: TPanel
@@ -94,6 +95,7 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Align = alLeft
           Caption = 'Access Token'
           TabOrder = 0
+          OnClick = APIAuthMethodRadioClick
         end
         object rAuthKey: TRadioButton
           AlignWithMargins = True
@@ -106,6 +108,8 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Checked = True
           TabOrder = 1
           TabStop = True
+          OnClick = APIAuthMethodRadioClick
+          ExplicitTop = 0
         end
         object btnValidateKey: TButton
           AlignWithMargins = True
@@ -165,8 +169,53 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Cursor = crHandPoint
           Align = alTop
           TabOrder = 0
+          OnChange = cboLanguageChange
         end
       end
     end
+  end
+  object btnSave: TJDFontButton
+    Left = 0
+    Top = 187
+    Width = 754
+    Height = 46
+    Cursor = crHandPoint
+    Align = alTop
+    DrawStyle = fdTransparent
+    Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    Image.AutoSize = False
+    Image.Text = #61572
+    Image.Font.Charset = DEFAULT_CHARSET
+    Image.Font.Color = clWindowText
+    Image.Font.Height = -24
+    Image.Font.Name = 'FontAwesome'
+    Image.Font.Style = []
+    Image.Font.Quality = fqAntialiased
+    Image.StandardColor = fcOrange
+    Overlay.Text = #57715
+    Overlay.Font.Charset = DEFAULT_CHARSET
+    Overlay.Font.Color = clWindowText
+    Overlay.Font.Height = -7
+    Overlay.Font.Name = 'FontAwesome'
+    Overlay.Font.Style = []
+    Overlay.Font.Quality = fqAntialiased
+    Overlay.Position = foNone
+    Overlay.Margin = 3
+    Margin = 8
+    Spacing = 8
+    SubTextFont.Charset = DEFAULT_CHARSET
+    SubTextFont.Color = clGray
+    SubTextFont.Height = -11
+    SubTextFont.Name = 'Tahoma'
+    SubTextFont.Style = []
+    TabOrder = 1
+    Text = 'Save Setup'
+    OnClick = btnSaveClick
+    ExplicitTop = 189
   end
 end

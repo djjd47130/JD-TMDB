@@ -27,22 +27,22 @@ type
     SB: TScrollBox;
     pMovies: TPanel;
     Label1: TLabel;
-    JDFontButton12: TJDFontButton;
-    JDFontButton27: TJDFontButton;
-    JDFontButton9: TJDFontButton;
-    JDFontButton2: TJDFontButton;
-    JDFontButton29: TJDFontButton;
-    JDFontButton36: TJDFontButton;
-    JDFontButton37: TJDFontButton;
-    JDFontButton35: TJDFontButton;
-    JDFontButton34: TJDFontButton;
-    JDFontButton24: TJDFontButton;
-    JDFontButton42: TJDFontButton;
-    JDFontButton46: TJDFontButton;
+    btnMovieCertifications: TJDFontButton;
+    btnMovieGenres: TJDFontButton;
+    btnMyMovieWatchlist: TJDFontButton;
+    btnMyFavoriteMovies: TJDFontButton;
+    btnMyRatedMovies: TJDFontButton;
+    btnTopRatedMovies: TJDFontButton;
+    btnUpcomingMovies: TJDFontButton;
+    btnPopularMovies: TJDFontButton;
+    btnNowPlayingMovies: TJDFontButton;
+    btnDiscoverMovies: TJDFontButton;
+    btnSearchCollections: TJDFontButton;
+    btnSearchMovies: TJDFontButton;
     pTV: TPanel;
     Label2: TLabel;
-    JDFontButton43: TJDFontButton;
-    JDFontButton25: TJDFontButton;
+    btnSearchTV: TJDFontButton;
+    btnDiscoverTV: TJDFontButton;
     JDFontButton4: TJDFontButton;
     JDFontButton31: TJDFontButton;
     JDFontButton7: TJDFontButton;
@@ -71,26 +71,36 @@ type
     pPeople: TPanel;
     Label5: TLabel;
     JDFontButton48: TJDFontButton;
+    JDFontButton6: TJDFontButton;
+    JDFontButton11: TJDFontButton;
+    JDFontButton2: TJDFontButton;
+    JDFontButton9: TJDFontButton;
+    JDFontButton12: TJDFontButton;
+    JDFontButton14: TJDFontButton;
+    JDFontButton15: TJDFontButton;
+    JDFontButton16: TJDFontButton;
+    JDFontButton23: TJDFontButton;
     procedure FormCreate(Sender: TObject);
-    procedure JDFontButton46Click(Sender: TObject);
-    procedure JDFontButton42Click(Sender: TObject);
+    procedure btnSearchMoviesClick(Sender: TObject);
+    procedure btnSearchCollectionsClick(Sender: TObject);
     procedure JDFontButton44Click(Sender: TObject);
     procedure JDFontButton45Click(Sender: TObject);
     procedure JDFontButton47Click(Sender: TObject);
     procedure JDFontButton48Click(Sender: TObject);
-    procedure JDFontButton43Click(Sender: TObject);
+    procedure btnSearchTVClick(Sender: TObject);
     procedure JDFontButton49Click(Sender: TObject);
     procedure CategoryPanelGroup1MouseWheelDown(Sender: TObject;
       Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     procedure CategoryPanelGroup1MouseWheelUp(Sender: TObject;
       Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-    procedure JDFontButton12Click(Sender: TObject);
+    procedure btnMovieCertificationsClick(Sender: TObject);
     procedure JDFontButton13Click(Sender: TObject);
-    procedure JDFontButton27Click(Sender: TObject);
+    procedure btnMovieGenresClick(Sender: TObject);
     procedure JDFontButton28Click(Sender: TObject);
     procedure JDFontButton18Click(Sender: TObject);
     procedure JDFontButton20Click(Sender: TObject);
   private
+    procedure CalcScrollHeight;
     { Private declarations }
   protected
     function CanClose: Boolean; override;
@@ -130,7 +140,20 @@ var
 begin
   inherited;
   TabCaption:= 'Main Menu';
+  CalcScrollHeight;
+  SB.VertScrollBar.Position:= 0;
+end;
 
+procedure TfrmTMDBHome.CalcScrollHeight;
+var
+  X: Integer;
+  H: Integer;
+begin
+  H:= 1;
+  for X := 0 to SB.ControlCount-1 do begin
+    H:= H + SB.Controls[X].Height;
+  end;
+  SB.VertScrollBar.Range:= H;
 end;
 
 function TfrmTMDBHome.CanClose: Boolean;
@@ -152,7 +175,7 @@ begin
   SB.VertScrollBar.Position:= SB.VertScrollBar.Position - 20;
 end;
 
-procedure TfrmTMDBHome.JDFontButton12Click(Sender: TObject);
+procedure TfrmTMDBHome.btnMovieCertificationsClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentCertsMovies);
@@ -176,7 +199,7 @@ begin
   TabController.CreateTab(TfrmContentConfigLanguages);
 end;
 
-procedure TfrmTMDBHome.JDFontButton27Click(Sender: TObject);
+procedure TfrmTMDBHome.btnMovieGenresClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentGenresMovie);
@@ -188,13 +211,13 @@ begin
   TabController.CreateTab(TfrmContentGenresTV);
 end;
 
-procedure TfrmTMDBHome.JDFontButton42Click(Sender: TObject);
+procedure TfrmTMDBHome.btnSearchCollectionsClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchCollections);
 end;
 
-procedure TfrmTMDBHome.JDFontButton43Click(Sender: TObject);
+procedure TfrmTMDBHome.btnSearchTVClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchTV);
@@ -212,7 +235,7 @@ begin
   TabController.CreateTab(TfrmContentSearchKeywords);
 end;
 
-procedure TfrmTMDBHome.JDFontButton46Click(Sender: TObject);
+procedure TfrmTMDBHome.btnSearchMoviesClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchMovies);

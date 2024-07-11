@@ -53,28 +53,10 @@ type
     btnLogout: TButton;
     TMDB: TTMDB;
     Tabs: TChromeTabs;
-    Panel1: TPanel;
-    gbAPIAuthMethod: TGroupBox;
-    gbAPIAuthMethodAPIKey: TPanel;
-    Label1: TLabel;
-    txtAPIKey: TEdit;
-    gbAPIAuthMethodAccessToken: TPanel;
-    Label3: TLabel;
-    txtAccessToken: TEdit;
-    Panel2: TPanel;
-    rAuthToken: TRadioButton;
-    rAuthKey: TRadioButton;
-    btnValidateKey: TButton;
-    gbLocaleOptions: TGroupBox;
-    Panel6: TPanel;
-    Label5: TLabel;
-    cboLanguage: TComboBox;
     pContent: TPanel;
     StatusBar1: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure UserAuthMethodClick(Sender: TObject);
     procedure btnValidateKeyClick(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
@@ -90,23 +72,18 @@ type
       var Close: Boolean);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
-    FAppSetup: ISuperObject;
-    FAuthMethod: Integer;
     FWebServer: TTMDBLocalWebServer;
-    procedure LoadSetup;
-    procedure SaveSetup;
-    function SetupFilename: String;
-    function GetAPIAuth: TTMDBAuthMethod;
-    procedure SetAPIAuth(const Value: TTMDBAuthMethod);
+    FAuthMethod: Integer;
     procedure ShowUserInfo;
   public
     procedure PrepAPI;
-    property APIAuth: TTMDBAuthMethod read GetAPIAuth write SetAPIAuth;
     property WebServer: TTMDBLocalWebServer read FWebServer;
   end;
 
 var
   frmMain: TfrmMain;
+
+function AppSetup: TAppSetup;
 
 implementation
 
@@ -115,6 +92,16 @@ uses
   Vcl.Themes;
 
 {$R *.dfm}
+
+var
+  _AppSetup: TAppSetup;
+
+function AppSetup: TAppSetup;
+begin
+  if _AppSetup = nil then
+    _AppSetup:= TAppSetup.Create;
+  Result:= _AppSetup;
+end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
@@ -134,15 +121,11 @@ begin
   pContent.Align:= alClient;
   gbUserInfo.Align:= alClient;
   gbUserLogin.Align:= alClient;
-  FAuthMethod:= 2;
 
-  LoadSetup;
+  FAuthMethod:= 2;
 
   FWebServer:= TTMDBLocalWebServer.Create(TMDB);
   FWebServer.Start;
-
-  //TMDB.ListPrimaryTranslations(cboLanguage.Items);
-  TMDB.ListLanguages(cboLanguage.Items);
 
   Width:= 1200;
   Height:= 800;
@@ -153,8 +136,6 @@ begin
   FWebServer.Terminate;
   FreeAndNil(FWebServer);
 
-  FAppSetup:= nil;
-
   UninitTabController;
 end;
 
@@ -162,106 +143,23 @@ procedure TfrmMain.FormShow(Sender: TObject);
 var
   T: TJDTabRef;
 begin
+  PrepAPI;
   T:= TabController.CreateTab(TfrmTMDBHome);
   T.ChromeTab.HideCloseButton:= True;
   //T.ChromeTab.Pinned:= True;
   //TODO: Ensure this tab cannot be closed...
 
-end;
-
-procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  SaveSetup;
+  if (AppSetup.SessionID <> '') and (AppSetup.SessionGuest = False) then begin
+    if TMDB.LoginState.RestoreSession(AppSetup.SessionID) then begin
+      ShowUserInfo;
+    end;
+  end;
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   //TODO: Query all open tabs...
 
-end;
-
-procedure TfrmMain.LoadSetup;
-var
-  C: TControl;
-  V: Integer;
-begin
-  if FileExists(SetupFilename) then begin
-    FAppSetup:= TSuperObject.ParseFile(SetupFilename);
-  end else begin
-    FAppSetup:= SO;
-  end;
-  txtAPIKey.Text:= FAppSetup.S['api_key'];
-  txtAccessToken.Text:= FAppSetup.S['access_token'];
-  APIAuth:= TTMDBAuthMethod(FAppSetup.I['api_auth']);
-  cboLanguage.Text:= FAppSetup.S['default_language'];
-  //TODO: Default Country...
-  //TODO: Timezone...
-  PrepAPI;
-  {
-  V:= FAppSetup.I['current_tab'];
-  if V <= Pages.PageCount-1 then begin
-    Pages.ActivePageIndex:= V;
-    C:= Pages.ActivePage.Controls[0];
-    if C is TfrmTabBase then begin
-      TfrmTabBase(C).Pages.ActivePageIndex:= FAppSetup.I['current_sub_tab'];
-    end else
-    if C is TPageControl then begin
-      TPageControl(C).ActivePageIndex:= FAppSetup.I['current_sub_tab'];
-    end;
-  end;
-  Caption:= 'TMDB API Test - ' + Pages.ActivePage.Caption;
-  }
-  if (FAppSetup.S['session_id'] <> '') and (FAppSetup.B['session_guest'] = False) then begin
-    if TMDB.LoginState.RestoreSession(FAppSetup.S['session_id']) then begin
-      ShowUserInfo;
-    end;
-  end;
-end;
-
-procedure TfrmMain.SaveSetup;
-var
-  C: TControl;
-begin
-  if Assigned(FAppSetup) then begin
-    FAppSetup.S['api_key']:= txtAPIKey.Text;
-    FAppSetup.S['access_token']:= txtAccessToken.Text;
-    FAppSetup.I['api_auth']:= Integer(APIAuth);
-    FAppSetup.S['default_language']:= cboLanguage.Text;
-    //TODO: Default Country...
-    //TODO: Timezone...
-    FAppSetup.S['session_id']:= TMDB.LoginState.SessionID;
-    FAppSetup.B['session_guest']:= TMDB.LoginState.IsGuest;
-    {
-    FAppSetup.I['current_tab']:= Pages.ActivePageIndex;
-    if Pages.ActivePage.ControlCount > 0 then begin
-      C:= Pages.ActivePage.Controls[0];
-      if C is TfrmTabBase then begin
-        FAppSetup.I['current_sub_tab']:=  TfrmTabBase(C).Pages.ActivePageIndex;
-      end else
-      if C is TPageControl then begin
-        FAppSetup.I['current_sub_tab']:= TPageControl(C).ActivePageIndex;
-      end;
-    end;
-    }
-    FAppSetup.SaveTo(SetupFilename);
-  end;
-end;
-
-procedure TfrmMain.APIAuthMethodRadioClick(Sender: TObject);
-var
-  T: Integer;
-  procedure HideAll;
-  begin
-    gbAPIAuthMethodAPIKey.Visible:= False;
-    gbAPIAuthMethodAccessToken.Visible:= False;
-  end;
-begin
-  HideAll;
-  T:= TControl(Sender).Tag;
-  case T of
-    0: gbAPIAuthMethodAPIKey.Visible:= True;
-    1: gbAPIAuthMethodAccessToken.Visible:= True;
-  end;
 end;
 
 procedure TfrmMain.ShowUserInfo;
@@ -360,31 +258,11 @@ begin
   end;
 end;
 
-function TfrmMain.GetAPIAuth: TTMDBAuthMethod;
-begin
-  if rAuthKey.Checked then
-    Result:= TTMDBAuthMethod.amAPIKey
-  else
-    Result:= TTMDBAuthMethod.amAccessToken;
-end;
-
-procedure TfrmMain.SetAPIAuth(const Value: TTMDBAuthMethod);
-var
-  R: TRadioButton;
-begin
-  case Value of
-    amAPIKey: R:= rAuthKey;
-    else R:= rAuthToken;
-  end;
-  R.Checked:= True;
-  APIAuthMethodRadioClick(R);
-end;
-
 procedure TfrmMain.PrepAPI;
 begin
-  TMDB.APIKey:= txtAPIKey.Text;
-  TMDB.AccessToken:= txtAccessToken.Text;
-  TMDB.AuthMethod:= GetAPIAuth;
+  TMDB.APIKey:= AppSetup.APIKey;
+  TMDB.AccessToken:= AppSetup.AccessToken;
+  TMDB.AuthMethod:= AppSetup.APIAuth;
 
 end;
 
@@ -428,12 +306,6 @@ begin
   pUser.BringToFront;
 end;
 
-function TfrmMain.SetupFilename: String;
-begin
-  Result:= ExtractFilePath(ParamStr(0));
-  Result:= TPath.Combine(Result, 'AppConfig.json');
-end;
-
 procedure TfrmMain.txtAuthPassKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -465,4 +337,8 @@ begin
   end;
 end;
 
+initialization
+  _AppSetup:= nil;
+finalization
+  FreeAndNil(_AppSetup);
 end.

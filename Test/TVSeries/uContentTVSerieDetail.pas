@@ -37,10 +37,6 @@ type
     TabSheet16: TTabSheet;
     TabSheet17: TTabSheet;
     tabVideos: TTabSheet;
-    pTop: TPanel;
-    Label1: TLabel;
-    txtID: TEdit;
-    btnSearch: TJDFontButton;
     lstDetail: TListView;
     Splitter1: TSplitter;
     txtOverview: TMemo;
@@ -50,7 +46,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure btnSearchClick(Sender: TObject);
     procedure lstDetailCustomDrawSubItem(Sender: TCustomListView;
       Item: TListItem; SubItem: Integer; State: TCustomDrawState;
       var DefaultDraw: Boolean);
@@ -94,17 +89,6 @@ implementation
 
 uses
   uMain;
-
-procedure TfrmContentTVSerieDetail.btnSearchClick(Sender: TObject);
-var
-  ID: Integer;
-begin
-  inherited;
-  ID:= StrToIntDef(txtID.Text, 0);
-  if ID < 1 then
-    raise Exception.Create('Please enter a valid series ID.');
-  LoadSeries(ID);
-end;
 
 procedure TfrmContentTVSerieDetail.DisplayAccountStates(
   const Value: ITMDBAccountStates);
@@ -180,7 +164,7 @@ begin
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos];
-  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, AppSetup.Language,
     TMDB.LoginState.SessionID);
 end;
 

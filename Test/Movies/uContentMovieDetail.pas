@@ -59,17 +59,12 @@ type
     TabSheet13: TTabSheet;
     TabSheet14: TTabSheet;
     tabVideos: TTabSheet;
-    pTop: TPanel;
-    Label1: TLabel;
-    txtID: TEdit;
-    btnSearch: TJDFontButton;
     lstDetail: TListView;
     Splitter1: TSplitter;
     lstExternalIDs: TListView;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure btnSearchClick(Sender: TObject);
     procedure btnFavoriteClick(Sender: TObject);
     procedure btnWatchlistClick(Sender: TObject);
     procedure lstDetailCustomDrawSubItem(Sender: TCustomListView;
@@ -177,7 +172,7 @@ begin
   Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
     mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
-  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
+  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, AppSetup.Language,
     TMDB.LoginState.SessionID);
 end;
 
@@ -199,17 +194,6 @@ begin
     Screen.Cursor:= crDefault;
   end;
   LoadMovie(FDetail.ID);
-end;
-
-procedure TfrmContentMovieDetail.btnSearchClick(Sender: TObject);
-var
-  ID: Integer;
-begin
-  inherited;
-  ID:= StrToIntDef(txtID.Text, 0);
-  if ID < 1 then
-    raise Exception.Create('Please enter a valid movie ID.');
-  LoadMovie(ID);
 end;
 
 procedure TfrmContentMovieDetail.btnWatchlistClick(Sender: TObject);
@@ -325,21 +309,21 @@ begin
     A('Status', FDetail.Status);
     A('Budget', FormatCurr('$#,###,###,##0.00', FDetail.Budget));
     A('Revenue', FormatCurr('$#,###,###,##0.00', FDetail.Revenue));
-    A('Homepage', FDetail.Homepage);
-    A('Origin Country', TMDBStrArrayToStr(FDetail.OriginalCountry));
-    A('Original Language', TMDB.LanguageName(FDetail.OriginalLanguage));
     for X := 0 to FDetail.ProductionCompanies.Count-1 do begin
       I:= A('Production Company', FDetail.ProductionCompanies[X].Name).Item;
       I.Indent:= 1;
     end;
+    A('Origin Country', TMDBStrArrayToStr(FDetail.OriginalCountry));
     for X := 0 to FDetail.ProductionCountries.Count-1 do begin
       I:= A('Production Country', TMDB.CountryName(FDetail.ProductionCountries[X].ISO3166_1)).Item;
       I.Indent:= 1;
     end;
+    A('Original Language', TMDB.LanguageName(FDetail.OriginalLanguage));
     for X := 0 to FDetail.SpokenLanguages.Count-1 do begin
       I:= A('Spoken Language', TMDB.LanguageName(FDetail.SpokenLanguages[X].ISO639_1)).Item;
       I.Indent:= 1;
     end;
+    A('Homepage', FDetail.Homepage);
     A('Runtime', IntToStr(FDetail.Runtime));
     A('Backdrop Path', FDetail.BackdropPath);
     A('Poster Path', FDetail.PosterPath);
@@ -371,8 +355,8 @@ var
     Result.SubItems.Add(V);
   end;
 begin
-  O:= FDetail.AppendedExternalIDs;
   lstExternalIDs.Items.Clear;
+  O:= FDetail.AppendedExternalIDs;
   A('IMDB', O.IMDBID);
   A('WikiData', O.WikiDataID);
   A('Facebook', O.FacebookID);

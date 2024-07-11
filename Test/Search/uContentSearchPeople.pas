@@ -51,7 +51,7 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   Result:= TMDB.Client.Search.SearchPeople(Q, A, L, APageNum);
 
   TabCaption:= 'Search People - "'+Q+'"';

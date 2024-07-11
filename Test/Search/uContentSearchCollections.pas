@@ -97,7 +97,7 @@ begin
   inherited;
   Q:= txtSearchMoviesQuery.Text;
   A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
-  L:= frmMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));
 
@@ -167,7 +167,7 @@ end;
 function TfrmContentSearchCollections.GetCollectionDetail(const ID: Integer): ITMDBCollectionDetail;
 begin
   PrepAPI;
-  Result:= TMDB.Client.Collections.GetDetails(ID, frmMain.cboLanguage.Text);
+  Result:= TMDB.Client.Collections.GetDetails(ID, AppSetup.Language);
 end;
 
 procedure TfrmContentSearchCollections.ShowDetail(const Index: Integer;
@@ -216,7 +216,7 @@ end;
 
 procedure TfrmContentSearchCollections.LoadImages;
 begin
-  FImages:= FDetail.GetImages(frmMain.cboLanguage.Text);
+  FImages:= FDetail.GetImages(AppSetup.Language);
   FDetailImages.LoadImages(FImages);
 end;
 
@@ -264,7 +264,6 @@ begin
   inherited;
   M:= FDetail.Parts[lstParts.ItemIndex];
   T:= TabController.CreateTab(TfrmContentMovieDetail);
-  (T.Content as TfrmContentMovieDetail).pTop.Visible:= False;
   (T.Content as TfrmContentMovieDetail).LoadMovie(M.ID);
 
 end;

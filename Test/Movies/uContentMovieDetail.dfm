@@ -1,5 +1,4 @@
 inherited frmContentMovieDetail: TfrmContentMovieDetail
-  ActiveControl = txtID
   Caption = 'Movie Detail'
   ClientWidth = 919
   OnCreate = FormCreate
@@ -12,7 +11,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -21,6 +20,10 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 220
@@ -174,6 +177,10 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet3: TTabSheet
       Caption = 'Alternative Titles'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lstAltTitles: TListView
         AlignWithMargins = True
         Left = 3
@@ -200,14 +207,26 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet4: TTabSheet
       Caption = 'Changes'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet6: TTabSheet
       Caption = 'External IDs'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lstExternalIDs: TListView
         AlignWithMargins = True
         Left = 3
@@ -234,10 +253,18 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object tabImages: TTabSheet
       Caption = 'Images'
       ImageIndex = 6
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet8: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 7
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lstKeywords: TListBox
         AlignWithMargins = True
         Left = 3
@@ -258,14 +285,26 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object TabSheet9: TTabSheet
       Caption = 'Lists'
       ImageIndex = 8
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet10: TTabSheet
       Caption = 'Recommendations'
       ImageIndex = 9
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet11: TTabSheet
       Caption = 'Release Dates'
       ImageIndex = 10
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lstReleaseDates: TListView
         AlignWithMargins = True
         Left = 3
@@ -310,95 +349,34 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     object tabReviews: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 11
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet13: TTabSheet
       Caption = 'Similar'
       ImageIndex = 12
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabSheet14: TTabSheet
       Caption = 'Translations'
       ImageIndex = 13
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
       ImageIndex = 14
-    end
-  end
-  object pTop: TPanel
-    Left = 0
-    Top = 0
-    Width = 919
-    Height = 33
-    Align = alTop
-    TabOrder = 1
-    object Label1: TLabel
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 45
-      Height = 25
-      Align = alLeft
-      Alignment = taRightJustify
-      AutoSize = False
-      Caption = 'ID:'
-      Layout = tlCenter
-    end
-    object txtID: TEdit
-      AlignWithMargins = True
-      Left = 55
-      Top = 4
-      Width = 90
-      Height = 25
-      Margins.Right = 0
-      Align = alLeft
-      TabOrder = 0
-      ExplicitHeight = 26
-    end
-    object btnSearch: TJDFontButton
-      AlignWithMargins = True
-      Left = 145
-      Top = 4
-      Width = 32
-      Height = 25
-      Cursor = crHandPoint
-      Margins.Left = 0
-      Align = alLeft
-      Default = True
-      DrawStyle = fdTransparent
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      Image.AutoSize = False
-      Image.Text = #61442
-      Image.Font.Charset = DEFAULT_CHARSET
-      Image.Font.Color = clWindowText
-      Image.Font.Height = -19
-      Image.Font.Name = 'FontAwesome'
-      Image.Font.Style = []
-      Image.Font.Quality = fqAntialiased
-      Image.StandardColor = fcBlue
-      Overlay.Text = #57715
-      Overlay.Font.Charset = DEFAULT_CHARSET
-      Overlay.Font.Color = clWindowText
-      Overlay.Font.Height = -7
-      Overlay.Font.Name = 'FontAwesome'
-      Overlay.Font.Style = []
-      Overlay.Font.Quality = fqAntialiased
-      Overlay.Position = foNone
-      Overlay.Margin = 3
-      ImagePosition = fpImgOnly
-      Margin = 8
-      Spacing = 8
-      SubTextFont.Charset = DEFAULT_CHARSET
-      SubTextFont.Color = clGray
-      SubTextFont.Height = -11
-      SubTextFont.Name = 'Tahoma'
-      SubTextFont.Style = []
-      TabOrder = 1
-      Text = 'User Login'
-      OnClick = btnSearchClick
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
 end
