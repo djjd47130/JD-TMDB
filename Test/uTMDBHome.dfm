@@ -99,8 +99,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 0
         Text = 'Movie Certifications'
         OnClick = btnMovieCertificationsClick
-        ExplicitLeft = 0
-        ExplicitTop = 524
       end
       object btnMovieGenres: TJDFontButton
         AlignWithMargins = True
@@ -150,8 +148,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 1
         Text = 'Movie Genres'
         OnClick = btnMovieGenresClick
-        ExplicitLeft = 0
-        ExplicitTop = 533
       end
       object btnMyMovieWatchlist: TJDFontButton
         AlignWithMargins = True
@@ -199,8 +195,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'My Movie Watchlist'
-        ExplicitLeft = 8
-        ExplicitTop = 331
       end
       object btnMyFavoriteMovies: TJDFontButton
         AlignWithMargins = True
@@ -248,8 +242,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 3
         Text = 'My Favorite Movies'
-        ExplicitLeft = 8
-        ExplicitTop = 279
       end
       object btnMyRatedMovies: TJDFontButton
         AlignWithMargins = True
@@ -297,7 +289,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 4
         Text = 'My Rated Movies'
-        ExplicitTop = 421
       end
       object btnTopRatedMovies: TJDFontButton
         AlignWithMargins = True
@@ -392,7 +383,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 6
         Text = 'Upcoming Movies'
-        ExplicitLeft = 8
       end
       object btnPopularMovies: TJDFontButton
         AlignWithMargins = True
@@ -440,7 +430,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 7
         Text = 'Popular Movies'
-        ExplicitTop = 377
       end
       object btnNowPlayingMovies: TJDFontButton
         AlignWithMargins = True
@@ -488,7 +477,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 8
         Text = 'Now Playing Movies'
-        ExplicitTop = 289
       end
       object btnDiscoverMovies: TJDFontButton
         AlignWithMargins = True
@@ -536,8 +524,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 9
         Text = 'Discover Movies'
-        ExplicitLeft = 8
-        ExplicitTop = 113
       end
       object btnSearchCollections: TJDFontButton
         AlignWithMargins = True
@@ -587,8 +573,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 10
         Text = 'Search Collections'
         OnClick = btnSearchCollectionsClick
-        ExplicitLeft = 32
-        ExplicitTop = 69
       end
       object btnSearchMovies: TJDFontButton
         AlignWithMargins = True
@@ -638,7 +622,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 11
         Text = 'Search Movies'
         OnClick = btnSearchMoviesClick
-        ExplicitTop = 25
       end
       object JDFontButton23: TJDFontButton
         AlignWithMargins = True
@@ -687,8 +670,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 12
         Text = 'Trending Movies'
-        ExplicitLeft = 8
-        ExplicitTop = 590
       end
     end
     object pTV: TPanel
@@ -764,7 +745,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 0
         Text = 'Search TV'
         OnClick = btnSearchTVClick
-        ExplicitTop = 25
       end
       object btnDiscoverTV: TJDFontButton
         AlignWithMargins = True
@@ -812,7 +792,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Discover TV'
-        ExplicitTop = 69
       end
       object JDFontButton4: TJDFontButton
         AlignWithMargins = True
@@ -860,7 +839,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'My Favorite TV'
-        ExplicitTop = 113
       end
       object JDFontButton31: TJDFontButton
         AlignWithMargins = True
@@ -908,7 +886,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 3
         Text = 'My Favorite TV Episodes'
-        ExplicitTop = 157
       end
       object JDFontButton7: TJDFontButton
         AlignWithMargins = True
@@ -956,7 +933,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 4
         Text = 'My Rated TV'
-        ExplicitTop = 201
       end
       object JDFontButton8: TJDFontButton
         AlignWithMargins = True
@@ -1004,7 +980,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 5
         Text = 'My Rated TV Episodes'
-        ExplicitTop = 245
       end
       object JDFontButton10: TJDFontButton
         AlignWithMargins = True
@@ -1052,7 +1027,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 6
         Text = 'My TV Watchlist'
-        ExplicitTop = 289
       end
       object JDFontButton28: TJDFontButton
         AlignWithMargins = True
@@ -1101,7 +1075,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 7
         Text = 'TV Genres'
         OnClick = JDFontButton28Click
-        ExplicitTop = 333
       end
       object JDFontButton13: TJDFontButton
         AlignWithMargins = True
@@ -1150,7 +1123,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 8
         Text = 'TV Certifications'
         OnClick = JDFontButton13Click
-        ExplicitTop = 377
       end
       object JDFontButton2: TJDFontButton
         AlignWithMargins = True
@@ -1199,7 +1171,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 9
         Text = 'TV Airing Today'
         OnClick = JDFontButton28Click
-        ExplicitTop = 507
       end
       object JDFontButton9: TJDFontButton
         AlignWithMargins = True
@@ -1248,8 +1219,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 10
         Text = 'TV On the Air'
         OnClick = JDFontButton28Click
-        ExplicitLeft = 8
-        ExplicitTop = 515
       end
       object JDFontButton12: TJDFontButton
         AlignWithMargins = True
@@ -1298,8 +1267,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 11
         Text = 'Popular TV'
         OnClick = JDFontButton28Click
-        ExplicitLeft = 32
-        ExplicitTop = 579
       end
       object JDFontButton14: TJDFontButton
         AlignWithMargins = True
@@ -1348,8 +1315,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 12
         Text = 'Top Rated TV'
         OnClick = JDFontButton28Click
-        ExplicitLeft = 32
-        ExplicitTop = 627
       end
       object JDFontButton15: TJDFontButton
         AlignWithMargins = True
@@ -1397,8 +1362,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 13
         Text = 'Trending TV'
-        ExplicitLeft = 40
-        ExplicitTop = 651
       end
     end
     object pMisc: TPanel
@@ -1473,7 +1436,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 0
         Text = 'Find By External ID'
-        ExplicitTop = 25
       end
       object JDFontButton45: TJDFontButton
         AlignWithMargins = True
@@ -1522,7 +1484,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 1
         Text = 'Search Keywords'
         OnClick = JDFontButton45Click
-        ExplicitTop = 69
       end
       object JDFontButton47: TJDFontButton
         AlignWithMargins = True
@@ -1571,7 +1532,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 2
         Text = 'Search Multi'
         OnClick = JDFontButton47Click
-        ExplicitTop = 113
       end
       object JDFontButton44: TJDFontButton
         AlignWithMargins = True
@@ -1620,7 +1580,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 3
         Text = 'Search Companies'
         OnClick = JDFontButton44Click
-        ExplicitTop = 157
       end
       object JDFontButton5: TJDFontButton
         AlignWithMargins = True
@@ -1668,7 +1627,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 4
         Text = 'My Lists'
-        ExplicitTop = 201
       end
       object JDFontButton1: TJDFontButton
         AlignWithMargins = True
@@ -1716,7 +1674,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 5
         Text = 'My Account'
-        ExplicitTop = 245
       end
     end
     object pConfig: TPanel
@@ -1791,8 +1748,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 0
         Text = 'TEST'
         Visible = False
-        ExplicitLeft = 32
-        ExplicitTop = 367
       end
       object JDFontButton22: TJDFontButton
         AlignWithMargins = True
@@ -1840,7 +1795,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Timezones'
-        ExplicitTop = 157
       end
       object JDFontButton21: TJDFontButton
         AlignWithMargins = True
@@ -1888,7 +1842,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'Primary Translations'
-        ExplicitTop = 245
       end
       object JDFontButton20: TJDFontButton
         AlignWithMargins = True
@@ -1984,7 +1937,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 4
         Text = 'Jobs'
-        ExplicitTop = 289
       end
       object JDFontButton18: TJDFontButton
         AlignWithMargins = True
@@ -2033,7 +1985,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 5
         Text = 'Countries'
         OnClick = JDFontButton18Click
-        ExplicitTop = 201
       end
       object JDFontButton17: TJDFontButton
         AlignWithMargins = True
@@ -2081,7 +2032,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 6
         Text = 'TMDB Config Details'
-        ExplicitTop = 113
       end
       object JDFontButton49: TJDFontButton
         AlignWithMargins = True
@@ -2129,7 +2079,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 7
         Text = 'Application Setup'
         OnClick = JDFontButton49Click
-        ExplicitTop = 25
       end
     end
     object pPeople: TPanel
@@ -2205,7 +2154,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 0
         Text = 'Search People'
         OnClick = JDFontButton48Click
-        ExplicitTop = 25
       end
       object JDFontButton6: TJDFontButton
         AlignWithMargins = True
@@ -2253,8 +2201,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 1
         Text = 'Popular People'
-        ExplicitLeft = 32
-        ExplicitTop = 127
       end
       object JDFontButton11: TJDFontButton
         AlignWithMargins = True
@@ -2302,8 +2248,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'Latest Person'
-        ExplicitLeft = 8
-        ExplicitTop = 172
       end
       object JDFontButton16: TJDFontButton
         AlignWithMargins = True
@@ -2351,7 +2295,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 3
         Text = 'Trending People'
-        ExplicitTop = 215
       end
     end
   end

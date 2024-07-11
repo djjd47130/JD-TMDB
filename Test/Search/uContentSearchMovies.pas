@@ -157,9 +157,9 @@ end;
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
-var
-  ID: Integer;
-  O: ITMDBMovie;
+//var
+  //ID: Integer;
+  //O: ITMDBMovie;
 begin
   pDetail.Visible:= False;
   {

@@ -242,8 +242,6 @@ begin
 end;
 
 procedure TJDTabController.SetActiveTabIndex(const Value: Integer);
-var
-  T: TJDTabRef;
 begin
   if (Value >= 0) and (Value < FItems.Count) { and
     (Value <> FChromeTabs.ActiveTabIndex) } then

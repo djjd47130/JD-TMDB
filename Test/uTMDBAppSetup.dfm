@@ -216,6 +216,5 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
     TabOrder = 1
     Text = 'Save Setup'
     OnClick = btnSaveClick
-    ExplicitTop = 189
   end
 end

@@ -14,13 +14,6 @@ type
   TAppSetup = class(TObject)
   private
     FAppSetup: ISuperObject;
-    FLanguage: String;
-    FAPIKey: String;
-    FAccessToken: String;
-    FAPIAuth: TTMDBAuthMethod;
-    FSessionGuest: Boolean;
-    FSessionID: String;
-    FCountry: String;
     function GetAccessToken: String;
     function GetAPIAuth: TTMDBAuthMethod;
     function GetAPIKey: String;

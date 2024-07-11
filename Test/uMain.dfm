@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'TMDB API Test'
-  ClientHeight = 524
-  ClientWidth = 932
+  ClientHeight = 462
+  ClientWidth = 817
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,15 +21,15 @@ object frmMain: TfrmMain
   object pTop: TPanel
     Left = 0
     Top = 0
-    Width = 932
+    Width = 817
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 971
+    ExplicitWidth = 932
     object btnUser: TJDFontButton
       AlignWithMargins = True
-      Left = 721
+      Left = 606
       Top = 3
       Width = 208
       Height = 27
@@ -70,12 +70,12 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 760
+      ExplicitLeft = 721
     end
     object Tabs: TChromeTabs
       Left = 0
       Top = 0
-      Width = 718
+      Width = 603
       Height = 33
       OnActiveTabChanged = TabsActiveTabChanged
       OnButtonCloseTabClick = TabsButtonCloseTabClick
@@ -406,14 +406,12 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ShowHint = True
       TabOrder = 1
-      ExplicitTop = 33
-      ExplicitWidth = 971
-      ExplicitHeight = 30
+      ExplicitWidth = 718
     end
   end
   object pUser: TPanel
-    Left = 8
-    Top = 298
+    Left = 96
+    Top = 170
     Width = 543
     Height = 204
     Font.Charset = DEFAULT_CHARSET
@@ -583,7 +581,6 @@ object frmMain: TfrmMain
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 147
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
@@ -648,30 +645,27 @@ object frmMain: TfrmMain
         ParentFont = False
         TabOrder = 2
         OnClick = btnLogoutClick
-        ExplicitWidth = 191
       end
     end
   end
   object pContent: TPanel
     Left = 0
     Top = 33
-    Width = 932
-    Height = 72
+    Width = 817
+    Height = 112
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 46
-    ExplicitWidth = 971
+    ExplicitWidth = 932
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 505
-    Width = 932
+    Top = 443
+    Width = 817
     Height = 19
     Panels = <>
-    ExplicitLeft = 472
-    ExplicitTop = 264
-    ExplicitWidth = 0
+    ExplicitTop = 505
+    ExplicitWidth = 932
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
@@ -682,7 +676,7 @@ object frmMain: TfrmMain
     RateLimitMsec = 50
     AgreedToWatchProviderAttribution = False
     OnUserAuthRequest = TMDBUserAuthRequest
-    Left = 172
-    Top = 15
+    Left = 36
+    Top = 199
   end
 end

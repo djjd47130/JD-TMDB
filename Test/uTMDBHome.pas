@@ -135,8 +135,6 @@ begin
 end;
 
 procedure TfrmTMDBHome.FormCreate(Sender: TObject);
-var
-  P: THackCategoryPanelGroup;
 begin
   inherited;
   TabCaption:= 'Main Menu';

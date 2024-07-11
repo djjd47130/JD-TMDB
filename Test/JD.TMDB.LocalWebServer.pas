@@ -41,7 +41,11 @@ type
   private
     FSessionID: WideString;
     FSessionGuest: Boolean;
-
+    procedure SetSessionGuest(const Value: Boolean);
+    procedure SetSessionID(const Value: WideString);
+  public
+    property SessionID: WideString read FSessionID write SetSessionID;
+    property SessionGuest: Boolean read FSessionGuest write SetSessionGuest;
   end;
 
   TTMDBLocalWebServer = class(TThread)
@@ -66,6 +70,18 @@ type
   end;
 
 implementation
+
+{ TTMDBLocalWebServerContext }
+
+procedure TTMDBLocalWebServerContext.SetSessionGuest(const Value: Boolean);
+begin
+  FSessionGuest := Value;
+end;
+
+procedure TTMDBLocalWebServerContext.SetSessionID(const Value: WideString);
+begin
+  FSessionID := Value;
+end;
 
 { TTMDBLocalWebServer }
 

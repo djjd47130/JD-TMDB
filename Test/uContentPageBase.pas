@@ -1,12 +1,5 @@
 unit uContentPageBase;
 
-(*
-  TODO: This design will NOT work once switching from plain JSON/XSuperObject to inherited interfaces!!!
-  Problem is "ITMDBMoviePage" and "ITMDBMovieItem" inherit from "ITMDBPage" and "ITMDBPageItem",
-  which inherfaces do not naturally support virtual/override of methods.
-
-*)
-
 interface
 
 uses
