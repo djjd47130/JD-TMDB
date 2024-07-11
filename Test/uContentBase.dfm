@@ -1,7 +1,7 @@
 object frmContentBase: TfrmContentBase
   Left = 0
   Top = 0
-  Caption = 'frmContentBase'
+  Caption = 'Content'
   ClientHeight = 473
   ClientWidth = 754
   Color = clBtnFace

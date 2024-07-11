@@ -12,7 +12,7 @@ inherited frmCommonImages: TfrmCommonImages
     Width = 964
     Height = 7
     Cursor = crVSplit
-    Align = alBottom
+    Align = alTop
     ResizeStyle = rsUpdate
     ExplicitTop = 231
   end
@@ -22,7 +22,8 @@ inherited frmCommonImages: TfrmCommonImages
     Top = 3
     Width = 958
     Height = 195
-    Align = alClient
+    Align = alTop
+    BorderStyle = bsNone
     Columns = <
       item
         Caption = 'Filename'
@@ -98,25 +99,26 @@ inherited frmCommonImages: TfrmCommonImages
     TabOrder = 0
     ViewStyle = vsReport
     OnSelectItem = lstImagesSelectItem
-    ExplicitHeight = 234
   end
   object pDetail: TPanel
     Left = 0
     Top = 208
     Width = 964
     Height = 233
-    Align = alBottom
+    Align = alClient
+    BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 214
     object Img: TImage
       AlignWithMargins = True
-      Left = 21
-      Top = 21
-      Width = 922
-      Height = 191
-      Margins.Left = 20
-      Margins.Top = 20
-      Margins.Right = 20
-      Margins.Bottom = 20
+      Left = 8
+      Top = 8
+      Width = 948
+      Height = 217
+      Margins.Left = 8
+      Margins.Top = 8
+      Margins.Right = 8
+      Margins.Bottom = 8
       Align = alClient
       Center = True
       Proportional = True

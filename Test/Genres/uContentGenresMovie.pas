@@ -11,8 +11,9 @@ uses
 type
   TfrmContentGenresMovie = class(TfrmContentBase)
     lstGenreMovies: TListView;
-    Button2: TButton;
-    procedure Button2Click(Sender: TObject);
+    btnRefresh: TButton;
+    procedure btnRefreshClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -26,7 +27,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TfrmContentGenresMovie.Button2Click(Sender: TObject);
+procedure TfrmContentGenresMovie.btnRefreshClick(Sender: TObject);
 var
   L: ITMDBGenres;
   G: ITMDBGenre;
@@ -55,6 +56,12 @@ begin
   finally
     Screen.Cursor:= crDefault;
   end;
+end;
+
+procedure TfrmContentGenresMovie.FormShow(Sender: TObject);
+begin
+  inherited;
+  btnRefreshClick(nil);
 end;
 
 end.

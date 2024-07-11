@@ -58,7 +58,7 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>TMDBTestApp</SanitizedProjectName>
-        <Custom_Styles>Light|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Light.vsf</Custom_Styles>
+        <Custom_Styles>&quot;Windows10 Dark|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Windows10Dark.vsf&quot;;Light|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Light.vsf</Custom_Styles>
         <DCC_Define>USE_INTF;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -77,7 +77,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
-        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
@@ -103,21 +102,13 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="uTMDBTestMain.pas">
-            <Form>frmTMDBTestMain</Form>
+        <DCCReference Include="uMain.pas">
+            <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Source\JD.TMDB.API.pas"/>
-        <DCCReference Include="uTabBase.pas">
-            <Form>frmTabBase</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="uContentBase.pas">
             <Form>frmContentBase</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="Search\uTabSearch.pas">
-            <Form>frmTabSearch</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uContentPageBase.pas">
@@ -128,10 +119,6 @@
             <Form>frmContentSearchMovies</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Configuration\uTabConfiguration.pas">
-            <Form>frmTabConfiguration</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Search\uContentSearchCollections.pas">
             <Form>frmContentSearchCollections</Form>
             <FormType>dfm</FormType>
@@ -139,10 +126,6 @@
         <DCCReference Include="..\Source\JD.TMDB.Intf.pas"/>
         <DCCReference Include="..\Source\JD.TMDB.Impl.pas"/>
         <DCCReference Include="..\Source\JD.TMDB.Common.pas"/>
-        <DCCReference Include="Genres\uTabGenres.pas">
-            <Form>frmTabGenres</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="uContentListBase.pas">
             <Form>frmContentBase1</Form>
             <FormType>dfm</FormType>
@@ -156,10 +139,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Source\JD.TMDB.pas"/>
-        <DCCReference Include="Certifications\uTabCertifications.pas">
-            <Form>frmTabCertifications</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Certifications\uContentCertsMovies.pas">
             <Form>frmContentCertsMovies</Form>
             <FormType>dfm</FormType>
@@ -174,10 +153,6 @@
         </DCCReference>
         <DCCReference Include="Search\uContentSearchCompanies.pas">
             <Form>frmContentSearchCompanies</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="Movies\uTabMovies.pas">
-            <Form>frmTabMovies</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Movies\uContentMovieDetail.pas">
@@ -225,10 +200,6 @@
             <Form>frmCommonReviews</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Movies\uContentMovieAccountStates.pas">
-            <Form>frmContentMovieAccountStates</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Common Forms\uCommonAlternativeTitles.pas">
             <Form>frmCommonAlternativeTitles</Form>
             <FormType>dfm</FormType>
@@ -241,10 +212,16 @@
             <Form>frmContentTVSerieDetail</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="TVSeries\uTabTVSeries.pas">
-            <Form>frmTabTVSeries</Form>
+        <DCCReference Include="JD.TabController.pas"/>
+        <DCCReference Include="uTMDBHome.pas">
+            <Form>frmTMDBHome</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uTMDBAppSetup.pas">
+            <Form>frmTMDBAppSetup</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TMDBCommon.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

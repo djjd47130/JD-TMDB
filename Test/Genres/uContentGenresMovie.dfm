@@ -1,5 +1,6 @@
 inherited frmContentGenresMovie: TfrmContentGenresMovie
   Caption = 'Movie Genres'
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object lstGenreMovies: TListView
@@ -24,7 +25,7 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     TabOrder = 0
     ViewStyle = vsReport
   end
-  object Button2: TButton
+  object btnRefresh: TButton
     AlignWithMargins = True
     Left = 3
     Top = 3
@@ -34,6 +35,7 @@ inherited frmContentGenresMovie: TfrmContentGenresMovie
     Align = alTop
     Caption = 'Refresh'
     TabOrder = 1
-    OnClick = Button2Click
+    Visible = False
+    OnClick = btnRefreshClick
   end
 end

@@ -1,8 +1,9 @@
 inherited frmContentGenresTV: TfrmContentGenresTV
   Caption = 'TV Genres'
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
-  object Button3: TButton
+  object btnRefresh: TButton
     AlignWithMargins = True
     Left = 3
     Top = 3
@@ -12,7 +13,8 @@ inherited frmContentGenresTV: TfrmContentGenresTV
     Align = alTop
     Caption = 'Refresh List'
     TabOrder = 0
-    OnClick = Button3Click
+    Visible = False
+    OnClick = btnRefreshClick
   end
   object lstGenreTV: TListView
     AlignWithMargins = True

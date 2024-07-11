@@ -10,9 +10,10 @@ uses
 
 type
   TfrmContentGenresTV = class(TfrmContentBase)
-    Button3: TButton;
+    btnRefresh: TButton;
     lstGenreTV: TListView;
-    procedure Button3Click(Sender: TObject);
+    procedure btnRefreshClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -26,7 +27,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TfrmContentGenresTV.Button3Click(Sender: TObject);
+procedure TfrmContentGenresTV.btnRefreshClick(Sender: TObject);
 var
   G: ITMDBGenre;
   X: Integer;
@@ -53,6 +54,12 @@ begin
   finally
     Screen.Cursor:= crDefault;
   end;
+end;
+
+procedure TfrmContentGenresTV.FormShow(Sender: TObject);
+begin
+  inherited;
+  btnRefreshClick(nil);
 end;
 
 end.

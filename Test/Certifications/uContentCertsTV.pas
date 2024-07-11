@@ -12,6 +12,7 @@ type
     lstCertsTV: TListView;
     btnRefreshCertsTV: TButton;
     procedure btnRefreshCertsTVClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -63,6 +64,12 @@ begin
   finally
     Screen.Cursor:= crDefault;
   end;
+end;
+
+procedure TfrmContentCertsTV.FormShow(Sender: TObject);
+begin
+  inherited;
+  btnRefreshCertsTVClick(nil);
 end;
 
 end.

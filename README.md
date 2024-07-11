@@ -64,3 +64,31 @@ The test applications uses controls from [JDLib, a separate repository of mine](
    - Access each possible namespace with its corresponding function, such as `Search`, `Movies`, `Account`, etc.
 6. You may additionally login using `LoginState` in runtime to access account-related functionality.
 
+```
+var
+  TMDB: TTMDB;
+begin
+  TMDB:= TTMDB.Create(nil);
+
+  //EITHER...
+  TMDB.APIKey:= YOUR_TMDB_API_KEY;
+  TMDB.AuthMethod:= amAPIKey;
+  //...OR...
+  TMDB.AccessToken:= YOUR_TMDB_ACCESS_TOKEN;
+  TMDB.AuthMethod:= amAccessToken;
+
+  //Now you can access most of the library / API...
+
+  var Results: ITMDBMoviePage;
+  Result:= TMDB.Client.Search.Movies('Star Wars', 'en-US');
+
+  var Movie: ITMDBMovieDetail;
+  Movie:= TMDB.Client.Movies.GetDetail(11, 'en-US');
+
+  var Credits: ITMDBCredits;
+  Credits:= TMDB.Client.Movies.GetCredits(11);
+
+end;
+```
+
+

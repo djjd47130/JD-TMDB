@@ -25,13 +25,13 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmCommonFormBase }
 
 function TfrmCommonFormBase.GetTMDB: TTMDB;
 begin
-  Result:= frmTMDBTestMain.TMDB;
+  Result:= frmMain.TMDB;
 end;
 
 end.

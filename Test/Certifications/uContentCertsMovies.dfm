@@ -2,6 +2,7 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
   Caption = 'Movie Certifications'
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object lstCertsMovies: TListView
@@ -58,6 +59,7 @@ inherited frmContentCertsMovies: TfrmContentCertsMovies
       Align = alLeft
       Caption = 'Refresh'
       TabOrder = 1
+      Visible = False
       OnClick = btnRefreshCertsMoviesClick
     end
   end

@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
+  uMain;
 
 { TfrmContentSearchPeople }
 
@@ -51,8 +51,10 @@ begin
   inherited;
   Q:= txtQuery.Text;
   A:= TTMDBBoolean(cboIncludeAdult.ItemIndex);
-  L:= frmTMDBTestMain.cboLanguage.Text;
+  L:= AppSetup.Language;
   Result:= TMDB.Client.Search.SearchPeople(Q, A, L, APageNum);
+
+  TabCaption:= 'Search People - "'+Q+'"';
 end;
 
 function TfrmContentSearchPeople.GetItem(const Index: Integer): ITMDBItem;

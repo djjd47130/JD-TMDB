@@ -8,11 +8,11 @@ inherited frmCommonVideos: TfrmCommonVideos
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 249
+    Top = 188
     Width = 882
     Height = 7
     Cursor = crVSplit
-    Align = alBottom
+    Align = alTop
     ResizeStyle = rsUpdate
     ExplicitLeft = -5
     ExplicitTop = 253
@@ -22,8 +22,9 @@ inherited frmCommonVideos: TfrmCommonVideos
     Left = 3
     Top = 3
     Width = 876
-    Height = 243
-    Align = alClient
+    Height = 182
+    Align = alTop
+    BorderStyle = bsNone
     Columns = <
       item
         Caption = 'Title'
@@ -53,28 +54,33 @@ inherited frmCommonVideos: TfrmCommonVideos
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = lstVideosDblClick
-    ExplicitLeft = -2
-    ExplicitTop = 7
   end
   object Panel1: TPanel
     Left = 0
-    Top = 256
+    Top = 195
     Width = 882
-    Height = 239
-    Align = alBottom
+    Height = 300
+    Align = alClient
+    BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 256
+    ExplicitHeight = 239
     object Edge: TEdgeBrowser
       AlignWithMargins = True
-      Left = 21
-      Top = 21
-      Width = 840
-      Height = 197
-      Margins.Left = 20
-      Margins.Top = 20
-      Margins.Right = 20
-      Margins.Bottom = 20
+      Left = 8
+      Top = 8
+      Width = 866
+      Height = 284
+      Margins.Left = 8
+      Margins.Top = 8
+      Margins.Right = 8
+      Margins.Bottom = 8
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = 21
+      ExplicitTop = 21
+      ExplicitWidth = 840
+      ExplicitHeight = 197
     end
   end
 end

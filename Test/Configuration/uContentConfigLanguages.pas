@@ -13,6 +13,7 @@ type
     lstLanguages: TListView;
     btnRefresh: TButton;
     procedure btnRefreshClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,6 +49,12 @@ begin
   finally
     lstLanguages.Items.EndUpdate;
   end;
+end;
+
+procedure TfrmContentConfigLanguages.FormShow(Sender: TObject);
+begin
+  inherited;
+  btnRefreshClick(nil);
 end;
 
 end.

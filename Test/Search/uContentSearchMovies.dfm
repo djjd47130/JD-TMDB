@@ -8,15 +8,19 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
     Width = 735
     ExplicitWidth = 735
     inherited Splitter1: TSplitter
-      Top = 145
+      Top = 32
       Width = 735
+      Align = alTop
       Beveled = False
-      ExplicitTop = 253
-      ExplicitWidth = 769
+      Visible = True
+      ExplicitLeft = -16
+      ExplicitTop = 443
+      ExplicitWidth = 735
     end
     inherited lstResults: TListView
+      Top = 42
       Width = 729
-      Height = 107
+      Height = 411
       Columns = <
         item
           Caption = 'Movie'
@@ -38,20 +42,24 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
           Caption = 'Description'
           Width = 500
         end>
+      ExplicitTop = 45
       ExplicitWidth = 729
-      ExplicitHeight = 107
+      ExplicitHeight = 411
     end
     inherited pTop: TPanel
       Width = 735
+      ExplicitLeft = 6
+      ExplicitTop = -38
       ExplicitWidth = 735
     end
     inherited pDetail: TPanel
-      Top = 152
+      Top = 456
       Width = 735
-      Height = 348
-      ExplicitTop = 152
+      Height = 44
+      Visible = True
+      ExplicitTop = 456
       ExplicitWidth = 735
-      ExplicitHeight = 348
+      ExplicitHeight = 44
     end
   end
   inherited pSearch: TPanel
@@ -67,11 +75,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 107
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
-        ExplicitWidth = 107
       end
       object txtSearchMoviesQuery: TEdit
         AlignWithMargins = True
@@ -132,11 +139,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 57
         Height = 18
         Align = alTop
         Caption = 'Region:'
-        ExplicitWidth = 57
       end
       object cboSearchMoviesRegion: TComboBox
         AlignWithMargins = True
@@ -161,11 +167,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 169
         Height = 18
         Align = alTop
         Caption = 'Primary Release Year:'
-        ExplicitWidth = 169
       end
       object txtSearchMoviesPrimaryReleaseYear: TEdit
         AlignWithMargins = True
@@ -190,11 +195,10 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 259
+        Width = 41
         Height = 18
         Align = alTop
         Caption = 'Year:'
-        ExplicitWidth = 41
       end
       object txtSearchMoviesYear: TEdit
         AlignWithMargins = True

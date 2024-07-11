@@ -10,8 +10,9 @@ uses
 type
   TfrmContentConfigCountries = class(TfrmContentBase)
     lstCountries: TListView;
-    Button2: TButton;
-    procedure Button2Click(Sender: TObject);
+    btnRefresh: TButton;
+    procedure btnRefreshClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -25,7 +26,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TfrmContentConfigCountries.Button2Click(Sender: TObject);
+procedure TfrmContentConfigCountries.btnRefreshClick(Sender: TObject);
 var
   X: Integer;
   C: ITMDBCountry;
@@ -45,6 +46,12 @@ begin
   finally
     lstCountries.Items.EndUpdate;
   end;
+end;
+
+procedure TfrmContentConfigCountries.FormShow(Sender: TObject);
+begin
+  inherited;
+  btnRefreshClick(nil);
 end;
 
 end.

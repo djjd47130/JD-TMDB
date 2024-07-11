@@ -37,10 +37,6 @@ type
     TabSheet16: TTabSheet;
     TabSheet17: TTabSheet;
     tabVideos: TTabSheet;
-    pTop: TPanel;
-    Label1: TLabel;
-    txtID: TEdit;
-    btnSearch: TJDFontButton;
     lstDetail: TListView;
     Splitter1: TSplitter;
     txtOverview: TMemo;
@@ -50,7 +46,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure btnSearchClick(Sender: TObject);
+    procedure lstDetailCustomDrawSubItem(Sender: TCustomListView;
+      Item: TListItem; SubItem: Integer; State: TCustomDrawState;
+      var DefaultDraw: Boolean);
   private
     FDetail: ITMDBTVSerieDetail;
 
@@ -90,18 +88,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uTMDBTestMain;
-
-procedure TfrmContentTVSerieDetail.btnSearchClick(Sender: TObject);
-var
-  ID: Integer;
-begin
-  inherited;
-  ID:= StrToIntDef(txtID.Text, 0);
-  if ID < 1 then
-    raise Exception.Create('Please enter a valid series ID.');
-  LoadSeries(ID);
-end;
+  uMain;
 
 procedure TfrmContentTVSerieDetail.DisplayAccountStates(
   const Value: ITMDBAccountStates);
@@ -177,7 +164,7 @@ begin
     trChanges, trContentRatings, trCredits, trEpisodeGroups, trExternalIDs,
     trImages, trKeywords, trLists, trRecommendations, trReviews, trScreenedTheatrically,
     trSimilar, trTranslations, trVideos];
-  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, frmTMDBTestMain.cboLanguage.Text,
+  Result:= TMDB.Client.TVSeries.GetDetails(ID, Inc, AppSetup.Language,
     TMDB.LoginState.SessionID);
 end;
 
@@ -188,8 +175,11 @@ begin
     Pages.Visible:= False;
     FDetail:= GetSeriesDetail(SeriesID);
     if FDetail <> nil then begin
+      TabCaption:= 'TV: '+FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'TV Details';
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -203,8 +193,11 @@ begin
     Pages.Visible:= False;
     FDetail:= Series;
     if FDetail <> nil then begin
+      TabCaption:= 'TV: '+FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'TV Details';
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -345,6 +338,37 @@ end;
 procedure TfrmContentTVSerieDetail.LoadVideos;
 begin
   FVideos.LoadVideoList(FDetail.AppendedVideos);
+end;
+
+procedure TfrmContentTVSerieDetail.lstDetailCustomDrawSubItem(
+  Sender: TCustomListView; Item: TListItem; SubItem: Integer;
+  State: TCustomDrawState; var DefaultDraw: Boolean);
+  function IsName(const N: String): Boolean;
+  begin
+    Result:= SameText(N, Item.Caption);
+  end;
+  procedure Chk(const N: String);
+  begin
+    if IsName(N) then begin
+      Sender.Canvas.Font.Color:= clBlue;
+      Sender.Canvas.Font.Style:= [fsBold,fsUnderline];
+    end;
+  end;
+begin
+  inherited;
+  Sender.Canvas.Brush.Color:= clBlack;
+  Sender.Canvas.Font.Color:= clWhite;
+  Sender.Canvas.Font.Style:= [fsBold];
+  if SubItem = 1 then begin
+    Chk('First Air Date'); //TV Episode Detail
+    Chk('Production Company'); //Company Detail
+    Chk('Homepage'); //URL in Default Browser
+    Chk('Backdrop Path'); //Image Detail
+    Chk('Poster Path'); //Image Detail
+    Chk('Title'); //Alternative Titles
+    Chk('Original Title'); //Alternative Titles
+  end;
+
 end;
 
 procedure TfrmContentTVSerieDetail.PagesChange(Sender: TObject);
