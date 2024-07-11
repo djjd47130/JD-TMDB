@@ -20,10 +20,6 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     OnChange = PagesChange
     object TabSheet1: TTabSheet
       Caption = 'Detail'
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 746
-      ExplicitHeight = 360
       object Splitter1: TSplitter
         Left = 0
         Top = 286
@@ -55,8 +51,7 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitWidth = 905
-        ExplicitHeight = 214
+        OnCustomDrawSubItem = lstDetailCustomDrawSubItem
       end
       object txtOverview: TMemo
         AlignWithMargins = True
@@ -175,130 +170,66 @@ inherited frmContentTVSerieDetail: TfrmContentTVSerieDetail
     object TabSheet3: TTabSheet
       Caption = 'Aggregate Credits'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 746
-      ExplicitHeight = 360
     end
     object tabAlternativeTitles: TTabSheet
       Caption = 'Alternative Titles'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 746
-      ExplicitHeight = 360
     end
     object TabSheet5: TTabSheet
       Caption = 'Changes'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 746
-      ExplicitHeight = 360
     end
     object TabSheet6: TTabSheet
       Caption = 'Content Ratings'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 963
-      ExplicitHeight = 360
     end
     object tabCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 963
-      ExplicitHeight = 360
     end
     object TabSheet8: TTabSheet
       Caption = 'Episode Groups'
       ImageIndex = 7
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 963
-      ExplicitHeight = 360
     end
     object TabSheet9: TTabSheet
       Caption = 'External IDs'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 29
-      ExplicitWidth = 963
-      ExplicitHeight = 360
     end
     object tabImages: TTabSheet
       Caption = 'Images'
       ImageIndex = 9
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet11: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 10
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet12: TTabSheet
       Caption = 'Lists'
       ImageIndex = 11
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet13: TTabSheet
       Caption = 'Recommendations'
       ImageIndex = 12
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object tabReviews: TTabSheet
       Caption = 'Reviews'
       ImageIndex = 13
-      ExplicitLeft = 0
-      ExplicitTop = 56
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet15: TTabSheet
       Caption = 'Screened Theatrically'
       ImageIndex = 14
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet16: TTabSheet
       Caption = 'Similar'
       ImageIndex = 15
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object TabSheet17: TTabSheet
       Caption = 'Translations'
       ImageIndex = 16
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 963
-      ExplicitHeight = 337
     end
     object tabVideos: TTabSheet
       Caption = 'Videos'
       ImageIndex = 17
-      ExplicitLeft = 0
-      ExplicitTop = 75
-      ExplicitWidth = 963
-      ExplicitHeight = 314
     end
   end
   object pTop: TPanel

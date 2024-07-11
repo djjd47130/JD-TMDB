@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'TMDB API Test'
-  ClientHeight = 554
-  ClientWidth = 971
+  ClientHeight = 524
+  ClientWidth = 932
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,7 @@ object frmMain: TfrmMain
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -21,14 +22,15 @@ object frmMain: TfrmMain
   object pTop: TPanel
     Left = 0
     Top = 0
-    Width = 971
+    Width = 932
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 971
     object btnUser: TJDFontButton
       AlignWithMargins = True
-      Left = 760
+      Left = 721
       Top = 3
       Width = 208
       Height = 27
@@ -69,11 +71,12 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
+      ExplicitLeft = 760
     end
     object Tabs: TChromeTabs
       Left = 0
       Top = 0
-      Width = 757
+      Width = 718
       Height = 33
       OnActiveTabChanged = TabsActiveTabChanged
       OnButtonCloseTabClick = TabsButtonCloseTabClick
@@ -239,7 +242,7 @@ object frmMain: TfrmMain
       LookAndFeel.Tabs.Active.Style.StopColor = 3223857
       LookAndFeel.Tabs.Active.Style.StartAlpha = 255
       LookAndFeel.Tabs.Active.Style.StopAlpha = 255
-      LookAndFeel.Tabs.Active.Style.OutlineColor = 5329233
+      LookAndFeel.Tabs.Active.Style.OutlineColor = 11110509
       LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
       LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
       LookAndFeel.Tabs.NotActive.Font.Name = 'Segoe UI'
@@ -411,14 +414,15 @@ object frmMain: TfrmMain
   end
   object Panel1: TPanel
     Left = 0
-    Top = 178
-    Width = 971
+    Top = 105
+    Width = 932
     Height = 187
     Align = alTop
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 56
-    ExplicitTop = 371
+    ExplicitLeft = -8
+    ExplicitTop = 135
+    ExplicitWidth = 971
     object gbAPIAuthMethod: TGroupBox
       AlignWithMargins = True
       Left = 4
@@ -581,9 +585,9 @@ object frmMain: TfrmMain
     end
   end
   object pUser: TPanel
-    Left = 26
-    Top = 312
-    Width = 623
+    Left = 8
+    Top = 298
+    Width = 543
     Height = 204
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -737,7 +741,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 279
       Top = 4
-      Width = 295
+      Width = 250
       Height = 196
       Align = alLeft
       Caption = 'User Info'
@@ -747,16 +751,17 @@ object frmMain: TfrmMain
         AlignWithMargins = True
         Left = 143
         Top = 23
-        Width = 147
+        Width = 102
         Height = 134
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 147
         object lblUserName: TLabel
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 141
+          Width = 96
           Height = 18
           Align = alTop
           AutoSize = False
@@ -769,7 +774,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 3
           Top = 27
-          Width = 141
+          Width = 96
           Height = 18
           Align = alTop
           AutoSize = False
@@ -801,7 +806,7 @@ object frmMain: TfrmMain
         AlignWithMargins = True
         Left = 52
         Top = 163
-        Width = 191
+        Width = 146
         Height = 28
         Cursor = crHandPoint
         Margins.Left = 50
@@ -816,29 +821,41 @@ object frmMain: TfrmMain
         ParentFont = False
         TabOrder = 2
         OnClick = btnLogoutClick
+        ExplicitWidth = 191
       end
     end
   end
   object pContent: TPanel
     Left = 0
     Top = 33
-    Width = 971
-    Height = 145
+    Width = 932
+    Height = 72
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 36
+    ExplicitTop = 46
+    ExplicitWidth = 971
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 505
+    Width = 932
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 472
+    ExplicitTop = 264
+    ExplicitWidth = 0
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
     AppUserAgent = 
       'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
       'TMDB)'
-    RateLimiting = True
+    RateLimiting = False
     RateLimitMsec = 50
     AgreedToWatchProviderAttribution = False
     OnUserAuthRequest = TMDBUserAuthRequest
-    Left = 812
-    Top = 55
+    Left = 172
+    Top = 15
   end
 end

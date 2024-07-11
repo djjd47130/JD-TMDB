@@ -1,5 +1,6 @@
 inherited frmContentCertsTV: TfrmContentCertsTV
   Caption = 'TV Certifications'
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object lstCertsTV: TListView
@@ -29,9 +30,6 @@ inherited frmContentCertsTV: TfrmContentCertsTV
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -195
-    ExplicitWidth = 949
-    ExplicitHeight = 276
   end
   object btnRefreshCertsTV: TButton
     AlignWithMargins = True
@@ -43,8 +41,8 @@ inherited frmContentCertsTV: TfrmContentCertsTV
     Align = alTop
     Caption = 'Refresh List'
     TabOrder = 1
+    Visible = False
     OnClick = btnRefreshCertsTVClick
-    ExplicitLeft = -195
-    ExplicitWidth = 949
+    ExplicitLeft = -2
   end
 end

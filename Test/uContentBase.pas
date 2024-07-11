@@ -56,7 +56,7 @@ function TfrmContentBase.GetTabCaption: String;
 var
   T: TJDTabRef;
 begin
-  T:= TabController.RefByForm(Self);
+  T:= TabController.TabByForm(Self);
   if T <> nil then
     Result:= T.Caption;
 end;
@@ -80,7 +80,7 @@ procedure TfrmContentBase.SetTabCaption(const Value: String);
 var
   T: TJDTabRef;
 begin
-  T:= TabController.RefByForm(Self);
+  T:= TabController.TabByForm(Self);
   if T <> nil then
     T.Caption:= Value;
 end;

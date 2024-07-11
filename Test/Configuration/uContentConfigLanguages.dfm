@@ -1,5 +1,6 @@
 inherited frmContentConfigLanguages: TfrmContentConfigLanguages
   Caption = 'Languages'
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object lstLanguages: TListView
@@ -27,7 +28,6 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -2
   end
   object btnRefresh: TButton
     AlignWithMargins = True
@@ -39,8 +39,7 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     Align = alTop
     Caption = 'Refresh List'
     TabOrder = 1
+    Visible = False
     OnClick = btnRefreshClick
-    ExplicitLeft = 8
-    ExplicitTop = -2
   end
 end

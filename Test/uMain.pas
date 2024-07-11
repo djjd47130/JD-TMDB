@@ -70,6 +70,7 @@ type
     Label5: TLabel;
     cboLanguage: TComboBox;
     pContent: TPanel;
+    StatusBar1: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -118,12 +119,14 @@ uses
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   {$IFDEF DEBUG}
-  ReportMemoryLeaksOnShutdown:= True;
+  //ReportMemoryLeaksOnShutdown:= True;
+  //MEMORY LEAKS! TEMPORARILY DISABLING!
   {$ENDIF}
 
   InitTabController;
   TabController.ChromeTabs:= Tabs;
   TabController.Container:= pContent;
+  TabController.MainForm:= Self;
 
   //TStyleManager.TrySetStyle('Light', False);
   TStyleManager.TrySetStyle('Windows10 Dark', False);
@@ -161,6 +164,8 @@ var
 begin
   T:= TabController.CreateTab(TfrmTMDBHome);
   T.ChromeTab.HideCloseButton:= True;
+  //T.ChromeTab.Pinned:= True;
+  //TODO: Ensure this tab cannot be closed...
 
 end;
 
@@ -310,6 +315,7 @@ var
   F: TfrmLoginBrowser;
   U: String;
 begin
+  //TODO: Move local web server into TTMDB component
   //Open URL in web browser to authenticate user...
   F:= TfrmLoginBrowser.Create(nil);
   try
@@ -419,6 +425,7 @@ begin
       txtAuthuser.SelectAll;
     end;
   end;
+  pUser.BringToFront;
 end;
 
 function TfrmMain.SetupFilename: String;

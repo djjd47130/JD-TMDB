@@ -40,7 +40,8 @@ uses
   uContentTVSerieDetail in 'TVSeries\uContentTVSerieDetail.pas' {frmContentTVSerieDetail},
   JD.TabController in 'JD.TabController.pas',
   uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome},
-  uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup};
+  uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup},
+  TMDBCommon in 'TMDBCommon.pas';
 
 {$R *.res}
 

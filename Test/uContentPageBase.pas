@@ -291,7 +291,7 @@ begin
   Splitter1.Visible:= True;
   pDetail.Visible:= True;
   pDetail.Top:= 1;
-  Splitter1.Top:= 1;
+  Splitter1.Top:= 10000;
 end;
 
 procedure TfrmContentPageBase.UpdateFooter;

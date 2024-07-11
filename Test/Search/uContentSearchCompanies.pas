@@ -46,7 +46,7 @@ begin
   Q:= txtSearchMoviesQuery.Text;
   Result:= TMDB.Client.Search.SearchCompanies(Q, APageNum);
 
-  TabCaption:= 'Search Companies - ' + Q;
+  TabCaption:= 'Search Companies - "'+Q+'"';
 end;
 
 function TfrmContentSearchCompanies.GetItem(

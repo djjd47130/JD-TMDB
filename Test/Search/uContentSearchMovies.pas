@@ -34,9 +34,9 @@ type
     procedure FormCreate(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
-    FDetailForm: TfrmContentMovieDetail;
-    procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
-    function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
+    //FDetailForm: TfrmContentMovieDetail;
+    //procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
+    //function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
   protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -65,12 +65,14 @@ uses
 procedure TfrmContentSearchMovies.FormCreate(Sender: TObject);
 begin
   inherited;
+  {
   FDetailForm:= TfrmContentMovieDetail.Create(pDetail);
   FDetailForm.Parent:= pDetail;
   FDetailForm.BorderStyle:= bsNone;
   FDetailForm.Align:= alClient;
   FDetailForm.pTop.Visible:= False;
   FDetailForm.Show;
+  }
 
 end;
 
@@ -122,10 +124,11 @@ begin
   Y:= txtSearchMoviesYear.Text;
   Result:= TMDB.Client.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
 
-  TabCaption:= 'Search Movies - ' + Q;
+  TabCaption:= 'Search Movies - "'+Q+'"';
 
 end;
 
+{
 procedure TfrmContentSearchMovies.DisplayMovieDetail(const Value: ITMDBMovieDetail);
 begin
   //Refresh detail of selected tab...
@@ -150,6 +153,7 @@ begin
   Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
     TMDB.LoginState.SessionID);
 end;
+}
 
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
@@ -157,6 +161,8 @@ var
   ID: Integer;
   O: ITMDBMovie;
 begin
+  pDetail.Visible:= False;
+  {
   Screen.Cursor:= crHourglass;
   try
     FDetail:= nil;
@@ -169,6 +175,7 @@ begin
   end;
   DisplayMovieDetail(FDetail);
   inherited;
+  }
 end;
 
 function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBItem;
@@ -207,7 +214,7 @@ end;
 procedure TfrmContentSearchMovies.PagesChange(Sender: TObject);
 begin
   inherited;
-  DisplayMovieDetail(FDetail);
+  //DisplayMovieDetail(FDetail);
 end;
 
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;

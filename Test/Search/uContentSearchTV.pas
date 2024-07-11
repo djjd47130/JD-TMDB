@@ -87,7 +87,7 @@ begin
   Y:= StrToIntDef(txtYear.Text, 0);
   Result:= TMDB.Client.Search.SearchTV(Q, FADY, A, L, Y, APageNum);
 
-  TabCaption:= 'Search TV - ' + Q;
+  TabCaption:= 'Search TV - "'+Q+'"';
 end;
 
 function TfrmContentSearchTV.GetItem(const Index: Integer): ITMDBItem;

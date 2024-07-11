@@ -51,6 +51,9 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
+    procedure lstDetailCustomDrawSubItem(Sender: TCustomListView;
+      Item: TListItem; SubItem: Integer; State: TCustomDrawState;
+      var DefaultDraw: Boolean);
   private
     FDetail: ITMDBTVSerieDetail;
 
@@ -188,8 +191,11 @@ begin
     Pages.Visible:= False;
     FDetail:= GetSeriesDetail(SeriesID);
     if FDetail <> nil then begin
+      TabCaption:= 'TV: '+FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'TV Details';
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -203,8 +209,11 @@ begin
     Pages.Visible:= False;
     FDetail:= Series;
     if FDetail <> nil then begin
+      TabCaption:= 'TV: '+FDetail.Title;
       Pages.Visible:= True;
       LoadTabContent;
+    end else begin
+      TabCaption:= 'TV Details';
     end;
   finally
     Screen.Cursor:= crDefault;
@@ -345,6 +354,37 @@ end;
 procedure TfrmContentTVSerieDetail.LoadVideos;
 begin
   FVideos.LoadVideoList(FDetail.AppendedVideos);
+end;
+
+procedure TfrmContentTVSerieDetail.lstDetailCustomDrawSubItem(
+  Sender: TCustomListView; Item: TListItem; SubItem: Integer;
+  State: TCustomDrawState; var DefaultDraw: Boolean);
+  function IsName(const N: String): Boolean;
+  begin
+    Result:= SameText(N, Item.Caption);
+  end;
+  procedure Chk(const N: String);
+  begin
+    if IsName(N) then begin
+      Sender.Canvas.Font.Color:= clBlue;
+      Sender.Canvas.Font.Style:= [fsBold,fsUnderline];
+    end;
+  end;
+begin
+  inherited;
+  Sender.Canvas.Brush.Color:= clBlack;
+  Sender.Canvas.Font.Color:= clWhite;
+  Sender.Canvas.Font.Style:= [fsBold];
+  if SubItem = 1 then begin
+    Chk('First Air Date'); //TV Episode Detail
+    Chk('Production Company'); //Company Detail
+    Chk('Homepage'); //URL in Default Browser
+    Chk('Backdrop Path'); //Image Detail
+    Chk('Poster Path'); //Image Detail
+    Chk('Title'); //Alternative Titles
+    Chk('Original Title'); //Alternative Titles
+  end;
+
 end;
 
 procedure TfrmContentTVSerieDetail.PagesChange(Sender: TObject);

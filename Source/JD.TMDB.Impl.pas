@@ -2438,7 +2438,7 @@ type
     property Genres: ITMDBGenres read GetGenres;
     property Homepage: WideString read GetHomepage;
     property ID: Integer read GetID;
-    property ITMDBID: WideString read GetIMDBID;
+    property IMDBID: WideString read GetIMDBID;
     property OriginalCountry: TTMDBStrArray read GetOriginalCountry;
     property OriginalLanguage: WideString read GetOriginalLanguage;
     property OriginalTitle: WideString read GetOriginalTitle;

@@ -4,16 +4,19 @@ inherited frmContentSearchTV: TfrmContentSearchTV
   TextHeight = 18
   inherited pMain: TPanel
     inherited Splitter1: TSplitter
-      Top = 145
+      Top = 212
+      Align = alTop
       ExplicitTop = 209
     end
     inherited lstResults: TListView
-      Height = 107
-      ExplicitHeight = 107
+      Height = 174
+      Align = alTop
+      ExplicitHeight = 174
     end
     inherited pDetail: TPanel
-      Top = 152
-      Height = 348
+      Top = 219
+      Height = 281
+      Align = alClient
       ExplicitTop = 152
       ExplicitHeight = 348
     end

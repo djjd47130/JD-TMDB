@@ -101,7 +101,7 @@ begin
   R:= cboSearchMoviesRegion.Text;
   Result:= ITMDBCollectionPage(TMDB.Client.Search.SearchCollections(Q, A, L, R, APageNum));
 
-  TabCaption:= 'Search Collections - ' + Q;
+  TabCaption:= 'Search Collections - "'+Q+'"';
 end;
 
 function TfrmContentSearchCollections.GetItem(

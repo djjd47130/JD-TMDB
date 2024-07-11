@@ -47,12 +47,14 @@ type
     FItems: TObjectList<TJDTabRef>;
     FChromeTabs: TChromeTabs;
     FContainer: TPanel;
+    FMainForm: TForm;
     function GetTab(const Index: Integer): TJDTabRef;
     procedure SetChromeTabs(const Value: TChromeTabs);
     procedure SetContainer(const Value: TPanel);
     function GetActiveTabIndex: Integer;
     procedure SetActiveTabIndex(const Value: Integer);
     procedure HideAll;
+    procedure SetMainForm(const Value: TForm);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -60,17 +62,19 @@ type
     function CreateTab(AClass: TfrmContentBaseClass;
       const AIndex: Integer = -1): TJDTabRef;
 
-    function RefByID(const ID: Integer): TJDTabRef;
-    function RefByForm(AForm: TfrmContentBase): TJDTabRef;
-
+    //procedure QueryCloseTab(const Tab: TJDTabRef);
     procedure DeleteTab(const Index: Integer);
-    function Count: Integer;
+    function TabCount: Integer;
     property Tabs[const Index: Integer]: TJDTabRef read GetTab; default;
+
+    function TabByID(const ID: Integer): TJDTabRef;
+    function TabByForm(AForm: TfrmContentBase): TJDTabRef;
 
   published
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
     property ChromeTabs: TChromeTabs read FChromeTabs write SetChromeTabs;
     property Container: TPanel read FContainer write SetContainer;
+    property MainForm: TForm read FMainForm write SetMainForm;
   end;
 
 procedure InitTabController;
@@ -162,7 +166,7 @@ end;
 
 { TJDTabController }
 
-function TJDTabController.Count: Integer;
+function TJDTabController.TabCount: Integer;
 begin
   Result:= FItems.Count;
 end;
@@ -211,12 +215,12 @@ begin
   Result:= FItems[Index];
 end;
 
-function TJDTabController.RefByForm(AForm: TfrmContentBase): TJDTabRef;
+function TJDTabController.TabByForm(AForm: TfrmContentBase): TJDTabRef;
 begin
-  Result:= RefByID(AForm.Tag);
+  Result:= TabByID(AForm.Tag);
 end;
 
-function TJDTabController.RefByID(const ID: Integer): TJDTabRef;
+function TJDTabController.TabByID(const ID: Integer): TJDTabRef;
 var
   X: Integer;
 begin
@@ -241,7 +245,9 @@ procedure TJDTabController.SetActiveTabIndex(const Value: Integer);
 var
   T: TJDTabRef;
 begin
-  if (Value >= 0) and (Value < FItems.Count) then  begin
+  if (Value >= 0) and (Value < FItems.Count) { and
+    (Value <> FChromeTabs.ActiveTabIndex) } then
+  begin
     FChromeTabs.ActiveTabIndex:= Value;
     HideAll;
     FItems[Value].FContent.Show;
@@ -257,6 +263,11 @@ end;
 procedure TJDTabController.SetContainer(const Value: TPanel);
 begin
   FContainer := Value;
+end;
+
+procedure TJDTabController.SetMainForm(const Value: TForm);
+begin
+  FMainForm := Value;
 end;
 
 end.

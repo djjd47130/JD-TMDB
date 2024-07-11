@@ -54,7 +54,7 @@ begin
   L:= frmMain.cboLanguage.Text;
   Result:= TMDB.Client.Search.SearchMulti(Q, A, L, APageNum);
 
-  TabCaption:= 'Search Multi - ' + Q;
+  TabCaption:= 'Search Multi - "'+Q+'"';
 end;
 
 function TfrmContentSearchMulti.GetItem(const Index: Integer): ITMDBItem;

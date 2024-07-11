@@ -60,7 +60,7 @@ begin
   Q:= txtQuery.Text;
   Result:= TMDB.Client.Search.SearchKeywords(Q, APageNum);
 
-  TabCaption:= 'Search Keywords - ' + Q;
+  TabCaption:= 'Search Keywords - "'+Q+'"';
 end;
 
 function TfrmContentSearchKeywords.GetItem(const Index: Integer): ITMDBItem;

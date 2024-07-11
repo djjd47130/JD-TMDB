@@ -1,6 +1,7 @@
 inherited frmContentConfigCountries: TfrmContentConfigCountries
   Caption = 'Countries'
   ClientWidth = 911
+  OnShow = FormShow
   ExplicitWidth = 927
   PixelsPerInch = 96
   TextHeight = 18
@@ -29,9 +30,8 @@ inherited frmContentConfigCountries: TfrmContentConfigCountries
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitWidth = 748
   end
-  object Button2: TButton
+  object btnRefresh: TButton
     AlignWithMargins = True
     Left = 3
     Top = 3
@@ -41,7 +41,7 @@ inherited frmContentConfigCountries: TfrmContentConfigCountries
     Align = alTop
     Caption = 'Refresh List'
     TabOrder = 1
-    OnClick = Button2Click
-    ExplicitWidth = 748
+    Visible = False
+    OnClick = btnRefreshClick
   end
 end
