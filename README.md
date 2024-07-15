@@ -50,6 +50,10 @@ There is a test application to demonstrate the usage of the TMDB API wrapper. No
 
 The test applications uses controls from [JDLib, a separate repository of mine](https://github.com/djjd47130/JDLib).
 
+### TChromeTabs
+
+The test application uses the [`TChromeTabs` control](https://github.com/norgepaul/TChromeTabs).
+
 ## Watch Providers Attribution
 
 **IMPORTANT**: In order to use any of the "Watch Providers" features, you must attribute ["**JustWatch**"](https://www.justwatch.com/) in your solution.
