@@ -32,7 +32,6 @@ uses
   IdCustomTCPServer,
   IdContext,
   IdURI,
-  JD.TMDB,
   JD.TMDB.Intf,
   JD.TMDB.Common;
 
@@ -50,7 +49,7 @@ type
 
   TTMDBLocalWebServer = class(TThread)
   private
-    FTMDB: TTMDB;
+    FTMDB: ITMDBClient;
     FServer: TIdHTTPServer;
     FPort: Integer;
     procedure Init;
@@ -61,7 +60,7 @@ type
   protected
     procedure Execute; override;
   public
-    constructor Create(ATMDB: TTMDB); reintroduce;
+    constructor Create(ATMDB: ITMDBClient); reintroduce;
     destructor Destroy; override;
 
     function RootURL: String;
@@ -85,11 +84,11 @@ end;
 
 { TTMDBLocalWebServer }
 
-constructor TTMDBLocalWebServer.Create(ATMDB: TTMDB);
+constructor TTMDBLocalWebServer.Create(ATMDB: ITMDBClient);
 begin
   inherited Create(True);
   FTMDB:= ATMDB;
-  FPort:= 1420;
+  FPort:= 14200;
 
 end;
 

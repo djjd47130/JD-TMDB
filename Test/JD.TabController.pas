@@ -33,8 +33,10 @@ type
     destructor Destroy; override;
 
     procedure Show;
+    function CloseQuery: Boolean;
 
     property Owner: TJDTabController read FOwner;
+    function Index: Integer;
     property FormClass: TfrmContentBaseClass read FClass;
     property Caption: String read GetCaption write SetCaption;
     property ID: Int64 read FID;
@@ -48,6 +50,7 @@ type
     FChromeTabs: TChromeTabs;
     FContainer: TPanel;
     FMainForm: TForm;
+    FCreating: Boolean;
     function GetTab(const Index: Integer): TJDTabRef;
     procedure SetChromeTabs(const Value: TChromeTabs);
     procedure SetContainer(const Value: TPanel);
@@ -55,6 +58,10 @@ type
     procedure SetActiveTabIndex(const Value: Integer);
     procedure HideAll;
     procedure SetMainForm(const Value: TForm);
+    function GetActiveTabID: Integer;
+    procedure SetActiveTabID(const Value: Integer);
+    function GetActiveTab: TJDTabRef;
+    procedure SetActiveTab(const Value: TJDTabRef);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -67,11 +74,17 @@ type
     function TabCount: Integer;
     property Tabs[const Index: Integer]: TJDTabRef read GetTab; default;
 
+    procedure HandleTabChanged(ATab: TChromeTab);
+
     function TabByID(const ID: Integer): TJDTabRef;
     function TabByForm(AForm: TfrmContentBase): TJDTabRef;
+    function TabByTab(ATab: TChromeTab): TJDTabRef;
 
+    function CloseQuery: Boolean;
   published
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
+    property ActiveTabID: Integer read GetActiveTabID write SetActiveTabID;
+    property ActiveTab: TJDTabRef read GetActiveTab write SetActiveTab;
     property ChromeTabs: TChromeTabs read FChromeTabs write SetChromeTabs;
     property Container: TPanel read FContainer write SetContainer;
     property MainForm: TForm read FMainForm write SetMainForm;
@@ -120,10 +133,10 @@ begin
   FID:= NewTabID;
 
   FContent:= FClass.Create(nil);
+  FContent.Tag:= FID;
   FContent.Parent:= FOwner.FContainer;
   FContent.BorderStyle:= bsNone;
   FContent.Align:= alClient;
-  FContent.Tag:= FID;
   FContent.Show;
 
   FChromeTab:= FOwner.ChromeTabs.Tabs.Add;
@@ -152,10 +165,20 @@ begin
     Result:= '';
 end;
 
+function TJDTabRef.Index: Integer;
+begin
+  Result:= FOwner.FItems.IndexOf(Self);
+end;
+
 procedure TJDTabRef.SetCaption(const Value: String);
 begin
   FContent.Caption:= Value;
   FChromeTab.Caption:= Value;
+end;
+
+function TJDTabRef.CloseQuery: Boolean;
+begin
+  Result:= FContent.CanClose;
 end;
 
 procedure TJDTabRef.Show;
@@ -166,16 +189,11 @@ end;
 
 { TJDTabController }
 
-function TJDTabController.TabCount: Integer;
-begin
-  Result:= FItems.Count;
-end;
-
 constructor TJDTabController.Create(AOwner: TComponent);
 begin
   inherited;
   FItems:= TObjectList<TJDTabRef>.Create(True);
-
+  FCreating:= False;
 end;
 
 destructor TJDTabController.Destroy;
@@ -188,7 +206,10 @@ end;
 procedure TJDTabController.DeleteTab(const Index: Integer);
 begin
   FItems.Delete(Index);
-  Self.ActiveTabIndex:= Index-1;
+  if Index > 0 then
+    ActiveTabIndex:= Index-1
+  else if TabCount > 0 then
+    ActiveTabIndex:= Index;
 end;
 
 function TJDTabController.CreateTab(AClass: TfrmContentBaseClass;
@@ -196,18 +217,49 @@ function TJDTabController.CreateTab(AClass: TfrmContentBaseClass;
 var
   I: Integer;
 begin
-  Result:= TJDTabRef.Create(Self, AClass);
-  I:= FItems.Add(Result);
-
-  if AIndex > -1 then begin
-    FItems.Move(I, AIndex);
+  FCreating:= True;
+  try
+    Result:= TJDTabRef.Create(Self, AClass);
+    I:= FItems.Add(Result);
+    if AIndex > -1 then begin
+      FItems.Move(I, AIndex);
+    end;
+  finally
+    FCreating:= False;
   end;
+  ActiveTab:= Result;
+end;
 
+function TJDTabController.TabCount: Integer;
+begin
+  Result:= FItems.Count;
+end;
+
+function TJDTabController.CloseQuery: Boolean;
+var
+  X: Integer;
+begin
+  Result:= True;
+  for X := FItems.Count-1 downto 0 do begin
+    Result:= FItems[X].CloseQuery;
+    if not Result then
+      Break;
+  end;
+end;
+
+function TJDTabController.GetActiveTab: TJDTabRef;
+begin
+  Result:= TabByTab(FChromeTabs.ActiveTab);
+end;
+
+function TJDTabController.GetActiveTabID: Integer;
+begin
+  Result:= GetActiveTab.ID;
 end;
 
 function TJDTabController.GetActiveTabIndex: Integer;
 begin
-  Result:= FChromeTabs.ActiveTabIndex;
+  Result:= GetActiveTab.Index;
 end;
 
 function TJDTabController.GetTab(const Index: Integer): TJDTabRef;
@@ -215,9 +267,23 @@ begin
   Result:= FItems[Index];
 end;
 
-function TJDTabController.TabByForm(AForm: TfrmContentBase): TJDTabRef;
+procedure TJDTabController.HandleTabChanged(ATab: TChromeTab);
 begin
-  Result:= TabByID(AForm.Tag);
+  if not FCreating then
+    ActiveTab:= TabByTab(ATab);
+end;
+
+function TJDTabController.TabByForm(AForm: TfrmContentBase): TJDTabRef;
+var
+  X: Integer;
+begin
+  Result:= nil;
+  for X := 0 to FItems.Count-1 do begin
+    if FItems[X].Content = AForm then begin
+      Result:= FItems[X];
+      Break;
+    end;
+  end;
 end;
 
 function TJDTabController.TabByID(const ID: Integer): TJDTabRef;
@@ -233,6 +299,19 @@ begin
   end;
 end;
 
+function TJDTabController.TabByTab(ATab: TChromeTab): TJDTabRef;
+var
+  X: Integer;
+begin
+  Result:= nil;
+  for X := 0 to FItems.Count-1 do begin
+    if FItems[X].FChromeTab = ATab then begin
+      Result:= FItems[X];
+      Break;
+    end;
+  end;
+end;
+
 procedure TJDTabController.HideAll;
 var
   X: Integer;
@@ -241,15 +320,31 @@ begin
     FItems[X].FContent.Hide;
 end;
 
+procedure TJDTabController.SetActiveTab(const Value: TJDTabRef);
+begin
+  SetActiveTabIndex(Value.Index);
+end;
+
+procedure TJDTabController.SetActiveTabID(const Value: Integer);
+var
+  T: TJDTabRef;
+begin
+  T:= TabByID(Value);
+  SetActiveTab(T);
+end;
+
 procedure TJDTabController.SetActiveTabIndex(const Value: Integer);
+var
+  T: TJDTabRef;
 begin
   if (Value >= 0) and (Value < FItems.Count) { and
     (Value <> FChromeTabs.ActiveTabIndex) } then
   begin
-    FChromeTabs.ActiveTabIndex:= Value;
+    T:= FItems[Value];
+    FChromeTabs.ActiveTabIndex:= T.ChromeTab.Index;
     HideAll;
-    FItems[Value].FContent.Show;
-    FItems[Value].FContent.BringToFront;
+    T.FContent.Show;
+    T.FContent.BringToFront;
   end;
 end;
 

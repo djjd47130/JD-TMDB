@@ -1,9 +1,9 @@
-inherited frmContentConfigLanguages: TfrmContentConfigLanguages
-  Caption = 'Languages'
+inherited frmContentConfigTimezones: TfrmContentConfigTimezones
+  Caption = 'Timezones'
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
-  object lstLanguages: TListView
+  object lstTimezones: TListView
     AlignWithMargins = True
     Left = 3
     Top = 37
@@ -12,15 +12,11 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     Align = alClient
     Columns = <
       item
-        Caption = 'Code'
-        Width = 80
-      end
-      item
-        Caption = 'English Name'
+        Caption = 'Country'
         Width = 250
       end
       item
-        Caption = 'Native Name'
+        Caption = 'Timezone'
         Width = 250
       end>
     HotTrackStyles = [htHandPoint, htUnderlineHot]
@@ -42,5 +38,6 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     TabOrder = 1
     Visible = False
     OnClick = btnRefreshClick
+    ExplicitLeft = 8
   end
 end

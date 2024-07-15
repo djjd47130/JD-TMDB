@@ -58,7 +58,7 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>TMDBTestApp</SanitizedProjectName>
-        <Custom_Styles>&quot;Windows10 Dark|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Windows10Dark.vsf&quot;;Light|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Light.vsf</Custom_Styles>
+        <Custom_Styles>&quot;Windows10 Dark|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Windows10Dark.vsf&quot;;Carbon|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Carbon.vsf;Light|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Light.vsf</Custom_Styles>
         <DCC_Define>USE_INTF;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -175,7 +175,6 @@
             <Form>frmCommonCredits</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="JD.TMDB.LocalWebServer.pas"/>
         <DCCReference Include="Search\uContentSearchTV.pas">
             <Form>frmContentSearchTV</Form>
             <FormType>dfm</FormType>
@@ -221,7 +220,25 @@
             <Form>frmTMDBAppSetup</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="TMDBCommon.pas"/>
+        <DCCReference Include="JD.TMDB.UI.pas"/>
+        <DCCReference Include="..\Source\JD.TMDB.LocalWebServer.pas"/>
+        <DCCReference Include="Configuration\uContentConfigTimezones.pas">
+            <Form>frmContentConfigTimezones</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Configuration\uContentConfigJobs.pas">
+            <Form>frmContentConfigJobs</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="JD.Mouse.pas"/>
+        <DCCReference Include="uContentBrowser.pas">
+            <Form>frmContentBrowser</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Movies\uContentMoviePage.pas">
+            <Form>frmContentMoviePage</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

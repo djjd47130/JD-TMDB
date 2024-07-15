@@ -7,15 +7,13 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uCommonFormBase, Vcl.ComCtrls,
   JD.TMDB.Common,
   JD.TMDB.Intf, Vcl.ExtCtrls, WebView2, Winapi.ActiveX, Vcl.Edge,
-  Clipbrd;
+  uContentBrowser;
 
 type
   TfrmCommonVideos = class(TfrmCommonFormBase)
     lstVideos: TListView;
-    Panel1: TPanel;
-    Edge: TEdgeBrowser;
-    Splitter1: TSplitter;
     procedure lstVideosDblClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     FVideos: ITMDBVideos;
   public
@@ -30,9 +28,16 @@ implementation
 {$R *.dfm}
 
 uses
-  uMain;
+  uMain,
+  JD.TabController;
 
 { TfrmCommonVideos }
+
+procedure TfrmCommonVideos.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lstVideos.Align:= alClient;
+end;
 
 procedure TfrmCommonVideos.LoadVideoList(const Videos: ITMDBVideos);
 var
@@ -59,25 +64,20 @@ end;
 
 procedure TfrmCommonVideos.lstVideosDblClick(Sender: TObject);
 var
+  T: TJDTabRef;
   V: ITMDBVideo;
   U: String;
-  function GetLocalBaseURL: String;
-  begin
-    Result:= 'http://localhost:'+IntToStr(frmMain.WebServer.Port);
-  end;
 begin
   inherited;
-  //TODO: Open video in default browser, OR embedded...
   V:= FVideos[lstVideos.ItemIndex];
-  Edge.ReinitializeWebView;
   if SameText(V.Site, 'YouTube') then begin
-    U:= URLCombine('youtube', V.Key);
+    U:= 'https://youtube.com/watch?v='+V.Key;
   end else begin
     //TODO
   end;
   if U <> '' then begin
-    U:= URLCombine(GetLocalBaseURL, U);
-    Edge.Navigate(U);
+    T:= TabController.CreateTab(TfrmContentBrowser);
+    (T.Content as TfrmContentBrowser).Navigate(U);
   end;
 end;
 

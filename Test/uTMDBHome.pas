@@ -7,6 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, JD.Common, JD.Ctrls,
   JD.Ctrls.FontButton, Vcl.ExtCtrls,
 
+  JD.TMDB.Common,
+  JD.TMDB.Intf,
+
   uTMDBAppSetup,
   uContentCertsMovies,
   uContentCertsTV,
@@ -20,7 +23,12 @@ uses
   uContentSearchPeople,
   uContentSearchTV,
   uContentConfigCountries,
-  uContentConfigLanguages, Vcl.StdCtrls;
+  uContentConfigLanguages,
+  uContentConfigTimezones,
+  uContentConfigJobs,
+  uContentBrowser,
+  uContentMoviePage,
+  Vcl.StdCtrls;
 
 type
   TfrmTMDBHome = class(TfrmContentBase)
@@ -59,7 +67,6 @@ type
     JDFontButton47: TJDFontButton;
     JDFontButton44: TJDFontButton;
     JDFontButton5: TJDFontButton;
-    JDFontButton1: TJDFontButton;
     JDFontButton3: TJDFontButton;
     JDFontButton22: TJDFontButton;
     JDFontButton21: TJDFontButton;
@@ -80,6 +87,7 @@ type
     JDFontButton15: TJDFontButton;
     JDFontButton16: TJDFontButton;
     JDFontButton23: TJDFontButton;
+    JDFontButton1: TJDFontButton;
     procedure FormCreate(Sender: TObject);
     procedure btnSearchMoviesClick(Sender: TObject);
     procedure btnSearchCollectionsClick(Sender: TObject);
@@ -99,13 +107,21 @@ type
     procedure JDFontButton28Click(Sender: TObject);
     procedure JDFontButton18Click(Sender: TObject);
     procedure JDFontButton20Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure JDFontButton22Click(Sender: TObject);
+    procedure JDFontButton19Click(Sender: TObject);
+    procedure JDFontButton1Click(Sender: TObject);
+    procedure btnNowPlayingMoviesClick(Sender: TObject);
+    procedure btnPopularMoviesClick(Sender: TObject);
+    procedure btnUpcomingMoviesClick(Sender: TObject);
+    procedure btnTopRatedMoviesClick(Sender: TObject);
   private
     procedure CalcScrollHeight;
-    { Private declarations }
+    procedure SetNarrowMode(const Value: Boolean);
   protected
     function CanClose: Boolean; override;
   public
-    { Public declarations }
+    procedure HideMenu;
   end;
 
 var
@@ -140,6 +156,83 @@ begin
   TabCaption:= 'Main Menu';
   CalcScrollHeight;
   SB.VertScrollBar.Position:= 0;
+end;
+
+procedure TfrmTMDBHome.FormResize(Sender: TObject);
+begin
+  inherited;
+  if Width >= 120 then begin
+    SetNarrowMode(False);
+  end else begin
+    SetNarrowMode(True);
+  end;
+end;
+
+procedure TfrmTMDBHome.HideMenu;
+begin
+  frmMain.ShowMenu(False);
+end;
+
+procedure TfrmTMDBHome.SetNarrowMode(const Value: Boolean);
+const
+  BTN_HEIGHT = 38;
+var
+  X, Y: Integer;
+  P: TPanel;
+  C: TControl;
+  L: TLabel;
+  B: TJDFontButton;
+begin
+  for X := 0 to SB.ControlCount-1 do begin
+    if SB.Controls[X] is TPanel then begin
+      P:= SB.Controls[X] as TPanel;
+      for Y := 0 to P.ControlCount-1 do begin
+        if P.Controls[Y] is TLabel then begin
+          L:= P.Controls[Y] as TLabel;
+          Break;
+        end;
+      end;
+      if Assigned(L) then begin
+        L.Visible:= not Value;
+        L.Top:= -1;
+      end;
+      for Y := 0 to P.ControlCount-1 do begin
+        C:= P.Controls[Y];
+        if C is TJDFontButton then begin
+          B:= C as TJDFontButton;
+
+          B.Height:= BTN_HEIGHT;
+          B.Font.Size:= 14;
+          B.Margins.Top:= 0;
+          B.Margins.Bottom:= 0;
+
+          B.Image.Font.Size:= 24;
+
+          B.ShowHint:= True;
+          B.Hint:= B.Text;
+          if Assigned(L) then begin
+            B.Hint:= L.Caption + ' - ' + B.Hint;
+          end;
+          if Value then begin
+            B.ImagePosition:= fpImgOnly;
+            B.Margins.Left:= 5;
+            B.Margins.Right:= 5;
+          end else begin
+            B.ImagePosition:= fpImgLeft;
+            B.Margins.Left:= 20;
+            B.Margins.Right:= 20;
+          end;
+
+        end;
+      end;
+      if Value then begin
+        P.ClientHeight:= ((P.ControlCount-1) * BTN_HEIGHT) + 20;
+      end else begin
+        P.ClientHeight:= ((P.ControlCount-1) * BTN_HEIGHT) + L.Height + 10;
+      end;
+    end;
+  end;
+  CalcScrollHeight;
 end;
 
 procedure TfrmTMDBHome.CalcScrollHeight;
@@ -177,84 +270,195 @@ procedure TfrmTMDBHome.btnMovieCertificationsClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentCertsMovies);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton13Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentCertsTV);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton18Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentConfigCountries);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.JDFontButton19Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentConfigJobs);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.JDFontButton1Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentBrowser);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton20Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentConfigLanguages);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.JDFontButton22Click(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentConfigTimezones);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.btnMovieGenresClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentGenresMovie);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnNowPlayingMoviesClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'Now Playing Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.MovieLists.GetNowPlaying(AppSetup.Language, Page, '');
+    end;
+  F.RefreshData;
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnPopularMoviesClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'Popular Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.MovieLists.GetPopular(AppSetup.Language, Page, '');
+    end;
+  F.RefreshData;
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton28Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentGenresTV);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.btnSearchCollectionsClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchCollections);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.btnSearchTVClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchTV);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnTopRatedMoviesClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'Top Rated Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.MovieLists.GetTopRated(AppSetup.Language, Page, '');
+    end;
+  F.RefreshData;
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnUpcomingMoviesClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'Upcoming Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.MovieLists.GetUpcoming(AppSetup.Language, Page, '');
+    end;
+  F.RefreshData;
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton44Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchCompanies);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton45Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchKeywords);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.btnSearchMoviesClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchMovies);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton47Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchMulti);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton48Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentSearchPeople);
+  HideMenu;
 end;
 
 procedure TfrmTMDBHome.JDFontButton49Click(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmTMDBAppSetup);
+  HideMenu;
 end;
 
 end.

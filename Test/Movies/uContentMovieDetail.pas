@@ -19,18 +19,17 @@ uses
 type
   TDetailRef = class;
 
-  TDetailRefEvent = procedure(Ref: TDetailRef) of Object;
+  TDetailRefEvent = reference to procedure(Ref: TDetailRef);
 
   TDetailRef = class(TObject)
   private
-    FClickable: Boolean;
     FOnClick: TDetailRefEvent;
     FItem: TListItem;
-    procedure SetClickable(const Value: Boolean);
     procedure SetOnClick(const Value: TDetailRefEvent);
+    function GetClickable: Boolean;
   public
     constructor Create(AItem: TListItem);
-    property Clickable: Boolean read FClickable write SetClickable;
+    property Clickable: Boolean read GetClickable;
     property Item: TListItem read FItem;
     property OnClick: TDetailRefEvent read FOnClick write SetOnClick;
   end;
@@ -43,7 +42,7 @@ type
     lblRating: TLabel;
     btnFavorite: TJDFontButton;
     btnWatchlist: TJDFontButton;
-    TabSheet3: TTabSheet;
+    tabAltTitles: TTabSheet;
     lstAltTitles: TListView;
     TabSheet4: TTabSheet;
     tabCredits: TTabSheet;
@@ -53,7 +52,7 @@ type
     lstKeywords: TListBox;
     TabSheet9: TTabSheet;
     TabSheet10: TTabSheet;
-    TabSheet11: TTabSheet;
+    tabReleaseDates: TTabSheet;
     lstReleaseDates: TListView;
     tabReviews: TTabSheet;
     TabSheet13: TTabSheet;
@@ -70,6 +69,7 @@ type
     procedure lstDetailCustomDrawSubItem(Sender: TCustomListView;
       Item: TListItem; SubItem: Integer; State: TCustomDrawState;
       var DefaultDraw: Boolean);
+    procedure lstDetailDblClick(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
 
@@ -110,7 +110,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uMain;
+  uMain,
+  JD.TabController;
 
 { TDetailRef }
 
@@ -119,9 +120,9 @@ begin
   FItem:= AItem;
 end;
 
-procedure TDetailRef.SetClickable(const Value: Boolean);
+function TDetailRef.GetClickable: Boolean;
 begin
-  FClickable := Value;
+  Result:= Assigned(FOnClick);
 end;
 
 procedure TDetailRef.SetOnClick(const Value: TDetailRefEvent);
@@ -263,13 +264,13 @@ end;
 procedure TfrmContentMovieDetail.ClearDetails;
 begin
   while lstDetail.Items.Count > 0 do begin
-    TDetailRef(lstDetail.Items[0]).Free;
+    TDetailRef(lstDetail.Items[0].Data).Free;
     lstDetail.Items.Delete(0);
   end;
 end;
 
 procedure TfrmContentMovieDetail.LoadDetails;
-  function A(const N: String; const V: String): TDetailRef;
+  function A(const N: String; const V: String; OnClick: TDetailRefEvent = nil): TDetailRef;
   var
     I: TListItem;
   begin
@@ -277,10 +278,12 @@ procedure TfrmContentMovieDetail.LoadDetails;
     I.Caption:= N;
     I.SubItems.Add(V);
     Result:= TDetailRef.Create(I);
+    Result.OnClick:= OnClick;
+    I.Data:= Result;
   end;
 var
   X: Integer;
-  I: TListItem;
+  I: TDetailRef;
   T1, T2: String;
 begin
   lstDetail.Items.BeginUpdate;
@@ -289,44 +292,82 @@ begin
 
     T1:= FDetail.Title;
     T2:= FDetail.OriginalTitle;
-    A('Title', T1);
+    A('Title', T1,
+      procedure(Ref: TDetailRef)
+      begin
+        //Alternative Titles
+        Pages.ActivePage:= tabAltTitles;
+        PagesChange(Pages);
+      end);
     if T1 <> T2 then
-      A('Original Title', T2);
+      A('Original Title', T2,
+        procedure(Ref: TDetailRef)
+        begin
+          //Alternative Titles
+          Pages.ActivePage:= tabAltTitles;
+          PagesChange(Pages);
+        end);
     A('Tagline', FDetail.Tagline);
     if FDetail.Collection <> nil then begin
       if FDetail.Collection.BelongsToCollection then begin
-        A('Collection', FDetail.Collection.Name);
+        A('Collection', FDetail.Collection.Name,
+          procedure(Ref: TDetailRef)
+          begin
+            //TabController.CreateTab(TfrmContentCollectionDetail);
+          end);
       end;
     end;
     A('Popularity', FormatFloat('0.000', FDetail.Popularity));
     A('Vote Average', FormatFloat('0.000', FDetail.VoteAverage));
     A('Vote Count', IntToStr(FDetail.VoteCount));
     for X := 0 to FDetail.Genres.Count-1 do begin
-      I:= A('Genre', FDetail.Genres[X].Name).Item;
-      I.Indent:= 1;
+      I:= A('Genre', FDetail.Genres[X].Name);
+      I.Item.Indent:= 1;
     end;
-    A('Release Date', FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate));
+    A('Release Date', FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate),
+      procedure(Ref: TDetailRef)
+      begin
+        //Relase Dates
+        Pages.ActivePage:= tabReleaseDates;
+        PagesChange(Pages);
+      end);
     A('Status', FDetail.Status);
     A('Budget', FormatCurr('$#,###,###,##0.00', FDetail.Budget));
     A('Revenue', FormatCurr('$#,###,###,##0.00', FDetail.Revenue));
     for X := 0 to FDetail.ProductionCompanies.Count-1 do begin
-      I:= A('Production Company', FDetail.ProductionCompanies[X].Name).Item;
-      I.Indent:= 1;
+      I:= A('Production Company', FDetail.ProductionCompanies[X].Name,
+        procedure(Ref: TDetailRef)
+        begin
+          //Company Detail
+        end);
+      I.Item.Indent:= 1;
     end;
     A('Origin Country', TMDBStrArrayToStr(FDetail.OriginalCountry));
     for X := 0 to FDetail.ProductionCountries.Count-1 do begin
-      I:= A('Production Country', TMDB.CountryName(FDetail.ProductionCountries[X].ISO3166_1)).Item;
-      I.Indent:= 1;
+      I:= A('Production Country', TMDB.CountryName(FDetail.ProductionCountries[X].ISO3166_1));
+      I.Item.Indent:= 1;
     end;
     A('Original Language', TMDB.LanguageName(FDetail.OriginalLanguage));
     for X := 0 to FDetail.SpokenLanguages.Count-1 do begin
-      I:= A('Spoken Language', TMDB.LanguageName(FDetail.SpokenLanguages[X].ISO639_1)).Item;
-      I.Indent:= 1;
+      I:= A('Spoken Language', TMDB.LanguageName(FDetail.SpokenLanguages[X].ISO639_1));
+      I.Item.Indent:= 1;
     end;
-    A('Homepage', FDetail.Homepage);
+    A('Homepage', FDetail.Homepage,
+      procedure(Ref: TDetailRef)
+      begin
+        //Web Browser
+      end);
     A('Runtime', IntToStr(FDetail.Runtime));
-    A('Backdrop Path', FDetail.BackdropPath);
-    A('Poster Path', FDetail.PosterPath);
+    A('Backdrop Path', FDetail.BackdropPath,
+      procedure(Ref: TDetailRef)
+      begin
+        //Image Detail
+      end);
+    A('Poster Path', FDetail.PosterPath,
+      procedure(Ref: TDetailRef)
+      begin
+        //Image Detail
+      end);
     if FDetail.Video then
       A('Video', 'True')
     else
@@ -336,7 +377,11 @@ begin
     else
       A('Adult', 'False');
     A('ID', IntToStr(FDetail.ID));
-    A('IMDB ID', FDetail.IMDBID);
+    A('IMDB ID', FDetail.IMDBID,
+      procedure(Ref: TDetailRef)
+      begin
+        //IMDB Movie Detail
+      end);
 
   finally
     lstDetail.Items.EndUpdate;
@@ -549,6 +594,8 @@ end;
 procedure TfrmContentMovieDetail.lstDetailCustomDrawSubItem(
   Sender: TCustomListView; Item: TListItem; SubItem: Integer;
   State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  I: TDetailRef;
   function IsName(const N: String): Boolean;
   begin
     Result:= SameText(N, Item.Caption);
@@ -566,6 +613,13 @@ begin
   Sender.Canvas.Font.Color:= clWhite;
   Sender.Canvas.Font.Style:= [fsBold];
   if SubItem = 1 then begin
+    I:= TDetailRef(Item.Data);
+    if I.Clickable then begin
+      Sender.Canvas.Font.Color:= clBlue;
+      Sender.Canvas.Font.Style:= [fsBold,fsUnderline];
+    end;
+
+    {
     Chk('Collection'); //Collection Detail
     Chk('Release Date'); //Release Dates
     Chk('Production Company'); //Company Detail
@@ -574,8 +628,22 @@ begin
     Chk('Poster Path'); //Image Detail
     Chk('Title'); //Alternative Titles
     Chk('Original Title'); //Alternative Titles
+    }
   end;
 
+end;
+
+procedure TfrmContentMovieDetail.lstDetailDblClick(Sender: TObject);
+var
+  I: TDetailRef;
+begin
+  inherited;
+  //Execute procedure associated with corresponding detail reference...
+  if lstDetail.Selected <> nil then begin
+    I:= TDetailRef(lstDetail.Selected.Data);
+    if Assigned(I.OnClick) then
+      I.OnClick(I);
+  end;
 end;
 
 end.

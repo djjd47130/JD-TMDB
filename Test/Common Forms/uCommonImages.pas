@@ -104,6 +104,7 @@ begin
       4: L:= FImages.Stills;
     end;
     FImage:= L[Integer(Item.Data)];
+
     if FImage.GetImage(B64) then begin
       Enc:= TBase64Encoding.Create(0);
       try

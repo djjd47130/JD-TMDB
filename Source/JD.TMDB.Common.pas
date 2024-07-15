@@ -15,15 +15,73 @@ const
   //TMDB Error Codes
   TMDB_ERR_SUCCESS = 1;
   TMDB_ERR_INVALID_SERVICE = 2;
-  TMDB_ERR_AUTH_FAILED = 3;
+  TMDB_ERR_AUTH_FAILED_PERMISSION = 3;
   TMDB_ERR_INVALID_FORMAT = 4;
-  //TODO: All the way to code 47... Issue #44
+  TMDB_ERR_INVALID_PARAMS = 5;
+  TMDB_ERR_INVALID_ID_PREREQUISITE = 6;
+  TMDB_ERR_INVALID_API_KEY = 7;
+  TMDB_ERR_DUPLICATE_ENTRY = 8;
+  TMDB_ERR_SERVICE_OFFLINE = 9;
+  TMDB_ERR_SUSPENDED_API_KEY = 10;
+  TMDB_ERR_INTERNAL_ERROR = 11;
+  TMDB_ERR_UPDATED_SUCCESSFULLY = 12;
+  TMDB_ERR_DELETED_SUCCESSFULLY = 13;
+  TMDB_ERR_AUTH_FAILED = 14;
+  TMDB_ERR_FAILED = 15;
+  TMDB_ERR_DEVICE_DENIED = 16;
+  TMDB_ERR_SESSION_DENIED = 17;
+  TMDB_ERR_VALIDATION_FAILED = 18;
+  TMDB_ERR_INVALID_ACCEPT_HEADER = 19;
+  TMDB_ERR_INVALID_DATE_RANGE = 20;
+  TMDB_ERR_ENTRY_NOT_FOUND = 21;
+  TMDB_ERR_INVALID_PAGE = 22;
+  TMDB_ERR_INVALID_DATE = 23;
+  TMDB_ERR_REQUEST_TIMED_OUT = 24;
+  TMDB_ERR_REQUEST_RATE_LIMITED = 25;
+  TMDB_ERR_USER_PASS_REQUIRED = 26;
+  TMDB_ERR_TOO_MANY_APPENDED = 27;
+  TMDB_ERR_INVALID_TIMEZONE = 28;
+  TMDB_ERR_CONFIRM_ACTION = 29;
+  TMDB_ERR_INVALID_USER_PASS = 30;
+  TMDB_ERR_ACCOUNT_DISABLED = 31;
+  TMDB_ERR_EMAIL_NOT_VERIFIED = 32;
+  TMDB_ERR_INVALID_REQUEST_TOKEN = 33;
+  TMDB_ERR_RESOURCE_NOT_FOUND = 34;
+  TMDB_ERR_INVALID_TOKEN = 35;
+  TMDB_ERR_TOKEN_NOT_GRANTED = 36;
+  TMDB_ERR_SESSION_NOT_FOUND = 37;
+  TMDB_ERR_NO_PERMISSION = 38;
+  TMDB_ERR_PRIVATE_RESOURCE = 39;
+  TMDB_ERR_NOTHING_TO_UPDATE = 40;
+  TMDB_ERR_TOKEN_NOT_APPROVED = 41;
+  TMDB_ERR_METHOD_NOT_SUPPORTED = 42;
+  TMDB_ERR_BACKEND_SERVER_CONN = 43;
+  TMDB_ERR_INVALID_ID = 44;
+  TMDB_ERR_USER_SUSPENDED = 45;
+  TMDB_ERR_API_MAINTENANCE = 46;
+  TMDB_ERR_INVALID_INPUT = 47;
+  //Issue #44
   //https://developer.themoviedb.org/docs/errors
 
 
 type
 
   { Common Types }
+
+  /// <summary>
+  /// Exception class for TMDB exceptions.
+  /// TODO: Make use in API requests...
+  /// </summary
+  ETMDBException = class(Exception)
+  private
+    FCode: Integer;
+    FHttpCode: Integer;
+  public
+    constructor Create(const Msg: String; const ErrCode: Integer;
+      const HttpCode: Integer); reintroduce;
+    property Code: Integer read FCode;
+    property HttpCode: Integer read FHttpCode;
+  end;
 
   /// <summary>
   /// Array of String, as used across TMDB library.
@@ -225,6 +283,18 @@ function TMDBTVEpisodeRequestsToStr(const AValue: TTMDBTVEpisodeRequests): WideS
 function TMDBPersonRequestsToStr(const AValue: TTMDBPersonRequests): WideString;
 
 implementation
+
+{ ETMDBException }
+
+constructor ETMDBException.Create(const Msg: String; const ErrCode,
+  HttpCode: Integer);
+begin
+  inherited Create(Msg);
+  FCode:= ErrCode;
+  FHttpCode:= HttpCode;
+end;
+
+{ General }
 
 function TMDBListTypeToStr(const AListType: TTMDBListType): String;
 begin

@@ -109,7 +109,6 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           TabOrder = 1
           TabStop = True
           OnClick = APIAuthMethodRadioClick
-          ExplicitTop = 0
         end
         object btnValidateKey: TButton
           AlignWithMargins = True
@@ -127,6 +126,7 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
+          OnClick = btnValidateKeyClick
         end
       end
     end

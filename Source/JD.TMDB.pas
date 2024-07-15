@@ -23,7 +23,8 @@ uses
   Winapi.Windows,
   JD.TMDB.Intf,
   JD.TMDB.Impl,
-  JD.TMDB.Common;
+  JD.TMDB.Common,
+  JD.TMDB.LocalWebServer;
 
 type
 
@@ -31,6 +32,7 @@ type
   private
     FTMDB: ITMDBClient;
     FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
+    FWebServer: TTMDBLocalWebServer;
 
     function GetAccessToken: String;
     function GetAPIKey: String;
@@ -50,6 +52,8 @@ type
     procedure SetAppUserAgent(const Value: String);
     function GetAgreedToWatchProviderAttribution: Boolean;
     procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
+    function GetWebServerPort: Integer;
+    procedure SetWebServerPort(const Value: Integer);
   protected
     procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
@@ -59,6 +63,7 @@ type
     property Client: ITMDBClient read FTMDB;
     property Cache: ITMDBCache read GetCache;
     property LoginState: ITMDBLoginState read GetLoginState;
+    property WebServer: TTMDBLocalWebServer read FWebServer;
 
     function CountryName(const Code: String): String;
     function LanguageName(const Code: String): String;
@@ -106,6 +111,7 @@ type
     property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
     property AgreedToWatchProviderAttribution: Boolean
       read GetAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
+    property WebServerPort: Integer read GetWebServerPort write SetWebServerPort;
 
     property OnUserAuthRequest: TTMDBUserAuthRequestEvent
       read FOnUserAuthRequest write FOnUserAuthRequest;
@@ -121,18 +127,26 @@ begin
   FTMDB:= TTMDBClient.Create;
   FTMDB._AddRef;
   FTMDB.OnUserAuthRequest:= UserAuthRequst;
+
+  FWebServer:= TTMDBLocalWebServer.Create(FTMDB);
+  FWebServer.Start;
+
+end;
+
+destructor TTMDB.Destroy;
+begin
+
+  FWebServer.Terminate;
+  FreeAndNil(FWebServer);
+
+  FTMDB._Release;
+  FTMDB:= nil;
+  inherited;
 end;
 
 function TTMDB.Credits: ITMDBNamespaceCredits;
 begin
   Result:= FTMDB.Credits;
-end;
-
-destructor TTMDB.Destroy;
-begin
-  FTMDB._Release;
-  FTMDB:= nil;
-  inherited;
 end;
 
 function TTMDB.Discover: ITMDBNamespaceDiscover;
@@ -205,6 +219,11 @@ begin
   Result:= FTMDB.RateLimitMsec;
 end;
 
+function TTMDB.GetWebServerPort: Integer;
+begin
+  Result:= FWebServer.Port;
+end;
+
 function TTMDB.GuestSessions: ITMDBNamespaceGuestSessions;
 begin
   Result:= FTMDB.GuestSessions;
@@ -253,6 +272,11 @@ end;
 procedure TTMDB.SetRateLimitMsec(const Value: DWORD);
 begin
   FTMDB.RateLimitMsec:= Value;
+end;
+
+procedure TTMDB.SetWebServerPort(const Value: Integer);
+begin
+  FWebServer.Port:= Value;
 end;
 
 function TTMDB.Trending: ITMDBNamespaceTrending;

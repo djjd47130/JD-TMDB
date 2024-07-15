@@ -72,6 +72,7 @@ type
     procedure txtAPIKeyChange(Sender: TObject);
     procedure txtAccessTokenChange(Sender: TObject);
     procedure cboLanguageChange(Sender: TObject);
+    procedure btnValidateKeyClick(Sender: TObject);
   private
     function GetAPIAuth: TTMDBAuthMethod;
     procedure SetAPIAuth(const Value: TTMDBAuthMethod);
@@ -265,6 +266,16 @@ begin
   inherited;
   SaveSetup;
   btnSave.Enabled:= False;
+end;
+
+procedure TfrmTMDBAppSetup.btnValidateKeyClick(Sender: TObject);
+var
+  O: ITMDBAuthValidateKeyResult;
+begin
+  inherited;
+  PrepAPI;
+  O:= TMDB.Client.Authentication.ValidateKey;
+  ShowMessage('API Key Validation Result: '+O.StatusMessage);
 end;
 
 procedure TfrmTMDBAppSetup.cboLanguageChange(Sender: TObject);

@@ -28,8 +28,6 @@ package JDTMDBLib;
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 
-{$WARN DUPLICATE_CTOR_DTOR OFF}
-
 requires
   rtl,
   dbrtl,
@@ -44,6 +42,7 @@ contains
   JD.TMDB.Intf in 'Source\JD.TMDB.Intf.pas',
   JD.TMDB.Impl in 'Source\JD.TMDB.Impl.pas',
   JD.TMDB.Common in 'Source\JD.TMDB.Common.pas',
-  JD.TMDB in 'Source\JD.TMDB.pas';
+  JD.TMDB in 'Source\JD.TMDB.pas',
+  JD.TMDB.LocalWebServer in 'Source\JD.TMDB.LocalWebServer.pas';
 
 end.

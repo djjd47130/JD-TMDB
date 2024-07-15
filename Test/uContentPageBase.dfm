@@ -113,6 +113,54 @@ inherited frmContentPageBase: TfrmContentPageBase
         TabOrder = 1
         OnClick = btnPageNextClick
       end
+      object btnRefresh: TJDFontButton
+        AlignWithMargins = True
+        Left = 601
+        Top = 3
+        Width = 41
+        Height = 26
+        Cursor = crHandPoint
+        Align = alRight
+        Default = True
+        DrawStyle = fdTransparent
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        Image.AutoSize = False
+        Image.Text = #61473
+        Image.Font.Charset = DEFAULT_CHARSET
+        Image.Font.Color = clWindowText
+        Image.Font.Height = -24
+        Image.Font.Name = 'FontAwesome'
+        Image.Font.Style = []
+        Image.Font.Quality = fqAntialiased
+        Image.StandardColor = fcGreen
+        Overlay.Text = #57715
+        Overlay.Font.Charset = DEFAULT_CHARSET
+        Overlay.Font.Color = clWindowText
+        Overlay.Font.Height = -7
+        Overlay.Font.Name = 'FontAwesome'
+        Overlay.Font.Style = []
+        Overlay.Font.Quality = fqAntialiased
+        Overlay.Position = foNone
+        Overlay.Margin = 3
+        ImagePosition = fpImgOnly
+        Margin = 8
+        Spacing = 8
+        SubTextFont.Charset = DEFAULT_CHARSET
+        SubTextFont.Color = clGray
+        SubTextFont.Height = -11
+        SubTextFont.Name = 'Tahoma'
+        SubTextFont.Style = []
+        TabOrder = 2
+        Text = 'Apply Search'
+        OnClick = btnRefreshClick
+        ExplicitLeft = 3
+        ExplicitTop = -12
+        ExplicitHeight = 639
+      end
     end
     object pDetail: TPanel
       Left = 0

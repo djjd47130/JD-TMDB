@@ -7,14 +7,16 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
-  JD.Common, JD.Ctrls, JD.Ctrls.FontButton,
+  System.NetEncoding,
+  JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.Graphics,
   JD.TMDB,
   JD.TMDB.Intf,
-  JD.TMDB.Impl,
   JD.TMDB.Common,
-  JD.TMDB.LocalWebServer,
   JD.TabController,
   uContentBase,
+  uContentBrowser,
+
+  Jpeg, PngImage,
 
   XSuperObject, XSuperJSON,
 
@@ -54,11 +56,15 @@ type
     TMDB: TTMDB;
     Tabs: TChromeTabs;
     pContent: TPanel;
-    StatusBar1: TStatusBar;
+    Stat: TStatusBar;
+    pMenu: TPanel;
+    btnMenu: TJDFontButton;
+    JDFontButton1: TJDFontButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure UserAuthMethodClick(Sender: TObject);
-    procedure btnValidateKeyClick(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure btnUserClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -66,18 +72,28 @@ type
       Shift: TShiftState);
     procedure TMDBUserAuthRequest(Sender: TObject; const URL: WideString;
       var Result: Boolean);
-    procedure FormShow(Sender: TObject);
     procedure TabsActiveTabChanged(Sender: TObject; ATab: TChromeTab);
     procedure TabsButtonCloseTabClick(Sender: TObject; ATab: TChromeTab;
       var Close: Boolean);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure btnMenuClick(Sender: TObject);
+    procedure TabsButtonAddClick(Sender: TObject; var Handled: Boolean);
   private
-    FWebServer: TTMDBLocalWebServer;
     FAuthMethod: Integer;
+    FMenu: TfrmTMDBHome;
+    FFullScreen: Boolean;
+    FRect: TRect;
+    FState: TWindowState;
+    FContentOnly: Boolean;
     procedure ShowUserInfo;
+    procedure ShowUserAvatar(const Path: String);
+    procedure SetFullScreen(const Value: Boolean);
+    procedure SetContentOnly(const Value: Boolean);
   public
     procedure PrepAPI;
-    property WebServer: TTMDBLocalWebServer read FWebServer;
+    function MenuVisible: Boolean;
+    procedure ShowMenu(const Value: Boolean);
+    property FullScreen: Boolean read FFullScreen write SetFullScreen;
+    property ContentOnly: Boolean read FContentOnly write SetContentOnly;
   end;
 
 var
@@ -110,32 +126,38 @@ begin
   //MEMORY LEAKS! TEMPORARILY DISABLING!
   {$ENDIF}
 
+  //UI
+  //TStyleManager.TrySetStyle('Light', False);
+  TStyleManager.TrySetStyle('Carbon', False);
+  //TStyleManager.TrySetStyle('Windows10 Dark', False);
+  ColorManager.BaseColor:= clBlack; // TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scButtonNormal);
+  pContent.Align:= alClient;
+  gbUserInfo.Align:= alClient;
+  gbUserLogin.Align:= alClient;
+  Width:= 1200;
+  Height:= 800;
+
+  //Tabs
   InitTabController;
   TabController.ChromeTabs:= Tabs;
   TabController.Container:= pContent;
   TabController.MainForm:= Self;
 
-  //TStyleManager.TrySetStyle('Light', False);
-  TStyleManager.TrySetStyle('Windows10 Dark', False);
-
-  pContent.Align:= alClient;
-  gbUserInfo.Align:= alClient;
-  gbUserLogin.Align:= alClient;
-
+  //User Auth
   FAuthMethod:= 2;
 
-  FWebServer:= TTMDBLocalWebServer.Create(TMDB);
-  FWebServer.Start;
+  //Main Menu
+  FMenu:= TfrmTMDBHome.Create(pMenu);
+  FMenu.Parent:= pMenu;
+  FMenu.BorderStyle:= bsNone;
+  FMenu.Align:= alClient;
+  FMenu.Show;
 
-  Width:= 1200;
-  Height:= 800;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  FWebServer.Terminate;
-  FreeAndNil(FWebServer);
-
+  //Tabs
   UninitTabController;
 end;
 
@@ -144,28 +166,40 @@ var
   T: TJDTabRef;
 begin
   PrepAPI;
-  T:= TabController.CreateTab(TfrmTMDBHome);
-  T.ChromeTab.HideCloseButton:= True;
-  //T.ChromeTab.Pinned:= True;
-  //TODO: Ensure this tab cannot be closed...
 
+  //User Auth
+  //Restore user login session
   if (AppSetup.SessionID <> '') and (AppSetup.SessionGuest = False) then begin
-    if TMDB.LoginState.RestoreSession(AppSetup.SessionID) then begin
-      ShowUserInfo;
+    try
+      if TMDB.LoginState.RestoreSession(AppSetup.SessionID) then begin
+        ShowUserInfo;
+      end;
+    except
+      on E: Exception do begin
+        //TODO
+      end;
     end;
   end;
 end;
 
+function TfrmMain.MenuVisible: Boolean;
+begin
+  //Main Menu
+  Result:= pMenu.Tag = 1;
+end;
+
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  //TODO: Query all open tabs...
-
+  //Tabs
+  CanClose:= TabController.CloseQuery;
 end;
 
 procedure TfrmMain.ShowUserInfo;
 var
   D: ITMDBAccountDetail;
 begin
+  //User Auth
+  imgUserAvatar.Picture.Assign(nil);
   if TMDB.LoginState.IsAuthenticated then begin
     btnLogin.Tag:= 1;
     gbUserInfo.Visible:= True;
@@ -183,7 +217,7 @@ begin
         btnUser.Text:= D.Name
       else
         btnUser.Text:= D.UserName;
-      //TODO: Gravatar...
+      ShowUserAvatar(D.TMDBAvatarPath);
     end;
   end else begin
     btnLogin.Tag:= 0;
@@ -195,14 +229,56 @@ begin
   end;
 end;
 
+procedure TfrmMain.ShowUserAvatar(const Path: String);
+var
+  D: WideString;
+  S: TStringStream;
+  Enc: TBase64Encoding;
+begin
+  //User Auth
+  imgUserAvatar.Picture.Assign(nil);
+  if Path <> '' then begin
+    if TMDB.Client.GetImage(D, Path, 'w185') then begin
+      Enc:= TBase64Encoding.Create(0);
+      try
+        D:= Enc.Decode(D);
+        S:= TStringStream.Create(D);
+        try
+          S.Position:= 0;
+          imgUserAvatar.Picture.LoadFromStream(S);
+        finally
+          S.Free;
+        end;
+      finally
+        Enc.Free;
+      end;
+    end else begin
+      //raise Exception.Create('Failed to fetch image.');
+    end;
+  end;
+end;
+
 procedure TfrmMain.TabsActiveTabChanged(Sender: TObject; ATab: TChromeTab);
 begin
-  TabController.ActiveTabIndex:= ATab.Index;
+  //Tabs
+  TabController.HandleTabChanged(ATab);
+end;
+
+procedure TfrmMain.TabsButtonAddClick(Sender: TObject; var Handled: Boolean);
+var
+  T: TJDTabRef;
+begin
+  //Tabs
+  Handled:= True;
+  T:= TabController.CreateTab(TfrmContentBrowser);
+  (T.Content as TfrmContentBrowser).Navigate('https://google.com');
+  ShowMenu(False);
 end;
 
 procedure TfrmMain.TabsButtonCloseTabClick(Sender: TObject; ATab: TChromeTab;
   var Close: Boolean);
 begin
+  //Tabs
   Close:= False;
   TabController.DeleteTab(ATab.Index);
 end;
@@ -213,12 +289,13 @@ var
   F: TfrmLoginBrowser;
   U: String;
 begin
+  //User Auth
   //TODO: Move local web server into TTMDB component
   //Open URL in web browser to authenticate user...
   F:= TfrmLoginBrowser.Create(nil);
   try
     //We instruct it to redirect to our web server upon successful login...
-    U:= URL + '?redirect_to=http://localhost:'+IntToStr(FWebServer.Port)+'/authgranted';
+    U:= URL + '?redirect_to=http://localhost:'+IntToStr(TMDB.WebServer.Port)+'/authgranted';
     F.LoadURL(U);
     F.ShowModal;
     Result:= F.Success;
@@ -233,6 +310,7 @@ var
   GS: ITMDBAuthGuestSessionResult;
   US: ITMDBAuthSessionResult;
 begin
+  //User Auth
   PrepAPI;
   Success:= False;
   case FAuthMethod of
@@ -254,6 +332,8 @@ begin
   end;
   if Success then begin
     pUser.Visible:= False;
+    AppSetup.SessionID:= US.SessionID;
+    AppSetup.SessionGuest:= TMDB.LoginState.IsGuest;
     ShowUserInfo;
   end;
 end;
@@ -263,20 +343,11 @@ begin
   TMDB.APIKey:= AppSetup.APIKey;
   TMDB.AccessToken:= AppSetup.AccessToken;
   TMDB.AuthMethod:= AppSetup.APIAuth;
-
-end;
-
-procedure TfrmMain.btnValidateKeyClick(Sender: TObject);
-var
-  O: ITMDBAuthValidateKeyResult;
-begin
-  PrepAPI;
-  O:= TMDB.Client.Authentication.ValidateKey;
-  ShowMessage('API Key Validation Result: '+O.StatusMessage);
 end;
 
 procedure TfrmMain.btnLogoutClick(Sender: TObject);
 begin
+  //User Auth
   pUser.Visible:= False;
   if MessageDlg('Are you sure you wish to log out?', mtConfirmation, [mbYes,mbNo], 0) = mrYes then begin
     PrepAPI;
@@ -286,8 +357,65 @@ begin
   end;
 end;
 
+procedure TfrmMain.SetContentOnly(const Value: Boolean);
+begin
+  FContentOnly := Value;
+  pTop.Visible:= not Value;
+  pMenu.Visible:= not Value;
+  Stat.Visible:= not Value;
+end;
+
+procedure TfrmMain.SetFullScreen(const Value: Boolean);
+var
+  M: TMonitor;
+begin
+  FFullScreen := Value;
+  M:= Screen.MonitorFromRect(BoundsRect);
+
+  if Value then begin
+    FRect:= BoundsRect;
+    FState:= WindowState;
+    //Parent:= nil;
+    //BringToFront;
+    BorderStyle:= bsNone;
+    WindowState:= wsMaximized;
+    SetBounds(M.Left, M.Top, M.Width, M.Height);
+  end else begin
+    //Parent:= TabController.Container;
+    BorderStyle:= bsSizeable;
+    SetBounds(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom);
+    WindowState:= FState;
+  end;
+end;
+
+procedure TfrmMain.ShowMenu(const Value: Boolean);
+begin
+  //Main Menu
+  if Value then begin
+    pMenu.Tag:= 1;
+    pMenu.Width:= 365;
+  end else begin
+    pMenu.Tag:= 0;
+    pMenu.Width:= 70;
+  end;
+end;
+
+procedure TfrmMain.btnMenuClick(Sender: TObject);
+begin
+  //Main Menu
+  case pMenu.Tag of
+    0: begin
+      ShowMenu(True);
+    end;
+    1: begin
+      ShowMenu(False);
+    end;
+  end;
+end;
+
 procedure TfrmMain.btnUserClick(Sender: TObject);
 begin
+  //User Auth
   if pUser.Visible then begin
     pUser.Visible:= False;
   end else begin
@@ -309,6 +437,7 @@ end;
 procedure TfrmMain.txtAuthPassKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  //User Auth
   if Key = VK_RETURN then begin
     btnLogin.Click;
   end;
@@ -318,6 +447,7 @@ procedure TfrmMain.UserAuthMethodClick(Sender: TObject);
 var
   I: Integer;
 begin
+  //User Auth
   I:= TComponent(Sender).Tag;
   FAuthMethod:= I;
   case I of

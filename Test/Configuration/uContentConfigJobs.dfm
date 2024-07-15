@@ -1,9 +1,9 @@
-inherited frmContentConfigLanguages: TfrmContentConfigLanguages
-  Caption = 'Languages'
-  OnShow = FormShow
+inherited frmContentConfigJobs: TfrmContentConfigJobs
+  Caption = 'Jobs and Departments'
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 18
-  object lstLanguages: TListView
+  object lstJobs: TListView
     AlignWithMargins = True
     Left = 3
     Top = 37
@@ -12,15 +12,11 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     Align = alClient
     Columns = <
       item
-        Caption = 'Code'
-        Width = 80
-      end
-      item
-        Caption = 'English Name'
+        Caption = 'Department'
         Width = 250
       end
       item
-        Caption = 'Native Name'
+        Caption = 'Job'
         Width = 250
       end>
     HotTrackStyles = [htHandPoint, htUnderlineHot]
@@ -28,7 +24,6 @@ inherited frmContentConfigLanguages: TfrmContentConfigLanguages
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -2
   end
   object btnRefresh: TButton
     AlignWithMargins = True

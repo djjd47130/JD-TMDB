@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 0
   Caption = 'TMDB API Test'
   ClientHeight = 462
-  ClientWidth = 817
+  ClientWidth = 846
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,17 +21,16 @@ object frmMain: TfrmMain
   object pTop: TPanel
     Left = 0
     Top = 0
-    Width = 817
+    Width = 846
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 932
     object btnUser: TJDFontButton
       AlignWithMargins = True
-      Left = 606
+      Left = 613
       Top = 3
-      Width = 208
+      Width = 230
       Height = 27
       Cursor = crHandPoint
       Align = alRight
@@ -70,14 +69,14 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 721
     end
     object Tabs: TChromeTabs
-      Left = 0
+      Left = 52
       Top = 0
-      Width = 603
+      Width = 558
       Height = 33
       OnActiveTabChanged = TabsActiveTabChanged
+      OnButtonAddClick = TabsButtonAddClick
       OnButtonCloseTabClick = TabsButtonCloseTabClick
       ActiveTabIndex = -1
       Options.Display.CloseButton.Offsets.Vertical = 7
@@ -85,15 +84,15 @@ object frmMain: TfrmMain
       Options.Display.CloseButton.Height = 14
       Options.Display.CloseButton.Width = 14
       Options.Display.CloseButton.AutoHide = True
-      Options.Display.CloseButton.Visibility = bvActive
+      Options.Display.CloseButton.Visibility = bvAll
       Options.Display.CloseButton.AutoHideWidth = 20
       Options.Display.CloseButton.CrossRadialOffset = 4
       Options.Display.AddButton.Offsets.Vertical = 10
       Options.Display.AddButton.Offsets.Horizontal = 2
-      Options.Display.AddButton.Height = 14
+      Options.Display.AddButton.Height = 16
       Options.Display.AddButton.Width = 31
-      Options.Display.AddButton.ShowPlusSign = False
-      Options.Display.AddButton.Visibility = avNone
+      Options.Display.AddButton.ShowPlusSign = True
+      Options.Display.AddButton.Visibility = avRightFloating
       Options.Display.AddButton.HorizontalOffsetFloating = -3
       Options.Display.ScrollButtonLeft.Offsets.Vertical = 10
       Options.Display.ScrollButtonLeft.Offsets.Horizontal = 1
@@ -120,8 +119,8 @@ object frmMain: TfrmMain
       Options.Display.Tabs.OffsetBottom = 0
       Options.Display.Tabs.MinWidth = 30
       Options.Display.Tabs.MaxWidth = 250
-      Options.Display.Tabs.TabWidthFromContent = True
-      Options.Display.Tabs.PinnedWidth = 39
+      Options.Display.Tabs.TabWidthFromContent = False
+      Options.Display.Tabs.PinnedWidth = 42
       Options.Display.Tabs.ImageOffsetLeft = 13
       Options.Display.Tabs.TextTrimType = tttFade
       Options.Display.Tabs.Orientation = toTop
@@ -156,12 +155,12 @@ object frmMain: TfrmMain
       Options.Display.TabSpinners.Download.SweepAngle = 135
       Options.Display.TabSpinners.AnimationUpdateMS = 50
       Options.Display.TabSpinners.HideImagesWhenSpinnerVisible = True
-      Options.DragDrop.DragType = dtBetweenContainers
+      Options.DragDrop.DragType = dtWithinContainer
       Options.DragDrop.DragOutsideImageAlpha = 220
       Options.DragDrop.DragOutsideDistancePixels = 30
       Options.DragDrop.DragStartPixels = 20
       Options.DragDrop.DragControlImageResizeFactor = 0.500000000000000000
-      Options.DragDrop.DragCursor = crDefault
+      Options.DragDrop.DragCursor = crDrag
       Options.DragDrop.DragDisplay = ddTabAndControl
       Options.DragDrop.DragFormBorderWidth = 2
       Options.DragDrop.DragFormBorderColor = 8421504
@@ -188,7 +187,7 @@ object frmMain: TfrmMain
       Options.Behaviour.BackgroundDragMovesForm = True
       Options.Behaviour.TabSmartDeleteResizing = True
       Options.Behaviour.TabSmartDeleteResizeCancelDelay = 700
-      Options.Behaviour.UseBuiltInPopupMenu = True
+      Options.Behaviour.UseBuiltInPopupMenu = False
       Options.Behaviour.TabRightClickSelect = True
       Options.Behaviour.ActivateNewTab = True
       Options.Behaviour.DebugMode = False
@@ -198,7 +197,7 @@ object frmMain: TfrmMain
       Options.Scrolling.ScrollButtons = csbRight
       Options.Scrolling.ScrollStep = 20
       Options.Scrolling.ScrollRepeatDelay = 20
-      Options.Scrolling.AutoHideButtons = False
+      Options.Scrolling.AutoHideButtons = True
       Options.Scrolling.DragScroll = True
       Options.Scrolling.DragScrollOffset = 50
       Options.Scrolling.MouseWheelScroll = True
@@ -237,8 +236,8 @@ object frmMain: TfrmMain
       LookAndFeel.Tabs.Active.Font.Alpha = 100
       LookAndFeel.Tabs.Active.Font.TextRenderingMode = TextRenderingHintClearTypeGridFit
       LookAndFeel.Tabs.Active.Font.UseDefaultFont = True
-      LookAndFeel.Tabs.Active.Style.StartColor = clBlack
-      LookAndFeel.Tabs.Active.Style.StopColor = 3223857
+      LookAndFeel.Tabs.Active.Style.StartColor = 3815994
+      LookAndFeel.Tabs.Active.Style.StopColor = clBlack
       LookAndFeel.Tabs.Active.Style.StartAlpha = 255
       LookAndFeel.Tabs.Active.Style.StopAlpha = 255
       LookAndFeel.Tabs.Active.Style.OutlineColor = 11110509
@@ -300,28 +299,28 @@ object frmMain: TfrmMain
       LookAndFeel.CloseButton.Circle.Hot.OutlineColor = 6054595
       LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1.000000000000000000
       LookAndFeel.CloseButton.Circle.Hot.OutlineAlpha = 255
-      LookAndFeel.AddButton.Button.Normal.StartColor = 14340292
-      LookAndFeel.AddButton.Button.Normal.StopColor = 14340035
+      LookAndFeel.AddButton.Button.Normal.StartColor = 3815994
+      LookAndFeel.AddButton.Button.Normal.StopColor = clBlack
       LookAndFeel.AddButton.Button.Normal.StartAlpha = 255
       LookAndFeel.AddButton.Button.Normal.StopAlpha = 255
       LookAndFeel.AddButton.Button.Normal.OutlineColor = 13088421
       LookAndFeel.AddButton.Button.Normal.OutlineSize = 1.000000000000000000
       LookAndFeel.AddButton.Button.Normal.OutlineAlpha = 255
-      LookAndFeel.AddButton.Button.Down.StartColor = 13417645
-      LookAndFeel.AddButton.Button.Down.StopColor = 13417644
+      LookAndFeel.AddButton.Button.Down.StartColor = clWhite
+      LookAndFeel.AddButton.Button.Down.StopColor = clSilver
       LookAndFeel.AddButton.Button.Down.StartAlpha = 255
       LookAndFeel.AddButton.Button.Down.StopAlpha = 255
       LookAndFeel.AddButton.Button.Down.OutlineColor = 10852748
       LookAndFeel.AddButton.Button.Down.OutlineSize = 1.000000000000000000
       LookAndFeel.AddButton.Button.Down.OutlineAlpha = 255
-      LookAndFeel.AddButton.Button.Hot.StartColor = 15524314
-      LookAndFeel.AddButton.Button.Hot.StopColor = 15524314
+      LookAndFeel.AddButton.Button.Hot.StartColor = clSilver
+      LookAndFeel.AddButton.Button.Hot.StopColor = clBlack
       LookAndFeel.AddButton.Button.Hot.StartAlpha = 255
       LookAndFeel.AddButton.Button.Hot.StopAlpha = 255
-      LookAndFeel.AddButton.Button.Hot.OutlineColor = 14927787
+      LookAndFeel.AddButton.Button.Hot.OutlineColor = clBlue
       LookAndFeel.AddButton.Button.Hot.OutlineSize = 1.000000000000000000
       LookAndFeel.AddButton.Button.Hot.OutlineAlpha = 255
-      LookAndFeel.AddButton.PlusSign.Normal.StartColor = clWhite
+      LookAndFeel.AddButton.PlusSign.Normal.StartColor = clSilver
       LookAndFeel.AddButton.PlusSign.Normal.StopColor = clWhite
       LookAndFeel.AddButton.PlusSign.Normal.StartAlpha = 255
       LookAndFeel.AddButton.PlusSign.Normal.StopAlpha = 255
@@ -406,14 +405,83 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ShowHint = True
       TabOrder = 1
-      ExplicitWidth = 718
+    end
+    object btnMenu: TJDFontButton
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 46
+      Height = 27
+      Cursor = crHandPoint
+      Align = alLeft
+      DrawStyle = fdTransparent
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      Image.AutoSize = False
+      Image.Text = #61641
+      Image.Font.Charset = DEFAULT_CHARSET
+      Image.Font.Color = clWindowText
+      Image.Font.Height = -24
+      Image.Font.Name = 'FontAwesome'
+      Image.Font.Style = []
+      Image.Font.Quality = fqAntialiased
+      Image.StandardColor = fcGreen
+      Overlay.Text = #57715
+      Overlay.Font.Charset = DEFAULT_CHARSET
+      Overlay.Font.Color = clWindowText
+      Overlay.Font.Height = -7
+      Overlay.Font.Name = 'FontAwesome'
+      Overlay.Font.Style = []
+      Overlay.Font.Quality = fqAntialiased
+      Overlay.Position = foNone
+      Overlay.Margin = 3
+      ImagePosition = fpImgOnly
+      Margin = 8
+      Spacing = 8
+      SubTextFont.Charset = DEFAULT_CHARSET
+      SubTextFont.Color = clGray
+      SubTextFont.Height = -11
+      SubTextFont.Name = 'Tahoma'
+      SubTextFont.Style = []
+      TabOrder = 2
+      Text = 'User Login'
+      OnClick = btnMenuClick
     end
   end
+  object pContent: TPanel
+    Left = 662
+    Top = 33
+    Width = 184
+    Height = 410
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 2
+  end
+  object Stat: TStatusBar
+    Left = 0
+    Top = 443
+    Width = 846
+    Height = 19
+    Panels = <>
+  end
+  object pMenu: TPanel
+    Tag = 1
+    Left = 0
+    Top = 33
+    Width = 369
+    Height = 410
+    Align = alLeft
+    BevelOuter = bvNone
+    TabOrder = 4
+  end
   object pUser: TPanel
-    Left = 96
-    Top = 170
+    Left = 200
+    Top = 186
     Width = 543
-    Height = 204
+    Height = 239
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -427,7 +495,7 @@ object frmMain: TfrmMain
       Left = 4
       Top = 4
       Width = 269
-      Height = 196
+      Height = 231
       Align = alLeft
       Caption = 'User Authentication'
       TabOrder = 0
@@ -460,6 +528,7 @@ object frmMain: TfrmMain
           Align = alLeft
           Caption = 'Guest'
           TabOrder = 1
+          Visible = False
           OnClick = UserAuthMethodClick
         end
         object rbCreds: TRadioButton
@@ -544,7 +613,7 @@ object frmMain: TfrmMain
       object btnLogin: TButton
         AlignWithMargins = True
         Left = 52
-        Top = 163
+        Top = 198
         Width = 165
         Height = 28
         Cursor = crHandPoint
@@ -567,7 +636,7 @@ object frmMain: TfrmMain
       Left = 279
       Top = 4
       Width = 250
-      Height = 196
+      Height = 231
       Align = alLeft
       Caption = 'User Info'
       TabOrder = 1
@@ -577,7 +646,7 @@ object frmMain: TfrmMain
         Left = 143
         Top = 23
         Width = 102
-        Height = 134
+        Height = 125
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -612,7 +681,7 @@ object frmMain: TfrmMain
         Left = 5
         Top = 23
         Width = 132
-        Height = 134
+        Height = 125
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
@@ -621,15 +690,16 @@ object frmMain: TfrmMain
           Left = 3
           Top = 3
           Width = 126
-          Height = 128
+          Height = 119
           Align = alClient
           ExplicitWidth = 113
+          ExplicitHeight = 128
         end
       end
       object btnLogout: TButton
         AlignWithMargins = True
         Left = 52
-        Top = 163
+        Top = 198
         Width = 146
         Height = 28
         Cursor = crHandPoint
@@ -646,37 +716,66 @@ object frmMain: TfrmMain
         TabOrder = 2
         OnClick = btnLogoutClick
       end
+      object JDFontButton1: TJDFontButton
+        AlignWithMargins = True
+        Left = 22
+        Top = 152
+        Width = 206
+        Height = 42
+        Cursor = crHandPoint
+        Margins.Left = 20
+        Margins.Top = 1
+        Margins.Right = 20
+        Margins.Bottom = 1
+        Align = alBottom
+        DrawStyle = fdTransparent
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -21
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        Image.AutoSize = False
+        Image.Text = #61447
+        Image.Font.Charset = DEFAULT_CHARSET
+        Image.Font.Color = clWindowText
+        Image.Font.Height = -27
+        Image.Font.Name = 'FontAwesome'
+        Image.Font.Style = []
+        Image.Font.Quality = fqAntialiased
+        Image.StandardColor = fcBlue
+        Overlay.Text = #57715
+        Overlay.Font.Charset = DEFAULT_CHARSET
+        Overlay.Font.Color = clWindowText
+        Overlay.Font.Height = -16
+        Overlay.Font.Name = 'FontAwesome'
+        Overlay.Font.Style = []
+        Overlay.Font.Quality = fqAntialiased
+        Overlay.StandardColor = fcRed
+        Overlay.Position = foNone
+        Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
+        SubTextFont.Charset = DEFAULT_CHARSET
+        SubTextFont.Color = clGray
+        SubTextFont.Height = -11
+        SubTextFont.Name = 'Tahoma'
+        SubTextFont.Style = []
+        TabOrder = 3
+        Text = 'My Account'
+      end
     end
-  end
-  object pContent: TPanel
-    Left = 0
-    Top = 33
-    Width = 817
-    Height = 112
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 2
-    ExplicitWidth = 932
-  end
-  object StatusBar1: TStatusBar
-    Left = 0
-    Top = 443
-    Width = 817
-    Height = 19
-    Panels = <>
-    ExplicitTop = 505
-    ExplicitWidth = 932
   end
   object TMDB: TTMDB
     AuthMethod = amAccessToken
     AppUserAgent = 
       'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-' +
       'TMDB)'
-    RateLimiting = False
-    RateLimitMsec = 50
+    RateLimiting = True
+    RateLimitMsec = 100
     AgreedToWatchProviderAttribution = False
+    WebServerPort = 0
     OnUserAuthRequest = TMDBUserAuthRequest
-    Left = 36
-    Top = 199
+    Left = 44
+    Top = 239
   end
 end

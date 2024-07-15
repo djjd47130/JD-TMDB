@@ -108,7 +108,6 @@ inherited frmCommonImages: TfrmCommonImages
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 214
     object Img: TImage
       AlignWithMargins = True
       Left = 8

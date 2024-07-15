@@ -28,7 +28,6 @@ uses
   uCommonVideos in 'Common Forms\uCommonVideos.pas' {frmCommonVideos},
   uCommonImages in 'Common Forms\uCommonImages.pas' {frmCommonImages},
   uCommonCredits in 'Common Forms\uCommonCredits.pas' {frmCommonCredits},
-  JD.TMDB.LocalWebServer in 'JD.TMDB.LocalWebServer.pas',
   uContentSearchTV in 'Search\uContentSearchTV.pas' {frmContentSearchTV},
   uContentSearchPeople in 'Search\uContentSearchPeople.pas' {frmContentSearchPeople},
   uContentSearchMulti in 'Search\uContentSearchMulti.pas' {frmContentSearchMulti},
@@ -41,14 +40,21 @@ uses
   JD.TabController in 'JD.TabController.pas',
   uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome},
   uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup},
-  TMDBCommon in 'TMDBCommon.pas';
+  JD.TMDB.UI in 'JD.TMDB.UI.pas',
+  JD.TMDB.LocalWebServer in '..\Source\JD.TMDB.LocalWebServer.pas',
+  uContentConfigTimezones in 'Configuration\uContentConfigTimezones.pas' {frmContentConfigTimezones},
+  uContentConfigJobs in 'Configuration\uContentConfigJobs.pas' {frmContentConfigJobs},
+  JD.Mouse in 'JD.Mouse.pas',
+  uContentBrowser in 'uContentBrowser.pas' {frmContentBrowser},
+  uContentMoviePage in 'Movies\uContentMoviePage.pas' {frmContentMoviePage};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Windows10 Dark');
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmContentBrowser, frmContentBrowser);
+  Application.CreateForm(TfrmContentMoviePage, frmContentMoviePage);
   Application.Run;
 end.

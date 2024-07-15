@@ -21,6 +21,7 @@ type
     pDetail: TPanel;
     Splitter1: TSplitter;
     btnApply: TJDFontButton;
+    btnRefresh: TJDFontButton;
     procedure lstResultsClick(Sender: TObject);
     procedure lstResultsDblClick(Sender: TObject);
     procedure lstResultsSelectItem(Sender: TObject; Item: TListItem;
@@ -31,9 +32,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnRefreshClick(Sender: TObject);
   private
     FObj: ITMDBPage;
   protected
+    procedure RefreshData; override;
+
     function AddCol(const ACaption: String; const AWidth: Integer): TListColumn; virtual;
     procedure SetupCols; virtual;
     procedure PrepSearch; virtual;
@@ -113,6 +117,13 @@ procedure TfrmContentPageBase.btnPagePrevClick(Sender: TObject);
 begin
   inherited;
   PagePrev;
+end;
+
+procedure TfrmContentPageBase.btnRefreshClick(Sender: TObject);
+begin
+  inherited;
+  //
+  Self.RefreshData;
 end;
 
 function TfrmContentPageBase.GetData(const APageNum: Integer): ITMDBPage;
@@ -261,6 +272,17 @@ end;
 procedure TfrmContentPageBase.Refresh;
 begin
   LoadPage(PageNum);
+end;
+
+procedure TfrmContentPageBase.RefreshData;
+var
+  P: Integer;
+begin
+  inherited;
+  P:= PageNum;
+  if P = 0 then
+    P:= 1;
+  Self.LoadPage(P);
 end;
 
 function TfrmContentPageBase.ResultCount: Integer;

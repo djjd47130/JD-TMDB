@@ -29,14 +29,8 @@ type
     Panel14: TPanel;
     Label15: TLabel;
     txtSearchMoviesYear: TEdit;
-    procedure FormDestroy(Sender: TObject);
-    procedure PagesChange(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
     FDetail: ITMDBMovieDetail;
-    //FDetailForm: TfrmContentMovieDetail;
-    //procedure DisplayMovieDetail(const Value: ITMDBMovieDetail);
-    //function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
   protected
     function Page: ITMDBPage; override;
     procedure SetupCols; override;
@@ -61,26 +55,6 @@ uses
   JD.TabController;
 
 { TfrmContentSearchMovies }
-
-procedure TfrmContentSearchMovies.FormCreate(Sender: TObject);
-begin
-  inherited;
-  {
-  FDetailForm:= TfrmContentMovieDetail.Create(pDetail);
-  FDetailForm.Parent:= pDetail;
-  FDetailForm.BorderStyle:= bsNone;
-  FDetailForm.Align:= alClient;
-  FDetailForm.pTop.Visible:= False;
-  FDetailForm.Show;
-  }
-
-end;
-
-procedure TfrmContentSearchMovies.FormDestroy(Sender: TObject);
-begin
-  inherited;
-  FDetail:= nil;
-end;
 
 procedure TfrmContentSearchMovies.PrepSearch;
 begin
@@ -128,54 +102,10 @@ begin
 
 end;
 
-{
-procedure TfrmContentSearchMovies.DisplayMovieDetail(const Value: ITMDBMovieDetail);
-begin
-  //Refresh detail of selected tab...
-  FDetail:= Value;
-  Screen.Cursor:= crHourglass;
-  try
-    FDetailForm.LoadMovie(Value);
-
-  finally
-    Screen.Cursor:= crDefault;
-  end;
-end;
-
-function TfrmContentSearchMovies.GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
-var
-  Inc: TTMDBMovieRequests;
-begin
-  PrepAPI;
-  Inc:= [mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
-    mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
-    mrReleaseDates, mrReviews, mrSimilar, mrTranslations, mrVideos];
-  Result:= TMDB.Client.Movies.GetDetails(ID, Inc, frmMain.cboLanguage.Text,
-    TMDB.LoginState.SessionID);
-end;
-}
-
 procedure TfrmContentSearchMovies.ShowDetail(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
-//var
-  //ID: Integer;
-  //O: ITMDBMovie;
 begin
   pDetail.Visible:= False;
-  {
-  Screen.Cursor:= crHourglass;
-  try
-    FDetail:= nil;
-    PrepAPI;
-    O:= (Obj) as ITMDBMovie;
-    ID:= O.ID;
-    FDetail:= GetMovieDetail(ID);
-  finally
-    Screen.Cursor:= crDefault;
-  end;
-  DisplayMovieDetail(FDetail);
-  inherited;
-  }
 end;
 
 function TfrmContentSearchMovies.GetItem(const Index: Integer): ITMDBItem;
@@ -199,7 +129,6 @@ var
   M: ITMDBMovie;
 begin
   inherited;
-  //TODO: Navigate to movie details tab within app...
   M:= Obj as ITMDBMovie;
   T:= TabController.CreateTab(TfrmContentMovieDetail);
   (T.Content as TfrmContentMovieDetail).LoadMovie(M.ID);
@@ -208,12 +137,6 @@ end;
 function TfrmContentSearchMovies.Page: ITMDBPage;
 begin
   Result:= ITMDBMoviePage(inherited Page);
-end;
-
-procedure TfrmContentSearchMovies.PagesChange(Sender: TObject);
-begin
-  inherited;
-  //DisplayMovieDetail(FDetail);
 end;
 
 procedure TfrmContentSearchMovies.PopulateItem(const Index: Integer;

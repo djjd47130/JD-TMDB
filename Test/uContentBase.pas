@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JD.TMDB.Intf, JD.TMDB;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JD.TMDB.Intf, JD.TMDB,
+  ChromeTabs, ChromeTabsClasses, ChromeTabsTypes;
 
 type
   TfrmContentBase = class;
@@ -25,6 +26,7 @@ type
     property TabCaption: String read GetTabCaption write SetTabCaption;
     procedure RefreshData; virtual;
     function CanClose: Boolean; virtual;
+
   end;
 
 var

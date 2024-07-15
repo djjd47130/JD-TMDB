@@ -29,9 +29,5 @@ object frmLoginBrowser: TfrmLoginBrowser
     Align = alClient
     TabOrder = 0
     OnNavigationCompleted = EdgeNavigationCompleted
-    ExplicitLeft = -205
-    ExplicitTop = 21
-    ExplicitWidth = 840
-    ExplicitHeight = 197
   end
 end
