@@ -176,12 +176,12 @@ end;
 procedure TTMDBLocalWebServer.ServerCommand(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
-  C: TTMDBLocalWebServerContext;
+  //C: TTMDBLocalWebServerContext;
   U: TIdURI;
   Doc: TStringList;
   X: Integer;
 begin
-  C:= TTMDBLocalWebServerContext(AContext);
+  //C:= TTMDBLocalWebServerContext(AContext);
   Doc:= TStringList.Create;
   try
     U:= TIdURI.Create(ARequestInfo.URI);

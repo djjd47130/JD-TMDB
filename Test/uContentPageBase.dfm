@@ -157,9 +157,6 @@ inherited frmContentPageBase: TfrmContentPageBase
         TabOrder = 2
         Text = 'Apply Search'
         OnClick = btnRefreshClick
-        ExplicitLeft = 3
-        ExplicitTop = -12
-        ExplicitHeight = 639
       end
     end
     object pDetail: TPanel

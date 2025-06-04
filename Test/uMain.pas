@@ -54,12 +54,12 @@ type
     imgUserAvatar: TImage;
     btnLogout: TButton;
     TMDB: TTMDB;
-    Tabs: TChromeTabs;
     pContent: TPanel;
     Stat: TStatusBar;
     pMenu: TPanel;
     btnMenu: TJDFontButton;
     JDFontButton1: TJDFontButton;
+    Tabs: TChromeTabs;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -127,9 +127,7 @@ begin
   {$ENDIF}
 
   //UI
-  //TStyleManager.TrySetStyle('Light', False);
   TStyleManager.TrySetStyle('Carbon', False);
-  //TStyleManager.TrySetStyle('Windows10 Dark', False);
   ColorManager.BaseColor:= clBlack; // TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scButtonNormal);
   pContent.Align:= alClient;
   gbUserInfo.Align:= alClient;
@@ -162,8 +160,8 @@ begin
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
-var
-  T: TJDTabRef;
+//var
+//  T: TJDTabRef;
 begin
   PrepAPI;
 
@@ -340,6 +338,7 @@ end;
 
 procedure TfrmMain.PrepAPI;
 begin
+  //API Auth
   TMDB.APIKey:= AppSetup.APIKey;
   TMDB.AccessToken:= AppSetup.AccessToken;
   TMDB.AuthMethod:= AppSetup.APIAuth;

@@ -102,9 +102,8 @@
         <DCCReference Include="IndySystem.dcp"/>
         <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="XSuperObjectLib.dcp"/>
         <DCCReference Include="Source\JD.TMDB.API.pas"/>
-        <DCCReference Include="..\x-superobject\XSuperJSON.pas"/>
-        <DCCReference Include="..\x-superobject\XSuperObject.pas"/>
         <DCCReference Include="Source\JD.TMDB.Intf.pas"/>
         <DCCReference Include="Source\JD.TMDB.Impl.pas"/>
         <DCCReference Include="Source\JD.TMDB.Common.pas"/>

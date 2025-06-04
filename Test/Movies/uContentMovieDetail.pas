@@ -14,7 +14,9 @@ uses
   uCommonCredits,
   uCommonImages,
   uCommonReviews,
-  uCommonAlternativeTitles;
+  uCommonAlternativeTitles,
+  uContentMoviePage,
+  uContentBrowser;
 
 type
   TDetailRef = class;
@@ -55,7 +57,7 @@ type
     tabReleaseDates: TTabSheet;
     lstReleaseDates: TListView;
     tabReviews: TTabSheet;
-    TabSheet13: TTabSheet;
+    tabSimilar: TTabSheet;
     TabSheet14: TTabSheet;
     tabVideos: TTabSheet;
     lstDetail: TListView;
@@ -70,6 +72,10 @@ type
       Item: TListItem; SubItem: Integer; State: TCustomDrawState;
       var DefaultDraw: Boolean);
     procedure lstDetailDblClick(Sender: TObject);
+    procedure lstDetailCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure lstDetailCustomDraw(Sender: TCustomListView; const ARect: TRect;
+      var DefaultDraw: Boolean);
   private
     FDetail: ITMDBMovieDetail;
 
@@ -77,6 +83,7 @@ type
     FImages: TfrmCommonImages;
     FVideos: TfrmCommonVideos;
     FReviews: TfrmCommonReviews;
+    FSimilar: TfrmContentMoviePage;
     //FAlternativeTitles: TfrmCommonAlternativeTitles;
 
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
@@ -92,10 +99,13 @@ type
     procedure LoadKeywords;
     procedure LoadReleaseDates;
     procedure LoadReviews;
+    procedure LoadSimilar;
     procedure LoadVideos;
     procedure LoadImages;
     function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
-      ATab: TTabSheet): TfrmCommonFormBase;
+      ATab: TTabSheet): TfrmCommonFormBase; overload;
+    function EmbedFormIntoTab(AClass: TfrmContentBaseClass;
+      ATab: TTabSheet): TfrmContentBase; overload;
     procedure ClearDetails;
   public
     procedure LoadMovie(const MovieID: Integer); overload;
@@ -111,7 +121,9 @@ implementation
 
 uses
   uMain,
-  JD.TabController;
+  JD.TabController,
+  Vcl.Styles,
+  Vcl.Themes;
 
 { TDetailRef }
 
@@ -143,6 +155,9 @@ begin
   FImages:= TfrmCommonImages(EmbedFormIntoTab(TfrmCommonImages, tabImages));
   FCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCredits));
   FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
+  FSimilar:= TfrmContentMoviePage(EmbedFormIntoTab(TfrmContentMoviePage, tabSimilar));
+  FSimilar.BaseName:= 'Similar Movies';
+
 end;
 
 procedure TfrmContentMovieDetail.FormDestroy(Sender: TObject);
@@ -153,6 +168,16 @@ end;
 
 function TfrmContentMovieDetail.EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
   ATab: TTabSheet): TfrmCommonFormBase;
+begin
+  Result:= AClass.Create(ATab);
+  Result.Parent:= ATab;
+  Result.BorderStyle:= bsNone;
+  Result.Align:= alClient;
+  Result.Show;
+end;
+
+function TfrmContentMovieDetail.EmbedFormIntoTab(AClass: TfrmContentBaseClass;
+  ATab: TTabSheet): TfrmContentBase;
 begin
   Result:= AClass.Create(ATab);
   Result.Parent:= ATab;
@@ -240,7 +265,7 @@ begin
       9: ; //Recommendations
       10: LoadReleaseDates;
       11: LoadReviews;
-      12: ; //Similar
+      12: LoadSimilar;
       13: ; //Translations
       14: LoadVideos;
     end;
@@ -313,7 +338,9 @@ begin
         A('Collection', FDetail.Collection.Name,
           procedure(Ref: TDetailRef)
           begin
-            //TabController.CreateTab(TfrmContentCollectionDetail);
+            //Movie Collection Detail
+            //var F:= TabController.CreateTab(TfrmContentCollectionDetail);
+            //F.LoadDetail(FDetail.Collection.ID);
           end);
       end;
     end;
@@ -339,6 +366,8 @@ begin
         procedure(Ref: TDetailRef)
         begin
           //Company Detail
+          //var F:= TabController.CreateTab(TfrmContentCompanyDetail);
+          //F.LoadDetail(FDetail.ProductionCompanies[X].ID);
         end);
       I.Item.Indent:= 1;
     end;
@@ -356,17 +385,25 @@ begin
       procedure(Ref: TDetailRef)
       begin
         //Web Browser
+        var F:= TabController.CreateTab(TfrmContentBrowser);
+        (F.Content as TfrmContentBrowser).Navigate(FDetail.Homepage);
       end);
     A('Runtime', IntToStr(FDetail.Runtime));
     A('Backdrop Path', FDetail.BackdropPath,
       procedure(Ref: TDetailRef)
       begin
         //Image Detail
+        var F:= TabController.CreateTab(TfrmContentBrowser);
+        var U:= TMDB.Client.GetImageURL(FDetail.BackdropPath);
+        (F.Content as TfrmContentBrowser).Navigate(U);
       end);
     A('Poster Path', FDetail.PosterPath,
       procedure(Ref: TDetailRef)
       begin
         //Image Detail
+        var F:= TabController.CreateTab(TfrmContentBrowser);
+        var U:= TMDB.Client.GetImageURL(FDetail.PosterPath);
+        (F.Content as TfrmContentBrowser).Navigate(U);
       end);
     if FDetail.Video then
       A('Video', 'True')
@@ -586,9 +623,48 @@ begin
   FReviews.LoadReviewList(FDetail.AppendedReviews);
 end;
 
+procedure TfrmContentMovieDetail.LoadSimilar;
+var
+  ID: Integer;
+begin
+  if FSimilar.OnGetPage = nil then begin
+    ID:= FDetail.ID;
+    FSimilar.OnGetPage:=
+      procedure(Sender: TObject;
+        const Page: Integer; var Data: ITMDBMoviePage)
+      begin
+        Data:= TMDB.Movies.GetSimilar(ID, AppSetup.Language, Page);
+      end;
+  end;
+  FSimilar.RefreshData;
+end;
+
 procedure TfrmContentMovieDetail.LoadVideos;
 begin
   FVideos.LoadVideoList(FDetail.AppendedVideos);
+end;
+
+procedure TfrmContentMovieDetail.lstDetailCustomDraw(Sender: TCustomListView;
+  const ARect: TRect; var DefaultDraw: Boolean);
+begin
+  inherited;
+
+  Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetSystemColor(clWindow);
+  //Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scWindow); // clBlack;
+  Sender.Canvas.Font.Color:= clWhite;
+  Sender.Canvas.Font.Style:= [fsBold];
+end;
+
+procedure TfrmContentMovieDetail.lstDetailCustomDrawItem(
+  Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+begin
+  inherited;
+
+  Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetSystemColor(clWindow);
+  //Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scWindow); // clBlack;
+  Sender.Canvas.Font.Color:= clWhite;
+  Sender.Canvas.Font.Style:= [fsBold];
 end;
 
 procedure TfrmContentMovieDetail.lstDetailCustomDrawSubItem(
@@ -609,7 +685,8 @@ var
   end;
 begin
   inherited;
-  Sender.Canvas.Brush.Color:= clBlack;
+  Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetSystemColor(clWindow);
+  //Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scWindow); // clBlack;
   Sender.Canvas.Font.Color:= clWhite;
   Sender.Canvas.Font.Style:= [fsBold];
   if SubItem = 1 then begin

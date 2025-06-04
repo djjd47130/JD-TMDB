@@ -143,6 +143,8 @@ begin
   FChromeTab.Tag:= FID;
   FChromeTab.Caption:= Caption;
 
+  FOwner.ChromeTabs.Invalidate;
+
 end;
 
 destructor TJDTabRef.Destroy;

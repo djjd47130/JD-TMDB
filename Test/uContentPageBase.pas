@@ -36,7 +36,6 @@ type
   private
     FObj: ITMDBPage;
   protected
-    procedure RefreshData; override;
 
     function AddCol(const ACaption: String; const AWidth: Integer): TListColumn; virtual;
     procedure SetupCols; virtual;
@@ -56,6 +55,7 @@ type
     procedure ItemClick(const Index: Integer; Item: TListItem; Obj: ITMDBItem); virtual;
 
   public
+    procedure RefreshData; override;
     procedure PageNext; virtual;
     procedure PagePrev; virtual;
     function PageCount: Integer; virtual;

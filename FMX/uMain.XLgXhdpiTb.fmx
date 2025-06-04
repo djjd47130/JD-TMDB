@@ -1,0 +1,275 @@
+inherited frmMain_XLgXhdpiTb: TfrmMain_XLgXhdpiTb
+  ClientHeight = 1255
+  ClientWidth = 800
+  DesignerMasterStyle = 3
+  inherited TabControl1: TTabControl
+    Size.Width = 800.000000000000000000
+    Size.Height = 1255.000000000000000000
+    Sizes = (
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s
+      800s
+      1206s)
+    inherited TabItem1: TTabItem
+      Size.Width = 55.000000000000000000
+      ExplicitSize.cx = 101.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited TabControl2: TTabControl
+        Size.Width = 800.000000000000000000
+        Size.Height = 1206.000000000000000000
+        Sizes = (
+          800s
+          1206s
+          800s
+          1206s)
+        inherited TabItem5: TTabItem
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+          inherited ToolBar1: TToolBar
+            Size.Width = 800.000000000000000000
+            Size.Height = 48.000000000000000000
+            inherited lblTitle1: TLabel
+              Size.Width = 800.000000000000000000
+              Size.Height = 48.000000000000000000
+            end
+            inherited btnNext: TSpeedButton
+              Position.X = 735.000000000000000000
+              Size.Height = 48.000000000000000000
+            end
+          end
+        end
+        inherited TabItem6: TTabItem
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+          inherited ToolBar2: TToolBar
+            Size.Width = 800.000000000000000000
+            inherited lblTitle2: TLabel
+              Size.Width = 800.000000000000000000
+            end
+          end
+        end
+      end
+    end
+    inherited TabItem2: TTabItem
+      Size.Width = 63.000000000000000000
+      ExplicitSize.cx = 102.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar3: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited lblTitle3: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem3: TTabItem
+      Size.Width = 46.000000000000000000
+      ExplicitSize.cx = 101.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar4: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited lblTitle4: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem4: TTabItem
+      Size.Width = 63.000000000000000000
+      ExplicitSize.cx = 99.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar5: TToolBar
+        Size.Width = 800.000000000000000000
+        Size.Height = 48.000000000000000000
+        inherited lblTitle5: TLabel
+          Size.Width = 800.000000000000000000
+          Size.Height = 48.000000000000000000
+        end
+      end
+    end
+    inherited TabItem7: TTabItem
+      Size.Width = 56.000000000000000000
+      ExplicitSize.cx = 56.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar6: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label1: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem8: TTabItem
+      Size.Width = 89.000000000000000000
+      ExplicitSize.cx = 168.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar7: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label2: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem9: TTabItem
+      Size.Width = 52.000000000000000000
+      ExplicitSize.cx = 143.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar8: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label3: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem10: TTabItem
+      Size.Width = 72.000000000000000000
+      ExplicitSize.cx = 129.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar9: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label4: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem11: TTabItem
+      Size.Width = 40.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar10: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label5: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem12: TTabItem
+      Size.Width = 124.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar11: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label6: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem13: TTabItem
+      Size.Width = 97.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar12: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label7: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem14: TTabItem
+      Size.Width = 59.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar13: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label8: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem15: TTabItem
+      Size.Width = 55.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar14: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label9: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited TabItem16: TTabItem
+      Size.Width = 95.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar15: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label10: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+    inherited Videos: TTabItem
+      Size.Width = 50.000000000000000000
+      ExplicitSize.cx = 111.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar16: TToolBar
+        Size.Width = 800.000000000000000000
+        inherited Label11: TLabel
+          Size.Width = 800.000000000000000000
+        end
+      end
+    end
+  end
+  inherited AppStyle: TStyleBook [2]
+    Styles = <
+      item
+      end>
+  end
+  inherited Gestures: TGestureManager [3]
+    GestureData = <
+      item
+        Control = TabControl1
+        Collection = <
+          item
+            GestureID = sgiLeft
+          end
+          item
+            GestureID = sgiRight
+          end>
+      end
+      item
+        Control = TabControl2
+        Collection = <
+          item
+            GestureID = sgiLeft
+          end
+          item
+            GestureID = sgiRight
+          end>
+      end>
+  end
+  inherited Acts: TActionList [4]
+  end
+  inherited imgActs: TImageList [5]
+  end
+  inherited TMDB: TTMDB [6]
+    OnUserAuthRequest = nil
+  end
+end

@@ -52,8 +52,6 @@ inherited frmContentSearchMovies: TfrmContentSearchMovies
       inherited btnRefresh: TJDFontButton
         Left = 691
         ExplicitLeft = 691
-        ExplicitTop = 3
-        ExplicitHeight = 26
       end
     end
     inherited pDetail: TPanel

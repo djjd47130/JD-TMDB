@@ -3656,6 +3656,8 @@ type
     property AgreedToWatchProviderAttribution: Boolean
       read GetAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
 
+    function GetImageURL(const Path: WideString;
+      const Size: WideString = 'original'): WideString; stdcall;
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean; stdcall;
 

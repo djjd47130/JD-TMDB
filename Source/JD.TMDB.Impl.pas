@@ -3774,6 +3774,8 @@ type
     function TVEpisodeGroups: ITMDBNamespaceTVEpisodeGroups; stdcall;
     function WatchProviders: ITMDBNamespaceWatchProviders; stdcall;
 
+    function GetImageURL(const Path: WideString;
+      const Size: WideString = 'original'): WideString; stdcall;
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean; stdcall;
 
@@ -8048,7 +8050,7 @@ end;
 
 procedure TTMDBDiscoverMoviesParams.SetCertification(const AValue: WideString);
 begin
-  FObj.S['certifications']:= AValue;
+  FObj.S['certification']:= AValue;
 end;
 
 procedure TTMDBDiscoverMoviesParams.SetCertificationCountry(
@@ -11856,6 +11858,11 @@ function TTMDBClient.GetImage(var Base64: WideString; const Path,
   Size: WideString): Boolean;
 begin
   Result:= FAPI.GetImage(Base64, Path, Size);
+end;
+
+function TTMDBClient.GetImageURL(const Path, Size: WideString): WideString;
+begin
+  Result:= FAPI.GetImageURL(Path, Size);
 end;
 
 function TTMDBClient.GetLoginState: ITMDBLoginState;

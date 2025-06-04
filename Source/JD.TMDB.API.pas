@@ -700,7 +700,7 @@ type
     procedure SetAPIReadAccessToken(const Value: String);
     procedure SetAppUserAgent(const Value: String);
     procedure PrepareJSONRequest;
-    function GetURL(const Req, Params: String): String;
+    function GetURL(Req, Params: String): String;
     function GetJSON(const Req: String; const Params: String = ''): ISuperObject;
     function PostJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
@@ -720,6 +720,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    function GetImageURL(const Path: WideString; const Size: WideString = 'original'): WideString;
     function GetImage(var Base64: WideString; const Path: WideString;
       const Size: WideString = 'original'): Boolean;
   published
@@ -2643,13 +2644,16 @@ begin
     FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
 end;
 
-function TTMDBAPI.GetURL(const Req, Params: String): String;
+function TTMDBAPI.GetURL(Req, Params: String): String;
 var
   R: String;
 begin
   R:= Req;
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
+  if Params <> '' then
+    if Copy(Params, 1, 1) <> '&' then
+      Params:= '&' + Params;
   Result:= TMDB_API_ROOT + R;
   if FAPIAuth = amAPIKey then begin
     Result:= Result + '?api_key=' + FAPIKey + Params;
@@ -2658,6 +2662,14 @@ begin
       Result:= Result + '?' + Params;
   end;
   Result:= TIdURI.URLEncode(Result);
+end;
+
+function TTMDBAPI.GetImageURL(const Path, Size: WideString): WideString;
+begin
+  Result:= FImageBaseURL;
+  Result:= URLCombine(Result, Size);
+  Result:= URLCombine(Result, Path);
+
 end;
 
 function TTMDBAPI.GetImage(var Base64: WideString; const Path,
@@ -2671,9 +2683,7 @@ begin
   //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
   //Result:= False;
 
-  U:= FImageBaseURL;
-  U:= URLCombine(U, Size);
-  U:= URLCombine(U, Path);
+  U:= GetImageURL(Path, Size);
   S:= TStringStream.Create;
   try
     //TODO: Setup headers...
@@ -2849,9 +2859,10 @@ begin
       dtArray:    ;
       dtString:   A(M.AsString);
       dtInteger: begin
-        if IsField('include_adult') or IsField('include_vide') then
+        if IsField('include_adult') or IsField('include_video') then
         begin
           case M.AsInteger of
+            0: ; //Default
             1: A('true');
             2: A('false');
           end;
@@ -2866,6 +2877,7 @@ begin
       dtTime:     A(FormatDateTime('hh:nn:ss.zzz', M.AsTime));
     end;
   end;
+  //raise Exception.Create(Result);
 end;
 
 function TTMDBAPIDiscoverMovieReq.GetCertification: WideString;

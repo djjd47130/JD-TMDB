@@ -22,7 +22,7 @@ type
       const Shift: TShiftState; const X, Y: Integer);
     procedure DoMove(const Shift: TShiftState; const X, Y: Integer);
   public
-    constructor Create(AOwner: TComponent);
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
     property CursorPos: TPoint read GetCursorPos write SetCursorPos;

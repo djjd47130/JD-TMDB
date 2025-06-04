@@ -44,5 +44,6 @@ inherited frmCommonVideos: TfrmCommonVideos
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = lstVideosDblClick
+    ExplicitLeft = -2
   end
 end

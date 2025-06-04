@@ -6,8 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, JD.Common, JD.Ctrls,
   JD.Ctrls.FontButton, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  JD.TMDB.Intf, JD.TMDB.Common,
-  uContentMovieDetail;
+  JD.TMDB.Intf, JD.TMDB.Common;
 
 type
   TMoviePageProc = reference to procedure(Sender: TObject;
@@ -16,7 +15,7 @@ type
   TfrmContentMoviePage = class(TfrmContentPageBase)
     procedure btnRefreshClick(Sender: TObject);
   private
-    FDetail: ITMDBMovieDetail;
+    //FDetail: ITMDBMovieDetail;
     FBaseName: String;
     FOnGetPage: TMoviePageProc;
     procedure SetBaseName(const Value: String);
@@ -46,7 +45,8 @@ implementation
 {$R *.dfm}
 
 uses
-  JD.TabController;
+  JD.TabController,
+  uContentMovieDetail;
 
 function GetMovieGenres(O: ITMDBMovieDetail): String;
 var

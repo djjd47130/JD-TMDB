@@ -40,13 +40,12 @@ uses
   JD.TabController in 'JD.TabController.pas',
   uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome},
   uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup},
-  JD.TMDB.UI in 'JD.TMDB.UI.pas',
   JD.TMDB.LocalWebServer in '..\Source\JD.TMDB.LocalWebServer.pas',
   uContentConfigTimezones in 'Configuration\uContentConfigTimezones.pas' {frmContentConfigTimezones},
   uContentConfigJobs in 'Configuration\uContentConfigJobs.pas' {frmContentConfigJobs},
-  JD.Mouse in 'JD.Mouse.pas',
   uContentBrowser in 'uContentBrowser.pas' {frmContentBrowser},
-  uContentMoviePage in 'Movies\uContentMoviePage.pas' {frmContentMoviePage};
+  uContentMoviePage in 'Movies\uContentMoviePage.pas' {frmContentMoviePage},
+  uContentDiscoverMovies in 'Discover\uContentDiscoverMovies.pas' {frmContentDiscoverMovies};
 
 {$R *.res}
 
@@ -56,5 +55,6 @@ begin
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmContentBrowser, frmContentBrowser);
   Application.CreateForm(TfrmContentMoviePage, frmContentMoviePage);
+  Application.CreateForm(TfrmContentDiscoverMovies, frmContentDiscoverMovies);
   Application.Run;
 end.

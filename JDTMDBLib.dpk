@@ -33,12 +33,11 @@ requires
   dbrtl,
   IndySystem,
   IndyProtocols,
-  IndyCore;
+  IndyCore,
+  XSuperObjectLib;
 
 contains
   JD.TMDB.API in 'Source\JD.TMDB.API.pas',
-  XSuperJSON in '..\x-superobject\XSuperJSON.pas',
-  XSuperObject in '..\x-superobject\XSuperObject.pas',
   JD.TMDB.Intf in 'Source\JD.TMDB.Intf.pas',
   JD.TMDB.Impl in 'Source\JD.TMDB.Impl.pas',
   JD.TMDB.Common in 'Source\JD.TMDB.Common.pas',
@@ -46,3 +45,4 @@ contains
   JD.TMDB.LocalWebServer in 'Source\JD.TMDB.LocalWebServer.pas';
 
 end.
+

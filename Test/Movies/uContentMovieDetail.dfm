@@ -11,7 +11,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = tabReleaseDates
+    ActivePage = tabVideos
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -65,6 +65,8 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         RowSelect = True
         TabOrder = 1
         ViewStyle = vsReport
+        OnCustomDraw = lstDetailCustomDraw
+        OnCustomDrawItem = lstDetailCustomDrawItem
         OnCustomDrawSubItem = lstDetailCustomDrawSubItem
         OnDblClick = lstDetailDblClick
       end
@@ -311,7 +313,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
       Caption = 'Reviews'
       ImageIndex = 11
     end
-    object TabSheet13: TTabSheet
+    object tabSimilar: TTabSheet
       Caption = 'Similar'
       ImageIndex = 12
     end

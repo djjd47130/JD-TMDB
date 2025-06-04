@@ -28,6 +28,7 @@ uses
   uContentConfigJobs,
   uContentBrowser,
   uContentMoviePage,
+  uContentDiscoverMovies,
   Vcl.StdCtrls;
 
 type
@@ -115,12 +116,16 @@ type
     procedure btnPopularMoviesClick(Sender: TObject);
     procedure btnUpcomingMoviesClick(Sender: TObject);
     procedure btnTopRatedMoviesClick(Sender: TObject);
+    procedure btnMyFavoriteMoviesClick(Sender: TObject);
+    procedure btnMyMovieWatchlistClick(Sender: TObject);
+    procedure JDFontButton23Click(Sender: TObject);
+    procedure btnDiscoverMoviesClick(Sender: TObject);
   private
     procedure CalcScrollHeight;
     procedure SetNarrowMode(const Value: Boolean);
   protected
-    function CanClose: Boolean; override;
   public
+    function CanClose: Boolean; override;
     procedure HideMenu;
   end;
 
@@ -185,6 +190,7 @@ var
 begin
   for X := 0 to SB.ControlCount-1 do begin
     if SB.Controls[X] is TPanel then begin
+      L:= nil;
       P:= SB.Controls[X] as TPanel;
       for Y := 0 to P.ControlCount-1 do begin
         if P.Controls[Y] is TLabel then begin
@@ -266,6 +272,15 @@ begin
   SB.VertScrollBar.Position:= SB.VertScrollBar.Position - 20;
 end;
 
+procedure TfrmTMDBHome.btnDiscoverMoviesClick(Sender: TObject);
+begin
+  inherited;
+
+  TabController.CreateTab(TfrmContentDiscoverMovies);
+  HideMenu;
+
+end;
+
 procedure TfrmTMDBHome.btnMovieCertificationsClick(Sender: TObject);
 begin
   inherited;
@@ -315,10 +330,71 @@ begin
   HideMenu;
 end;
 
+procedure TfrmTMDBHome.JDFontButton23Click(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+  //W: TTMDBTimeWindow;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'Trending Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      //TODO: Handle time window option...
+      Data:= TMDB.Trending.GetMovies(twDay, AppSetup.Language, Page);
+    end;
+  F.RefreshData;
+  HideMenu;
+end;
+
 procedure TfrmTMDBHome.btnMovieGenresClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentGenresMovie);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnMyFavoriteMoviesClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'My Favorite Movies';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.Account.GetFavoriteMovies(TMDB.LoginState.AccountID, Page,
+        AppSetup.Language, TMDB.LoginState.SessionID);
+    end;
+  F.RefreshData;
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnMyMovieWatchlistClick(Sender: TObject);
+var
+  T: TJDTabRef;
+  F: TfrmContentMoviePage;
+begin
+  inherited;
+  T:= TabController.CreateTab(TfrmContentMoviePage);
+  F:= TfrmContentMoviePage(T.Content);
+  F.BaseName:= 'My Movie Watchlist';
+  F.OnGetPage:=
+    procedure(Sender: TObject;
+      const Page: Integer; var Data: ITMDBMoviePage)
+    begin
+      Data:= TMDB.Account.GetWatchlistMovies(TMDB.LoginState.AccountID, Page,
+        AppSetup.Language, TMDB.LoginState.SessionID);
+    end;
+  F.RefreshData;
   HideMenu;
 end;
 

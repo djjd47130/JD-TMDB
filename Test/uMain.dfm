@@ -80,7 +80,7 @@ object frmMain: TfrmMain
       OnButtonCloseTabClick = TabsButtonCloseTabClick
       ActiveTabIndex = -1
       Options.Display.CloseButton.Offsets.Vertical = 7
-      Options.Display.CloseButton.Offsets.Horizontal = 2
+      Options.Display.CloseButton.Offsets.Horizontal = 0
       Options.Display.CloseButton.Height = 14
       Options.Display.CloseButton.Width = 14
       Options.Display.CloseButton.AutoHide = True
@@ -111,15 +111,15 @@ object frmMain: TfrmMain
       Options.Display.TabModifiedGlow.AnimationUpdateMS = 50
       Options.Display.Tabs.SeeThroughTabs = False
       Options.Display.Tabs.TabOverlap = 15
-      Options.Display.Tabs.ContentOffsetLeft = 30
-      Options.Display.Tabs.ContentOffsetRight = 30
+      Options.Display.Tabs.ContentOffsetLeft = 25
+      Options.Display.Tabs.ContentOffsetRight = 25
       Options.Display.Tabs.OffsetLeft = 0
       Options.Display.Tabs.OffsetTop = 4
       Options.Display.Tabs.OffsetRight = 0
       Options.Display.Tabs.OffsetBottom = 0
       Options.Display.Tabs.MinWidth = 30
       Options.Display.Tabs.MaxWidth = 250
-      Options.Display.Tabs.TabWidthFromContent = False
+      Options.Display.Tabs.TabWidthFromContent = True
       Options.Display.Tabs.PinnedWidth = 42
       Options.Display.Tabs.ImageOffsetLeft = 13
       Options.Display.Tabs.TextTrimType = tttFade
@@ -236,8 +236,8 @@ object frmMain: TfrmMain
       LookAndFeel.Tabs.Active.Font.Alpha = 100
       LookAndFeel.Tabs.Active.Font.TextRenderingMode = TextRenderingHintClearTypeGridFit
       LookAndFeel.Tabs.Active.Font.UseDefaultFont = True
-      LookAndFeel.Tabs.Active.Style.StartColor = 3815994
-      LookAndFeel.Tabs.Active.Style.StopColor = clBlack
+      LookAndFeel.Tabs.Active.Style.StartColor = clBlack
+      LookAndFeel.Tabs.Active.Style.StopColor = 3815994
       LookAndFeel.Tabs.Active.Style.StartAlpha = 255
       LookAndFeel.Tabs.Active.Style.StopAlpha = 255
       LookAndFeel.Tabs.Active.Style.OutlineColor = 11110509
@@ -772,10 +772,10 @@ object frmMain: TfrmMain
       'TMDB)'
     RateLimiting = True
     RateLimitMsec = 100
-    AgreedToWatchProviderAttribution = False
+    AgreedToWatchProviderAttribution = True
     WebServerPort = 0
     OnUserAuthRequest = TMDBUserAuthRequest
-    Left = 44
-    Top = 239
+    Left = 420
+    Top = 55
   end
 end

@@ -13,6 +13,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     Top = 0
     Width = 364
     Height = 573
+    VertScrollBar.Position = 1458
     VertScrollBar.Range = 3000
     VertScrollBar.Tracking = True
     Align = alClient
@@ -27,7 +28,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     OnMouseWheelUp = CategoryPanelGroup1MouseWheelUp
     object pMovies: TPanel
       Left = 0
-      Top = 0
+      Top = -1458
       Width = 347
       Height = 636
       Align = alTop
@@ -55,7 +56,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       object btnMovieCertifications: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 479
+        Top = 523
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -104,7 +105,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       object btnMovieGenres: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 523
+        Top = 567
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -153,7 +154,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       object btnMyMovieWatchlist: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 391
+        Top = 435
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -196,11 +197,12 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 2
         Text = 'My Movie Watchlist'
+        OnClick = btnMyMovieWatchlistClick
       end
       object btnMyFavoriteMovies: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 347
+        Top = 391
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -243,11 +245,12 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 3
         Text = 'My Favorite Movies'
+        OnClick = btnMyFavoriteMoviesClick
       end
       object btnMyRatedMovies: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 435
+        Top = 479
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -529,6 +532,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 9
         Text = 'Discover Movies'
+        OnClick = btnDiscoverMoviesClick
       end
       object btnSearchCollections: TJDFontButton
         AlignWithMargins = True
@@ -631,7 +635,7 @@ inherited frmTMDBHome: TfrmTMDBHome
       object JDFontButton23: TJDFontButton
         AlignWithMargins = True
         Left = 20
-        Top = 567
+        Top = 347
         Width = 307
         Height = 42
         Cursor = crHandPoint
@@ -675,11 +679,12 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 12
         Text = 'Trending Movies'
+        OnClick = JDFontButton23Click
       end
     end
     object pTV: TPanel
       Left = 0
-      Top = 636
+      Top = -822
       Width = 347
       Height = 673
       Align = alTop
@@ -1176,7 +1181,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 9
         Text = 'TV Airing Today'
-        OnClick = JDFontButton28Click
       end
       object JDFontButton9: TJDFontButton
         AlignWithMargins = True
@@ -1224,7 +1228,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 10
         Text = 'TV On the Air'
-        OnClick = JDFontButton28Click
       end
       object JDFontButton12: TJDFontButton
         AlignWithMargins = True
@@ -1272,7 +1275,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 11
         Text = 'Popular TV'
-        OnClick = JDFontButton28Click
       end
       object JDFontButton14: TJDFontButton
         AlignWithMargins = True
@@ -1320,7 +1322,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         SubTextFont.Style = []
         TabOrder = 12
         Text = 'Top Rated TV'
-        OnClick = JDFontButton28Click
       end
       object JDFontButton15: TJDFontButton
         AlignWithMargins = True
@@ -1372,7 +1373,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pMisc: TPanel
       Left = 0
-      Top = 1547
+      Top = 89
       Width = 347
       Height = 344
       Align = alTop
@@ -1686,7 +1687,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pConfig: TPanel
       Left = 0
-      Top = 1891
+      Top = 433
       Width = 347
       Height = 393
       Align = alTop
@@ -2094,7 +2095,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pPeople: TPanel
       Left = 0
-      Top = 1309
+      Top = -149
       Width = 347
       Height = 238
       Align = alTop
