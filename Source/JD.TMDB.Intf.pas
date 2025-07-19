@@ -26,8 +26,8 @@ uses
   JD.TMDB.API;
 
 
-
 type
+
 
 {$REGION 'Forward Definitions'}
   ITMDBItem = interface;
@@ -150,8 +150,8 @@ type
   ITMDBTVSeasons = interface;
   ITMDBTVSeasonPage = interface;
   ITMDBTVSeasonDetail = interface;
-  //ITMDBTVSeasonEpisode = interface;
-  //ITMDBTVSeasonEpisodes = interface;
+  ITMDBTVSeasonEpisode = interface;
+  ITMDBTVSeasonEpisodes = interface;
   ITMDBTVEpisode = interface;
   ITMDBTVEpisodes = interface;
   ITMDBTVEpisodePage = interface;
@@ -210,6 +210,7 @@ type
     ['{9909E734-78DB-4CBB-B84D-A8E16315DA4E}']
     function GetOwner: ITMDBItems; stdcall;
     function GetIndex: Integer; stdcall;
+    function GetText: WideString; stdcall; //TODO
 
     property Owner: ITMDBItems read GetOwner;
     property Index: Integer read GetIndex;
@@ -237,12 +238,15 @@ type
     function GetPage: Integer; stdcall;
     function GetTotalPages: Integer; stdcall;
     function GetTotalResults: Integer; stdcall;
-    function GetItems: ITMDBItems;
+    function GetItems: ITMDBItems; stdcall;
+    function GetLazyLoading: Boolean; stdcall;
+    procedure SetLazyLoading(const Value: Boolean); stdcall;
 
     property Page: Integer read GetPage;
     property TotalPages: Integer read GetTotalPages;
     property TotalResults: Integer read GetTotalResults;
     property Items: ITMDBItems read GetItems;
+    property LazyLoading: Boolean read GetLazyLoading write SetLazyLoading;
   end;
 
   /// <summary>
@@ -555,12 +559,11 @@ type
 
 
 
-//TODO
+//TODO: This is quite a complex structure, because the data types dynamically differ
+//  depending on the type of change...
+//https://developer.themoviedb.org/docs/tracking-content-changes
 {$REGION 'Change Related'}
 
-  //TODO: This is quite a complex structure, because the data types dynamically differ
-  //  depending on the type of change...
-  //https://developer.themoviedb.org/docs/tracking-content-changes
 
   /// <summary>
   /// The actual value which has been changed in TMDB.
@@ -590,7 +593,7 @@ type
   ITMDBChangeRecord = interface
     ['{27B8CA5E-D72C-4298-92D9-012A58450CAA}']
     function GetID: WideString; stdcall;
-    function GetAction: WideString; stdcall; //TODO: Change to enum...
+    function GetAction: TTMDBChangeAction; stdcall;
     function GetTime: TDateTime; stdcall;
     function GetISO639_1: WideString; stdcall;
     function GetISO3166_1: WideString; stdcall;
@@ -598,7 +601,7 @@ type
     function GetOriginalValue: ITMDBChangeValue; stdcall;
 
     property ID: WideString read GetID;
-    property Action: WideString read GetAction; //TODO
+    property Action: TTMDBChangeAction read GetAction;
     property Time: TDateTime read GetTime;
     property ISO639_1: WideString read GetISO639_1;
     property ISO3166_1: WideString read GetISO3166_1;
@@ -719,6 +722,9 @@ type
     function GetName: WideString; stdcall;
     function GetOriginCountry: WideString; stdcall;
     function GetParentCompany: WideString; stdcall;
+
+    //TODO: ParentCompany is actually an object of type TMDBCompany!!!
+    //Null if non-existent, JSON object if populated, NOT string as docs say.
 
     property Description: WideString read GetDescription;
     property Headquarters: WideString read GetHeadquarters;

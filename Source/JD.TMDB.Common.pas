@@ -173,6 +173,8 @@ type
 
   TTMDBTimeWindow = (twDay, twWeek);
 
+  TTMDBChangeAction = (caCreated, caUpdated, caDeleted);
+
 
 
 

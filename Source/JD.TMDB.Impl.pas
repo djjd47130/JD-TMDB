@@ -219,6 +219,7 @@ type
     constructor Create(AOwner: ITMDBItems; AObj: ISuperObject;
       const AIndex: Integer; ATMDB: ITMDBClient); virtual;
     destructor Destroy; override;
+    function GetText: WideString; virtual; stdcall;
 
     property Owner: ITMDBItems read GetOwner;
     property Index: Integer read GetIndex;
@@ -252,7 +253,9 @@ type
     function GetPage: Integer; stdcall;
     function GetTotalPages: Integer; stdcall;
     function GetTotalResults: Integer; stdcall;
-    function GetItems: ITMDBItems;
+    function GetItems: ITMDBItems; stdcall;
+    function GetLazyLoading: Boolean; stdcall;
+    procedure SetLazyLoading(const Value: Boolean); stdcall;
   public
     constructor Create(AObj: ISuperObject; ATMDB: ITMDBClient;
       AItemClass: TTMDBItemClass; AItemsClass: TTMDBItemsClass); virtual;
@@ -262,6 +265,7 @@ type
     property TotalPages: Integer read GetTotalPages;
     property TotalResults: Integer read GetTotalResults;
     property Items: ITMDBItems read GetItems;
+    property LazyLoading: Boolean read GetLazyLoading write SetLazyLoading;
   end;
 
   TTMDBDetail = class(TInterfacedObject, ITMDBDetail)
@@ -293,6 +297,8 @@ type
     function GetTitle: WideString; stdcall;
     function GetPopularity: Single; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     function AsMovie: ITMDBMovie; stdcall;
     function AsPerson: ITMDBPerson; stdcall;
     function AsTVSeries: ITMDBTVSerie; stdcall;
@@ -514,6 +520,8 @@ type
     function GetTitle: WideString; stdcall;
     function GetType: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ISO3166_1: WideString read GetISO3166_1;
     property Title: WideString read GetTitle;
     property &Type: WideString read GetType;
@@ -699,7 +707,7 @@ type
     FOriginalValue: ITMDBChangeValue;
   protected
     function GetID: WideString; stdcall;
-    function GetAction: WideString; stdcall; //TODO: Change to enum...
+    function GetAction: TTMDBChangeAction; stdcall;
     function GetTime: TDateTime; stdcall;
     function GetISO639_1: WideString; stdcall;
     function GetISO3166_1: WideString; stdcall;
@@ -710,7 +718,7 @@ type
     destructor Destroy; override;
 
     property ID: WideString read GetID;
-    property Action: WideString read GetAction; //TODO
+    property Action: TTMDBChangeAction read GetAction;
     property Time: TDateTime read GetTime;
     property ISO639_1: WideString read GetISO639_1;
     property ISO3166_1: WideString read GetISO3166_1;
@@ -731,6 +739,8 @@ type
     constructor Create(AOwner: ITMDBItems; AObj: ISuperObject;
       const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
+
+    function GetText: WideString; override; stdcall;
 
     property Key: WideString read GetKey;
     property Count: Integer read GetCount;
@@ -753,6 +763,8 @@ type
     function GetID: Integer; stdcall;
     function GetAdult: Boolean; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ID: Integer read GetID;
     property Adult: Boolean read GetAdult;
   end;
@@ -784,6 +796,8 @@ type
     function GetName: WideString; stdcall;
     function GetOriginCountry: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ID: Integer read GetID;
     property LogoPath: WideString read GetLogoPath;
     property Name: WideString read GetName;
@@ -888,6 +902,8 @@ type
     function GetISO3166_1: WideString; stdcall;
     function GetRating: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property Descriptors: TTMDBStrArray read GetDescriptors;
     property ISO3166_1: WideString read GetISO3166_1;
     property Rating: WideString read GetRating;
@@ -914,6 +930,8 @@ type
     function GetEnglishName: WideString; stdcall;
     function GetNativeName: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ISO3166_1: WideString read GetISO3166_1;
     property EnglishName: WideString read GetEnglishName;
     property NativeName: WideString read GetNativeName;
@@ -969,6 +987,8 @@ type
     function GetID: Integer; stdcall;
     function GetName: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ID: Integer read GetID;
     property Name: WideString read GetName;
   end;
@@ -1005,6 +1025,8 @@ type
   public
     function GetImage(var Base64: WideString;
       const Size: WideString = 'original'): Boolean; stdcall;
+
+    function GetText: WideString; override; stdcall;
 
     property AspectRatio: Single read GetAspectRatio;
     property Height: Integer read GetHeight;
@@ -1063,6 +1085,8 @@ type
     function GetDepartment: WideString; stdcall;
     function GetJobs: TTMDBStrArray; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property Department: WideString read GetDepartment;
     property Jobs: TTMDBStrArray read GetJobs;
   end;
@@ -1087,6 +1111,8 @@ type
     function GetID: Integer; stdcall;
     function GetName: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ID: Integer read GetID;
     property Name: WideString read GetName;
   end;
@@ -1133,6 +1159,8 @@ type
     function GetEnglishName: WideString; stdcall;
     function GetName: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ISO639_1: WideString read GetISO639_1;
     property EnglishName: WideString read GetEnglishName;
     property Name: WideString read GetName;
@@ -1160,6 +1188,8 @@ type
     function GetISO3166_1: WideString; stdcall;
     function GetZones: TTMDBStrArray; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ISO3166_1: WideString read GetISO3166_1;
     property Zones: TTMDBStrArray read GetZones;
   end;
@@ -1320,6 +1350,8 @@ type
     function GetPublishedAt: TDateTime; stdcall;
     function GetID: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ISO639_1: WideString read GetISO639_1;
     property ISO3166_1: WideString read GetISO3166_1;
     property Name: WideString read GetName;
@@ -1816,6 +1848,8 @@ type
     function GetCharacter: WideString; stdcall;
     function GetEpisodeCount: Integer; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     function GetDetail: ITMDBCreditDetail; stdcall;
 
     property CreditID: WideString read GetCreditID;
@@ -1836,6 +1870,8 @@ type
     function GetJob: WideString; stdcall;
     function GetEpisodeCount: Integer; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     function GetDetail: ITMDBCreditDetail; stdcall;
 
     property CreditID: WideString read GetCreditID;
@@ -1973,6 +2009,8 @@ type
     function GetName: WideString; stdcall;
     function GetOriginCountry: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property ID: Integer read GetID;
     property LogoPath: WideString read GetLogoPath;
     property Name: WideString read GetName;
@@ -2051,6 +2089,8 @@ type
       const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
 
+    function GetText: WideString; override; stdcall;
+
     property Author: WideString read GetAuthor;
     property AuthorDetail: ITMDBReviewAuthor read GetAuthorDetail;
     property Content: WideString read GetContent;
@@ -2126,6 +2166,8 @@ type
     function GetOverview: WideString; stdcall;
     function GetPosterPath: WideString; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property Adult: Boolean read GetAdult;
     property BackdropPath: WideString read GetBackdropPath;
     property ID: Integer read GetID;
@@ -2472,6 +2514,8 @@ type
     function GetSeasonNumber: Integer; stdcall;
   public
     function GetDetail: ITMDBTVEpisodeDetail; stdcall;
+
+    function GetText: WideString; override; stdcall;
 
     property ID: Integer read GetID;
     property EpisodeNumber: Integer read GetEpisodeNumber;
@@ -2999,6 +3043,8 @@ type
     function GetName: WideString;
     function GetPosterPath: WideString;
   public
+    function GetText: WideString; override; stdcall;
+
     property Description: WideString read GetDescription;
     property FavoriteCount: Integer read GetFavoriteCount;
     property ID: Integer read GetID;
@@ -3100,6 +3146,8 @@ type
       const AIndex: Integer; ATMDB: ITMDBClient); override;
     destructor Destroy; override;
 
+    function GetText: WideString; override; stdcall;
+
     property DisplayPriorities: ITMDBWatchProviderPriorities read GetDisplayPriorities;
     property DisplayPriority: Integer read GetDisplayPriority;
     property LogoPath: WideString read GetLogoPath;
@@ -3123,6 +3171,8 @@ type
     function GetProviderName: WideString; stdcall;
     function GetDisplayPriority: Integer; stdcall;
   public
+    function GetText: WideString; override; stdcall;
+
     property LogoPath: WideString read GetLogoPath;
     property ProviderID: Integer read GetProviderID;
     property ProviderName: WideString read GetProviderName;
@@ -3817,6 +3867,11 @@ begin
   Result:= FOwner;
 end;
 
+function TTMDBItem.GetText: WideString;
+begin
+  Result:= 'Item ' + IntToStr(Index);
+end;
+
 
 
 { TTMDBItems }
@@ -3901,6 +3956,11 @@ begin
   Result:= FItems;
 end;
 
+function TTMDBPage.GetLazyLoading: Boolean;
+begin
+  Result:= FObj.B['lazy_loading'];
+end;
+
 function TTMDBPage.GetPage: Integer;
 begin
   Result:= FObj.I['page'];
@@ -3914,6 +3974,11 @@ end;
 function TTMDBPage.GetTotalResults: Integer;
 begin
   Result:= FObj.I['total_results'];
+end;
+
+procedure TTMDBPage.SetLazyLoading(const Value: Boolean);
+begin
+  FObj.B['lazy_loading']:= Value;
 end;
 
 
@@ -4220,6 +4285,11 @@ begin
   Result:= FObj.S['iso_3166_1'];
 end;
 
+function TTMDBAlternativeTitle.GetText: WideString;
+begin
+  Result:= GetTitle;
+end;
+
 function TTMDBAlternativeTitle.GetTitle: WideString;
 begin
   Result:= FObj.S['title'];
@@ -4428,6 +4498,11 @@ begin
   Result:= FObj.S['key'];
 end;
 
+function TTMDBChange.GetText: WideString;
+begin
+  Result:= GetKey; //TODO???
+end;
+
 procedure TTMDBChange.ClearItems;
 begin
   FItems.Clear;
@@ -4571,6 +4646,11 @@ begin
   Result:= FObj.S['native_name'];
 end;
 
+function TTMDBCountry.GetText: WideString;
+begin
+  Result:= GetEnglishName;
+end;
+
 { TTMDBJobDepartments }
 
 constructor TTMDBJobDepartments.Create(AObj: ISuperArray; ATMDB: ITMDBClient);
@@ -4601,6 +4681,11 @@ begin
   for X := 0 to A.Length-1 do begin
     Result[X]:= A.S[X];
   end;
+end;
+
+function TTMDBJobDepartment.GetText: WideString;
+begin
+  Result:= GetDepartment;
 end;
 
 { TTMDBGenres }
@@ -4649,6 +4734,11 @@ begin
   end;
 end;
 
+function TTMDBGenre.GetText: WideString;
+begin
+  Result:= GetName;
+end;
+
 { TTMDBLanguages }
 
 constructor TTMDBLanguages.Create(AObj: ISuperArray; ATMDB: ITMDBClient);
@@ -4691,6 +4781,11 @@ begin
   Result:= FObj.S['name'];
 end;
 
+function TTMDBLanguage.GetText: WideString;
+begin
+  Result:= GetEnglishName;
+end;
+
 { TTMDBTimezones }
 
 constructor TTMDBTimezones.Create(AObj: ISuperArray; ATMDB: ITMDBClient);
@@ -4708,6 +4803,11 @@ end;
 function TTMDBTimezone.GetISO3166_1: WideString;
 begin
   Result:= FObj.S['iso_3166_1'];
+end;
+
+function TTMDBTimezone.GetText: WideString;
+begin
+  Result:= GetISO3166_1;
 end;
 
 function TTMDBTimezone.GetZones: TTMDBStrArray;
@@ -5517,6 +5617,11 @@ end;
 
 
 
+function TTMDBList.GetText: WideString;
+begin
+  Result:= GetName;
+end;
+
 { TTMDBAccountStates }
 
 constructor TTMDBAccountStates.Create(AObj: ISuperObject);
@@ -5754,6 +5859,11 @@ begin
   Result:= FObj.S['iso_639_1'];
 end;
 
+function TTMDBMediaImage.GetText: WideString;
+begin
+  Result:= GetFilePath; //TODO???
+end;
+
 function TTMDBMediaImage.GetVoteAverage: Single;
 begin
   Result:= FObj.F['vote_average'];
@@ -5903,6 +6013,11 @@ end;
 function TTMDBKeyword.GetName: WideString;
 begin
   Result:= FObj.S['name'];
+end;
+
+function TTMDBKeyword.GetText: WideString;
+begin
+  Result:= GetName;
 end;
 
 { TTMDBKeywordList }
@@ -6133,6 +6248,11 @@ begin
   Result:= FObj.S['poster_path'];
 end;
 
+function TTMDBCollection.GetText: WideString;
+begin
+  Result:= GetName;
+end;
+
 { TTMDBCompany }
 
 function TTMDBCompany.GetID: Integer;
@@ -6153,6 +6273,11 @@ end;
 function TTMDBCompany.GetOriginCountry: WideString;
 begin
   Result:= FObj.S['origin_country'];
+end;
+
+function TTMDBCompany.GetText: WideString;
+begin
+  Result:= GetName;
 end;
 
 { TTMDBCompanies }
@@ -6612,6 +6737,11 @@ end;
 function TTMDBVideo.GetSize: Integer;
 begin
   Result:= FObj.I['size'];
+end;
+
+function TTMDBVideo.GetText: WideString;
+begin
+  Result:= GetName;
 end;
 
 function TTMDBVideo.GetType: WideString;
@@ -7193,6 +7323,11 @@ begin
   Result:= FObj.S['origin_country'];
 end;
 
+function TTMDBTVNetwork.GetText: WideString;
+begin
+  Result:= GetName;
+end;
+
 { TTMDBTVNetworkDetail }
 
 constructor TTMDBTVNetworkDetail.Create(AObj: ISuperObject);
@@ -7278,6 +7413,11 @@ end;
 function TTMDBMedium.GetPopularity: Single;
 begin
   Result:= FObj.F['popularity'];
+end;
+
+function TTMDBMedium.GetText: WideString;
+begin
+  Result:= GetTitle;
 end;
 
 function TTMDBMedium.GetTitle: WideString;
@@ -7379,6 +7519,11 @@ end;
 function TTMDBContentRating.GetRating: WideString;
 begin
   Result:= FObj.S['rating'];
+end;
+
+function TTMDBContentRating.GetText: WideString;
+begin
+  Result:= GetRating;
 end;
 
 { TTMDBContentRatings }
@@ -7808,6 +7953,11 @@ end;
 function TTMDBWatchProvider.GetProviderName: WideString;
 begin
   Result:= FObj.S['provider_name'];
+end;
+
+function TTMDBWatchProvider.GetText: WideString;
+begin
+  Result:= GetProviderName;
 end;
 
 { TTMDBWatchProviders }
@@ -8676,6 +8826,11 @@ begin
   Result:= FObj.S['id'];
 end;
 
+function TTMDBReview.GetText: WideString;
+begin
+  Result:= GetAuthor; //TODO
+end;
+
 function TTMDBReview.GetUpdatedAt: TDateTime;
 begin
   Result:= FObj.D['updated_at'];
@@ -8796,6 +8951,11 @@ begin
   Result:= FObj.I['id'];
 end;
 
+function TTMDBChangeRef.GetText: WideString;
+begin
+  inherited; //TODO???
+end;
+
 { TTMDBChangeRefs }
 
 function TTMDBChangeRefs.GetItem(const Index: Integer): ITMDBChangeRef;
@@ -8875,9 +9035,17 @@ begin
   inherited;
 end;
 
-function TTMDBChangeRecord.GetAction: WideString;
+function TTMDBChangeRecord.GetAction: TTMDBChangeAction;
 begin
-  Result:= FObj.S['action'];
+  var T:= FObj.S['action'];
+  if SameText(T, 'created') then
+    Result:= TTMDBChangeAction.caCreated
+  else if SameText(T, 'updated') then
+    Result:= TTMDBChangeAction.caUpdated
+  else if SameText(T, 'deleted') then
+    Result:= TTMDBChangeAction.caCreated
+  else
+    Result:= TTMDBChangeAction.caUpdated;
 end;
 
 function TTMDBChangeRecord.GetID: WideString;
@@ -9089,12 +9257,14 @@ end;
 
 function TTMDBPersonDetail.GetBirthday: TDateTime;
 begin
-  Result:= FObj.D['birthday'];
+  Result:= ConvertDate(FObj.S['birthday']);
+  //Result:= FObj.D['birthday'];
 end;
 
 function TTMDBPersonDetail.GetDeathday: TDateTime;
 begin
-  Result:= FObj.D['deathday'];
+  Result:= ConvertDate(FObj.S['deathday']);
+  //Result:= FObj.D['deathday'];
 end;
 
 function TTMDBPersonDetail.GetGender: TTMDBGender;
@@ -9109,7 +9279,7 @@ end;
 
 function TTMDBPersonDetail.GetIMDBID: WideString;
 begin
-  Result:= FObj.S['imdg_id'];
+  Result:= FObj.S['imdb_id'];
 end;
 
 function TTMDBPersonDetail.GetKnownForDepartment: WideString;
@@ -9619,6 +9789,11 @@ begin
   Result:= FObj.I['episode_count'];
 end;
 
+function TTMDBCreditRole.GetText: WideString;
+begin
+  Result:= GetCharacter;
+end;
+
 { TTMDBCreditRoles }
 
 function TTMDBCreditRoles.GetItem(const Index: Integer): ITMDBCreditRole;
@@ -9646,6 +9821,11 @@ end;
 function TTMDBCreditJob.GetJob: WideString;
 begin
   Result:= FObj.S['job'];
+end;
+
+function TTMDBCreditJob.GetText: WideString;
+begin
+  Result:= GetJob;
 end;
 
 { TTMDBCreditJobs }
@@ -9749,6 +9929,11 @@ begin
   Result:= FObj.I['season_number'];
 end;
 
+function TTMDBScreenedTheatricallyRef.GetText: WideString;
+begin
+  inherited; //TODO???
+end;
+
 { TTMDBScreenedTheatrically }
 
 function TTMDBScreenedTheatrically.GetItem(
@@ -9849,6 +10034,11 @@ end;
 function TTMDBMediaWatchProvider.GetProviderName: WideString;
 begin
   Result:= FObj.S['provider_name'];
+end;
+
+function TTMDBMediaWatchProvider.GetText: WideString;
+begin
+  Result:= GetProviderName;
 end;
 
 { TTMDBMediaWatchProviders }
