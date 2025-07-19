@@ -4131,7 +4131,7 @@ var
   S: String;
 begin
   S:= FObj.S['expires_at'];
-  Result:= ConvertDate(S); //TODO: Ensure this accounts for time...
+  Result:= TMDBConvertDate(S); //TODO: Ensure this accounts for time...
 end;
 
 function TTMDBAuthGuestSessionResult.GetGuestSessionID: WideString;
@@ -4156,7 +4156,7 @@ var
   S: String;
 begin
   S:= FObj.S['expires_at'];
-  Result:= ConvertDate(S); //TODO: Ensure this accounts for time...
+  Result:= TMDBConvertDate(S); //TODO: Ensure this accounts for time...
 
 end;
 
@@ -4209,7 +4209,7 @@ var
   S: String;
 begin
   S:= FObj.S['expires_at'];
-  Result:= StrToDateTimeDef(S, 0);
+  Result:= TMDBConvertDate(S);
   //TODO: This will probably fail and return 0 due to extra text in string...
 
 end;
@@ -4900,7 +4900,7 @@ end;
 
 function TTMDBMovie.GetReleaseDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['release_date']);
+  Result:= TMDBConvertDate(FObj.S['release_date']);
 end;
 
 function TTMDBMovie.GetVideo: Boolean;
@@ -5345,7 +5345,7 @@ end;
 
 function TTMDBMovieDetail.GetReleaseDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['release_date']);
+  Result:= TMDBConvertDate(FObj.S['release_date']);
 end;
 
 function TTMDBMovieDetail.GetReleaseDates: ITMDBReleaseDateCountries;
@@ -5457,7 +5457,7 @@ end;
 
 function TTMDBTVSerie.GetFirstAirDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['first_air_date']);
+  Result:= TMDBConvertDate(FObj.S['first_air_date']);
 end;
 
 function TTMDBTVSerie.GetGenres: ITMDBGenres;
@@ -5960,12 +5960,12 @@ end;
 
 function TTMDBDateRange.GetMaximum: TDateTime;
 begin
-  Result:= StrToDateTimeDef(FObj.S['maximum'], 0);
+  Result:= TMDBConvertDate(FObj.S['maximum']);
 end;
 
 function TTMDBDateRange.GetMinimum: TDateTime;
 begin
-  Result:= StrToDateTimeDef(FObj.S['minimum'], 0);
+  Result:= TMDBConvertDate(FObj.S['minimum']);
 end;
 
 { TTMDBDatedMoviePage }
@@ -6077,7 +6077,7 @@ end;
 
 function TTMDBReleaseDate.GetReleaseDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['release_date']);
+  Result:= TMDBConvertDate(FObj.S['release_date']);
 end;
 
 function TTMDBReleaseDate.GetType: TTMDBReleaseType;
@@ -6726,7 +6726,7 @@ end;
 
 function TTMDBVideo.GetPublishedAt: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['published_at']);
+  Result:= TMDBConvertDate(FObj.S['published_at']);
 end;
 
 function TTMDBVideo.GetSite: WideString;
@@ -7037,7 +7037,7 @@ end;
 
 function TTMDBTVSerieDetail.GetFirstAirDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['first_air_date']);
+  Result:= TMDBConvertDate(FObj.S['first_air_date']);
 end;
 
 function TTMDBTVSerieDetail.GetGenres: ITMDBGenres;
@@ -7062,7 +7062,7 @@ end;
 
 function TTMDBTVSerieDetail.GetLastAirDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['last_air_date']);
+  Result:= TMDBConvertDate(FObj.S['last_air_date']);
 end;
 
 function TTMDBTVSerieDetail.GetLastEpisodeToAir: ITMDBTVEpisode;
@@ -7190,7 +7190,7 @@ end;
 
 function TTMDBTVEpisode.GetAirDate: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['air_date']);
+  Result:= TMDBConvertDate(FObj.S['air_date']);
 end;
 
 function TTMDBTVEpisode.GetEpisodeNumber: Integer;
@@ -8050,7 +8050,7 @@ end;
 
 function TTMDBDiscoverMoviesParams.GetPrimaryReleaseDateGTE: TDateTime;
 begin
-  Result:= FObj.D['primary_release_date.gte'];
+  Result:= TMDBConvertDate(FObj.S['primary_release_date.gte']);
 end;
 
 function TTMDBDiscoverMoviesParams.GetPrimaryReleaseYear: Integer;
@@ -8060,7 +8060,7 @@ end;
 
 function TTMDBDiscoverMoviesParams.GetPrimaryReleaseDateLTE: TDateTime;
 begin
-  Result:= FObj.D['primary_release_date.lte'];
+  Result:= TMDBConvertDate(FObj.S['primary_release_date.lte']);
 end;
 
 function TTMDBDiscoverMoviesParams.GetRegion: WideString;
@@ -8070,12 +8070,12 @@ end;
 
 function TTMDBDiscoverMoviesParams.GetReleaseDateGTE: TDateTime;
 begin
-  Result:= FObj.D['release_date.gte'];
+  Result:= TMDBConvertDate(FObj.S['release_date.gte']);
 end;
 
 function TTMDBDiscoverMoviesParams.GetReleaseDateLTE: TDateTime;
 begin
-  Result:= FObj.D['release_date.lte'];
+  Result:= TMDBConvertDate(FObj.S['release_date.lte']);
 end;
 
 function TTMDBDiscoverMoviesParams.GetSortBy: WideString;
@@ -8417,22 +8417,22 @@ end;
 
 function TTMDBDiscoverTVParams.GetAirDateGTE: TDateTime;
 begin
-  Result:= FObj.D['air_date.gte'];
+  Result:= TMDBConvertDate(FObj.S['air_date.gte']);
 end;
 
 function TTMDBDiscoverTVParams.GetAirDateLTE: TDateTime;
 begin
-  Result:= FObj.D['air_date.lte'];
+  Result:= TMDBConvertDate(FObj.S['air_date.lte']);
 end;
 
 function TTMDBDiscoverTVParams.GetFirstAirDateGTE: TDateTime;
 begin
-  Result:= FObj.D['first_air_date.gte'];
+  Result:= TMDBConvertDate(FObj.S['first_air_date.gte']);
 end;
 
 function TTMDBDiscoverTVParams.GetFirstAirDateLTE: TDateTime;
 begin
-  Result:= FObj.D['first_air_date.lte'];
+  Result:= TMDBConvertDate(FObj.S['first_air_date.lte']);
 end;
 
 function TTMDBDiscoverTVParams.GetFirstAirDateYear: Integer;
@@ -8818,7 +8818,7 @@ end;
 
 function TTMDBReview.GetCreatedAt: TDateTime;
 begin
-  Result:= FObj.D['created_at'];
+  Result:= TMDBConvertDate(FObj.S['created_at']);
 end;
 
 function TTMDBReview.GetID: WideString;
@@ -8833,7 +8833,7 @@ end;
 
 function TTMDBReview.GetUpdatedAt: TDateTime;
 begin
-  Result:= FObj.D['updated_at'];
+  Result:= TMDBConvertDate(FObj.S['updated_at']);
 end;
 
 function TTMDBReview.GetURL: WideString;
@@ -8901,7 +8901,7 @@ end;
 
 function TTMDBReviewDetail.GetCreatedAt: TDateTime;
 begin
-  Result:= FObj.D['created_at'];
+  Result:= TMDBConvertDate(FObj.S['created_at']);
 end;
 
 function TTMDBReviewDetail.GetID: WideString;
@@ -8931,7 +8931,7 @@ end;
 
 function TTMDBReviewDetail.GetUpdatedAt: TDateTime;
 begin
-  Result:= FObj.D['updated_at'];
+  Result:= TMDBConvertDate(FObj.S['updated_at']);
 end;
 
 function TTMDBReviewDetail.GetURL: WideString;
@@ -8997,7 +8997,7 @@ end;
 
 function TTMDBChangeValue.GetD: TDateTime;
 begin
-  Result:= FObj.Cast.AsDateTime;
+  Result:= TMDBConvertDate(FObj.Cast.AsString);
 end;
 
 function TTMDBChangeValue.GetF: Double;
@@ -9072,7 +9072,7 @@ end;
 
 function TTMDBChangeRecord.GetTime: TDateTime;
 begin
-  Result:= Fobj.D['time'];
+  Result:= TMDBConvertDate(FObj.S['time']);
 end;
 
 function TTMDBChangeRecord.GetValue: ITMDBChangeValue;
@@ -9257,13 +9257,13 @@ end;
 
 function TTMDBPersonDetail.GetBirthday: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['birthday']);
+  Result:= TMDBConvertDate(FObj.S['birthday']);
   //Result:= FObj.D['birthday'];
 end;
 
 function TTMDBPersonDetail.GetDeathday: TDateTime;
 begin
-  Result:= ConvertDate(FObj.S['deathday']);
+  Result:= TMDBConvertDate(FObj.S['deathday']);
   //Result:= FObj.D['deathday'];
 end;
 
@@ -9366,7 +9366,7 @@ end;
 
 function TTMDBTVSeason.GetAirDate: TDateTime;
 begin
-  Result:= FObj.D['air_date'];
+  Result:= TMDBConvertDate(FObj.S['air_date']);
 end;
 
 function TTMDBTVSeason.GetEpisodeCount: Integer;
@@ -9563,7 +9563,7 @@ end;
 
 function TTMDBTVSeasonDetail.GetAirDate: TDateTime;
 begin
-  Result:= FObj.D['air_date'];
+  Result:= TMDBConvertDate(FObj.S['air_date']);
 end;
 
 function TTMDBTVSeasonDetail.GetEpisodes: ITMDBTVSeasonEpisodes;
@@ -9710,7 +9710,7 @@ end;
 
 function TTMDBTVEpisodeDetail.GetAirDate: TDateTime;
 begin
-  Result:= FObj.D['air_date'];
+  Result:= TMDBConvertDate(FObj.S['air_date']);
 end;
 
 function TTMDBTVEpisodeDetail.GetCrew: ITMDBCrewPeople;

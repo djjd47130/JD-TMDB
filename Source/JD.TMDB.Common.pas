@@ -249,7 +249,7 @@ function JSONToStrArray(Arr: ISuperArray): TTMDBStrArray;
 function JSONToIntArray(Arr: ISuperArray): TTMDBIntArray;
 
 //Convert a date from string to TDateTime
-function ConvertDate(const S: String): TDateTime;
+function TMDBConvertDate(const S: String): TDateTime;
 
 function TMDBStrArrayToStr(const AValue: TTMDBStrArray): String;
 
@@ -366,7 +366,7 @@ begin
   end;
 end;
 
-function ConvertDate(const S: String): TDateTime;
+function TMDBConvertDate(const S: String): TDateTime;
 var
   F: TFormatSettings;
 begin
