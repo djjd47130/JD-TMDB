@@ -8,7 +8,20 @@ uses
   JD.Ctrls.FontButton, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
 
   JD.TMDB.Intf,
-  JD.TMDB.Common, Vcl.CheckLst, JD.FontGlyphs, System.ImageList, Vcl.ImgList;
+  JD.TMDB.Common, Vcl.CheckLst, JD.FontGlyphs, System.ImageList, Vcl.ImgList,
+  VirtualTrees.BaseAncestorVCL, VirtualTrees.BaseTree, VirtualTrees.AncestorVCL,
+  VirtualTrees,
+  uContentPageBase, uCommonDblCheckList, JD.Ctrls.ChipList,
+  JD.Ctrls.ListBox, Vcl.WinXCtrls, Vcl.WinXPanels;
+
+
+type
+  PTMDBDualCheckNode = ^TTMDBDualCheckNode;
+  TTMDBDualCheckNode = record
+    Intf: IInterface;
+    WithChecked: Boolean;
+    WithoutChecked: Boolean;
+  end;
 
 
 type
@@ -44,6 +57,47 @@ type
     Panel8: TPanel;
     Label9: TLabel;
     cboSearchMoviesAdult: TComboBox;
+    CategoryPanel1: TCategoryPanel;
+    CategoryPanel2: TCategoryPanel;
+    Panel1: TPanel;
+    Label2: TLabel;
+    Edit1: TEdit;
+    Panel2: TPanel;
+    Label3: TLabel;
+    Edit2: TEdit;
+    CategoryPanel3: TCategoryPanel;
+    Panel3: TPanel;
+    Label4: TLabel;
+    Edit3: TEdit;
+    Panel4: TPanel;
+    Label5: TLabel;
+    Edit4: TEdit;
+    CategoryPanel4: TCategoryPanel;
+    CategoryPanel6: TCategoryPanel;
+    Panel11: TPanel;
+    Label12: TLabel;
+    CategoryPanel5: TCategoryPanel;
+    Panel7: TPanel;
+    Label8: TLabel;
+    Edit7: TEdit;
+    Panel9: TPanel;
+    Label10: TLabel;
+    Edit8: TEdit;
+    CategoryPanel7: TCategoryPanel;
+    Panel15: TPanel;
+    Label16: TLabel;
+    Edit11: TEdit;
+    Panel16: TPanel;
+    Label17: TLabel;
+    Edit12: TEdit;
+    frmGenres: TfrmCommonDblCheckList;
+    JDChipList1: TJDChipList;
+    Splitter2: TSplitter;
+    clCompanies: TJDChipList;
+    Panel5: TPanel;
+    Label6: TLabel;
+    txtSearchCompanies: TButtonedEdit;
+    txtSearchKeyword: TSearchBox;
     procedure cboCertCountryClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -52,6 +106,10 @@ type
     procedure cboSearchMoviesRegionClick(Sender: TObject);
     procedure cboSearchMoviesRegionChange(Sender: TObject);
     procedure cboSearchMoviesRegionCloseUp(Sender: TObject);
+    procedure JDChipList1Resize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure txtSearchCompaniesRightButtonClick(Sender: TObject);
+    procedure txtSearchKeywordInvokeSearch(Sender: TObject);
   private
     FPrepped: Boolean;
     function GetCertString: String;
@@ -89,6 +147,30 @@ end;
 
 { TfrmContentDiscoverMovies }
 
+procedure TfrmContentDiscoverMovies.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FPrepped:= False;
+  CategoryPanelGroup1.CollapseAll;
+  frmGenres.Align:= alClient;
+
+  frmGenres.LoadList(TMDB.Cache.TVGenres);
+
+end;
+
+procedure TfrmContentDiscoverMovies.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  ClearCertCountries;
+end;
+
+procedure TfrmContentDiscoverMovies.FormShow(Sender: TObject);
+begin
+  inherited;
+  if Self.lstResults.Items.Count = 0 then
+    Self.btnApply.Click;
+end;
+
 function TfrmContentDiscoverMovies.GetData(const APageNum: Integer): ITMDBPage;
 begin
   inherited;
@@ -118,6 +200,17 @@ var
 begin
   P:= ITMDBMoviePage(Page);
   Result:= P.Items.GetItem(Index);
+end;
+
+procedure TfrmContentDiscoverMovies.JDChipList1Resize(Sender: TObject);
+begin
+  inherited;
+  //TODO: Resize parent accordingly...
+  var P:= JDChipList1.Parent as TCustomControl;
+  if P is TCategoryPanel then begin
+    TCategoryPanel(P).Height:= JDChipList1.Top + JDChipList1.Height + 2;
+  end else
+    P.Height:= JDChipList1.Top + JDChipList1.Height + 2;
 end;
 
 procedure TfrmContentDiscoverMovies.lstCertsClickCheck(Sender: TObject);
@@ -189,19 +282,6 @@ begin
   end;
 end;
 
-procedure TfrmContentDiscoverMovies.FormCreate(Sender: TObject);
-begin
-  inherited;
-  FPrepped:= False;
-  Self.CategoryPanelGroup1.CollapseAll;
-end;
-
-procedure TfrmContentDiscoverMovies.FormDestroy(Sender: TObject);
-begin
-  inherited;
-  ClearCertCountries;
-end;
-
 procedure TfrmContentDiscoverMovies.PrepSearch;
 begin
   inherited;
@@ -257,8 +337,11 @@ begin
     APanel.CollapsedImageIndex:= 0;
     APanel.ExpandedImageIndex:= 1;
   end;
-  APanel.Visible:= False;
-  APanel.Visible:= True;
+
+  //TODO: This is a very sloppy solution to images not refreshing when changed.
+  //  The REAL solution is to replace it with something custom and robust...
+  //APanel.Visible:= False;
+  //APanel.Visible:= True;
 end;
 
 procedure TfrmContentDiscoverMovies.UpdateImageIndices;
@@ -267,6 +350,17 @@ begin
   SetCategoryPanelImageIndices(cpCerts, CheckListBoxHasChecks(lstCerts) or (cboSearchMoviesAdult.ItemIndex > 0));
   SetCategoryPanelImageIndices(cpRegion, (cboSearchMoviesRegion.ItemIndex >= 0));
 
+end;
+
+procedure TfrmContentDiscoverMovies.txtSearchCompaniesRightButtonClick(
+  Sender: TObject);
+begin
+  inherited;
+
+  var S:= txtSearchCompanies.Text;
+  txtSearchCompanies.Text:= '';
+  var I:= clCompanies.Items.Add;
+  I.Caption:= S;
 end;
 
 procedure TfrmContentDiscoverMovies.cboCertCountryClick(Sender: TObject);
@@ -296,6 +390,16 @@ begin
       Result:= Result + lstCerts.Items[X];
     end;
   end;
+end;
+
+procedure TfrmContentDiscoverMovies.txtSearchKeywordInvokeSearch(Sender: TObject);
+begin
+  inherited;
+
+  var S:= txtSearchKeyword.Text;
+  txtSearchKeyword.Text:= '';
+  var I:= JDChipList1.Items.Add;
+  I.Caption:= S;
 end;
 
 procedure TfrmContentDiscoverMovies.SetupCols;

@@ -79,6 +79,7 @@ object frmMain: TfrmMain
       OnButtonAddClick = TabsButtonAddClick
       OnButtonCloseTabClick = TabsButtonCloseTabClick
       ActiveTabIndex = -1
+      Images = Favicons
       Options.Display.CloseButton.Offsets.Vertical = 7
       Options.Display.CloseButton.Offsets.Horizontal = 0
       Options.Display.CloseButton.Height = 14
@@ -777,5 +778,9 @@ object frmMain: TfrmMain
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 420
     Top = 55
+  end
+  object Favicons: TImageList
+    Left = 472
+    Top = 56
   end
 end

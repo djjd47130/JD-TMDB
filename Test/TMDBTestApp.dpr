@@ -38,14 +38,18 @@ uses
   uContentConfigLanguages in 'Configuration\uContentConfigLanguages.pas' {frmContentConfigLanguages},
   uContentTVSerieDetail in 'TVSeries\uContentTVSerieDetail.pas' {frmContentTVSerieDetail},
   JD.TabController in 'JD.TabController.pas',
-  uTMDBHome in 'uTMDBHome.pas' {frmTMDBHome},
+  uTMDBMenu in 'uTMDBMenu.pas' {frmTMDBHome},
   uTMDBAppSetup in 'uTMDBAppSetup.pas' {frmTMDBAppSetup},
   JD.TMDB.LocalWebServer in '..\Source\JD.TMDB.LocalWebServer.pas',
   uContentConfigTimezones in 'Configuration\uContentConfigTimezones.pas' {frmContentConfigTimezones},
   uContentConfigJobs in 'Configuration\uContentConfigJobs.pas' {frmContentConfigJobs},
   uContentBrowser in 'uContentBrowser.pas' {frmContentBrowser},
   uContentMoviePage in 'Movies\uContentMoviePage.pas' {frmContentMoviePage},
-  uContentDiscoverMovies in 'Discover\uContentDiscoverMovies.pas' {frmContentDiscoverMovies};
+  uContentDiscoverMovies in 'Discover\uContentDiscoverMovies.pas' {frmContentDiscoverMovies},
+  uCommonDblCheckList in 'Common Forms\uCommonDblCheckList.pas' {frmCommonDblCheckList: TFrame},
+  uContentChangesMovies in 'Changes\uContentChangesMovies.pas' {frmContentChangesMovies},
+  uCommonChanges in 'Common Forms\uCommonChanges.pas' {frmContentChanges},
+  uContentPersonDetail in 'People\uContentPersonDetail.pas' {frmContentPersonDetail};
 
 {$R *.res}
 
@@ -53,8 +57,8 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmMain, frmMain);
-  Application.CreateForm(TfrmContentBrowser, frmContentBrowser);
-  Application.CreateForm(TfrmContentMoviePage, frmContentMoviePage);
-  Application.CreateForm(TfrmContentDiscoverMovies, frmContentDiscoverMovies);
+  Application.CreateForm(TfrmContentChangesMovies, frmContentChangesMovies);
+  Application.CreateForm(TfrmContentChanges, frmContentChanges);
+  Application.CreateForm(TfrmContentPersonDetail, frmContentPersonDetail);
   Application.Run;
 end.

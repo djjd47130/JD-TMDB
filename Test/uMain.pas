@@ -5,6 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Types, System.UITypes,
+  System.Generics.Collections,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.Menus,
   System.NetEncoding,
@@ -26,10 +27,29 @@ uses
   Vcl.Styles.Fixes,
 
   uLoginBrowser,
-  uTMDBHome,
-  uTMDBAppSetup;
+  uTMDBMenu,
+  uTMDBAppSetup, System.ImageList, Vcl.ImgList;
 
 type
+
+  TDetailRef = class;
+
+  TDetailRefEvent = reference to procedure(Ref: TDetailRef);
+
+  TDetailRef = class(TObject)
+  private
+    FOnClick: TDetailRefEvent;
+    FItem: TListItem;
+    procedure SetOnClick(const Value: TDetailRefEvent);
+    function GetClickable: Boolean;
+  public
+    constructor Create(AItem: TListItem);
+    property Clickable: Boolean read GetClickable;
+    property Item: TListItem read FItem;
+    property OnClick: TDetailRefEvent read FOnClick write SetOnClick;
+  end;
+
+
   TfrmMain = class(TForm)
     pTop: TPanel;
     btnUser: TJDFontButton;
@@ -60,6 +80,7 @@ type
     btnMenu: TJDFontButton;
     JDFontButton1: TJDFontButton;
     Tabs: TChromeTabs;
+    Favicons: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -84,6 +105,7 @@ type
     FRect: TRect;
     FState: TWindowState;
     FContentOnly: Boolean;
+    FFaviconRefs: TDictionary<String, Integer>;
     procedure ShowUserInfo;
     procedure ShowUserAvatar(const Path: String);
     procedure SetFullScreen(const Value: Boolean);
@@ -119,6 +141,27 @@ begin
   Result:= _AppSetup;
 end;
 
+
+{ TDetailRef }
+
+constructor TDetailRef.Create(AItem: TListItem);
+begin
+  FItem:= AItem;
+end;
+
+function TDetailRef.GetClickable: Boolean;
+begin
+  Result:= Assigned(FOnClick);
+end;
+
+procedure TDetailRef.SetOnClick(const Value: TDetailRefEvent);
+begin
+  FOnClick := Value;
+end;
+
+
+{ TfrmMain }
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   {$IFDEF DEBUG}
@@ -140,6 +183,7 @@ begin
   TabController.ChromeTabs:= Tabs;
   TabController.Container:= pContent;
   TabController.MainForm:= Self;
+  FFaviconRefs:= TDictionary<String, Integer>.Create;
 
   //User Auth
   FAuthMethod:= 2;
@@ -157,6 +201,7 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   //Tabs
   UninitTabController;
+  FreeAndNil(FFaviconRefs);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);

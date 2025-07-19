@@ -79,6 +79,7 @@ procedure TfrmContentBrowser.txtAddressDblClick(Sender: TObject);
 begin
   inherited;
 
+
   txtAddress.SelectAll;
 end;
 
@@ -115,7 +116,7 @@ begin
   inherited;
   Tab.ChromeTab.SpinnerState:= tssNone;
   btnGo.Tag:= 0;
-  btnGo.Image.Text:= '';
+  btnGo.Image.Text:= ''; //Go
 end;
 
 procedure TfrmContentBrowser.EdgeNavigationStarting(Sender: TCustomEdgeBrowser;
@@ -124,7 +125,7 @@ begin
   inherited;
   Tab.ChromeTab.SpinnerState:= tssRenderedDownload;
   btnGo.Tag:= 1;
-  btnGo.Image.Text:= '';
+  btnGo.Image.Text:= ''; //Stop
 end;
 
 procedure TfrmContentBrowser.EdgeNewWindowRequested(Sender: TCustomEdgeBrowser;

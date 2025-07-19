@@ -5,7 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, Vcl.ComCtrls,
-  Vcl.StdCtrls, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, Vcl.ExtCtrls,
+  Vcl.StdCtrls,
+  Vcl.ExtCtrls,
+  PngImage,
+  Jpeg,
+  JD.Common, JD.Ctrls, JD.Ctrls.FontButton,
   JD.Graphics,
   JD.TMDB.Common,
   JD.TMDB.Intf,
@@ -15,27 +19,11 @@ uses
   uCommonImages,
   uCommonReviews,
   uCommonAlternativeTitles,
+  uCommonChanges,
   uContentMoviePage,
   uContentBrowser;
 
 type
-  TDetailRef = class;
-
-  TDetailRefEvent = reference to procedure(Ref: TDetailRef);
-
-  TDetailRef = class(TObject)
-  private
-    FOnClick: TDetailRefEvent;
-    FItem: TListItem;
-    procedure SetOnClick(const Value: TDetailRefEvent);
-    function GetClickable: Boolean;
-  public
-    constructor Create(AItem: TListItem);
-    property Clickable: Boolean read GetClickable;
-    property Item: TListItem read FItem;
-    property OnClick: TDetailRefEvent read FOnClick write SetOnClick;
-  end;
-
   TfrmContentMovieDetail = class(TfrmContentBase)
     Pages: TPageControl;
     TabSheet1: TTabSheet;
@@ -46,7 +34,7 @@ type
     btnWatchlist: TJDFontButton;
     tabAltTitles: TTabSheet;
     lstAltTitles: TListView;
-    TabSheet4: TTabSheet;
+    tabChanges: TTabSheet;
     tabCredits: TTabSheet;
     TabSheet6: TTabSheet;
     tabImages: TTabSheet;
@@ -78,12 +66,14 @@ type
       var DefaultDraw: Boolean);
   private
     FDetail: ITMDBMovieDetail;
+    FBackdrop: TPicture;
 
     FCredits: TfrmCommonCredits;
     FImages: TfrmCommonImages;
     FVideos: TfrmCommonVideos;
     FReviews: TfrmCommonReviews;
     FSimilar: TfrmContentMoviePage;
+    FChanges: TfrmContentChanges;
     //FAlternativeTitles: TfrmCommonAlternativeTitles;
 
     function GetMovieDetail(const ID: Integer): ITMDBMovieDetail;
@@ -102,6 +92,7 @@ type
     procedure LoadSimilar;
     procedure LoadVideos;
     procedure LoadImages;
+    procedure LoadChanges;
     function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
       ATab: TTabSheet): TfrmCommonFormBase; overload;
     function EmbedFormIntoTab(AClass: TfrmContentBaseClass;
@@ -125,28 +116,12 @@ uses
   Vcl.Styles,
   Vcl.Themes;
 
-{ TDetailRef }
-
-constructor TDetailRef.Create(AItem: TListItem);
-begin
-  FItem:= AItem;
-end;
-
-function TDetailRef.GetClickable: Boolean;
-begin
-  Result:= Assigned(FOnClick);
-end;
-
-procedure TDetailRef.SetOnClick(const Value: TDetailRefEvent);
-begin
-  FOnClick := Value;
-end;
-
 { TfrmContentMovieDetail }
 
 procedure TfrmContentMovieDetail.FormCreate(Sender: TObject);
 begin
   inherited;
+  FBackdrop:= TPicture.Create;
   FDetail:= nil;
   Pages.Align:= alClient;
   Pages.ActivePageIndex:= 0;
@@ -156,6 +131,7 @@ begin
   FCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCredits));
   FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
   FSimilar:= TfrmContentMoviePage(EmbedFormIntoTab(TfrmContentMoviePage, tabSimilar));
+  FChanges:= TfrmContentChanges(EmbedFormIntoTab(TfrmContentChanges, tabChanges));
   FSimilar.BaseName:= 'Similar Movies';
 
 end;
@@ -164,6 +140,7 @@ procedure TfrmContentMovieDetail.FormDestroy(Sender: TObject);
 begin
   inherited;
   FDetail:= nil;
+  FreeAndNil(FBackdrop);
 end;
 
 function TfrmContentMovieDetail.EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
@@ -256,7 +233,7 @@ begin
       0: LoadDetails;
       1: LoadAccountStates;
       2: LoadAlternativeTitles;
-      3: ; //Changes
+      3: LoadChanges;
       4: LoadCredits;
       5: LoadExternalIDs;
       6: LoadImages;
@@ -288,10 +265,12 @@ end;
 
 procedure TfrmContentMovieDetail.ClearDetails;
 begin
+  FBackdrop.Assign(nil);
   while lstDetail.Items.Count > 0 do begin
     TDetailRef(lstDetail.Items[0].Data).Free;
     lstDetail.Items.Delete(0);
   end;
+  lstDetail.Invalidate;
 end;
 
 procedure TfrmContentMovieDetail.LoadDetails;
@@ -310,6 +289,7 @@ var
   X: Integer;
   I: TDetailRef;
   T1, T2: String;
+  BackdropPath: String;
 begin
   lstDetail.Items.BeginUpdate;
   try
@@ -389,6 +369,7 @@ begin
         (F.Content as TfrmContentBrowser).Navigate(FDetail.Homepage);
       end);
     A('Runtime', IntToStr(FDetail.Runtime));
+    BackdropPath:= FDetail.BackdropPath;
     A('Backdrop Path', FDetail.BackdropPath,
       procedure(Ref: TDetailRef)
       begin
@@ -422,6 +403,12 @@ begin
 
   finally
     lstDetail.Items.EndUpdate;
+  end;
+
+  //TODO: Load backdrop...
+  if BackdropPath <> '' then begin
+    BackdropPath:= TMDB.Client.GetImageURL(BackdropPath);
+
   end;
 
   txtOverview.Lines.Text:= FDetail.Overview;
@@ -510,6 +497,11 @@ begin
   end;
 end;
 
+procedure TfrmContentMovieDetail.LoadChanges;
+begin
+  FChanges.LoadChanges(FDetail.AppendedChanges, mtMovie);
+end;
+
 procedure TfrmContentMovieDetail.LoadCredits;
 begin
   FCredits.LoadCredits(FDetail.AppendedCredits);
@@ -543,6 +535,7 @@ procedure TfrmContentMovieDetail.LoadMovie(const Movie: ITMDBMovieDetail);
 begin
   Screen.Cursor:= crHourglass;
   try
+    FBackdrop.Assign(nil);
     Pages.Visible:= False;
     FDetail:= Movie;
     if FDetail <> nil then begin
@@ -561,6 +554,7 @@ procedure TfrmContentMovieDetail.LoadMovie(const MovieID: Integer);
 begin
   Screen.Cursor:= crHourglass;
   try
+    FBackdrop.Assign(nil);
     Pages.Visible:= False;
     FDetail:= GetMovieDetail(MovieID);
     if FDetail <> nil then begin
@@ -653,6 +647,9 @@ begin
   //Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scWindow); // clBlack;
   Sender.Canvas.Font.Color:= clWhite;
   Sender.Canvas.Font.Style:= [fsBold];
+
+  //TODO: Paint backdrop...?
+
 end;
 
 procedure TfrmContentMovieDetail.lstDetailCustomDrawItem(
@@ -672,17 +669,6 @@ procedure TfrmContentMovieDetail.lstDetailCustomDrawSubItem(
   State: TCustomDrawState; var DefaultDraw: Boolean);
 var
   I: TDetailRef;
-  function IsName(const N: String): Boolean;
-  begin
-    Result:= SameText(N, Item.Caption);
-  end;
-  procedure Chk(const N: String);
-  begin
-    if IsName(N) then begin
-      Sender.Canvas.Font.Color:= clBlue;
-      Sender.Canvas.Font.Style:= [fsBold,fsUnderline];
-    end;
-  end;
 begin
   inherited;
   Sender.Canvas.Brush.Color:= TStyleManager.ActiveStyle.GetSystemColor(clWindow);
@@ -696,16 +682,6 @@ begin
       Sender.Canvas.Font.Style:= [fsBold,fsUnderline];
     end;
 
-    {
-    Chk('Collection'); //Collection Detail
-    Chk('Release Date'); //Release Dates
-    Chk('Production Company'); //Company Detail
-    Chk('Homepage'); //URL in Default Browser
-    Chk('Backdrop Path'); //Image Detail
-    Chk('Poster Path'); //Image Detail
-    Chk('Title'); //Alternative Titles
-    Chk('Original Title'); //Alternative Titles
-    }
   end;
 
 end;

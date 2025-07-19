@@ -2,26 +2,28 @@ inherited frmCommonImages: TfrmCommonImages
   Caption = 'Images'
   ClientHeight = 441
   ClientWidth = 964
+  DoubleBuffered = True
   ExplicitWidth = 980
   ExplicitHeight = 480
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 201
+    Top = 204
     Width = 964
     Height = 7
     Cursor = crVSplit
     Align = alTop
     ResizeStyle = rsUpdate
-    ExplicitTop = 231
+    ExplicitLeft = 8
+    ExplicitTop = 169
   end
   object lstImages: TListView
     AlignWithMargins = True
     Left = 3
     Top = 3
     Width = 958
-    Height = 195
+    Height = 198
     Align = alTop
     BorderStyle = bsNone
     Columns = <
@@ -92,19 +94,19 @@ inherited frmCommonImages: TfrmCommonImages
         TitleImage = -1
       end>
     HotTrackStyles = [htHandPoint, htUnderlineHot]
+    LargeImages = ImgList
     GroupView = True
     ReadOnly = True
     RowSelect = True
     ParentFont = False
     TabOrder = 0
-    ViewStyle = vsReport
     OnSelectItem = lstImagesSelectItem
   end
   object pDetail: TPanel
     Left = 0
-    Top = 208
+    Top = 211
     Width = 964
-    Height = 233
+    Height = 230
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
@@ -113,7 +115,7 @@ inherited frmCommonImages: TfrmCommonImages
       Left = 8
       Top = 8
       Width = 948
-      Height = 217
+      Height = 214
       Margins.Left = 8
       Margins.Top = 8
       Margins.Right = 8
@@ -127,5 +129,12 @@ inherited frmCommonImages: TfrmCommonImages
       ExplicitWidth = 441
       ExplicitHeight = 97
     end
+  end
+  object ImgList: TImageList
+    DrawingStyle = dsTransparent
+    Height = 120
+    Width = 120
+    Left = 368
+    Top = 104
   end
 end

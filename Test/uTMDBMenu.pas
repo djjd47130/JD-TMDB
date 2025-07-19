@@ -1,4 +1,4 @@
-unit uTMDBHome;
+unit uTMDBMenu;
 
 interface
 
@@ -29,6 +29,7 @@ uses
   uContentBrowser,
   uContentMoviePage,
   uContentDiscoverMovies,
+  uContentChangesMovies,
   Vcl.StdCtrls;
 
 type
@@ -89,6 +90,7 @@ type
     JDFontButton16: TJDFontButton;
     JDFontButton23: TJDFontButton;
     JDFontButton1: TJDFontButton;
+    btnMovieChanges: TJDFontButton;
     procedure FormCreate(Sender: TObject);
     procedure btnSearchMoviesClick(Sender: TObject);
     procedure btnSearchCollectionsClick(Sender: TObject);
@@ -120,6 +122,7 @@ type
     procedure btnMyMovieWatchlistClick(Sender: TObject);
     procedure JDFontButton23Click(Sender: TObject);
     procedure btnDiscoverMoviesClick(Sender: TObject);
+    procedure btnMovieChangesClick(Sender: TObject);
   private
     procedure CalcScrollHeight;
     procedure SetNarrowMode(const Value: Boolean);
@@ -285,6 +288,13 @@ procedure TfrmTMDBHome.btnMovieCertificationsClick(Sender: TObject);
 begin
   inherited;
   TabController.CreateTab(TfrmContentCertsMovies);
+  HideMenu;
+end;
+
+procedure TfrmTMDBHome.btnMovieChangesClick(Sender: TObject);
+begin
+  inherited;
+  TabController.CreateTab(TfrmContentChangesMovies);
   HideMenu;
 end;
 

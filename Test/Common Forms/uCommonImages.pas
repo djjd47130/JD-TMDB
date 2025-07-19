@@ -9,7 +9,7 @@ uses
   JD.TMDB.Intf,
   Imaging.Jpeg,
   Imaging.PngImage,
-  System.NetEncoding;
+  System.NetEncoding, JD.Ctrls.ImageGrid, System.ImageList, Vcl.ImgList;
 
 type
   TfrmCommonImages = class(TfrmCommonFormBase)
@@ -17,6 +17,7 @@ type
     pDetail: TPanel;
     Img: TImage;
     Splitter1: TSplitter;
+    ImgList: TImageList;
     procedure lstImagesSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
   private
@@ -41,6 +42,8 @@ var
   Img: ITMDBMediaImage;
   I: TListItem;
   X: Integer;
+  Idx: Integer;
+
   procedure PopulateItem;
   begin
     I.Caption:= Img.FilePath;
@@ -50,8 +53,81 @@ var
     I.SubItems.Add(FormatFloat('0.000', Img.AspectRatio));
     I.Data:= Pointer(X);
   end;
+
+  function AddImage(const AImg: ITMDBMediaImage; const ASize: String = 'Original'): Integer;
+  var
+    B64: WideString;
+    S: TStringStream;
+    Enc: TBase64Encoding;
+    ImgBitmap: TBitmap;
+    P: TPicture;
+    SrcWidth, SrcHeight, DestWidth, DestHeight, XOffset, YOffset: Integer;
+  begin
+    if AImg.GetImage(B64, ASize) then
+    begin
+      Enc := TBase64Encoding.Create(0);
+      try
+        B64 := Enc.Decode(B64);
+        S := TStringStream.Create(B64);
+        try
+          S.Position := 0;
+          P := TPicture.Create;
+          try
+            P.LoadFromStream(S);
+
+            // Create a bitmap matching the image list size
+            ImgBitmap := TBitmap.Create;
+            try
+              ImgBitmap.SetSize(ImgList.Width, ImgList.Height);
+              ImgBitmap.Canvas.FillRect(Rect(0, 0, ImgBitmap.Width, ImgBitmap.Height)); // Clear the background
+
+              // Determine proportional size
+              SrcWidth := P.Width;
+              SrcHeight := P.Height;
+              if (SrcWidth / SrcHeight) > (ImgList.Width / ImgList.Height) then
+              begin
+                DestWidth := ImgList.Width;
+                DestHeight := Round(SrcHeight * (ImgList.Width / SrcWidth));
+              end
+              else
+              begin
+                DestHeight := ImgList.Height;
+                DestWidth := Round(SrcWidth * (ImgList.Height / SrcHeight));
+              end;
+
+              // Calculate centering offsets
+              XOffset := (ImgList.Width - DestWidth) div 2;
+              YOffset := (ImgList.Height - DestHeight) div 2;
+
+              // Stretch and center the image
+              ImgBitmap.Canvas.StretchDraw(Rect(XOffset, YOffset, XOffset + DestWidth, YOffset + DestHeight), P.Graphic);
+
+              // Add to image list
+              ImgList.Add(ImgBitmap, nil);
+              Result := ImgList.Count - 1;
+
+            finally
+              ImgBitmap.Free;
+            end;
+
+          finally
+            P.Free;
+          end;
+        finally
+          S.Free;
+        end;
+      finally
+        Enc.Free;
+      end;
+    end else
+      raise Exception.Create('Failed to fetch image.');
+  end;
+
 begin
   FImages:= Images;
+
+  ImgList.Clear;
+
   lstImages.Items.BeginUpdate;
   try
     lstImages.Items.Clear;
@@ -62,6 +138,8 @@ begin
       I:= lstImages.Items.Add;
       I.GroupID:= 0;
       PopulateItem;
+      Idx:= AddImage(Img, 'w300');
+      I.ImageIndex:= Idx;
     end;
 
     L:= FImages.Logos;
@@ -70,6 +148,8 @@ begin
       I:= lstImages.Items.Add;
       I.GroupID:= 1;
       PopulateItem;
+      Idx:= AddImage(Img, 'w45');
+      I.ImageIndex:= Idx;
     end;
 
     L:= FImages.Posters;
@@ -78,6 +158,8 @@ begin
       I:= lstImages.Items.Add;
       I.GroupID:= 2;
       PopulateItem;
+      Idx:= AddImage(Img, 'w92');
+      I.ImageIndex:= Idx;
     end;
 
   finally
@@ -95,6 +177,7 @@ var
 begin
   inherited;
   Img.Picture.Assign(nil);
+
   if Selected then begin
     case Item.GroupID of
       0: L:= FImages.Backdrops;

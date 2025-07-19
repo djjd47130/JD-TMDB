@@ -7,16 +7,30 @@ uses
   System.UITypes,
   Winapi.Windows, Winapi.Messages,
   Vcl.Controls, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Forms,
-  ChromeTabs, ChromeTabsClasses,
+  ChromeTabs, ChromeTabsClasses
 
-  uContentBase
+  //TODO: Remove this necessity...
+  , uContentBase
 
   ;
 
 type
+  TJDTabForm = class;
   TJDTabRef = class;
   TJDTabController = class;
 
+
+  TJDTabFormClass = class of TJDTabForm;
+
+  //TODO: Migrage form-related stuff to central form class as part of library...
+  TJDTabForm = class(TForm)
+  private
+
+  public
+
+  published
+
+  end;
 
 
   TJDTabRef = class(TObject)
@@ -44,6 +58,7 @@ type
     property ChromeTab: TChromeTab read FChromeTab;
   end;
 
+  //TODO: Change to component on form rather than global instance...
   TJDTabController = class(TComponent)
   private
     FItems: TObjectList<TJDTabRef>;

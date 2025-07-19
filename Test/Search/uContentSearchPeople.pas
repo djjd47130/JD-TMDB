@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentPageBase, JD.Common, JD.Ctrls,
   JD.Ctrls.FontButton, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
   JD.TMDB.Common,
-  JD.TMDB.Intf;
+  JD.TMDB.Intf, JD.TabController,
+  uContentPersonDetail;
 
 type
   TfrmContentSearchPeople = class(TfrmContentPageBase)
@@ -73,9 +74,14 @@ end;
 
 procedure TfrmContentSearchPeople.ItemDblClick(const Index: Integer;
   Item: TListItem; Obj: ITMDBItem);
+var
+  T: TJDTabRef;
+  M: ITMDBPerson;
 begin
   inherited;
-
+  M:= Obj as ITMDBPerson; //TODO: Interface not supported...
+  T:= TabController.CreateTab(TfrmContentPersonDetail);
+  (T.Content as TfrmContentPersonDetail).LoadPerson(M.ID);
 end;
 
 function TfrmContentSearchPeople.Page: ITMDBPage;

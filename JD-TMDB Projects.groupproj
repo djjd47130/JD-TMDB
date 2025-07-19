@@ -3,6 +3,12 @@
         <ProjectGuid>{0782C948-670D-43CC-AACB-33A5CC382F2E}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="..\JDLib-master\JDLibComponents.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\JDLib-master\DclJDLibComponents.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="JDTMDBLib.dproj">
             <Dependencies/>
         </Projects>
@@ -10,9 +16,6 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Test\TMDBTestApp.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="FMX\TMDBFMX.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -23,6 +26,24 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="JDLibComponents">
+        <MSBuild Projects="..\JDLib-master\JDLibComponents.dproj"/>
+    </Target>
+    <Target Name="JDLibComponents:Clean">
+        <MSBuild Projects="..\JDLib-master\JDLibComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JDLibComponents:Make">
+        <MSBuild Projects="..\JDLib-master\JDLibComponents.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DclJDLibComponents">
+        <MSBuild Projects="..\JDLib-master\DclJDLibComponents.dproj"/>
+    </Target>
+    <Target Name="DclJDLibComponents:Clean">
+        <MSBuild Projects="..\JDLib-master\DclJDLibComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DclJDLibComponents:Make">
+        <MSBuild Projects="..\JDLib-master\DclJDLibComponents.dproj" Targets="Make"/>
+    </Target>
     <Target Name="JDTMDBLib">
         <MSBuild Projects="JDTMDBLib.dproj"/>
     </Target>
@@ -50,23 +71,14 @@
     <Target Name="TMDBTestApp:Make">
         <MSBuild Projects="Test\TMDBTestApp.dproj" Targets="Make"/>
     </Target>
-    <Target Name="TMDBFMX">
-        <MSBuild Projects="FMX\TMDBFMX.dproj"/>
-    </Target>
-    <Target Name="TMDBFMX:Clean">
-        <MSBuild Projects="FMX\TMDBFMX.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="TMDBFMX:Make">
-        <MSBuild Projects="FMX\TMDBFMX.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="JDTMDBLib;dclJDTMDBLib;TMDBTestApp;TMDBFMX"/>
+        <CallTarget Targets="JDLibComponents;DclJDLibComponents;JDTMDBLib;dclJDTMDBLib;TMDBTestApp"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JDTMDBLib:Clean;dclJDTMDBLib:Clean;TMDBTestApp:Clean;TMDBFMX:Clean"/>
+        <CallTarget Targets="JDLibComponents:Clean;DclJDLibComponents:Clean;JDTMDBLib:Clean;dclJDTMDBLib:Clean;TMDBTestApp:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JDTMDBLib:Make;dclJDTMDBLib:Make;TMDBTestApp:Make;TMDBFMX:Make"/>
+        <CallTarget Targets="JDLibComponents:Make;DclJDLibComponents:Make;JDTMDBLib:Make;dclJDTMDBLib:Make;TMDBTestApp:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

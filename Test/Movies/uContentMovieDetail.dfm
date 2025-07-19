@@ -11,7 +11,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
     Top = 64
     Width = 919
     Height = 409
-    ActivePage = tabVideos
+    ActivePage = TabSheet1
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
@@ -199,7 +199,7 @@ inherited frmContentMovieDetail: TfrmContentMovieDetail
         ViewStyle = vsReport
       end
     end
-    object TabSheet4: TTabSheet
+    object tabChanges: TTabSheet
       Caption = 'Changes'
       ImageIndex = 3
     end

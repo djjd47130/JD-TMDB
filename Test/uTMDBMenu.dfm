@@ -13,7 +13,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     Top = 0
     Width = 364
     Height = 573
-    VertScrollBar.Position = 1458
+    VertScrollBar.Position = 139
     VertScrollBar.Range = 3000
     VertScrollBar.Tracking = True
     Align = alClient
@@ -28,9 +28,9 @@ inherited frmTMDBHome: TfrmTMDBHome
     OnMouseWheelUp = CategoryPanelGroup1MouseWheelUp
     object pMovies: TPanel
       Left = 0
-      Top = -1458
+      Top = -139
       Width = 347
-      Height = 636
+      Height = 671
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
@@ -681,15 +681,67 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Trending Movies'
         OnClick = JDFontButton23Click
       end
+      object btnMovieChanges: TJDFontButton
+        AlignWithMargins = True
+        Left = 20
+        Top = 611
+        Width = 307
+        Height = 42
+        Cursor = crHandPoint
+        Margins.Left = 20
+        Margins.Top = 1
+        Margins.Right = 20
+        Margins.Bottom = 1
+        Align = alTop
+        Color = clBlack
+        DrawStyle = fdTransparent
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -21
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        Image.AutoSize = False
+        Image.Text = #61451
+        Image.Font.Charset = DEFAULT_CHARSET
+        Image.Font.Color = clWindowText
+        Image.Font.Height = -27
+        Image.Font.Name = 'FontAwesome'
+        Image.Font.Style = []
+        Image.Font.Quality = fqAntialiased
+        Image.StandardColor = fcGray
+        Overlay.Text = #61448
+        Overlay.Font.Charset = DEFAULT_CHARSET
+        Overlay.Font.Color = clWindowText
+        Overlay.Font.Height = -12
+        Overlay.Font.Name = 'FontAwesome'
+        Overlay.Font.Style = [fsBold]
+        Overlay.Font.Quality = fqAntialiased
+        Overlay.StandardColor = fcGreen
+        Overlay.Position = foBottomLeft
+        Overlay.Margin = 2
+        Margin = 6
+        Spacing = 10
+        SubTextFont.Charset = DEFAULT_CHARSET
+        SubTextFont.Color = clGray
+        SubTextFont.Height = -11
+        SubTextFont.Name = 'Tahoma'
+        SubTextFont.Style = []
+        TabOrder = 13
+        Text = 'Movie Changes'
+        OnClick = btnMovieChangesClick
+        ExplicitLeft = 32
+        ExplicitTop = 639
+      end
     end
     object pTV: TPanel
       Left = 0
-      Top = -822
+      Top = 532
       Width = 347
       Height = 673
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 497
       object Label2: TLabel
         AlignWithMargins = True
         Left = 8
@@ -1373,12 +1425,13 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pMisc: TPanel
       Left = 0
-      Top = 89
+      Top = 1443
       Width = 347
       Height = 344
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitTop = 1408
       object Label3: TLabel
         AlignWithMargins = True
         Left = 8
@@ -1687,12 +1740,13 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pConfig: TPanel
       Left = 0
-      Top = 433
+      Top = 1787
       Width = 347
       Height = 393
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
+      ExplicitTop = 1752
       object Label4: TLabel
         AlignWithMargins = True
         Left = 8
@@ -2095,12 +2149,13 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pPeople: TPanel
       Left = 0
-      Top = -149
+      Top = 1205
       Width = 347
       Height = 238
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 4
+      ExplicitTop = 1170
       object Label5: TLabel
         AlignWithMargins = True
         Left = 8

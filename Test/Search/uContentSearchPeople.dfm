@@ -26,6 +26,10 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
     inherited pTop: TPanel
       Width = 681
       ExplicitWidth = 681
+      inherited btnRefresh: TJDFontButton
+        Left = 637
+        ExplicitLeft = 637
+      end
     end
     inherited pDetail: TPanel
       Top = 280
@@ -55,10 +59,11 @@ inherited frmContentSearchPeople: TfrmContentSearchPeople
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 259
         Height = 18
         Align = alTop
         Caption = 'Search Query:'
+        ExplicitWidth = 107
       end
       object txtQuery: TEdit
         AlignWithMargins = True

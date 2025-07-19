@@ -1,15 +1,20 @@
 inherited frmTMDBAppSetup: TfrmTMDBAppSetup
   Caption = 'App Setup'
+  ClientHeight = 482
+  ClientWidth = 791
   OnShow = FormShow
+  ExplicitWidth = 807
+  ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 18
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 754
+    Width = 791
     Height = 187
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 754
     object gbAPIAuthMethod: TGroupBox
       AlignWithMargins = True
       Left = 4
@@ -177,7 +182,7 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
   object btnSave: TJDFontButton
     Left = 0
     Top = 187
-    Width = 754
+    Width = 791
     Height = 46
     Cursor = crHandPoint
     Align = alTop
@@ -216,5 +221,6 @@ inherited frmTMDBAppSetup: TfrmTMDBAppSetup
     TabOrder = 1
     Text = 'Save Setup'
     OnClick = btnSaveClick
+    ExplicitWidth = 754
   end
 end

@@ -6,50 +6,69 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
   ExplicitHeight = 540
   PixelsPerInch = 96
   TextHeight = 18
-  inherited pMain: TPanel
-    Width = 664
+  object Splitter2: TSplitter [0]
+    Left = 257
+    Top = 0
+    Width = 5
     Height = 501
-    ExplicitWidth = 664
+    ExplicitLeft = 281
+  end
+  inherited pMain: TPanel
+    Left = 262
+    Width = 667
+    Height = 501
+    ExplicitLeft = 262
+    ExplicitWidth = 667
     ExplicitHeight = 501
     inherited Splitter1: TSplitter
-      Top = 297
-      Width = 664
+      Top = 431
+      Width = 667
       ExplicitTop = 297
       ExplicitWidth = 664
     end
     inherited lstResults: TListView
-      Width = 658
-      Height = 259
-      ExplicitWidth = 658
-      ExplicitHeight = 259
+      Width = 661
+      Height = 393
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      ExplicitLeft = 6
+      ExplicitWidth = 661
+      ExplicitHeight = 393
     end
     inherited pTop: TPanel
-      Width = 664
-      ExplicitWidth = 664
+      Width = 667
+      ExplicitWidth = 667
       inherited btnRefresh: TJDFontButton
-        Left = 620
-        ExplicitLeft = 620
+        Left = 623
+        ExplicitLeft = 623
       end
     end
     inherited pDetail: TPanel
-      Top = 304
-      Width = 664
-      ExplicitTop = 304
-      ExplicitWidth = 664
+      Top = 438
+      Width = 667
+      Height = 63
+      ExplicitTop = 438
+      ExplicitWidth = 667
+      ExplicitHeight = 63
     end
   end
   inherited pSearch: TPanel
+    Width = 257
     Height = 501
     Visible = True
+    ExplicitWidth = 257
     ExplicitHeight = 501
     inherited btnApply: TJDFontButton
       Top = 457
+      Width = 251
+      Default = False
       ExplicitTop = 457
+      ExplicitWidth = 251
     end
     object CategoryPanelGroup1: TCategoryPanelGroup
       Left = 0
       Top = 0
-      Width = 265
+      Width = 257
       Height = 457
       VertScrollBar.Tracking = True
       Align = alTop
@@ -63,20 +82,409 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
       Images = Img16
       ParentDoubleBuffered = False
       TabOrder = 1
-      object cpRelease: TCategoryPanel
-        Top = 347
+      object CategoryPanel7: TCategoryPanel
+        Top = 1002
         Height = 30
-        Caption = 'Release Year'
+        Caption = 'Watch'
         Collapsed = True
         CollapsedImageIndex = 0
         ExpandedImageIndex = 1
         TabOrder = 0
         ExpandedHeight = 146
+        object Panel15: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Label16: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Primary Release Year:'
+            ExplicitWidth = 169
+          end
+          object Edit11: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+        object Panel16: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 55
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object Label17: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Year:'
+            ExplicitWidth = 41
+          end
+          object Edit12: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+      end
+      object CategoryPanel5: TCategoryPanel
+        Top = 972
+        Height = 30
+        Caption = 'Runtime'
+        Collapsed = True
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 1
+        ExpandedHeight = 146
+        object Panel7: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Label8: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Primary Release Year:'
+            ExplicitWidth = 169
+          end
+          object Edit7: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+        object Panel9: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 55
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object Label10: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Year:'
+            ExplicitWidth = 41
+          end
+          object Edit8: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+      end
+      object CategoryPanel3: TCategoryPanel
+        Top = 942
+        Height = 30
+        Caption = 'People'
+        Collapsed = True
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 2
+        ExpandedHeight = 146
+        object Panel3: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Label4: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Primary Release Year:'
+            ExplicitWidth = 169
+          end
+          object Edit3: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+        object Panel4: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 55
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object Label5: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Year:'
+            ExplicitWidth = 41
+          end
+          object Edit4: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+      end
+      object CategoryPanel4: TCategoryPanel
+        Top = 742
+        Caption = 'Companies'
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 3
+        object clCompanies: TJDChipList
+          Left = 0
+          Top = 49
+          Width = 234
+          Height = 120
+          Align = alTop
+          AllowExclude = True
+          AutoSize = False
+          ChipHeight = 24
+          ChipPadding = 3
+          Color = clBackground
+          ExcludeToggle = ctButton
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Items = <
+            item
+              Caption = 'Disney'
+              Exclude = False
+            end
+            item
+              Caption = 'Dasney'
+              Exclude = True
+            end>
+          ParentBackground = False
+          ParentColor = False
+          UI.ChipColor = 12615680
+          UI.ChipExcludeColor = clMaroon
+          UI.DeleteButtonColor = clRed
+          UI.ShowDeleteBtn = False
+          UI.ChipNormal.Brush.Alpha = 255
+          UI.ChipNormal.Brush.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Brush.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Alpha = 255
+          UI.ChipNormal.Pen.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Pen.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Width = 1.000000000000000000
+          OnResize = JDChipList1Resize
+        end
+        object Panel5: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 49
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object Label6: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Search for Companies:'
+            ExplicitWidth = 168
+          end
+          object txtSearchCompanies: TButtonedEdit
+            Left = 0
+            Top = 21
+            Width = 228
+            Height = 26
+            Align = alTop
+            Images = Img16
+            RightButton.HotImageIndex = 2
+            RightButton.ImageIndex = 0
+            RightButton.PressedImageIndex = 3
+            RightButton.Visible = True
+            TabOrder = 0
+            OnRightButtonClick = txtSearchCompaniesRightButtonClick
+          end
+        end
+      end
+      object CategoryPanel2: TCategoryPanel
+        Top = 712
+        Height = 30
+        Caption = 'Votes'
+        Collapsed = True
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 4
+        ExpandedHeight = 146
+        object Panel1: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Label2: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Primary Release Year:'
+            ExplicitWidth = 169
+          end
+          object Edit1: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+        object Panel2: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 55
+          Width = 228
+          Height = 55
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object Label3: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Year:'
+            ExplicitWidth = 41
+          end
+          object Edit2: TEdit
+            AlignWithMargins = True
+            Left = 3
+            Top = 24
+            Width = 222
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            ExplicitHeight = 26
+          end
+        end
+      end
+      object cpRelease: TCategoryPanel
+        Top = 682
+        Height = 30
+        Caption = 'Release Date'
+        Collapsed = True
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 5
+        ExpandedHeight = 280
         object Panel13: TPanel
           AlignWithMargins = True
           Left = 3
           Top = 0
-          Width = 253
+          Width = 228
           Height = 55
           Margins.Top = 0
           Margins.Bottom = 0
@@ -87,7 +495,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 247
+            Width = 222
             Height = 18
             Margins.Bottom = 0
             Align = alTop
@@ -98,7 +506,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 24
-            Width = 247
+            Width = 222
             Height = 28
             Align = alClient
             TabOrder = 0
@@ -109,7 +517,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           AlignWithMargins = True
           Left = 3
           Top = 55
-          Width = 253
+          Width = 228
           Height = 55
           Margins.Top = 0
           Margins.Bottom = 0
@@ -120,7 +528,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 247
+            Width = 222
             Height = 18
             Margins.Bottom = 0
             Align = alTop
@@ -131,7 +539,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 24
-            Width = 247
+            Width = 222
             Height = 28
             Align = alClient
             TabOrder = 0
@@ -139,18 +547,132 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           end
         end
       end
-      object cpRegion: TCategoryPanel
-        Top = 257
-        Height = 90
-        Caption = 'Region and Language'
+      object CategoryPanel6: TCategoryPanel
+        Top = 470
+        Height = 212
+        Caption = 'Keywords'
         CollapsedImageIndex = 0
         ExpandedImageIndex = 1
-        TabOrder = 1
+        TabOrder = 6
+        object Panel11: TPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 0
+          Width = 228
+          Height = 49
+          Margins.Top = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Label12: TLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 222
+            Height = 18
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Search for Keywords:'
+            ExplicitWidth = 161
+          end
+          object txtSearchKeyword: TSearchBox
+            Left = 0
+            Top = 21
+            Width = 228
+            Height = 28
+            Align = alClient
+            TabOrder = 0
+            OnInvokeSearch = txtSearchKeywordInvokeSearch
+            ExplicitHeight = 26
+          end
+        end
+        object JDChipList1: TJDChipList
+          Left = 0
+          Top = 49
+          Width = 234
+          Height = 104
+          Align = alTop
+          AllowExclude = True
+          AutoSize = False
+          ChipHeight = 24
+          ChipPadding = 3
+          Color = clBackground
+          ExcludeToggle = ctButton
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Items = <
+            item
+              Caption = 'Science Fiction'
+              Exclude = False
+            end
+            item
+              Caption = 'Comedy'
+              Exclude = False
+            end
+            item
+              Caption = 'Horror'
+              Exclude = True
+            end>
+          ParentBackground = False
+          ParentColor = False
+          UI.ChipColor = 12615680
+          UI.ChipExcludeColor = clMaroon
+          UI.DeleteButtonColor = clRed
+          UI.ShowDeleteBtn = True
+          UI.ChipNormal.Brush.Alpha = 255
+          UI.ChipNormal.Brush.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Brush.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Alpha = 255
+          UI.ChipNormal.Pen.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Pen.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Width = 1.000000000000000000
+          OnResize = JDChipList1Resize
+        end
+      end
+      object CategoryPanel1: TCategoryPanel
+        Top = 287
+        Height = 183
+        Caption = 'Genres'
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 7
+        inline frmGenres: TfrmCommonDblCheckList
+          Left = 0
+          Top = 0
+          Width = 234
+          Height = 140
+          Align = alTop
+          TabOrder = 0
+          ExplicitWidth = 234
+          ExplicitHeight = 140
+          inherited TV: TVirtualStringTree
+            Width = 228
+            Height = 116
+            DefaultNodeHeight = 22
+            Header.Height = 18
+            ExplicitWidth = 228
+            ExplicitHeight = 116
+          end
+        end
+      end
+      object cpRegion: TCategoryPanel
+        Top = 257
+        Height = 30
+        Caption = 'Region and Language'
+        Collapsed = True
+        CollapsedImageIndex = 0
+        ExpandedImageIndex = 1
+        TabOrder = 8
+        ExpandedHeight = 90
         object Panel10: TPanel
           AlignWithMargins = True
           Left = 3
           Top = 0
-          Width = 253
+          Width = 228
           Height = 55
           Margins.Top = 0
           Margins.Bottom = 0
@@ -161,7 +683,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 247
+            Width = 222
             Height = 18
             Margins.Bottom = 0
             Align = alTop
@@ -172,7 +694,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 24
-            Width = 247
+            Width = 222
             Height = 26
             Cursor = crHandPoint
             Align = alClient
@@ -195,12 +717,12 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 2
+        TabOrder = 9
         object Label1: TLabel
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 253
+          Width = 228
           Height = 18
           Margins.Bottom = 0
           Align = alTop
@@ -211,7 +733,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           AlignWithMargins = True
           Left = 3
           Top = 24
-          Width = 253
+          Width = 228
           Height = 26
           Cursor = crHandPoint
           Align = alTop
@@ -223,7 +745,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           AlignWithMargins = True
           Left = 3
           Top = 56
-          Width = 253
+          Width = 228
           Height = 92
           OnClickCheck = lstCertsClickCheck
           Align = alTop
@@ -234,7 +756,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           AlignWithMargins = True
           Left = 3
           Top = 176
-          Width = 253
+          Width = 228
           Height = 55
           Margins.Top = 0
           Margins.Bottom = 0
@@ -245,7 +767,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 247
+            Width = 222
             Height = 18
             Margins.Bottom = 0
             Align = alTop
@@ -256,7 +778,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
             AlignWithMargins = True
             Left = 3
             Top = 24
-            Width = 247
+            Width = 222
             Height = 26
             Cursor = crHandPoint
             Align = alClient
@@ -275,8 +797,8 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
     end
   end
   object Img16: TImageList
-    Left = 208
-    Top = 352
+    Left = 312
+    Top = 248
     Bitmap = {
       494C010104000800040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
@@ -555,7 +1077,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
       end>
     Glyphs = <
       item
-        Caption = 'Blue Collapses'
+        Caption = 'Blue Collapsed'
         Glyph = #61697
         Color = fcGray
         Scale = 0.960000000000000000
@@ -598,7 +1120,7 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
         Ref.StandardColor = fcGreen
         Ref.UseStandardColor = True
       end>
-    Left = 208
-    Top = 304
+    Left = 312
+    Top = 200
   end
 end

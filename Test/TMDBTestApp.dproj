@@ -212,7 +212,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="JD.TabController.pas"/>
-        <DCCReference Include="uTMDBHome.pas">
+        <DCCReference Include="uTMDBMenu.pas">
             <Form>frmTMDBHome</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -241,6 +241,23 @@
             <Form>frmContentDiscoverMovies</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Common Forms\uCommonDblCheckList.pas">
+            <Form>frmCommonDblCheckList</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Changes\uContentChangesMovies.pas">
+            <Form>frmContentChangesMovies</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Common Forms\uCommonChanges.pas">
+            <Form>frmContentChanges</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="People\uContentPersonDetail.pas">
+            <Form>frmContentPersonDetail</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -262,6 +279,7 @@
                     <Source Name="MainSource">TMDBTestApp.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\XSuperObjectLib.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\JDWordGridComps.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\dclJDUOMLib.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
