@@ -69,6 +69,8 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
+      ExplicitLeft = 616
+      ExplicitTop = 0
     end
     object Tabs: TChromeTabs
       Left = 52
@@ -406,6 +408,8 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ShowHint = True
       TabOrder = 1
+      ExplicitLeft = 49
+      ExplicitTop = -6
     end
     object btnMenu: TJDFontButton
       AlignWithMargins = True
@@ -460,6 +464,7 @@ object frmMain: TfrmMain
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 36
   end
   object Stat: TStatusBar
     Left = 0

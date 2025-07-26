@@ -3130,7 +3130,7 @@ type
   /// </summary>
   ITMDBNamespace = interface
     ['{0E665C12-812B-4B2D-8A48-17A16740290C}']
-    function GetOwner: ITMDBClient;
+    function GetOwner: ITMDBClient; stdcall;
 
     property Owner: ITMDBClient read GetOwner;
   end;
@@ -3526,7 +3526,7 @@ type
 {$REGION 'TMDB Client'}
 
   /// <summary>
-  ///
+  /// Collection of cached lists and data which is frequently accessed.
   /// </summary>
   ITMDBCache = interface
     ['{7D0D9646-6136-48D8-8FC1-03A6950B670F}']
@@ -3547,7 +3547,7 @@ type
 
     property Config: ITMDBConfiguration read GetConfig;
     property Countries: ITMDBCountries read GetCountries;
-    //property Jobs: ITMDBJobList read GetJobs;
+    property JobDepartments: ITMDBJobDepartments read GetJobDepartments;
     property Languages: ITMDBLanguages read GetLanguages;
     property PrimaryTranslations: TTMDBStrArray read GetPrimaryTranslations;
     property Timezones: ITMDBTimezones read GetTimezones;
@@ -3591,7 +3591,7 @@ type
 
 
   /// <summary>
-  /// The core interface-based implementation of the TMDB API wrapper.
+  /// The core interface-based encapsulation of the TMDB API wrapper.
   /// </summary>
   ITMDBClient = interface
     ['{FB7CAA70-63BE-4BAC-9BE8-4E0E0225A9C3}']
@@ -3669,6 +3669,9 @@ type
 
     property OnUserAuthRequest: TTMDBUserAuthRequestEvent
       read GetOnUserAuthRequest write SetOnUserAuthRequest;
+    //OnError
+    //OnLogMessage
+
   end;
 
 {$ENDREGION}

@@ -28,6 +28,15 @@ uses
 
 type
 
+  /// <summary>
+  /// An attempt at addressing interface-related memory leaks, which didn't work.
+  ///   Keeping it anyway, as it's recommended to use TInterfacedPersistent
+  ///   instead of TInterfacedObject for various reasons as explained here:
+  ///   https://www.codeproject.com/Articles/1252175/Fixing-Delphis-Interface-Limitations
+  /// </summary>
+  TTMDBInterfacedObject = class(TInterfacedPersistent);
+
+
 {$REGION 'Forward Definitions'}
 
   TTMDBItem = class;
@@ -206,14 +215,14 @@ type
 
   TTMDBItemsClass = class of TTMDBItems;
 
-  TTMDBItem = class(TInterfacedObject, ITMDBItem)
+  TTMDBItem = class(TTMDBInterfacedObject, ITMDBItem)
   private
     FTMDB: ITMDBClient;
     FObj: ISuperObject;
     FOwner: ITMDBItems;
     FIndex: Integer;
   protected
-    function GetOwner: ITMDBItems; stdcall;
+    function GetOwner: ITMDBItems; reintroduce; stdcall;
     function GetIndex: Integer; stdcall;
   public
     constructor Create(AOwner: ITMDBItems; AObj: ISuperObject;
@@ -225,7 +234,7 @@ type
     property Index: Integer read GetIndex;
   end;
 
-  TTMDBItems = class(TInterfacedObject, ITMDBItems)
+  TTMDBItems = class(TTMDBInterfacedObject, ITMDBItems)
   private
     FTMDB: ITMDBClient;
     FObj: ISuperArray;
@@ -245,7 +254,7 @@ type
     property Items[const Index: Integer]: ITMDBItem read GetItem; default;
   end;
 
-  TTMDBPage = class(TInterfacedObject, ITMDBPage)
+  TTMDBPage = class(TTMDBInterfacedObject, ITMDBPage)
   private
     FObj: ISuperObject;
     FItems: ITMDBItems;
@@ -268,7 +277,7 @@ type
     property LazyLoading: Boolean read GetLazyLoading write SetLazyLoading;
   end;
 
-  TTMDBDetail = class(TInterfacedObject, ITMDBDetail)
+  TTMDBDetail = class(TTMDBInterfacedObject, ITMDBDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -337,7 +346,7 @@ type
 
 {$REGION 'Account Related'}
 
-  TTMDBAccountDetail = class(TInterfacedObject, ITMDBAccountDetail)
+  TTMDBAccountDetail = class(TTMDBInterfacedObject, ITMDBAccountDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBCLient;
@@ -364,7 +373,7 @@ type
     property TMDBAvatarPath: WideString read GetTMDBAvatarPath;
   end;
 
-  TTMDBAccountAddFavoriteResult = class(TInterfacedObject, ITMDBAccountAddFavoriteResult)
+  TTMDBAccountAddFavoriteResult = class(TTMDBInterfacedObject, ITMDBAccountAddFavoriteResult)
   private
     FObj: ISuperObject;
   protected
@@ -377,7 +386,7 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
-  TTMDBAccountAddWatchlistResult = class(TInterfacedObject, ITMDBAccountAddWatchlistResult)
+  TTMDBAccountAddWatchlistResult = class(TTMDBInterfacedObject, ITMDBAccountAddWatchlistResult)
   private
     FObj: ISuperObject;
   protected
@@ -390,7 +399,7 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
-  TTMDBAccountStates = class(TInterfacedObject, ITMDBAccountStates)
+  TTMDBAccountStates = class(TTMDBInterfacedObject, ITMDBAccountStates)
   private
     FObj: ISuperObject;
   protected
@@ -412,7 +421,7 @@ type
 
 {$REGION 'Authentication Related'}
 
-  TTMDBAuthGuestSessionResult = class(TInterfacedObject, ITMDBAuthGuestSessionResult)
+  TTMDBAuthGuestSessionResult = class(TTMDBInterfacedObject, ITMDBAuthGuestSessionResult)
   private
     FObj: ISuperObject;
   protected
@@ -427,7 +436,7 @@ type
     property ExpiresAt: TDateTime read GetExpiresAt;
   end;
 
-  TTMDBAuthRequestTokenResult = class(TInterfacedObject, ITMDBAuthRequestTokenResult)
+  TTMDBAuthRequestTokenResult = class(TTMDBInterfacedObject, ITMDBAuthRequestTokenResult)
   private
     FObj: ISuperObject;
   protected
@@ -442,7 +451,7 @@ type
     property ExpiresAt: TDateTime read GetExpiresAt;
   end;
 
-  TTMDBAuthSessionResult = class(TInterfacedObject, ITMDBAuthSessionResult)
+  TTMDBAuthSessionResult = class(TTMDBInterfacedObject, ITMDBAuthSessionResult)
   private
     FObj: ISuperObject;
   protected
@@ -459,7 +468,7 @@ type
     property StatusMessage: WideString read GetStatusMessage;
   end;
 
-  TTMDBAuthSessionResultLogin = class(TInterfacedObject, ITMDBAuthSessionResultLogin)
+  TTMDBAuthSessionResultLogin = class(TTMDBInterfacedObject, ITMDBAuthSessionResultLogin)
   private
     FObj: ISuperObject;
   protected
@@ -478,7 +487,7 @@ type
     property StatusMessag: WideString read GetStatusMessage;
   end;
 
-  TTMDBAuthDeleteSessionResult = class(TInterfacedObject, ITMDBAuthDeleteSessionResult)
+  TTMDBAuthDeleteSessionResult = class(TTMDBInterfacedObject, ITMDBAuthDeleteSessionResult)
   private
     FObj: ISuperObject;
   protected
@@ -493,7 +502,7 @@ type
     property StatusMessag: WideString read GetStatusMessage;
   end;
 
-  TTMDBAuthValidateKeyResult = class(TInterfacedObject, ITMDBAuthValidateKeyResult)
+  TTMDBAuthValidateKeyResult = class(TTMDBInterfacedObject, ITMDBAuthValidateKeyResult)
   private
     FObj: ISuperObject;
   protected
@@ -542,7 +551,7 @@ type
 
 {$REGION 'Certification Related'}
 
-  TTMDBCertification = class(TInterfacedObject, ITMDBCertification)
+  TTMDBCertification = class(TTMDBInterfacedObject, ITMDBCertification)
   private
     FObj: ISuperObject;
     FOwner: ITMDBCertificationCountry;
@@ -559,7 +568,7 @@ type
     property Order: Integer read GetOrder;
   end;
 
-  TTMDBCertificationCountry = class(TInterfacedObject, ITMDBCertificationCountry)
+  TTMDBCertificationCountry = class(TTMDBInterfacedObject, ITMDBCertificationCountry)
   private
     FObj: ISuperArray;
     FOwner: ITMDBCertificationCountries;
@@ -583,7 +592,7 @@ type
     property Items[const Index: Integer]: ITMDBCertification read GetItem;
   end;
 
-  TTMDBCertificationCountries = class(TInterfacedObject, ITMDBCertificationCountries)
+  TTMDBCertificationCountries = class(TTMDBInterfacedObject, ITMDBCertificationCountries)
   private
     FObj: ISuperObject;
     FItems: TInterfaceList;
@@ -606,7 +615,7 @@ type
 
 {$REGION 'Release Date Related'}
 
-  TTMDBReleaseDate = class(TInterfacedObject, ITMDBReleaseDate)
+  TTMDBReleaseDate = class(TTMDBInterfacedObject, ITMDBReleaseDate)
   private
     FObj: ISuperObject;
     FOwner: TTMDBReleaseDateCountry;
@@ -629,7 +638,7 @@ type
     property ReleaseType: TTMDBReleaseType read GetType;
   end;
 
-  TTMDBReleaseDateCountry = class(TInterfacedObject, ITMDBReleaseDateCountry)
+  TTMDBReleaseDateCountry = class(TTMDBInterfacedObject, ITMDBReleaseDateCountry)
   private
     FObj: ISuperArray;
     FOwner: TTMDBReleaseDateCountries;
@@ -653,7 +662,7 @@ type
     property Items[const Index: Integer]: ITMDBReleaseDate read GetItem;
   end;
 
-  TTMDBReleaseDateCountries = class(TInterfacedObject, ITMDBReleaseDateCountries)
+  TTMDBReleaseDateCountries = class(TTMDBInterfacedObject, ITMDBReleaseDateCountries)
   private
     FObj: ISuperArray;
     FItems: TInterfaceList;
@@ -676,7 +685,7 @@ type
 
 {$REGION 'Change Related'}
 
-  TTMDBChangeValue = class(TInterfacedObject, ITMDBChangeValue)
+  TTMDBChangeValue = class(TTMDBInterfacedObject, ITMDBChangeValue)
   private
     FObj: ISuperObject;
   protected
@@ -700,7 +709,7 @@ type
     property A: ISuperArray read GetA;
   end;
 
-  TTMDBChangeRecord = class(TInterfacedObject, ITMDBChangeRecord)
+  TTMDBChangeRecord = class(TTMDBInterfacedObject, ITMDBChangeRecord)
   private
     FObj: ISuperObject;
     FValue: ITMDBChangeValue;
@@ -820,7 +829,7 @@ type
     property Items: ITMDBCompanies read GetItems;
   end;
 
-  TTMDBCompanyDetail = class(TInterfacedObject, ITMDBCompanyDetail)
+  TTMDBCompanyDetail = class(TTMDBInterfacedObject, ITMDBCompanyDetail)
   private
     FObj: ISuperObject;
   protected
@@ -852,7 +861,7 @@ type
 
 {$REGION 'Configuration Related'}
 
-  TTMDBConfigurationImages = class(TInterfacedObject, ITMDBConfigurationImages)
+  TTMDBConfigurationImages = class(TTMDBInterfacedObject, ITMDBConfigurationImages)
   private
     FOwner: ITMDBConfiguration;
     FObj: ISuperObject;
@@ -876,7 +885,7 @@ type
     property StillSizes: TTMDBStrArray read GetStillSizes;
   end;
 
-  TTMDBConfiguration = class(TInterfacedObject, ITMDBConfiguration)
+  TTMDBConfiguration = class(TTMDBInterfacedObject, ITMDBConfiguration)
   private
     FObj: ISuperObject;
     FImages: ITMDBConfigurationImages;
@@ -954,7 +963,7 @@ type
 
 {$REGION 'External ID Related'}
 
-  TTMDBExternalIDs = class(TInterfacedObject, ITMDBExternalIDs)
+  TTMDBExternalIDs = class(TTMDBInterfacedObject, ITMDBExternalIDs)
   private
     FObj: ISuperObject;
   protected
@@ -1046,7 +1055,7 @@ type
     property Items[const Index: Integer]: ITMDBMediaImage read GetItem; default;
   end;
 
-  TTMDBMediaImageGroup = class(TInterfacedObject, ITMDBMediaImageGroup)
+  TTMDBMediaImageGroup = class(TTMDBInterfacedObject, ITMDBMediaImageGroup)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1133,7 +1142,7 @@ type
     property Items: ITMDBKeywords read GetItems;
   end;
 
-  TTMDBKeywordDetail = class(TInterfacedObject, ITMDBKeywordDetail)
+  TTMDBKeywordDetail = class(TTMDBInterfacedObject, ITMDBKeywordDetail)
   private
     FObj: ISuperObject;
   protected
@@ -1209,7 +1218,7 @@ type
 
 {$REGION 'Translation Related'}
 
-  TTMDBTranslationData = class(TInterfacedObject, ITMDBTranslationData)
+  TTMDBTranslationData = class(TTMDBInterfacedObject, ITMDBTranslationData)
   private
     FObj: ISuperObject;
   public
@@ -1281,7 +1290,7 @@ type
     property Overview: WideString read GetOverview;
   end;
 
-  TTMDBTranslation = class(TInterfacedObject, ITMDBTranslation)
+  TTMDBTranslation = class(TTMDBInterfacedObject, ITMDBTranslation)
   private
     FObj: ISuperObject;
     FData: ITMDBTranslationData;
@@ -1313,7 +1322,7 @@ type
     property TVEpisodeData: ITMDBTVEpisodeTranslationData read GetTVEpisodeData;
   end;
 
-  TTMDBTranslations = class(TInterfacedObject, ITMDBTranslations)
+  TTMDBTranslations = class(TTMDBInterfacedObject, ITMDBTranslations)
   private
     FObj: ISuperObject;
     FItems: TInterfaceList;
@@ -1379,7 +1388,7 @@ type
 
 {$REGION 'Discover Related'}
 
-  TTMDBDiscoverMoviesParams = class(TInterfacedObject, ITMDBDiscoverMoviesParams)
+  TTMDBDiscoverMoviesParams = class(TTMDBInterfacedObject, ITMDBDiscoverMoviesParams)
   private
     FObj: ISuperObject;
   protected
@@ -1504,7 +1513,7 @@ type
     property Year: Integer read GetYear write SetYear;
   end;
 
-  TTMDBDiscoverTVParams = class(TInterfacedObject, ITMDBDiscoverTVParams)
+  TTMDBDiscoverTVParams = class(TTMDBInterfacedObject, ITMDBDiscoverTVParams)
   private
     FObj: ISuperObject;
   protected
@@ -1622,7 +1631,7 @@ type
 
 {$REGION 'Find Related'}
 
-  TTMDBFindResults = class(TInterfacedObject, ITMDBFindResults)
+  TTMDBFindResults = class(TTMDBInterfacedObject, ITMDBFindResults)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1794,7 +1803,7 @@ type
     property Items[const Index: Integer]: ITMDBCrewPerson read GetItem; default;
   end;
 
-  TTMDBCredits = class(TInterfacedObject, ITMDBCredits)
+  TTMDBCredits = class(TTMDBInterfacedObject, ITMDBCredits)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1811,7 +1820,7 @@ type
     property Crew: ITMDBCrewPeople read GetCrew;
   end;
 
-  TTMDBCreditDetail = class(TInterfacedObject, ITMDBCreditDetail)
+  TTMDBCreditDetail = class(TTMDBInterfacedObject, ITMDBCreditDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1924,7 +1933,7 @@ type
     property Items[const Index: Integer]: ITMDBAggregateCrewPerson read GetItem; default;
   end;
 
-  TTMDBAggregateCredits = class(TInterfacedObject, ITMDBAggregateCredits)
+  TTMDBAggregateCredits = class(TTMDBInterfacedObject, ITMDBAggregateCredits)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -1980,7 +1989,7 @@ type
     property Items[const Index: Integer]: ITMDBCombinedCrewCredit read GetItem; default;
   end;
 
-  TTMDBCombinedCredits = class(TInterfacedObject, ITMDBCombinedCredits)
+  TTMDBCombinedCredits = class(TTMDBInterfacedObject, ITMDBCombinedCredits)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -2027,7 +2036,7 @@ type
     property Items[const Index: Integer]: ITMDBTVNetwork read GetItem; default;
   end;
 
-  TTMDBTVNetworkDetail = class(TInterfacedObject, ITMDBTVNetworkDetail)
+  TTMDBTVNetworkDetail = class(TTMDBInterfacedObject, ITMDBTVNetworkDetail)
   private
     FObj: ISuperObject;
   protected
@@ -2055,7 +2064,7 @@ type
 
 {$REGION 'Review Related'}
 
-  TTMDBReviewAuthor = class(TInterfacedObject, ITMDBReviewAuthor)
+  TTMDBReviewAuthor = class(TTMDBInterfacedObject, ITMDBReviewAuthor)
   private
     FObj: ISuperObject;
   protected
@@ -2116,7 +2125,7 @@ type
     property Items: ITMDBReviews read GetItems;
   end;
 
-  TTMDBReviewDetail = class(TInterfacedObject, ITMDBReviewDetail)
+  TTMDBReviewDetail = class(TTMDBInterfacedObject, ITMDBReviewDetail)
   private
     FObj: ISuperObject;
     FAuthorDetail: ITMDBReviewAuthor;
@@ -2195,7 +2204,7 @@ type
     property Items: ITMDBCollections read GetItems;
   end;
 
-  TTMDBCollectionDetail = class(TInterfacedObject, ITMDBCollectionDetail)
+  TTMDBCollectionDetail = class(TTMDBInterfacedObject, ITMDBCollectionDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -2229,7 +2238,7 @@ type
 
 {$REGION 'Rating Related'}
 
-  TTMDBRatingResult = class(TInterfacedObject, ITMDBRatingResult)
+  TTMDBRatingResult = class(TTMDBInterfacedObject, ITMDBRatingResult)
   private
     FObj: ISuperObject;
   protected
@@ -2248,7 +2257,7 @@ type
 
 {$REGION 'Movie List Related'}
 
-  TTMDBDateRange = class(TInterfacedObject, ITMDBDateRange)
+  TTMDBDateRange = class(TTMDBInterfacedObject, ITMDBDateRange)
   private
     FObj: ISuperObject;
   protected
@@ -2365,7 +2374,7 @@ type
     property Dates: ITMDBDateRange read GetDates;
   end;
 
-  TTMDBMovieCollectionRef = class(TInterfacedObject, ITMDBMovieCollectionRef)
+  TTMDBMovieCollectionRef = class(TTMDBInterfacedObject, ITMDBMovieCollectionRef)
   private
     FObj: ISuperObject;
   protected
@@ -2385,7 +2394,7 @@ type
     property BackdropPath: WideString read GetBackdropPath;
   end;
 
-  TTMDBMovieDetail = class(TInterfacedObject, ITMDBMovieDetail)
+  TTMDBMovieDetail = class(TTMDBInterfacedObject, ITMDBMovieDetail)
   private
     FTMDB: ITMDBClient;
     FObj: ISuperObject;
@@ -2925,7 +2934,7 @@ type
     property Items[const Index: Integer]: ITMDBTVSeasonEpisode read GetItem; default;
   end;
 
-  TTMDBTVSeasonDetail = class(TInterfacedObject, ITMDBTVSeasonDetail)
+  TTMDBTVSeasonDetail = class(TTMDBInterfacedObject, ITMDBTVSeasonDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -2970,7 +2979,7 @@ type
 
 {$REGION 'TV Episode Group Related'}
 
-  TTMDBTVEpisodeGroups = class(TInterfacedObject, ITMDBTVEpisodeGroups)
+  TTMDBTVEpisodeGroups = class(TTMDBInterfacedObject, ITMDBTVEpisodeGroups)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -3001,7 +3010,7 @@ type
     property GroupType: TTMDBTVEpisodeGroupType read GetType;
   end;
 
-  TTMDBTVEpisodeGroup = class(TInterfacedObject, ITMDBTVEpisodeGroup)
+  TTMDBTVEpisodeGroup = class(TTMDBInterfacedObject, ITMDBTVEpisodeGroup)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -3070,7 +3079,7 @@ type
     property Items: ITMDBLists read GetItems;
   end;
 
-  TTMDBListDetail = class(TInterfacedObject, ITMDBListDetail)
+  TTMDBListDetail = class(TTMDBInterfacedObject, ITMDBListDetail)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -3100,7 +3109,7 @@ type
 
 {$REGION 'Watch Provider Related'}
 
-  TTMDBWatchProviderPriority = class(TInterfacedObject, ITMDBWatchProviderPriority)
+  TTMDBWatchProviderPriority = class(TTMDBInterfacedObject, ITMDBWatchProviderPriority)
   private
     FCountryCode: WideString;
     FPriority: Integer;
@@ -3114,7 +3123,7 @@ type
     property Priority: Integer read GetPriority;
   end;
 
-  TTMDBWatchProviderPriorities = class(TInterfacedObject, ITMDBWatchProviderPriorities)
+  TTMDBWatchProviderPriorities = class(TTMDBInterfacedObject, ITMDBWatchProviderPriorities)
   private
     FObj: ISuperObject;
     FItems: TInterfaceList;
@@ -3186,7 +3195,7 @@ type
     property Items[const Index: Integer]: ITMDBMediaWatchProvider read GetItem; default;
   end;
 
-  TTMDBMediaWatchProviderCountry = class(TInterfacedObject, ITMDBMediaWatchProviderCountry)
+  TTMDBMediaWatchProviderCountry = class(TTMDBInterfacedObject, ITMDBMediaWatchProviderCountry)
   private
     FCountryCode: WideString;
     FObj: ISuperObject;
@@ -3212,7 +3221,7 @@ type
     property Flatrate: ITMDBMediaWatchProviders read GetFlatrate;
   end;
 
-  TTMDBMediaWatchProviderCountries = class(TInterfacedObject, ITMDBMediaWatchProviderCountries)
+  TTMDBMediaWatchProviderCountries = class(TTMDBInterfacedObject, ITMDBMediaWatchProviderCountries)
   private
     FObj: ISuperObject;
     FTMDB: ITMDBClient;
@@ -3240,11 +3249,11 @@ type
 
 {$REGION 'API Namespace Related'}
 
-  TTMDBNamespace = class(TInterfacedObject, ITMDBNamespace)
+  TTMDBNamespace = class(TTMDBInterfacedObject, ITMDBNamespace)
   private
     FOwner: TTMDBClient;
   protected
-    function GetOwner: ITMDBClient;
+    function GetOwner: ITMDBClient; stdcall;
   public
     constructor Create(AOwner: TTMDBClient);
     destructor Destroy; override;
@@ -3640,7 +3649,7 @@ type
 
 {$REGION 'TMDB Client'}
 
-  TTMDBCache = class(TInterfacedObject, ITMDBCache)
+  TTMDBCache = class(TTMDBInterfacedObject, ITMDBCache)
   private
     FOwner: TTMDBClient;
     FConfig: ITMDBConfiguration;
@@ -3684,7 +3693,7 @@ type
     property TVGenres: ITMDBGenres read GetTVGenres;
   end;
 
-  TTMDBLoginState = class(TInterfacedObject, ITMDBLoginState)
+  TTMDBLoginState = class(TTMDBInterfacedObject, ITMDBLoginState)
   private
     FOwner: TTMDBClient;
     FAuthMethod: TTMDBUserAuth;
@@ -3720,7 +3729,7 @@ type
     property AccountDetail: ITMDBAccountDetail read GetAccountDetail;
   end;
 
-  TTMDBClient = class(TInterfacedObject, ITMDBClient)
+  TTMDBClient = class(TTMDBInterfacedObject, ITMDBClient)
   private
     FAPI: TTMDBAPI;
     FUserAuth: TTMDBUserAuth;
@@ -4359,7 +4368,6 @@ end;
 constructor TTMDBCertificationCountries.Create(AObj: ISuperObject);
 begin
   FObj:= AObj;
-  //FItems:= TList<ITMDBCertificationCountry>.Create;
   FItems:= TInterfaceList.Create;
   PopulateItems;
 end;
