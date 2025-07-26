@@ -49,7 +49,8 @@ uses
   uCommonDblCheckList in 'Common Forms\uCommonDblCheckList.pas' {frmCommonDblCheckList: TFrame},
   uContentChangesMovies in 'Changes\uContentChangesMovies.pas' {frmContentChangesMovies},
   uCommonChanges in 'Common Forms\uCommonChanges.pas' {frmContentChanges},
-  uContentPersonDetail in 'People\uContentPersonDetail.pas' {frmContentPersonDetail};
+  uContentPersonDetail in 'People\uContentPersonDetail.pas' {frmContentPersonDetail},
+  uCommonPersonCredits in 'Common Forms\uCommonPersonCredits.pas' {frmCommonPersonCredits};
 
 {$R *.res}
 
@@ -60,5 +61,6 @@ begin
   Application.CreateForm(TfrmContentChangesMovies, frmContentChangesMovies);
   Application.CreateForm(TfrmContentChanges, frmContentChanges);
   Application.CreateForm(TfrmContentPersonDetail, frmContentPersonDetail);
+  Application.CreateForm(TfrmCommonPersonCredits, frmCommonPersonCredits);
   Application.Run;
 end.

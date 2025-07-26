@@ -15,7 +15,6 @@ type
   TfrmContentMoviePage = class(TfrmContentPageBase)
     procedure btnRefreshClick(Sender: TObject);
   private
-    //FDetail: ITMDBMovieDetail;
     FBaseName: String;
     FOnGetPage: TMoviePageProc;
     procedure SetBaseName(const Value: String);
@@ -73,33 +72,16 @@ procedure TfrmContentMoviePage.DoOnGetPage(const Page: Integer;
 begin
   if Assigned(FOnGetPage) then
     FOnGetPage(Self, Page, Data);
-  //
 end;
 
 function TfrmContentMoviePage.GetData(const APageNum: Integer): ITMDBPage;
 var
   P: ITMDBMoviePage;
-  //Q, L, R, PRY, Y: String;
-  //A: TTMDBBoolean;
 begin
   inherited;
-
   DoOnGetPage(APageNum, P);
   Result:= P;
-
-  {
-  Q:= txtSearchMoviesQuery.Text;
-  A:= TTMDBBoolean(cboSearchMoviesAdult.ItemIndex);
-  L:= AppSetup.Language;
-  R:= cboSearchMoviesRegion.Text;
-  PRY:= txtSearchMoviesPrimaryReleaseYear.Text;
-  Y:= txtSearchMoviesYear.Text;
-  }
-
-  //Result:= TMDB.Client.Search.SearchMovies(Q, A, L, R, PRY, Y, APageNum);
-
-  TabCaption:= Self.BaseName; // 'Search Movies - "'+Q+'"';
-
+  TabCaption:= Self.BaseName;
 end;
 
 function TfrmContentMoviePage.GetItem(const Index: Integer): ITMDBItem;

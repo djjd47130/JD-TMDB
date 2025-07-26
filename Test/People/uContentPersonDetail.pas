@@ -21,7 +21,8 @@ uses
   uCommonAlternativeTitles,
   uCommonChanges,
   uContentMoviePage,
-  uContentBrowser;
+  uContentBrowser,
+  uCommonPersonCredits;
 
 type
   TfrmContentPersonDetail = class(TfrmContentBase)
@@ -52,9 +53,9 @@ type
   private
     FDetail: ITMDBPersonDetail;
 
-    FCombinedCredits: TfrmCommonCredits;
-    FMovieCredits: TfrmCommonCredits;
-    FTVCredits: TfrmCommonCredits;
+    FCombinedCredits: TfrmCommonPersonCredits;
+    FMovieCredits: TfrmCommonPersonCredits;
+    FTVCredits: TfrmCommonPersonCredits;
     FImages: TfrmCommonImages;
     FChanges: TfrmContentChanges;
 
@@ -94,9 +95,9 @@ begin
   Pages.Align:= alClient;
   Pages.ActivePageIndex:= 0;
 
-  FCombinedCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCombinedCredits));
-  FMovieCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabMovieCredits));
-  FTVCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabTVCredits));
+  FCombinedCredits:= TfrmCommonPersonCredits(EmbedFormIntoTab(TfrmCommonPersonCredits, tabCombinedCredits));
+  FMovieCredits:= TfrmCommonPersonCredits(EmbedFormIntoTab(TfrmCommonPersonCredits, tabMovieCredits));
+  FTVCredits:= TfrmCommonPersonCredits(EmbedFormIntoTab(TfrmCommonPersonCredits, tabTVCredits));
   FImages:= TfrmCommonImages(EmbedFormIntoTab(TfrmCommonImages, tabImages));
   FChanges:= TfrmContentChanges(EmbedFormIntoTab(TfrmContentChanges, tabChanges));
 
@@ -313,7 +314,7 @@ end;
 
 procedure TfrmContentPersonDetail.LoadCombinedCredits;
 begin
-  //FCombinedCredits.LoadCredits(FDetail.AppendedCombinedCredits);
+  FCombinedCredits.LoadCombinedCredits(FDetail.AppendedCombinedCredits);
 end;
 
 procedure TfrmContentPersonDetail.LoadExternalIDs;
@@ -328,12 +329,12 @@ end;
 
 procedure TfrmContentPersonDetail.LoadMovieCredits;
 begin
-  //FMovieCredits.LoadCredits(FDetail.AppendedMovieCredits);
+  FMovieCredits.LoadMovieCredits(FDetail.AppendedMovieCredits);
 end;
 
 procedure TfrmContentPersonDetail.LoadTVCredits;
 begin
-  //FTVCredits.LoadCredits(FDetail.AppendedTVCredits);
+  FTVCredits.LoadTVCredits(FDetail.AppendedTVCredits);
 end;
 
 procedure TfrmContentPersonDetail.lstDetailAdvancedCustomDraw(

@@ -23,7 +23,7 @@ inherited frmContentPersonDetail: TfrmContentPersonDetail
       Caption = 'Detail'
       object Splitter1: TSplitter
         Left = 0
-        Top = 334
+        Top = 302
         Width = 971
         Height = 7
         Cursor = crVSplit
@@ -35,9 +35,9 @@ inherited frmContentPersonDetail: TfrmContentPersonDetail
       object txtOverview: TMemo
         AlignWithMargins = True
         Left = 3
-        Top = 344
+        Top = 312
         Width = 965
-        Height = 98
+        Height = 130
         Align = alBottom
         BorderStyle = bsNone
         Color = clBtnFace
@@ -50,7 +50,7 @@ inherited frmContentPersonDetail: TfrmContentPersonDetail
         Left = 3
         Top = 3
         Width = 965
-        Height = 328
+        Height = 296
         Align = alClient
         Columns = <
           item
