@@ -28,27 +28,11 @@ uses
 
   uLoginBrowser,
   uTMDBMenu,
-  uTMDBAppSetup, System.ImageList, Vcl.ImgList;
+  uTMDBAppSetup, System.ImageList, Vcl.ImgList, JD.Favicons;
+
+
 
 type
-
-  TDetailRef = class;
-
-  TDetailRefEvent = reference to procedure(Ref: TDetailRef);
-
-  TDetailRef = class(TObject)
-  private
-    FOnClick: TDetailRefEvent;
-    FItem: TListItem;
-    procedure SetOnClick(const Value: TDetailRefEvent);
-    function GetClickable: Boolean;
-  public
-    constructor Create(AItem: TListItem);
-    property Clickable: Boolean read GetClickable;
-    property Item: TListItem read FItem;
-    property OnClick: TDetailRefEvent read FOnClick write SetOnClick;
-  end;
-
 
   TfrmMain = class(TForm)
     pTop: TPanel;
@@ -80,7 +64,8 @@ type
     btnMenu: TJDFontButton;
     JDFontButton1: TJDFontButton;
     Tabs: TChromeTabs;
-    Favicons: TImageList;
+    imgFavicons16: TImageList;
+    JDFavicons1: TJDFavicons;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -98,6 +83,7 @@ type
       var Close: Boolean);
     procedure btnMenuClick(Sender: TObject);
     procedure TabsButtonAddClick(Sender: TObject; var Handled: Boolean);
+    procedure JDFavicons1LookupFavicon(Sender: TObject; const URI: string; Ref: TJDFaviconRef; var Handled: Boolean);
   private
     FAuthMethod: Integer;
     FMenu: TfrmTMDBHome;
@@ -105,7 +91,6 @@ type
     FRect: TRect;
     FState: TWindowState;
     FContentOnly: Boolean;
-    FFaviconRefs: TDictionary<String, Integer>;
     procedure ShowUserInfo;
     procedure ShowUserAvatar(const Path: String);
     procedure SetFullScreen(const Value: Boolean);
@@ -131,6 +116,8 @@ uses
 
 {$R *.dfm}
 
+
+
 var
   _AppSetup: TAppSetup;
 
@@ -142,22 +129,6 @@ begin
 end;
 
 
-{ TDetailRef }
-
-constructor TDetailRef.Create(AItem: TListItem);
-begin
-  FItem:= AItem;
-end;
-
-function TDetailRef.GetClickable: Boolean;
-begin
-  Result:= Assigned(FOnClick);
-end;
-
-procedure TDetailRef.SetOnClick(const Value: TDetailRefEvent);
-begin
-  FOnClick := Value;
-end;
 
 
 { TfrmMain }
@@ -165,12 +136,14 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   {$IFDEF DEBUG}
-  ReportMemoryLeaksOnShutdown:= True;
-  //MEMORY LEAKS! TEMPORARILY DISABLING!
+  //ReportMemoryLeaksOnShutdown:= True;
+  //MEMORY LEAKS! TEMPORARILY DISABLING! - Issue #5
+  //https://github.com/djjd47130/JD-TMDB/issues/5
   {$ENDIF}
 
   //UI
-  TStyleManager.TrySetStyle('Carbon', False);
+  //TStyleManager.TrySetStyle('Carbon', False);
+  TStyleManager.TrySetStyle('Windows10 Dark', False);
   ColorManager.BaseColor:= clBlack; // TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scButtonNormal);
   pContent.Align:= alClient;
   gbUserInfo.Align:= alClient;
@@ -183,7 +156,6 @@ begin
   TabController.ChromeTabs:= Tabs;
   TabController.Container:= pContent;
   TabController.MainForm:= Self;
-  FFaviconRefs:= TDictionary<String, Integer>.Create;
 
   //User Auth
   FAuthMethod:= 2;
@@ -201,12 +173,9 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   //Tabs
   UninitTabController;
-  FreeAndNil(FFaviconRefs);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
-//var
-//  T: TJDTabRef;
 begin
   PrepAPI;
 
@@ -223,6 +192,13 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TfrmMain.JDFavicons1LookupFavicon(Sender: TObject; const URI: string; Ref: TJDFaviconRef;
+  var Handled: Boolean);
+begin
+  //TODO: Return image if not a web URL...
+
 end;
 
 function TfrmMain.MenuVisible: Boolean;

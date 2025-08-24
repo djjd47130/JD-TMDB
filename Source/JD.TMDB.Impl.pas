@@ -34,7 +34,8 @@ type
   ///   instead of TInterfacedObject for various reasons as explained here:
   ///   https://www.codeproject.com/Articles/1252175/Fixing-Delphis-Interface-Limitations
   /// </summary>
-  TTMDBInterfacedObject = class(TInterfacedPersistent);
+  TTMDBInterfacedObject = class(TInterfacedObject);
+  //TTMDBInterfacedObject = class(TInterfacedPersistent);
 
 
 {$REGION 'Forward Definitions'}
@@ -2295,25 +2296,34 @@ type
     function GetDetails(const AppendToResponse: TTMDBMovieRequests = [];
       const Language: WideString = ''; const SessionID: WideString = '';
       const GuestSessionID: WideString = ''): ITMDBMovieDetail; stdcall;
-    //function GetAccountStates: ITMDBAccountStates; stdcall;
-    //function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
-    //function GetChanges(const StartDate, EndDate: TDateTime;
-    //  const Page: Integer = 1): ITMDBChangePage; stdcall;
-    //function GetCredits: ITMDBCredits; stdcall;
-    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
-    //function GetImages(): ITMDBMediaImages; stdcall;
-    //function GetKeywords: ITMDBKeywordList; stdcall;
-    //function GetLists(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBListPage; stdcall;
-    //function GetRecommendations(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
-    //function GetReviews(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBReviewList; stdcall;
-    //function GetSimilar(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetTranslations: ITMDBTranslationList; stdcall;
-    //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
+
+    //Shortcut methods
+    function GetAccountStates: ITMDBAccountStates; stdcall;
+    function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
+    function GetChanges(const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    function GetCredits: ITMDBCredits; stdcall;
+    function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    function GetImages(): ITMDBMediaImageGroup; stdcall;
+    function GetKeywords: ITMDBKeywords; stdcall;
+    function GetLists(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBListPage; stdcall;
+    function GetRecommendations(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMediaPage; stdcall;
+    function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
+    function GetReviews(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBReviewPage; stdcall;
+    function GetSimilar(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    function GetTranslations: ITMDBTranslations; stdcall;
+    function GetVideos(const Language: WideString): ITMDBVideos; stdcall;
+
+    //TODO: Add options for user to directly control rating, favorite, and watchlist for this item...
+    //function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    //function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    //function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function AddRating(const Rating: Single): ITMDB... //TODO
+    //function RemoveRating: ITMDB... //TODO
 
     property BackdropPath: WideString read GetBackdropPath;
     property Genres: ITMDBGenres read GetGenres;
@@ -3649,6 +3659,8 @@ type
 
 {$REGION 'TMDB Client'}
 
+  //TODO: Add cache expiration mechanism...
+
   TTMDBCache = class(TTMDBInterfacedObject, ITMDBCache)
   private
     FOwner: TTMDBClient;
@@ -4854,9 +4866,32 @@ end;
 
 { TTMDBMovie }
 
+function TTMDBMovie.GetAccountStates: ITMDBAccountStates;
+begin
+  if FTMDB.LoginState.IsGuest then
+    Result:= FTMDB.Movies.GetAccountStates(ID, '', FTMDB.LoginState.SessionID)
+  else
+    Result:= FTMDB.Movies.GetAccountStates(ID, FTMDB.LoginState.SessionID);
+end;
+
+function TTMDBMovie.GetAlternativeTitles(const Country: WideString): ITMDBAlternativeTitles;
+begin
+  Result:= FTMDB.Movies.GetAlternativeTitles(ID);
+end;
+
 function TTMDBMovie.GetBackdropPath: WideString;
 begin
   Result:= FObj.S['backdrop_path'];
+end;
+
+function TTMDBMovie.GetChanges(const StartDate, EndDate: TDateTime): ITMDBChanges;
+begin
+  Result:= FTMDB.Movies.GetChanges(ID, StartDate, EndDate);
+end;
+
+function TTMDBMovie.GetCredits: ITMDBCredits;
+begin
+  Result:= FTMDB.Movies.GetCredits(ID);
 end;
 
 function TTMDBMovie.GetDetails(const AppendToResponse: TTMDBMovieRequests = [];
@@ -4864,6 +4899,11 @@ function TTMDBMovie.GetDetails(const AppendToResponse: TTMDBMovieRequests = [];
   const GuestSessionID: WideString = ''): ITMDBMovieDetail;
 begin
   Result:= FTMDB.Movies.GetDetails(ID, AppendToResponse, Language, SessionID, GuestSessionID);
+end;
+
+function TTMDBMovie.GetExternalIDs: ITMDBExternalIDs;
+begin
+  Result:= FTMDB.Movies.GetExternalIDs(ID);
 end;
 
 function TTMDBMovie.GetGenres: ITMDBGenres;
@@ -4886,6 +4926,21 @@ begin
   Result:= FGenres;
 end;
 
+function TTMDBMovie.GetImages: ITMDBMediaImageGroup;
+begin
+  Result:= FTMDB.Movies.GetImages(ID);
+end;
+
+function TTMDBMovie.GetKeywords: ITMDBKeywords;
+begin
+  Result:= FTMDB.Movies.GetKeywords(ID);
+end;
+
+function TTMDBMovie.GetLists(const Language: WideString; const Page: Integer): ITMDBListPage;
+begin
+  Result:= FTMDB.Movies.GetLists(ID);
+end;
+
 function TTMDBMovie.GetOriginalLanguage: WideString;
 begin
   Result:= FObj.S['original_language'];
@@ -4906,14 +4961,44 @@ begin
   Result:= FObj.S['poster_path'];
 end;
 
+function TTMDBMovie.GetRecommendations(const Language: WideString; const Page: Integer): ITMDBMediaPage;
+begin
+  Result:= FTMDB.Movies.GetRecommendations(ID);
+end;
+
 function TTMDBMovie.GetReleaseDate: TDateTime;
 begin
   Result:= TMDBConvertDate(FObj.S['release_date']);
 end;
 
+function TTMDBMovie.GetReleaseDates: ITMDBReleaseDateCountries;
+begin
+  Result:= FTMDB.Movies.GetReleaseDates(ID);
+end;
+
+function TTMDBMovie.GetReviews(const Language: WideString; const Page: Integer): ITMDBReviewPage;
+begin
+  Result:= FTMDB.Movies.GetReviews(ID);
+end;
+
+function TTMDBMovie.GetSimilar(const Language: WideString; const Page: Integer): ITMDBMoviePage;
+begin
+  Result:= FTMDB.Movies.GetSimilar(ID);
+end;
+
+function TTMDBMovie.GetTranslations: ITMDBTranslations;
+begin
+  Result:= FTMDB.Movies.GetTranslations(ID);
+end;
+
 function TTMDBMovie.GetVideo: Boolean;
 begin
   Result:= FObj.B['video'];
+end;
+
+function TTMDBMovie.GetVideos(const Language: WideString): ITMDBVideos;
+begin
+  Result:= FTMDB.Movies.GetVideos(ID);
 end;
 
 function TTMDBMovie.GetVoteAverage: Single;
@@ -11697,7 +11782,9 @@ function TTMDBCache.GetConfig: ITMDBConfiguration;
 begin
   if FConfig = nil then begin
     FConfig:= FOwner.Configuration.GetDetails;
-    FOwner.FAPI.ImageBaseURL:= FConfig.Images.SecureBaseURL;
+    //If image base hasn't been overwritten, update it...
+    if FOwner.FAPI.Images.ImageBaseURL = DEFAULT_IMAGE_BASE then
+      FOwner.FAPI.Images.ImageBaseURL:= FConfig.Images.SecureBaseURL;
   end;
   Result:= FConfig;
 end;
@@ -12055,12 +12142,12 @@ end;
 function TTMDBClient.GetImage(var Base64: WideString; const Path,
   Size: WideString): Boolean;
 begin
-  Result:= FAPI.GetImage(Base64, Path, Size);
+  Result:= FAPI.Images.GetImage(Base64, Path, Size);
 end;
 
 function TTMDBClient.GetImageURL(const Path, Size: WideString): WideString;
 begin
-  Result:= FAPI.GetImageURL(Path, Size);
+  Result:= FAPI.Images.GetImageURL(Path, Size);
 end;
 
 function TTMDBClient.GetLoginState: ITMDBLoginState;

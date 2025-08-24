@@ -90,7 +90,6 @@ type
     Panel16: TPanel;
     Label17: TLabel;
     Edit12: TEdit;
-    frmGenres: TfrmCommonDblCheckList;
     JDChipList1: TJDChipList;
     Splitter2: TSplitter;
     clCompanies: TJDChipList;
@@ -98,6 +97,9 @@ type
     Label6: TLabel;
     txtSearchCompanies: TButtonedEdit;
     txtSearchKeyword: TSearchBox;
+    clGenres: TJDChipList;
+    SearchBox1: TSearchBox;
+    Label7: TLabel;
     procedure cboCertCountryClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -152,9 +154,9 @@ begin
   inherited;
   FPrepped:= False;
   CategoryPanelGroup1.CollapseAll;
-  frmGenres.Align:= alClient;
+  clGenres.Align:= alClient;
 
-  frmGenres.LoadList(TMDB.Cache.TVGenres);
+  //frmGenres.LoadList(TMDB.Cache.TVGenres);
 
 end;
 

@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  Caption = 'TMDB API Test'
+  Caption = 'SPACEBALLS: The Web Browser'
   ClientHeight = 462
   ClientWidth = 846
   Color = clBtnFace
@@ -69,8 +69,6 @@ object frmMain: TfrmMain
       TabOrder = 0
       Text = 'User Login'
       OnClick = btnUserClick
-      ExplicitLeft = 616
-      ExplicitTop = 0
     end
     object Tabs: TChromeTabs
       Left = 52
@@ -81,7 +79,7 @@ object frmMain: TfrmMain
       OnButtonAddClick = TabsButtonAddClick
       OnButtonCloseTabClick = TabsButtonCloseTabClick
       ActiveTabIndex = -1
-      Images = Favicons
+      Images = imgFavicons16
       Options.Display.CloseButton.Offsets.Vertical = 7
       Options.Display.CloseButton.Offsets.Horizontal = 0
       Options.Display.CloseButton.Height = 14
@@ -408,8 +406,6 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ShowHint = True
       TabOrder = 1
-      ExplicitLeft = 49
-      ExplicitTop = -6
     end
     object btnMenu: TJDFontButton
       AlignWithMargins = True
@@ -464,7 +460,6 @@ object frmMain: TfrmMain
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 36
   end
   object Stat: TStatusBar
     Left = 0
@@ -784,8 +779,18 @@ object frmMain: TfrmMain
     Left = 420
     Top = 55
   end
-  object Favicons: TImageList
-    Left = 472
+  object imgFavicons16: TImageList
+    Left = 544
+    Top = 104
+  end
+  object JDFavicons1: TJDFavicons
+    ImageLists = <
+      item
+        ImageList = imgFavicons16
+      end>
+    Mode = fmGoogle
+    OnLookupFavicon = JDFavicons1LookupFavicon
+    Left = 544
     Top = 56
   end
 end

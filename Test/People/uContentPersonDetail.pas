@@ -61,11 +61,9 @@ type
 
     procedure ClearDetails;
     function GetPersonDetail(const ID: Integer): ITMDBPersonDetail;
-    function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
-      ATab: TTabSheet): TfrmCommonFormBase; overload;
-    function EmbedFormIntoTab(AClass: TfrmContentBaseClass;
-      ATab: TTabSheet): TfrmContentBase; overload;
-    procedure LoadTabContent;
+
+    procedure LoadTabContent; //Loads content for whatever tab is currently visible
+    //One of the following gets called from LoadTabContent depending on current tab:
     procedure LoadDetails;
     procedure LoadChanges;
     procedure LoadCombinedCredits;
@@ -75,6 +73,11 @@ type
     procedure LoadTranslations;
     procedure LoadTVCredits;
   public
+    function EmbedFormIntoTab(AClass: TfrmCommonFormBaseClass;
+      ATab: TTabSheet): TfrmCommonFormBase; overload;
+    function EmbedFormIntoTab(AClass: TfrmContentBaseClass;
+      ATab: TTabSheet): TfrmContentBase; overload;
+
     procedure LoadPerson(const PersonID: Integer); overload;
     procedure LoadPerson(const Person: ITMDBPersonDetail); overload;
   end;
@@ -122,6 +125,8 @@ procedure TfrmContentPersonDetail.LoadTabContent;
 begin
   Screen.Cursor:= crHourglass;
   try
+    //Load only the content of the currently active tab...
+    //TODO: Change each to track whether it's loaded, and show cached data...
     case Pages.ActivePageIndex of
       0: LoadDetails;
       1: LoadChanges;
@@ -151,8 +156,8 @@ procedure TfrmContentPersonDetail.LoadDetails;
   end;
 var
   X: Integer;
-  I: TDetailRef;
-  BackdropPath: String;
+  //I: TDetailRef;
+  //BackdropPath: String;
 begin
   lstDetail.Items.BeginUpdate;
   try
@@ -161,8 +166,8 @@ begin
     A('Name', FDetail.Title,
       procedure(Ref: TDetailRef)
       begin
-        //TODO: Translations...
-        //Pages.ActivePage:= tabAltTitles;
+        //Translations...
+        Pages.ActivePage:= tabTranslations;
         PagesChange(Pages);
       end);
 
@@ -170,17 +175,16 @@ begin
       A('Also Known As', FDetail.AlsoKnownAs[X],
         procedure(Ref: TDetailRef)
         begin
-        //TODO: Translations...
-          //Pages.ActivePage:= tabAltTitles;
+        //Translations...
+          Pages.ActivePage:= tabTranslations;
           PagesChange(Pages);
         end);
     end;
     A('Gender', TMDBGenderToStr(FDetail.Gender));
     A('Department', FDetail.KnownForDepartment);
-    A('Birthday', FormatDateTime('yyyy-mm-dd', FDetail.Birthday));
+    A('Birthday', TMDBDateTimeToStr(FDetail.Birthday));
     A('Birth Place', FDetail.PlaceOfBirth);
-    if FDetail.Deathday <> 0 then
-      A('Deathday', FormatDateTime('yyyy-mm-dd', FDetail.Deathday));
+    A('Deathday', TMDBDateTimeToStr(FDetail.Deathday));
     A('Homepage', FDetail.Homepage,
       procedure(Ref: TDetailRef)
       begin

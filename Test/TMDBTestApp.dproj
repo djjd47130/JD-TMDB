@@ -106,7 +106,6 @@
             <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\JD.TMDB.API.pas"/>
         <DCCReference Include="uContentBase.pas">
             <Form>frmContentBase</Form>
             <FormType>dfm</FormType>
@@ -123,9 +122,6 @@
             <Form>frmContentSearchCollections</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\JD.TMDB.Intf.pas"/>
-        <DCCReference Include="..\Source\JD.TMDB.Impl.pas"/>
-        <DCCReference Include="..\Source\JD.TMDB.Common.pas"/>
         <DCCReference Include="uContentListBase.pas">
             <Form>frmContentBase1</Form>
             <FormType>dfm</FormType>
@@ -138,7 +134,6 @@
             <Form>frmContentGenresTV</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\JD.TMDB.pas"/>
         <DCCReference Include="Certifications\uContentCertsMovies.pas">
             <Form>frmContentCertsMovies</Form>
             <FormType>dfm</FormType>
@@ -220,7 +215,6 @@
             <Form>frmTMDBAppSetup</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\JD.TMDB.LocalWebServer.pas"/>
         <DCCReference Include="Configuration\uContentConfigTimezones.pas">
             <Form>frmContentConfigTimezones</Form>
             <FormType>dfm</FormType>

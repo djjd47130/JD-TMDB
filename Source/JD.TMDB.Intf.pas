@@ -1893,25 +1893,34 @@ type
     function GetDetails(const AppendToResponse: TTMDBMovieRequests = [];
       const Language: WideString = ''; const SessionID: WideString = '';
       const GuestSessionID: WideString = ''): ITMDBMovieDetail; stdcall;
-    //function GetAccountStates: ITMDBAccountStates; stdcall;
-    //function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
-    //function GetChanges(const StartDate, EndDate: TDateTime;
-    //  const Page: Integer = 1): ITMDBChangePage; stdcall;
-    //function GetCredits: ITMDBCredits; stdcall;
-    //function GetExternalIDs: ITMDBExternalIDs; stdcall;
-    //function GetImages(): ITMDBMediaImages; stdcall;
-    //function GetKeywords: ITMDBKeywordList; stdcall;
-    //function GetLists(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBListPage; stdcall;
-    //function GetRecommendations(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
-    //function GetReviews(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBReviewList; stdcall;
-    //function GetSimilar(const Language: WideString = '';
-    //  const Page: Integer = 1): ITMDBMoviePage; stdcall;
-    //function GetTranslations: ITMDBTranslationList; stdcall;
-    //function GetVideos(const Language: WideString): ITMDBVideoList; stdcall;
+
+    //Shortcut methods
+    function GetAccountStates: ITMDBAccountStates; stdcall;
+    function GetAlternativeTitles(const Country: WideString = ''): ITMDBAlternativeTitles; stdcall;
+    function GetChanges(const StartDate, EndDate: TDateTime): ITMDBChanges; stdcall;
+    function GetCredits: ITMDBCredits; stdcall;
+    function GetExternalIDs: ITMDBExternalIDs; stdcall;
+    function GetImages: ITMDBMediaImageGroup; stdcall;
+    function GetKeywords: ITMDBKeywords; stdcall;
+    function GetLists(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBListPage; stdcall;
+    function GetRecommendations(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMediaPage; stdcall;
+    function GetReleaseDates: ITMDBReleaseDateCountries; stdcall;
+    function GetReviews(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBReviewPage; stdcall;
+    function GetSimilar(const Language: WideString = '';
+      const Page: Integer = 1): ITMDBMoviePage; stdcall;
+    function GetTranslations: ITMDBTranslations; stdcall;
+    function GetVideos(const Language: WideString): ITMDBVideos; stdcall;
+
+    //TODO: Add options for user to directly control rating, favorite, and watchlist for this item...
+    //function AddToFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    //function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
+    //function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
+    //function AddRating(const Rating: Single): ITMDB... //TODO
+    //function RemoveRating: ITMDB... //TODO
 
     property BackdropPath: WideString read GetBackdropPath;
     property Genres: ITMDBGenres read GetGenres;
@@ -2049,8 +2058,8 @@ type
     function RemoveFromFavorites: ITMDBAccountAddFavoriteResult; stdcall;
     function AddToWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
     function RemoveFromWatchlist: ITMDBAccountAddWatchlistResult; stdcall;
-    //function AddRating(const Rating: Single): ITMDB...
-    //function RemoveRating: ITMDB...
+    //function AddRating(const Rating: Single): ITMDB... //TODO
+    //function RemoveRating: ITMDB... //TODO
 
     //TODO: Should I share these with "Appended" data?
     //  For example, if (Has Appended Data) then (Use Appended Data) else (Fetch Data)
@@ -3526,7 +3535,7 @@ type
 {$REGION 'TMDB Client'}
 
   /// <summary>
-  /// Collection of cached lists and data which is frequently accessed.
+  /// Collection of cached data which is frequently accessed.
   /// </summary>
   ITMDBCache = interface
     ['{7D0D9646-6136-48D8-8FC1-03A6950B670F}']
@@ -3650,6 +3659,9 @@ type
     function TVEpisodeGroups: ITMDBNamespaceTVEpisodeGroups; stdcall;
     function WatchProviders: ITMDBNamespaceWatchProviders; stdcall;
 
+    /// <summary>
+    /// The "User-Agent" header supplied in all HTTP requests
+    /// </summary>
     property AppUserAgent: WideString read GetAppUserAgent write SetAppUserAgent;
     property APIKey: WideString read GetAPIKey write SetAPIKey;
     property AccessToken: WideString read GetAccessToken write SetAccessToken;

@@ -9,7 +9,6 @@ uses
   Vcl.Controls, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Forms,
   ChromeTabs, ChromeTabsClasses
 
-  //TODO: Remove this necessity...
   , uContentBase
 
   ;
@@ -22,7 +21,9 @@ type
 
   TJDTabFormClass = class of TJDTabForm;
 
-  //TODO: Migrage form-related stuff to central form class as part of library...
+  //TODO: Migrate form-related stuff to central form class as part of library...
+  //NOTE: The following approach is not likely to suffice, as it is not a typical actual VCL form
+  //  tied to the VCL framework via DFM. Need to create base form in separate dedicated unit instead.
   TJDTabForm = class(TForm)
   private
 
@@ -31,6 +32,7 @@ type
   published
 
   end;
+
 
 
   TJDTabRef = class(TObject)
@@ -81,8 +83,15 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    /// <summary>
+    /// Creates a new tab in the main UI as a specific class of TfrmContentBase.
+    /// - AClass: TfrmContentBaseClass - The content form class to be created.
+    /// - AIndex: Integer (Optional) - The index where to insert the new tab.
+    /// - AID: Integer (Optional) - The unique ID of the resource being opened.
+    /// </summary>
     function CreateTab(AClass: TfrmContentBaseClass;
-      const AIndex: Integer = -1): TJDTabRef;
+      const AIndex: Integer = -1;
+      const AID: Integer = -1): TJDTabRef;
 
     //procedure QueryCloseTab(const Tab: TJDTabRef);
     procedure DeleteTab(const Index: Integer);
@@ -230,10 +239,13 @@ begin
 end;
 
 function TJDTabController.CreateTab(AClass: TfrmContentBaseClass;
-  const AIndex: Integer): TJDTabRef;
+  const AIndex: Integer;
+  const AID: Integer): TJDTabRef;
 var
   I: Integer;
 begin
+  //TODO: If AID is specified, and identical tab already exists,
+  //  prompt whether to open existing tab or create new tab.
   FCreating:= True;
   try
     Result:= TJDTabRef.Create(Self, AClass);

@@ -18,8 +18,8 @@ unit JD.TMDB.LocalWebServer;
   - Move inside library and inside TTMDB component...
 
   REMARKS:
-  - Videos - This is used for embedded videos via YouTube, etc.
   - User Auth - This is used for a redirect upon user authentication in web browser.
+  - Videos - This is used for embedded videos via YouTube, etc.
 
 *)
 

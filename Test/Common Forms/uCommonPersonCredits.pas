@@ -127,7 +127,7 @@ begin
 
   //Cast
   for var X := 0 to FCredits.Cast.Count-1 do begin
-    var MCast:= FCredits.Cast.Items[X];
+    var MCast:= FCredits.Cast.Items[X]; //TODO: Why does this raise "Interface not supported" on combined credits?
     var I:= lstResults.Items.Add;
     var O:= TCreditListObj.Create;
     O.FMedium:= MCast;

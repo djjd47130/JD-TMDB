@@ -21,7 +21,7 @@ uses
   uCommonAlternativeTitles,
   uCommonChanges,
   uContentMoviePage,
-  uContentBrowser;
+  uContentBrowser, ChromeTabs, ChromeTabsClasses;
 
 type
   TfrmContentMovieDetail = class(TfrmContentBase)
@@ -51,6 +51,7 @@ type
     lstDetail: TListView;
     Splitter1: TSplitter;
     lstExternalIDs: TListView;
+    Tabs: TChromeTabs;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PagesChange(Sender: TObject);
@@ -64,9 +65,11 @@ type
       State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure lstDetailCustomDraw(Sender: TCustomListView; const ARect: TRect;
       var DefaultDraw: Boolean);
+    procedure TabsActiveTabChanged(Sender: TObject; ATab: TChromeTab);
   private
     FDetail: ITMDBMovieDetail;
     FBackdrop: TPicture;
+    FLoading: Boolean;
 
     FCredits: TfrmCommonCredits;
     FImages: TfrmCommonImages;
@@ -121,19 +124,39 @@ uses
 procedure TfrmContentMovieDetail.FormCreate(Sender: TObject);
 begin
   inherited;
-  FBackdrop:= TPicture.Create;
-  FDetail:= nil;
-  Pages.Align:= alClient;
-  Pages.ActivePageIndex:= 0;
+  FLoading:= True;
+  try
+    FBackdrop:= TPicture.Create;
+    FDetail:= nil;
+    Pages.Align:= alClient;
+    Pages.ActivePageIndex:= 0;
 
-  FVideos:= TfrmCommonVideos(EmbedFormIntoTab(TfrmCommonVideos, tabVideos));
-  FImages:= TfrmCommonImages(EmbedFormIntoTab(TfrmCommonImages, tabImages));
-  FCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCredits));
-  FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
-  FSimilar:= TfrmContentMoviePage(EmbedFormIntoTab(TfrmContentMoviePage, tabSimilar));
-  FChanges:= TfrmContentChanges(EmbedFormIntoTab(TfrmContentChanges, tabChanges));
-  FSimilar.BaseName:= 'Similar Movies';
+    FVideos:= TfrmCommonVideos(EmbedFormIntoTab(TfrmCommonVideos, tabVideos));
+    FImages:= TfrmCommonImages(EmbedFormIntoTab(TfrmCommonImages, tabImages));
+    FCredits:= TfrmCommonCredits(EmbedFormIntoTab(TfrmCommonCredits, tabCredits));
+    FReviews:= TfrmCommonReviews(EmbedFormIntoTab(TfrmCommonReviews, tabReviews));
+    FSimilar:= TfrmContentMoviePage(EmbedFormIntoTab(TfrmContentMoviePage, tabSimilar));
+    FChanges:= TfrmContentChanges(EmbedFormIntoTab(TfrmContentChanges, tabChanges));
+    FSimilar.BaseName:= 'Similar Movies';
 
+    Tabs.Tabs.Clear;
+    for var X := 0 to Pages.PageCount-1 do begin
+      var Tab:= Tabs.Tabs.Add;
+      Tab.Caption:= Pages.Pages[X].Caption;
+      Tab.ImageIndex:= Pages.Pages[X].ImageIndex;
+
+    end;
+
+    Tabs.ActiveTabIndex:= Pages.ActivePageIndex;
+
+    for var X := 0 to Pages.PageCount-1 do
+      Pages.Pages[X].TabVisible:= False;
+
+    Pages.ActivePageIndex:= 0;
+
+  finally
+    FLoading:= False;
+  end;
 end;
 
 procedure TfrmContentMovieDetail.FormDestroy(Sender: TObject);
@@ -222,6 +245,21 @@ end;
 procedure TfrmContentMovieDetail.PagesChange(Sender: TObject);
 begin
   inherited;
+  if FLoading then
+    Exit;
+  if Tabs.ActiveTabIndex <> Pages.ActivePageIndex then
+    Tabs.ActiveTabIndex:= Pages.ActivePageIndex;
+  LoadTabContent;
+end;
+
+procedure TfrmContentMovieDetail.TabsActiveTabChanged(Sender: TObject;
+  ATab: TChromeTab);
+begin
+  inherited;
+  if FLoading then
+    Exit;
+  if Tabs.ActiveTabIndex <> Pages.ActivePageIndex then
+    Pages.ActivePageIndex:= Tabs.ActiveTabIndex;
   LoadTabContent;
 end;
 
@@ -238,28 +276,16 @@ begin
       5: LoadExternalIDs;
       6: LoadImages;
       7: LoadKeywords;
-      8: ; //Lists
-      9: ; //Recommendations
+      //8: LoadLists;
+      //9: LoadRecommendations;
       10: LoadReleaseDates;
       11: LoadReviews;
       12: LoadSimilar;
-      13: ; //Translations
+      //13: LoadTranslations;
       14: LoadVideos;
     end;
   finally
     Screen.Cursor:= crDefault;
-  end;
-end;
-
-function GetMovieGenres(O: ITMDBMovieDetail): String;
-var
-  X: Integer;
-begin
-  Result:= '';
-  for X := 0 to O.Genres.Count-1 do begin
-    if Result <> '' then
-      Result:= Result + ', ';
-    Result:= Result + O.Genres[X].Name;
   end;
 end;
 
@@ -331,7 +357,7 @@ begin
       I:= A('Genre', FDetail.Genres[X].Name);
       I.Item.Indent:= 1;
     end;
-    A('Release Date', FormatDateTime('yyyy-mm-dd', FDetail.ReleaseDate),
+    A('Release Date', TMDBDateTimeToStr(FDetail.ReleaseDate),
       procedure(Ref: TDetailRef)
       begin
         //Relase Dates

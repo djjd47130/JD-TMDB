@@ -729,8 +729,6 @@ inherited frmTMDBHome: TfrmTMDBHome
         TabOrder = 13
         Text = 'Movie Changes'
         OnClick = btnMovieChangesClick
-        ExplicitLeft = 32
-        ExplicitTop = 639
       end
     end
     object pTV: TPanel
@@ -741,7 +739,6 @@ inherited frmTMDBHome: TfrmTMDBHome
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 497
       object Label2: TLabel
         AlignWithMargins = True
         Left = 8
@@ -1431,7 +1428,6 @@ inherited frmTMDBHome: TfrmTMDBHome
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 1408
       object Label3: TLabel
         AlignWithMargins = True
         Left = 8
@@ -1746,7 +1742,6 @@ inherited frmTMDBHome: TfrmTMDBHome
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitTop = 1752
       object Label4: TLabel
         AlignWithMargins = True
         Left = 8
@@ -2155,7 +2150,6 @@ inherited frmTMDBHome: TfrmTMDBHome
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 1170
       object Label5: TLabel
         AlignWithMargins = True
         Left = 8

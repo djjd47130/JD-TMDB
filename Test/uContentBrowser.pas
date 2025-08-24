@@ -7,7 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, WebView2, Winapi.ActiveX,
   Vcl.Edge, Vcl.StdCtrls, Vcl.ExtCtrls, JD.Common, JD.Ctrls, JD.Ctrls.FontButton,
   JD.TabController,
-  ChromeTabsTypes;
+  ChromeTabsTypes,
+  System.RegularExpressions,
+  System.NetEncoding;
 
 type
   TfrmContentBrowser = class(TfrmContentBase)
@@ -40,10 +42,14 @@ type
   private
     FInitialized: Boolean;
     procedure SetFullscreen(const Value: Boolean);
+  protected
   public
     procedure UpdateHeader;
     procedure Navigate(const URL: String);
     function Tab: TJDTabRef;
+
+    function GetImageIndex: Integer; override;
+    procedure RefreshData; override;
   end;
 
 var
@@ -55,6 +61,32 @@ implementation
 
 uses
   uMain;
+
+function IsValidURLPath(const Input: string): Boolean;
+const
+  Patterns: array[0..5] of string = (
+    '^[a-zA-Z][a-zA-Z0-9+\-.]*://',           // Any protocol
+    '^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?', // Domain with optional port
+    '^www\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,}',      // www-prefixed domain
+    '^about:[a-zA-Z0-9\-]+$',                 // about: scheme
+    '^localhost(:\d+)?',                      // localhost with optional port
+    '^\d{1,3}(\.\d{1,3}){3}(:\d+)?'           // IPv4 with optional port
+  );
+var
+  NormalizedInput: string;
+  Pattern: string;
+begin
+  NormalizedInput := Trim(Input);
+  Result := False;
+  for Pattern in Patterns do begin
+    if TRegEx.IsMatch(NormalizedInput, Pattern, [roIgnoreCase]) then begin
+      Result := True;
+      Break;
+    end;
+  end;
+end;
+
+{ TfrmContentBrowser }
 
 procedure TfrmContentBrowser.EdgeContainsFullScreenElementChanged(
   Sender: TCustomEdgeBrowser; ContainsFullScreenElement: Boolean);
@@ -117,6 +149,8 @@ begin
   Tab.ChromeTab.SpinnerState:= tssNone;
   btnGo.Tag:= 0;
   btnGo.Image.Text:= ''; //Go
+
+  Tab.ChromeTab.ImageIndex:= Self.GetImageIndex;
 end;
 
 procedure TfrmContentBrowser.EdgeNavigationStarting(Sender: TCustomEdgeBrowser;
@@ -126,6 +160,8 @@ begin
   Tab.ChromeTab.SpinnerState:= tssRenderedDownload;
   btnGo.Tag:= 1;
   btnGo.Image.Text:= ''; //Stop
+
+  //Tab.ChromeTab.ImageIndex:= Self.GetImageIndex;
 end;
 
 procedure TfrmContentBrowser.EdgeNewWindowRequested(Sender: TCustomEdgeBrowser;
@@ -159,18 +195,73 @@ begin
   UpdateHeader;
 end;
 
+function TfrmContentBrowser.GetImageIndex: Integer;
+begin
+  Result:= -1;
+  try
+    var Ref:= frmMain.JDFavicons1.GetFavicon(txtAddress.Text);
+    if Assigned(Ref) then
+      Result:= frmMain.JDFavicons1.GetFavicon(txtAddress.Text).ImageIndex;
+  except
+    on E: Exception do begin
+
+    end;
+  end;
+end;
+
+{
 procedure TfrmContentBrowser.Navigate(const URL: String);
 var
   S: String;
   P: Integer;
 begin
   S:= URL;
-  P:= Pos('://', S);
-  if P < 1 then
-    S:= 'https://' + S;
-  txtAddress.Text:= S;
-  Edge.Navigate(S);
+
+  if IsValidURLPath(S) then begin
+    P:= Pos('://', S);
+    if P < 1 then
+      S:= 'https://' + S;
+    txtAddress.Text:= S;
+    Edge.Navigate(S);
+  end else begin
+    //TODO: Perform search...
+
+  end;
   UpdateHeader;
+end;
+}
+
+procedure TfrmContentBrowser.Navigate(const URL: String);
+var
+  S: String;
+  P: Integer;
+begin
+  S := Trim(URL);
+
+  if IsValidURLPath(S) then
+  begin
+    P := Pos('://', S);
+    if P < 1 then
+      S := 'https://' + S;
+    txtAddress.Text := S;
+    Edge.Navigate(S);
+  end
+  else
+  begin
+    // Perform Google search
+    S := 'https://www.google.com/search?q=' + TNetEncoding.URL.Encode(S);
+    txtAddress.Text := S;
+    Edge.Navigate(S);
+  end;
+
+  UpdateHeader;
+end;
+
+procedure TfrmContentBrowser.RefreshData;
+begin
+  inherited;
+  Navigate(txtAddress.Text);
+  //Edge.Refresh;
 end;
 
 procedure TfrmContentBrowser.btnBackClick(Sender: TObject);

@@ -178,6 +178,7 @@ end;
 
 procedure TfrmTMDBHome.HideMenu;
 begin
+  //TODO: Add user option whether to auto-close menu, enabled by default.
   frmMain.ShowMenu(False);
 end;
 

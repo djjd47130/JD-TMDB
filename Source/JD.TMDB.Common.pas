@@ -6,13 +6,13 @@ uses
   Types, SysUtils,
   XSuperObject;
 
-{ TMDB Error Code Constants }
-
 const
+  { Default Constants }
   TMDB_API_ROOT = 'https://api.themoviedb.org/3/';
   TMDB_API_USERAGENT = 'JD TMDB API Wrapper for Delphi (https://github.com/djjd47130/JD-TMDB)';
+  DEFAULT_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
-  //TMDB Error Codes
+  { TMDB Error Code Constants }
   TMDB_ERR_SUCCESS = 1;
   TMDB_ERR_INVALID_SERVICE = 2;
   TMDB_ERR_AUTH_FAILED_PERMISSION = 3;
@@ -117,7 +117,7 @@ type
   TTMDBAuthMethod = (amAPIKey, amAccessToken);
 
   /// <summary>
-  /// TMDB user Account Authentication
+  /// TMDB User Account Authentication
   /// </summary>
   TTMDBUserAuth = (uaUnauthorized, uaGuest, uaNormal, uaCredentials);
 
@@ -171,8 +171,14 @@ type
   /// </summary>
   TTMDBTVEpisodeGroupTypes = set of TTMDBTVEpisodeGroupType;
 
+  /// <summary>
+  ///
+  /// </summary>
   TTMDBTimeWindow = (twDay, twWeek);
 
+  /// <summary>
+  ///
+  /// </summary>
   TTMDBChangeAction = (caCreated, caUpdated, caDeleted);
 
 
@@ -186,7 +192,7 @@ type
 
   /// <summary>
   /// Type of movie details that can be returned with AppendToResponse
-  /// TODO: Some use pagination...
+  /// TODO: Some of these use pagination...
   /// </summary>
   TTMDBMovieRequest = (mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
@@ -238,6 +244,8 @@ const
 
 
 
+
+
 //Similar to TPath.Combine but more general-purpose
 function URLCombine(P1, P2: String; const Delim: String = '/'): String; overload;
 function URLCombine(P1, P2: Integer; const Delim: String = '/'): String; overload;
@@ -250,6 +258,8 @@ function JSONToIntArray(Arr: ISuperArray): TTMDBIntArray;
 
 //Convert a date from string to TDateTime
 function TMDBConvertDate(const S: String): TDateTime;
+
+function TMDBDateTimeToStr(const AValue: TDateTime): String;
 
 function TMDBStrArrayToStr(const AValue: TTMDBStrArray): String;
 
@@ -376,6 +386,14 @@ begin
   F.DateSeparator:= '-';
   F.TimeSeparator:= ':';
   Result:= StrToDateTimeDef(S, 0, F);
+end;
+
+function TMDBDateTimeToStr(const AValue: TDateTime): String;
+begin
+  if AValue > 0 then
+    Result:= FormatDateTime('yyyy-mm-dd', AValue)
+  else
+    Result:= '(Not Specified)';
 end;
 
 function TMDBAuthMethodToStr(const AAuthMethod: TTMDBAuthMethod): WideString;

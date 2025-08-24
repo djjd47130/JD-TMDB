@@ -31,7 +31,6 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
       Height = 393
       DoubleBuffered = True
       ParentDoubleBuffered = False
-      ExplicitLeft = 6
       ExplicitWidth = 661
       ExplicitHeight = 393
     end
@@ -640,23 +639,63 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
         CollapsedImageIndex = 0
         ExpandedImageIndex = 1
         TabOrder = 7
-        inline frmGenres: TfrmCommonDblCheckList
-          Left = 0
-          Top = 0
-          Width = 234
-          Height = 140
+        object Label7: TLabel
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 228
+          Height = 18
+          Margins.Bottom = 0
           Align = alTop
-          TabOrder = 0
-          ExplicitWidth = 234
-          ExplicitHeight = 140
-          inherited TV: TVirtualStringTree
-            Width = 228
-            Height = 116
-            DefaultNodeHeight = 22
-            Header.Height = 18
-            ExplicitWidth = 228
-            ExplicitHeight = 116
-          end
+          Caption = 'Search for Genres'
+          ExplicitTop = 0
+        end
+        object clGenres: TJDChipList
+          Left = 0
+          Top = 49
+          Width = 234
+          Height = 92
+          Align = alTop
+          AllowExclude = True
+          AutoSize = False
+          ChipHeight = 24
+          ChipPadding = 3
+          Color = clBackground
+          ExcludeToggle = ctButton
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Items = <
+            item
+              Caption = 'Science Fiction'
+              Exclude = False
+            end>
+          ParentBackground = False
+          ParentColor = False
+          UI.ChipColor = 12615680
+          UI.ChipExcludeColor = clMaroon
+          UI.DeleteButtonColor = clRed
+          UI.ShowDeleteBtn = True
+          UI.ChipNormal.Brush.Alpha = 255
+          UI.ChipNormal.Brush.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Brush.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Alpha = 255
+          UI.ChipNormal.Pen.Color.StandardColor = fcNeutral
+          UI.ChipNormal.Pen.Color.UseStandardColor = True
+          UI.ChipNormal.Pen.Width = 1.000000000000000000
+          OnResize = JDChipList1Resize
+          ExplicitLeft = 3
+        end
+        object SearchBox1: TSearchBox
+          Left = 0
+          Top = 21
+          Width = 234
+          Height = 28
+          Align = alTop
+          TabOrder = 1
+          OnInvokeSearch = txtSearchKeywordInvokeSearch
         end
       end
       object cpRegion: TCategoryPanel

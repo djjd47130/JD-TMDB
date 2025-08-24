@@ -10,18 +10,18 @@ inherited frmContentBrowser: TfrmContentBrowser
   TextHeight = 18
   object Edge: TEdgeBrowser
     Left = 0
-    Top = 160
+    Top = 88
     Width = 845
-    Height = 345
+    Height = 417
     Align = alBottom
     TabOrder = 1
+    TabStop = True
     OnContainsFullScreenElementChanged = EdgeContainsFullScreenElementChanged
     OnContentLoading = EdgeContentLoading
     OnDocumentTitleChanged = EdgeDocumentTitleChanged
     OnNavigationStarting = EdgeNavigationStarting
     OnNavigationCompleted = EdgeNavigationCompleted
     OnNewWindowRequested = EdgeNewWindowRequested
-    ExplicitLeft = 8
   end
   object pTop: TPanel
     Left = 0
@@ -40,8 +40,7 @@ inherited frmContentBrowser: TfrmContentBrowser
       Align = alClient
       TabOrder = 3
       OnDblClick = txtAddressDblClick
-      ExplicitLeft = 99
-      ExplicitTop = 4
+      ExplicitHeight = 26
     end
     object btnGo: TJDFontButton
       Left = 813
@@ -84,7 +83,6 @@ inherited frmContentBrowser: TfrmContentBrowser
       TabOrder = 4
       Text = 'btnGo'
       OnClick = btnGoClick
-      ExplicitLeft = 816
     end
     object btnBack: TJDFontButton
       Left = 0

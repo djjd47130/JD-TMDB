@@ -14,9 +14,6 @@ unit JD.TMDB.API;
   https://developer.themoviedb.org/docs/getting-started
   https://developer.themoviedb.org/reference/intro/getting-started
 
-  TODO:
-  - Images - Use image base URL from configuration instead of hard-coding - Issue #43
-
   REMARKS:
   - This unit is fully functional at this point, with the exception of a few
     specific Namespaces and capabilities missing as described above.
@@ -31,13 +28,12 @@ unit JD.TMDB.API;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Generics.Collections, System.Types,
+  System.Classes, System.SysUtils, System.Generics.Collections, System.Types, System.NetEncoding,
   Winapi.Windows,
-  XSuperObject, XSuperJSON,
-  JD.TMDB.Common,
   IdURI, IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL,
-  System.NetEncoding;
+  XSuperObject, XSuperJSON,
+  JD.TMDB.Common;
 
 type
   TTMDBAPI = class;
@@ -649,7 +645,16 @@ type
   end;
 
   TTMDBAPIImages = class(TTMDBAPINamespace)
+  private
+    FImageBaseURL: String;
+    procedure SetImageBaseURL(const Value: String);
   public
+    constructor Create(AOwner: TTMDBAPI); override;
+    function GetImageURL(const Path: WideString; const Size: WideString = 'original'): WideString;
+    function GetImage(var Base64: WideString; const Path: WideString;
+      const Size: WideString = 'original'): Boolean;
+  published
+    property ImageBaseURL: String read FImageBaseURL write SetImageBaseURL;
   end;
 
   TTMDBAPI = class(TComponent)
@@ -665,6 +670,8 @@ type
     FAuthMethod: TTMDBAuthMethod;
     FAgreedToWatchProviderAttribution: Boolean;
     FRateLimiting: Boolean;
+
+    FImages: TTMDBAPIImages;
 
     //TMDB API Namespaces
     FConfiguration: TTMDBAPIConfiguration;
@@ -695,34 +702,35 @@ type
     FTrending: TTMDBAPITrending;
     FReviews: TTMDBAPIReviews;
     FTVSeriesLists: TTMDBAPITVSeriesLists;
-    FImageBaseURL: String;
+
+    function GetWatchProviders: TTMDBAPIWatchProviders;
     procedure SetAPIKey(const Value: String);
     procedure SetAPIReadAccessToken(const Value: String);
+    procedure SetAuthMethod(const Value: TTMDBAuthMethod);
     procedure SetAppUserAgent(const Value: String);
+    procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
+
     procedure PrepareJSONRequest;
-    function GetURL(Req, Params: String): String;
+    function MakeURL(Req, Params: String): String;
+
+    //Raw HTTP Commands
     function GetJSON(const Req: String; const Params: String = ''): ISuperObject;
     function PostJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
     function DeleteJSON(const Req: String; const Params: String = '';
       const Body: ISuperObject = nil): ISuperObject;
-    function GetWatchProviders: TTMDBAPIWatchProviders;
-    procedure SetAuthMethod(const Value: TTMDBAuthMethod);
-    procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
+    procedure CheckForError(AObj: ISuperObject);
 
     //Rate Limiting
-    procedure SetRateLimitMsec(const Value: DWORD);
     procedure SetRateLimiting(const Value: Boolean);
+    procedure SetRateLimitMsec(const Value: DWORD);
+    function GetRateLimitWaitMsec: DWORD;
     procedure CheckRateLimit;
-    function GetRatetLimitWaitMsec: DWORD;
-    procedure SetImageBaseURL(const Value: String);
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetImageURL(const Path: WideString; const Size: WideString = 'original'): WideString;
-    function GetImage(var Base64: WideString; const Path: WideString;
-      const Size: WideString = 'original'): Boolean;
   published
     property AuthMethod: TTMDBAuthMethod read FAuthMethod write SetAuthMethod;
     property APIKey: String read FAPIKey write SetAPIKey;
@@ -730,12 +738,12 @@ type
     property AppUserAgent: String read FAppUserAgent write SetAppUserAgent;
     property AgreedToWatchProviderAttribution: Boolean
       read FAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
-    property ImageBaseURL: String read FImageBaseURL write SetImageBaseURL;
 
     //Rate Limiting
-    property RateLimitMsec: DWORD read FRateLimitMsec write SetRateLimitMsec;
     property RateLimiting: Boolean read FRateLimiting write SetRateLimiting;
+    property RateLimitMsec: DWORD read FRateLimitMsec write SetRateLimitMsec;
 
+    //TMDB Namespaces
     property Account: TTMDBAPIAccount read FAccount;
     property Authentication: TTMDBAPIAuthentication read FAuthentication;
     property Certifications: TTMDBAPICertifications read FCertifications;
@@ -763,6 +771,9 @@ type
     property TVSeasons: TTMDBAPITVSeasons read FTVSeasons;
     property TVEpisodes: TTMDBAPITVEpisodes read FTVEpisodes;
     property TVEpisodeGroups: TTMDBAPITVEpisodeGroups read FTVEpisodeGroups;
+
+    property Images: TTMDBAPIImages read FImages;
+
     //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
     property WatchProviders: TTMDBAPIWatchProviders read GetWatchProviders;
   end;
@@ -770,7 +781,7 @@ type
 implementation
 
 type
-  //Hack to be able to call "Delete" via "DoRequest" and provide a body.
+  //Hack to be able to call "DELETE" via "DoRequest" and provide a body.
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
@@ -796,6 +807,7 @@ end;
 { TTMDBAPIAccount }
 
 {
+//TODO: Why was this commented out?
 function TTMDBAPIAccount.GetAccountInfo: ISuperObject;
 var
   U: String;
@@ -2524,7 +2536,6 @@ begin
 
   FRateLimitMsec:= 100;
   FLastReqMsec:= GetTickCount;
-  FImageBaseURL:= 'https://image.tmdb.org/t/p/';
 
   FSSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FSSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
@@ -2532,6 +2543,8 @@ begin
   FSSEIO.SSLOptions.VerifyMode := [];
   FSSEIO.SSLOptions.VerifyDepth := 0;
   FHTTP.IOHandler := FSSEIO;
+
+  FImages:= TTMDBAPIImages.Create(Self);
 
   FAccount:= TTMDBAPIAccount.Create(Self);
   FAuthentication:= TTMDBAPIAuthentication.Create(Self);
@@ -2599,7 +2612,7 @@ begin
   inherited;
 end;
 
-function TTMDBAPI.GetRatetLimitWaitMsec: DWORD;
+function TTMDBAPI.GetRateLimitWaitMsec: DWORD;
 var
   Cur, Next: DWORD;
 begin
@@ -2622,82 +2635,71 @@ var
   Wait: DWORD;
 begin
   if FRateLimiting then begin
-    Wait:= GetRatetLimitWaitMsec;
+    Wait:= GetRateLimitWaitMsec;
     if Wait > 0 then
       Sleep(Wait);
     FLastReqMsec:= GetTickCount;
   end;
 end;
 
-function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
-begin
-  Result:= FWatchProviders;
-end;
-
 procedure TTMDBAPI.PrepareJSONRequest;
 begin
+  //Ensure rate limiting is respected, if applicable...
   CheckRateLimit;
+  //Accept JSON data in response...
   FHTTP.Request.Accept:= 'application/json';
+  //Supply JSON data in request...
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
+  //Assign user agent string...
   FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
+  //Supply access token, if applicable...
   if FAPIAuth = amAccessToken then
     FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
 end;
 
-function TTMDBAPI.GetURL(Req, Params: String): String;
+function TTMDBAPI.MakeURL(Req, Params: String): String;
 var
   R: String;
 begin
   R:= Req;
+  //Delete any forward slash prefix
   if Copy(R, 1, 1) = '/' then
     Delete(R, 1, 1);
+  //Add question mark prefix to params
   if Params <> '' then
     if Copy(Params, 1, 1) <> '&' then
       Params:= '&' + Params;
+  //Concatenate API root and request
   Result:= TMDB_API_ROOT + R;
+  //Insert API key to params if applicable
   if FAPIAuth = amAPIKey then begin
     Result:= Result + '?api_key=' + FAPIKey + Params;
   end else begin
     if Params <> '' then
       Result:= Result + '?' + Params;
   end;
+  //Return encoded URL
   Result:= TIdURI.URLEncode(Result);
 end;
 
-function TTMDBAPI.GetImageURL(const Path, Size: WideString): WideString;
+procedure TTMDBAPI.CheckForError(AObj: ISuperObject);
 begin
-  Result:= FImageBaseURL;
-  Result:= URLCombine(Result, Size);
-  Result:= URLCombine(Result, Path);
-
-end;
-
-function TTMDBAPI.GetImage(var Base64: WideString; const Path,
-  Size: WideString): Boolean;
-var
-  U: String;
-  S: TStringStream;
-  Enc: TBase64Encoding;
-begin
-  //UNTESTED
-  //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
-  //Result:= False;
-
-  U:= GetImageURL(Path, Size);
-  S:= TStringStream.Create;
-  try
-    //TODO: Setup headers...
-    FHTTP.Get(U, S);
-    S.Position:= 0;
-    Enc:= TBase64Encoding.Create(0);
-    try
-      Base64:= Enc.Encode(S.DataString);
-      Result:= True;
-    finally
-      Enc.Free;
+  //If valid JSON exists...
+  if AObj <> nil then begin
+    //If JSON is an object type...
+    if AObj.DataType = TDataType.dtObject then begin
+      //If success flag exists...
+      if AObj.Null['success'] = TMemberStatus.jAssigned then begin
+        //If success flag is false...
+        if not AObj.B['success'] then begin
+          //Detected TMDB response error, raise exception...
+          var EC:= AObj.I['status_code'];
+          var EM:= AObj.S['status_message'];
+          var EXM:= 'TMDB API responded with error ' + IntToStr(EC) + ': ' + EM;
+          raise ETMDBException.Create(EXM, EC, FHTTP.Response.ResponseCode);
+        end;
+      end;
     end;
-  finally
-    S.Free;
   end;
 end;
 
@@ -2708,9 +2710,13 @@ var
 begin
   Result:= nil;
   PrepareJSONRequest;
-  U:= GetURL(Req, Params);
+  U:= MakeURL(Req, Params);
+
   S:= FHTTP.Get(U);
+  //TODO: Handle HTTP exceptions...
+
   Result:= SO(S);
+  CheckForError(Result);
 end;
 
 function TTMDBAPI.PostJSON(const Req, Params: String;
@@ -2722,18 +2728,20 @@ var
 begin
   Result:= nil;
   PrepareJSONRequest;
-  U:= GetURL(Req, Params);
+  U:= MakeURL(Req, Params);
   B:= TStringStream.Create;
   try
     Body.SaveTo(B, True);
     B.Position:= 0;
 
     S:= FHTTP.Post(U, B);
+    //TODO: Handle HTTP exceptions...
 
     Result:= SO(S);
   finally
     B.Free;
   end;
+  CheckForError(Result);
 end;
 
 function TTMDBAPI.DeleteJSON(const Req, Params: String;
@@ -2745,7 +2753,7 @@ var
 begin
   Result:= nil;
   PrepareJSONRequest;
-  U:= GetURL(Req, Params);
+  U:= MakeURL(Req, Params);
   B:= TStringStream.Create;
   Res:= TStringStream.Create;
   try
@@ -2757,12 +2765,19 @@ begin
     TIdHTTPAccess(FHTTP).DoRequest('DELETE', U, B, Res, []);
     Res.Position:= 0;
     S:= Res.DataString;
+    //TODO: Handle HTTP exceptions...
 
     Result:= SO(S);
   finally
     B.Free;
     Res.Free;
   end;
+  CheckForError(Result);
+end;
+
+function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
+begin
+  Result:= FWatchProviders;
 end;
 
 procedure TTMDBAPI.SetAgreedToWatchProviderAttribution(const Value: Boolean);
@@ -2788,11 +2803,6 @@ end;
 procedure TTMDBAPI.SetAuthMethod(const Value: TTMDBAuthMethod);
 begin
   FAuthMethod := Value;
-end;
-
-procedure TTMDBAPI.SetImageBaseURL(const Value: String);
-begin
-  FImageBaseURL := Value;
 end;
 
 procedure TTMDBAPI.SetRateLimitMsec(const Value: DWORD);
@@ -3798,6 +3808,52 @@ procedure TTMDBAPIDiscoverTVReq.SetWithWatchProviders(const AValue: WideString);
 begin
   EnsureObj;
   FObj.S['with_watch_providers']:= AValue;
+end;
+
+{ TTMDBAPIImages }
+
+constructor TTMDBAPIImages.Create(AOwner: TTMDBAPI);
+begin
+  inherited;
+  FImageBaseURL:= DEFAULT_IMAGE_BASE;
+end;
+
+function TTMDBAPIImages.GetImage(var Base64: WideString; const Path, Size: WideString): Boolean;
+var
+  U: String;
+  S: TStringStream;
+  Enc: TBase64Encoding;
+begin
+  //Base64: https://stackoverflow.com/questions/28821900/convert-bitmap-to-string-without-line-breaks/28826182#28826182
+
+  U:= GetImageURL(Path, Size);
+  S:= TStringStream.Create;
+  try
+    //TODO: Setup headers...
+    FOwner.FHTTP.Get(U, S);
+    S.Position:= 0;
+    Enc:= TBase64Encoding.Create(0);
+    try
+      Base64:= Enc.Encode(S.DataString);
+      Result:= True;
+    finally
+      Enc.Free;
+    end;
+  finally
+    S.Free;
+  end;
+end;
+
+function TTMDBAPIImages.GetImageURL(const Path, Size: WideString): WideString;
+begin
+  Result:= FImageBaseURL;
+  Result:= URLCombine(Result, Size);
+  Result:= URLCombine(Result, Path);
+end;
+
+procedure TTMDBAPIImages.SetImageBaseURL(const Value: String);
+begin
+  FImageBaseURL := Value;
 end;
 
 end.
