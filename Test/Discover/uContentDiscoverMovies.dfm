@@ -648,11 +648,11 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           Margins.Bottom = 0
           Align = alTop
           Caption = 'Search for Genres'
-          ExplicitTop = 0
+          ExplicitWidth = 135
         end
         object clGenres: TJDChipList
           Left = 0
-          Top = 49
+          Top = 47
           Width = 234
           Height = 92
           Align = alTop
@@ -686,13 +686,12 @@ inherited frmContentDiscoverMovies: TfrmContentDiscoverMovies
           UI.ChipNormal.Pen.Color.UseStandardColor = True
           UI.ChipNormal.Pen.Width = 1.000000000000000000
           OnResize = JDChipList1Resize
-          ExplicitLeft = 3
         end
         object SearchBox1: TSearchBox
           Left = 0
           Top = 21
           Width = 234
-          Height = 28
+          Height = 26
           Align = alTop
           TabOrder = 1
           OnInvokeSearch = txtSearchKeywordInvokeSearch

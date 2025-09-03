@@ -4,15 +4,22 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentMoviePage, JD.Common, JD.Ctrls,
-  JD.Ctrls.FontButton, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.WinXCtrls, Vcl.WinXPanels,
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.CheckLst,
+  System.ImageList, Vcl.ImgList,
+
+  JD.Common, JD.Ctrls, JD.Ctrls.FontButton, JD.FontGlyphs,
+  JD.Ctrls.ChipList, JD.Ctrls.ListBox,
 
   JD.TMDB.Intf,
-  JD.TMDB.Common, Vcl.CheckLst, JD.FontGlyphs, System.ImageList, Vcl.ImgList,
+  JD.TMDB.Common,
+
   VirtualTrees.BaseAncestorVCL, VirtualTrees.BaseTree, VirtualTrees.AncestorVCL,
   VirtualTrees,
-  uContentPageBase, uCommonDblCheckList, JD.Ctrls.ChipList,
-  JD.Ctrls.ListBox, Vcl.WinXCtrls, Vcl.WinXPanels;
+
+  uContentPageBase,
+  uCommonDblCheckList,
+  uContentMoviePage;
 
 
 type

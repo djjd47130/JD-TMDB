@@ -18,13 +18,18 @@ unit JD.TMDB;
 
 interface
 
+{.$DEFINE USE_WEB_SERVER}
+
 uses
   System.Classes, System.SysUtils,
   Winapi.Windows,
   JD.TMDB.Intf,
   JD.TMDB.Impl,
-  JD.TMDB.Common,
-  JD.TMDB.LocalWebServer;
+  JD.TMDB.Common
+  {$IFDEF USE_WEB_SERVER}
+  , JD.TMDB.LocalWebServer
+  {$ENDIF}
+  ;
 
 type
 
@@ -32,8 +37,9 @@ type
   private
     FTMDB: ITMDBClient;
     FOnUserAuthRequest: TTMDBUserAuthRequestEvent;
+    {$IFDEF USE_WEB_SERVER}
     FWebServer: TTMDBLocalWebServer;
-
+    {$ENDIF}
     function GetAccessToken: String;
     function GetAPIKey: String;
     function GetAuthMethod: TTMDBAuthMethod;
@@ -52,8 +58,10 @@ type
     procedure SetAppUserAgent(const Value: String);
     function GetAgreedToWatchProviderAttribution: Boolean;
     procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
+    {$IFDEF USE_WEB_SERVER}
     function GetWebServerPort: Integer;
     procedure SetWebServerPort(const Value: Integer);
+    {$ENDIF}
   protected
     procedure DoUserAuthRequest(const URL: WideString; var Result: Boolean); virtual;
   public
@@ -63,13 +71,16 @@ type
     property Client: ITMDBClient read FTMDB;
     property Cache: ITMDBCache read GetCache;
     property LoginState: ITMDBLoginState read GetLoginState;
+    {$IFDEF USE_WEB_SERVER}
     property WebServer: TTMDBLocalWebServer read FWebServer;
+    {$ENDIF}
 
     function CountryName(const Code: String): String;
     function LanguageName(const Code: String): String;
     procedure ListLanguages(AList: TStrings);
     procedure ListCountries(AList: TStrings);
     procedure ListPrimaryTranslations(AList: TStrings);
+    procedure ListTimeZones(AList: TStrings; const ACountryCode: String);
 
     { Namespaces }
 
@@ -111,7 +122,9 @@ type
     property RateLimitMsec: DWORD read GetRateLimitMsec write SetRateLimitMsec;
     property AgreedToWatchProviderAttribution: Boolean
       read GetAgreedToWatchProviderAttribution write SetAgreedToWatchProviderAttribution;
+    {$IFDEF USE_WEB_SERVER}
     property WebServerPort: Integer read GetWebServerPort write SetWebServerPort;
+    {$ENDIF}
 
     property OnUserAuthRequest: TTMDBUserAuthRequestEvent
       read FOnUserAuthRequest write FOnUserAuthRequest;
@@ -128,16 +141,20 @@ begin
   FTMDB._AddRef;
   FTMDB.OnUserAuthRequest:= UserAuthRequst;
 
+  {$IFDEF USE_WEB_SERVER}
   FWebServer:= TTMDBLocalWebServer.Create(FTMDB);
   FWebServer.Start;
+  {$ENDIF}
 
 end;
 
 destructor TTMDB.Destroy;
 begin
 
+  {$IFDEF USE_WEB_SERVER}
   FWebServer.Terminate;
   FreeAndNil(FWebServer);
+  {$ENDIF}
 
   FTMDB._Release;
   FTMDB:= nil;
@@ -158,9 +175,15 @@ procedure TTMDB.DoUserAuthRequest(const URL: WideString; var Result: Boolean);
 begin
   if Assigned(FOnUserAuthRequest) then begin
     //U:= 'https://www.themoviedb.org/authenticate/'+RequestToken;
+    //Trigger event for client-side to open web browser for authentication...
     FOnUserAuthRequest(Self, URL, Result);
     //TODO: Add optional internal browser to be used instead of triggering event.
     //NOTE: This will also require moving the HTTP server into TTMDB as well.
+
+
+    //TODO: Wait, why exactly does this need to be its own dedicated HTTP server again???
+
+
   end;
 end;
 
@@ -219,10 +242,17 @@ begin
   Result:= FTMDB.RateLimitMsec;
 end;
 
+{$IFDEF USE_WEB_SERVER}
 function TTMDB.GetWebServerPort: Integer;
 begin
   Result:= FWebServer.Port;
 end;
+
+procedure TTMDB.SetWebServerPort(const Value: Integer);
+begin
+  FWebServer.Port:= Value;
+end;
+{$ENDIF}
 
 function TTMDB.GuestSessions: ITMDBNamespaceGuestSessions;
 begin
@@ -272,11 +302,6 @@ end;
 procedure TTMDB.SetRateLimitMsec(const Value: DWORD);
 begin
   FTMDB.RateLimitMsec:= Value;
-end;
-
-procedure TTMDB.SetWebServerPort(const Value: Integer);
-begin
-  FWebServer.Port:= Value;
 end;
 
 function TTMDB.Trending: ITMDBNamespaceTrending;
@@ -414,6 +439,25 @@ end;
 function TTMDB.Lists: ITMDBNamespaceLists;
 begin
   Result:= FTMDB.Lists;
+end;
+
+procedure TTMDB.ListTimeZones(AList: TStrings; const ACountryCode: String);
+var
+  A: ITMDBTimeZones;
+  A2: TTMDBStrArray;
+  X: Integer;
+begin
+  AList.Clear;
+  A:= FTMDB.Cache.Timezones;
+  for X := 0 to A.Count-1 do begin
+    if SameText(ACountryCode, A[X].ISO3166_1) then begin
+      A2:= A[X].Zones;
+      for var Y := 0 to Length(A2)-1 do begin
+        AList.Append(A2[Y]);
+      end;
+      Break;
+    end;
+  end;
 end;
 
 function TTMDB.MovieLists: ITMDBNamespaceMovieLists;

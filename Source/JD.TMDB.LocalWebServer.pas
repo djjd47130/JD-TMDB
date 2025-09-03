@@ -14,12 +14,12 @@ unit JD.TMDB.LocalWebServer;
   https://developer.themoviedb.org/docs/getting-started
   https://developer.themoviedb.org/reference/intro/getting-started
 
-  TODO:
-  - Move inside library and inside TTMDB component...
-
   REMARKS:
   - User Auth - This is used for a redirect upon user authentication in web browser.
   - Videos - This is used for embedded videos via YouTube, etc.
+
+  NOTE:
+  - Turns out this is entirely unnecessary, and should be removed.
 
 *)
 
@@ -186,13 +186,15 @@ begin
   try
     U:= TIdURI.Create(ARequestInfo.URI);
     try
+      //Parse requested document into string list...
       Doc.Delimiter:= '/';
-      Doc.DelimitedText:= U.Path+U.Document;
+      Doc.DelimitedText:= U.Path + U.Document;
+      //Delete any empty entries at the end...
       for X := Doc.Count-1 downto 0 do begin
         if Trim(Doc[X]) = '' then
           Doc.Delete(X);
       end;
-
+      //Handle request by HTTP command...
       case ARequestInfo.CommandType of
         hcUnknown: ;
         hcHEAD: ;

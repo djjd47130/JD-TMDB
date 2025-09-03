@@ -13,7 +13,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     Top = 0
     Width = 364
     Height = 573
-    VertScrollBar.Position = 139
+    VertScrollBar.Position = 1809
     VertScrollBar.Range = 3000
     VertScrollBar.Tracking = True
     Align = alClient
@@ -28,7 +28,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     OnMouseWheelUp = CategoryPanelGroup1MouseWheelUp
     object pMovies: TPanel
       Left = 0
-      Top = -139
+      Top = -1809
       Width = 347
       Height = 671
       Align = alTop
@@ -248,6 +248,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = btnMyFavoriteMoviesClick
       end
       object btnMyRatedMovies: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 479
@@ -457,7 +458,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
-        Image.Text = #61501
+        Image.Text = #61765
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
         Image.Font.Height = -27
@@ -652,7 +653,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         Image.AutoSize = False
-        Image.Text = #61448
+        Image.Text = #61953
         Image.Font.Charset = DEFAULT_CHARSET
         Image.Font.Color = clWindowText
         Image.Font.Height = -27
@@ -733,7 +734,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pTV: TPanel
       Left = 0
-      Top = 532
+      Top = -1138
       Width = 347
       Height = 673
       Align = alTop
@@ -807,6 +808,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = btnSearchTVClick
       end
       object btnDiscoverTV: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 83
@@ -854,6 +856,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Discover TV'
       end
       object JDFontButton4: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 127
@@ -901,6 +904,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'My Favorite TV'
       end
       object JDFontButton31: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 171
@@ -948,6 +952,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'My Favorite TV Episodes'
       end
       object JDFontButton7: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 215
@@ -995,6 +1000,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'My Rated TV'
       end
       object JDFontButton8: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 259
@@ -1042,6 +1048,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'My Rated TV Episodes'
       end
       object JDFontButton10: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 303
@@ -1185,6 +1192,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = JDFontButton13Click
       end
       object JDFontButton2: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 435
@@ -1232,6 +1240,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'TV Airing Today'
       end
       object JDFontButton9: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 479
@@ -1279,6 +1288,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'TV On the Air'
       end
       object JDFontButton12: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 523
@@ -1326,6 +1336,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Popular TV'
       end
       object JDFontButton14: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 567
@@ -1373,6 +1384,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Top Rated TV'
       end
       object JDFontButton15: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 611
@@ -1422,7 +1434,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pMisc: TPanel
       Left = 0
-      Top = 1443
+      Top = -227
       Width = 347
       Height = 344
       Align = alTop
@@ -1448,6 +1460,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         ExplicitWidth = 757
       end
       object JDFontButton26: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 39
@@ -1639,6 +1652,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = JDFontButton44Click
       end
       object JDFontButton5: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 215
@@ -1686,6 +1700,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'My Lists'
       end
       object JDFontButton1: TJDFontButton
+        Tag = 1
         AlignWithMargins = True
         Left = 20
         Top = 259
@@ -1736,7 +1751,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pConfig: TPanel
       Left = 0
-      Top = 1787
+      Top = 117
       Width = 347
       Height = 393
       Align = alTop
@@ -1857,6 +1872,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = JDFontButton22Click
       end
       object JDFontButton21: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 259
@@ -2048,6 +2064,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = JDFontButton18Click
       end
       object JDFontButton17: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 83
@@ -2095,6 +2112,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'TMDB Config Details'
       end
       object JDFontButton49: TJDFontButton
+        Tag = 1
         AlignWithMargins = True
         Left = 20
         Top = 39
@@ -2144,7 +2162,7 @@ inherited frmTMDBHome: TfrmTMDBHome
     end
     object pPeople: TPanel
       Left = 0
-      Top = 1205
+      Top = -465
       Width = 347
       Height = 238
       Align = alTop
@@ -2218,6 +2236,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         OnClick = JDFontButton48Click
       end
       object JDFontButton6: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 83
@@ -2265,6 +2284,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Popular People'
       end
       object JDFontButton11: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 127
@@ -2312,6 +2332,7 @@ inherited frmTMDBHome: TfrmTMDBHome
         Text = 'Latest Person'
       end
       object JDFontButton16: TJDFontButton
+        Tag = 2
         AlignWithMargins = True
         Left = 20
         Top = 171

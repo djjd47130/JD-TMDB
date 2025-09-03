@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'SPACEBALLS: The Web Browser'
-  ClientHeight = 462
-  ClientWidth = 846
+  ClientHeight = 515
+  ClientWidth = 888
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,14 @@ object frmMain: TfrmMain
   object pTop: TPanel
     Left = 0
     Top = 0
-    Width = 846
+    Width = 888
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object btnUser: TJDFontButton
       AlignWithMargins = True
-      Left = 613
+      Left = 655
       Top = 3
       Width = 230
       Height = 27
@@ -73,7 +73,7 @@ object frmMain: TfrmMain
     object Tabs: TChromeTabs
       Left = 52
       Top = 0
-      Width = 558
+      Width = 600
       Height = 33
       OnActiveTabChanged = TabsActiveTabChanged
       OnButtonAddClick = TabsButtonAddClick
@@ -453,27 +453,30 @@ object frmMain: TfrmMain
     end
   end
   object pContent: TPanel
-    Left = 662
+    Left = 704
     Top = 33
     Width = 184
-    Height = 410
+    Height = 463
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
   end
   object Stat: TStatusBar
     Left = 0
-    Top = 443
-    Width = 846
+    Top = 496
+    Width = 888
     Height = 19
-    Panels = <>
+    Panels = <
+      item
+        Width = 50
+      end>
   end
   object pMenu: TPanel
     Tag = 1
     Left = 0
     Top = 33
     Width = 369
-    Height = 410
+    Height = 463
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 4
@@ -611,24 +614,52 @@ object frmMain: TfrmMain
           OnKeyUp = txtAuthPassKeyUp
         end
       end
-      object btnLogin: TButton
+      object btnLogin: TJDFontButton
         AlignWithMargins = True
-        Left = 52
-        Top = 198
-        Width = 165
-        Height = 28
+        Left = 22
+        Top = 186
+        Width = 225
+        Height = 42
         Cursor = crHandPoint
-        Margins.Left = 50
-        Margins.Right = 50
+        Margins.Left = 20
+        Margins.Top = 1
+        Margins.Right = 20
+        Margins.Bottom = 1
         Align = alBottom
-        Caption = 'Login'
+        DrawStyle = fdTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -21
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ParentFont = False
+        Image.AutoSize = False
+        Image.Text = #61537
+        Image.Font.Charset = DEFAULT_CHARSET
+        Image.Font.Color = clWindowText
+        Image.Font.Height = -27
+        Image.Font.Name = 'FontAwesome'
+        Image.Font.Style = []
+        Image.Font.Quality = fqAntialiased
+        Image.StandardColor = fcGreen
+        Overlay.Text = #57715
+        Overlay.Font.Charset = DEFAULT_CHARSET
+        Overlay.Font.Color = clWindowText
+        Overlay.Font.Height = -16
+        Overlay.Font.Name = 'FontAwesome'
+        Overlay.Font.Style = []
+        Overlay.Font.Quality = fqAntialiased
+        Overlay.StandardColor = fcRed
+        Overlay.Position = foNone
+        Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
+        SubTextFont.Charset = DEFAULT_CHARSET
+        SubTextFont.Color = clGray
+        SubTextFont.Height = -11
+        SubTextFont.Name = 'Tahoma'
+        SubTextFont.Style = []
         TabOrder = 3
+        Text = 'Login'
         OnClick = btnLoginClick
       end
     end
@@ -642,12 +673,12 @@ object frmMain: TfrmMain
       Caption = 'User Info'
       TabOrder = 1
       Visible = False
-      object Panel4: TPanel
+      object pUserDetail: TPanel
         AlignWithMargins = True
         Left = 143
         Top = 23
         Width = 102
-        Height = 125
+        Height = 115
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -682,7 +713,7 @@ object frmMain: TfrmMain
         Left = 5
         Top = 23
         Width = 132
-        Height = 125
+        Height = 115
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
@@ -691,36 +722,16 @@ object frmMain: TfrmMain
           Left = 3
           Top = 3
           Width = 126
-          Height = 119
+          Height = 109
           Align = alClient
           ExplicitWidth = 113
           ExplicitHeight = 128
         end
       end
-      object btnLogout: TButton
-        AlignWithMargins = True
-        Left = 52
-        Top = 198
-        Width = 146
-        Height = 28
-        Cursor = crHandPoint
-        Margins.Left = 50
-        Margins.Right = 50
-        Align = alBottom
-        Caption = 'Logout'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 2
-        OnClick = btnLogoutClick
-      end
       object JDFontButton1: TJDFontButton
         AlignWithMargins = True
         Left = 22
-        Top = 152
+        Top = 142
         Width = 206
         Height = 42
         Cursor = crHandPoint
@@ -761,8 +772,56 @@ object frmMain: TfrmMain
         SubTextFont.Height = -11
         SubTextFont.Name = 'Tahoma'
         SubTextFont.Style = []
-        TabOrder = 3
+        TabOrder = 2
         Text = 'My Account'
+      end
+      object btnLogout: TJDFontButton
+        AlignWithMargins = True
+        Left = 22
+        Top = 186
+        Width = 206
+        Height = 42
+        Cursor = crHandPoint
+        Margins.Left = 20
+        Margins.Top = 1
+        Margins.Right = 20
+        Margins.Bottom = 1
+        Align = alBottom
+        DrawStyle = fdTransparent
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -21
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        Image.AutoSize = False
+        Image.Text = #61582
+        Image.Font.Charset = DEFAULT_CHARSET
+        Image.Font.Color = clWindowText
+        Image.Font.Height = -27
+        Image.Font.Name = 'FontAwesome'
+        Image.Font.Style = []
+        Image.Font.Quality = fqAntialiased
+        Image.StandardColor = fcRed
+        Overlay.Text = #57715
+        Overlay.Font.Charset = DEFAULT_CHARSET
+        Overlay.Font.Color = clWindowText
+        Overlay.Font.Height = -16
+        Overlay.Font.Name = 'FontAwesome'
+        Overlay.Font.Style = []
+        Overlay.Font.Quality = fqAntialiased
+        Overlay.StandardColor = fcRed
+        Overlay.Position = foNone
+        Overlay.Margin = 3
+        Margin = 6
+        Spacing = 10
+        SubTextFont.Charset = DEFAULT_CHARSET
+        SubTextFont.Color = clGray
+        SubTextFont.Height = -11
+        SubTextFont.Name = 'Tahoma'
+        SubTextFont.Style = []
+        TabOrder = 3
+        Text = 'Logout'
+        OnClick = btnLogoutClick
       end
     end
   end
@@ -774,7 +833,6 @@ object frmMain: TfrmMain
     RateLimiting = True
     RateLimitMsec = 100
     AgreedToWatchProviderAttribution = True
-    WebServerPort = 0
     OnUserAuthRequest = TMDBUserAuthRequest
     Left = 420
     Top = 55
@@ -792,5 +850,10 @@ object frmMain: TfrmMain
     OnLookupFavicon = JDFavicons1LookupFavicon
     Left = 544
     Top = 56
+  end
+  object AppEvents: TApplicationEvents
+    OnHint = AppEventsHint
+    Left = 424
+    Top = 120
   end
 end

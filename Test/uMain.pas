@@ -28,7 +28,7 @@ uses
 
   uLoginBrowser,
   uTMDBMenu,
-  uTMDBAppSetup, System.ImageList, Vcl.ImgList, JD.Favicons;
+  uTMDBAppSetup, System.ImageList, Vcl.ImgList, JD.Favicons, Vcl.AppEvnts;
 
 
 
@@ -49,14 +49,12 @@ type
     pAuthPass: TPanel;
     Label4: TLabel;
     txtAuthPass: TEdit;
-    btnLogin: TButton;
     gbUserInfo: TGroupBox;
-    Panel4: TPanel;
+    pUserDetail: TPanel;
     lblUserName: TLabel;
     lblUserFullName: TLabel;
     Panel5: TPanel;
     imgUserAvatar: TImage;
-    btnLogout: TButton;
     TMDB: TTMDB;
     pContent: TPanel;
     Stat: TStatusBar;
@@ -66,6 +64,9 @@ type
     Tabs: TChromeTabs;
     imgFavicons16: TImageList;
     JDFavicons1: TJDFavicons;
+    btnLogout: TJDFontButton;
+    AppEvents: TApplicationEvents;
+    btnLogin: TJDFontButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -84,6 +85,7 @@ type
     procedure btnMenuClick(Sender: TObject);
     procedure TabsButtonAddClick(Sender: TObject; var Handled: Boolean);
     procedure JDFavicons1LookupFavicon(Sender: TObject; const URI: string; Ref: TJDFaviconRef; var Handled: Boolean);
+    procedure AppEventsHint(Sender: TObject);
   private
     FAuthMethod: Integer;
     FMenu: TfrmTMDBHome;
@@ -96,7 +98,11 @@ type
     procedure SetFullScreen(const Value: Boolean);
     procedure SetContentOnly(const Value: Boolean);
   public
+    /// <summary>
+    /// Prepares API component for a new request, resetting API key/token, user-agent, etc.
+    /// </summary>
     procedure PrepAPI;
+    property Menu: TfrmTMDBHome read FMenu;
     function MenuVisible: Boolean;
     procedure ShowMenu(const Value: Boolean);
     property FullScreen: Boolean read FFullScreen write SetFullScreen;
@@ -137,14 +143,15 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   {$IFDEF DEBUG}
   //ReportMemoryLeaksOnShutdown:= True;
-  //MEMORY LEAKS! TEMPORARILY DISABLING! - Issue #5
+  //MEMORY LEAKS! TEMPORARILY DISABLING TO HIDE MESSAGE! - Issue #5
   //https://github.com/djjd47130/JD-TMDB/issues/5
   {$ENDIF}
 
   //UI
   //TStyleManager.TrySetStyle('Carbon', False);
-  TStyleManager.TrySetStyle('Windows10 Dark', False);
-  ColorManager.BaseColor:= clBlack; // TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scButtonNormal);
+  //TStyleManager.TrySetStyle('Windows10 Dark', False);
+  TStyleManager.TrySetStyle('Cobalt XEMedia', False);
+  ColorManager.BaseColor:= TStyleManager.ActiveStyle.GetStyleColor(TStyleColor.scWindow);
   pContent.Align:= alClient;
   gbUserInfo.Align:= alClient;
   gbUserLogin.Align:= alClient;
@@ -175,9 +182,45 @@ begin
   UninitTabController;
 end;
 
+procedure TfrmMain.PrepAPI;
+begin
+  //API Auth
+  TMDB.APIKey:= AppSetup.APIKey;
+  TMDB.AccessToken:= AppSetup.AccessToken;
+  TMDB.AuthMethod:= AppSetup.APIAuth;
+  //TMDB.AppUserAgent:= ''; //TODO
+  //TMDB.RateLimiting:= True; //TODO
+  //TMDB.RateLimitMsec:= 100; //TODO
+
+end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   PrepAPI;
+
+  FMenu.EnableTMDBItems(False);
+
+  //Check whether API is configured and accessible.
+  //  If not, navigate to App Setup accordingly.
+  var Configured:= AppSetup.IsConfigured;
+  if not Configured then begin
+    case MessageDlg('TMDB API must be properly configured to continue.'+
+      sLineBreak+sLineBreak+'Open API setup?', mtError, [mbYes,mbNo], 0) of
+      mrYes: begin
+        var Tab:= TabController.CreateTab(TfrmTMDBAppSetup);
+        //TODO: Disable all TMDB functionality until valid API credentials are configured...
+        //  - Config and Cache
+        //  - Main Menu Items
+        //  - User Authentication
+
+      end;
+      else begin
+        Application.Terminate;
+      end;
+    end;
+  end else begin
+    FMenu.EnableTMDBItems(True);
+  end;
 
   //User Auth
   //Restore user login session
@@ -192,6 +235,7 @@ begin
       end;
     end;
   end;
+
 end;
 
 procedure TfrmMain.JDFavicons1LookupFavicon(Sender: TObject; const URI: string; Ref: TJDFaviconRef;
@@ -309,18 +353,26 @@ var
   U: String;
 begin
   //User Auth
-  //TODO: Move local web server into TTMDB component
+
   //Open URL in web browser to authenticate user...
+  //TODO: Change this to open in new tab instead of modal window...
   F:= TfrmLoginBrowser.Create(nil);
   try
     //We instruct it to redirect to our web server upon successful login...
-    U:= URL + '?redirect_to=http://localhost:'+IntToStr(TMDB.WebServer.Port)+'/authgranted';
+    //U:= URL + '?redirect_to=http://localhost:'+IntToStr(TMDB.WebServer.Port)+'/authgranted';
+    U:= URL + '?redirect_to=http://localhost:'+IntToStr(14200)+'/authgranted';
+    //Turns out local HTTP server is totally unnecessary.
     F.LoadURL(U);
     F.ShowModal;
     Result:= F.Success;
   finally
     F.Free;
   end;
+end;
+
+procedure TfrmMain.AppEventsHint(Sender: TObject);
+begin
+  Stat.Panels[0].Text:= Application.Hint;
 end;
 
 procedure TfrmMain.btnLoginClick(Sender: TObject);
@@ -355,14 +407,6 @@ begin
     AppSetup.SessionGuest:= TMDB.LoginState.IsGuest;
     ShowUserInfo;
   end;
-end;
-
-procedure TfrmMain.PrepAPI;
-begin
-  //API Auth
-  TMDB.APIKey:= AppSetup.APIKey;
-  TMDB.AccessToken:= AppSetup.AccessToken;
-  TMDB.AuthMethod:= AppSetup.APIAuth;
 end;
 
 procedure TfrmMain.btnLogoutClick(Sender: TObject);

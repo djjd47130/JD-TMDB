@@ -51,6 +51,8 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Cobalt XEMedia');
+  Application.Title := 'SPACEBALLS: The Web Browser';
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmContentChangesMovies, frmContentChangesMovies);
   Application.CreateForm(TfrmContentChanges, frmContentChanges);

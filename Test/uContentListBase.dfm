@@ -24,7 +24,6 @@ inherited frmContentBase1: TfrmContentBase1
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = -2
   end
   object Button2: TButton
     AlignWithMargins = True
@@ -36,7 +35,5 @@ inherited frmContentBase1: TfrmContentBase1
     Align = alTop
     Caption = 'Refresh List'
     TabOrder = 1
-    ExplicitLeft = -2
-    ExplicitTop = -2
   end
 end

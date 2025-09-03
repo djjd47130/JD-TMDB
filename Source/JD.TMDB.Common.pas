@@ -3,7 +3,7 @@ unit JD.TMDB.Common;
 interface
 
 uses
-  Types, SysUtils,
+  System.Types, System.SysUtils,
   XSuperObject;
 
 const
@@ -70,7 +70,6 @@ type
 
   /// <summary>
   /// Exception class for TMDB exceptions.
-  /// TODO: Make use in API requests...
   /// </summary
   ETMDBException = class(Exception)
   private
@@ -192,7 +191,6 @@ type
 
   /// <summary>
   /// Type of movie details that can be returned with AppendToResponse
-  /// TODO: Some of these use pagination...
   /// </summary>
   TTMDBMovieRequest = (mrAccountStates, mrAlternativeTitles, mrChanges, mrCredits,
     mrExternalIDs, mrImages, mrKeywords, mrLists, mrRecommendations,
@@ -372,7 +370,7 @@ begin
   case AValue of
     bFalse: Result:= 'false';
     bTrue:  Result:= 'true';
-    else    Result:= ''
+    else    Result:= '';
   end;
 end;
 

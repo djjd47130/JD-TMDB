@@ -35,6 +35,7 @@ inherited frmContentPageBase: TfrmContentPageBase
       Top = 35
       Width = 639
       Height = 258
+      Hint = 'Refresh List'
       Align = alClient
       BorderStyle = bsNone
       Columns = <
@@ -94,6 +95,7 @@ inherited frmContentPageBase: TfrmContentPageBase
         Width = 37
         Height = 26
         Cursor = crHandPoint
+        Hint = 'Go to Prior Page'
         Align = alLeft
         Caption = '<'
         Enabled = False
@@ -107,6 +109,7 @@ inherited frmContentPageBase: TfrmContentPageBase
         Width = 37
         Height = 26
         Cursor = crHandPoint
+        Hint = 'Go to Next Page'
         Align = alLeft
         Caption = '>'
         Enabled = False
@@ -120,6 +123,7 @@ inherited frmContentPageBase: TfrmContentPageBase
         Width = 41
         Height = 26
         Cursor = crHandPoint
+        Hint = 'Refresh List'
         Align = alRight
         Default = True
         DrawStyle = fdTransparent
@@ -185,6 +189,7 @@ inherited frmContentPageBase: TfrmContentPageBase
       Width = 259
       Height = 41
       Cursor = crHandPoint
+      Hint = 'Apply Search / Refresh List'
       Align = alBottom
       Default = True
       DrawStyle = fdTransparent

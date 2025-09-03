@@ -21,10 +21,8 @@ interface
 uses
   System.Classes, System.SysUtils, System.Generics.Collections,
   Winapi.Windows,
-  JD.TMDB.API, JD.TMDB.Intf,
-  XSuperObject,
-  XSuperJSON,
-  JD.TMDB.Common;
+  XSuperObject, XSuperJSON,
+  JD.TMDB.API, JD.TMDB.Intf, JD.TMDB.Common;
 
 type
 

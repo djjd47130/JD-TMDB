@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uContentBase, Vcl.StdCtrls, Vcl.ExtCtrls,
   XSuperObject,
   JD.TMDB.Common,
-  JD.TMDB.Intf, JD.Common, JD.Ctrls, JD.Ctrls.FontButton;
+  JD.TMDB.Intf, JD.Common, JD.Ctrls, JD.Ctrls.FontButton, Vcl.ComCtrls;
 
 type
 
@@ -37,6 +37,7 @@ type
     procedure LoadSetup;
     procedure SaveSetup;
     function SetupFilename: String;
+    function IsConfigured: Boolean;
 
     property APIKey: String read GetAPIKey write SetAPIKey;
     property AccessToken: String read GetAccessToken write SetAccessToken;
@@ -49,7 +50,11 @@ type
   end;
 
   TfrmTMDBAppSetup = class(TfrmContentBase)
-    Panel1: TPanel;
+    btnSave: TJDFontButton;
+    Pages: TPageControl;
+    tabAPIAuth: TTabSheet;
+    tabLocale: TTabSheet;
+    tabBrowser: TTabSheet;
     gbAPIAuthMethod: TGroupBox;
     gbAPIAuthMethodAPIKey: TPanel;
     Label1: TLabel;
@@ -65,7 +70,19 @@ type
     Panel6: TPanel;
     Label5: TLabel;
     cboLanguage: TComboBox;
-    btnSave: TJDFontButton;
+    GroupBox1: TGroupBox;
+    Panel3: TPanel;
+    Label2: TLabel;
+    Edit1: TEdit;
+    Panel4: TPanel;
+    Label4: TLabel;
+    ComboBox1: TComboBox;
+    Panel5: TPanel;
+    Label6: TLabel;
+    cboCountry: TComboBox;
+    Panel1: TPanel;
+    Label7: TLabel;
+    cboTimeZone: TComboBox;
     procedure APIAuthMethodRadioClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -73,6 +90,9 @@ type
     procedure txtAccessTokenChange(Sender: TObject);
     procedure cboLanguageChange(Sender: TObject);
     procedure btnValidateKeyClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure cboCountryChange(Sender: TObject);
+    procedure PagesChanging(Sender: TObject; var AllowChange: Boolean);
   private
     function GetAPIAuth: TTMDBAuthMethod;
     procedure SetAPIAuth(const Value: TTMDBAuthMethod);
@@ -128,7 +148,7 @@ end;
 procedure TAppSetup.SaveSetup;
 begin
   if FAppSetup <> nil then
-    FAppSetup.SaveTo(SetupFilename);
+    FAppSetup.SaveTo(SetupFilename, True);
 end;
 
 function TAppSetup.GetAccessToken: String;
@@ -171,6 +191,22 @@ begin
   Result:= FAppSetup.S['default_timezone'];
 end;
 
+function TAppSetup.IsConfigured: Boolean;
+begin
+  Result:= False;
+  var Tmp:= '';
+  case Self.APIAuth of
+    amAPIKey: Tmp:= Self.APIKey;
+    amAccessToken: Tmp:= Self.AccessToken;
+  end;
+  if Trim(Tmp) <> '' then
+    Result:= True;
+  if Result then begin
+    var Res:= frmMain.TMDB.Authentication.ValidateKey;
+    Result:= Res.Success;
+  end;
+end;
+
 procedure TAppSetup.SetAccessToken(const Value: String);
 begin
   FAppSetup.S['access_token']:= Value;
@@ -208,29 +244,55 @@ end;
 
 procedure TAppSetup.SetTimezones(const Value: String);
 begin
-  FAppSetup.S['timezone']:= Value;
+  FAppSetup.S['default_timezone']:= Value;
 end;
 
 { TfrmTMDBAppSetup }
+
+procedure TfrmTMDBAppSetup.FormCreate(Sender: TObject);
+begin
+  inherited;
+  //Setup UI
+  Pages.Align:= alClient;
+
+end;
 
 procedure TfrmTMDBAppSetup.FormShow(Sender: TObject);
 begin
   inherited;
   LoadSetup;
   PrepAPI;
-  //TMDB.ListPrimaryTranslations(cboLanguage.Items);
-  TMDB.ListLanguages(cboLanguage.Items);
-  btnSave.Enabled:= False;
+  if not AppSetup.IsConfigured then begin
+    //TODO: Hide all other tabs...
+    Self.Pages.ActivePage:= tabAPIAuth;
+  end else begin
+    //TMDB.ListPrimaryTranslations(cboLanguage.Items);
+    TMDB.ListLanguages(cboLanguage.Items);
+    TMDB.ListCountries(cboCountry.Items);
+    TMDB.ListTimeZones(cboTimezone.Items, cboCountry.Text);
+    btnSave.Enabled:= False;
+  end;
 end;
 
 procedure TfrmTMDBAppSetup.LoadSetup;
 begin
+
+  //TODO: Check whether API is properly configured...
+
   txtAPIKey.Text:= AppSetup.APIKey;
   txtAccessToken.Text:= AppSetup.AccessToken;
   APIAuth:= AppSetup.APIAuth;
   cboLanguage.Text:= AppSetup.Language;
-  //TODO: Default Country...
-  //TODO: Timezone...
+  cboCountry.Text:= AppSetup.Country;
+  TMDB.ListTimeZones(cboTimezone.Items, cboCountry.Text);
+  cboTimezone.Text:= AppSetup.Timezone;
+end;
+
+procedure TfrmTMDBAppSetup.PagesChanging(Sender: TObject; var AllowChange: Boolean);
+begin
+  inherited;
+  //TODO: Prevent changing to TMDB-specific tabs if app isn't properly configured yet..
+
 end;
 
 procedure TfrmTMDBAppSetup.SaveSetup;
@@ -239,6 +301,8 @@ begin
   AppSetup.AccessToken:= txtAccessToken.Text;
   AppSetup.APIAuth:= APIAuth;
   AppSetup.Language:= cboLanguage.Text;
+  AppSetup.Country:= cboCountry.Text;
+  AppSetup.Timezone:= cboTimezone.Text;
   AppSetup.SaveSetup;
 end;
 
@@ -264,6 +328,11 @@ end;
 procedure TfrmTMDBAppSetup.btnSaveClick(Sender: TObject);
 begin
   inherited;
+  //TODO: Validate setup...
+
+  //TODO: Re-enable app-wide controls if valid...
+  //frmMain.Menu.EnableTMDBItems(True);
+
   SaveSetup;
   btnSave.Enabled:= False;
 end;
@@ -276,6 +345,13 @@ begin
   PrepAPI;
   O:= TMDB.Client.Authentication.ValidateKey;
   ShowMessage('API Key Validation Result: '+O.StatusMessage);
+end;
+
+procedure TfrmTMDBAppSetup.cboCountryChange(Sender: TObject);
+begin
+  inherited;
+  btnSave.Enabled:= True;
+  TMDB.ListTimeZones(cboTimezone.Items, cboCountry.Text);
 end;
 
 procedure TfrmTMDBAppSetup.cboLanguageChange(Sender: TObject);

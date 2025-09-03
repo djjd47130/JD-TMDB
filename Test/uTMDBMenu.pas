@@ -126,10 +126,12 @@ type
   private
     procedure CalcScrollHeight;
     procedure SetNarrowMode(const Value: Boolean);
+    procedure EnableItemsInPanel(const APanel: TPanel; const AEnabled: Boolean);
   protected
   public
     function CanClose: Boolean; override;
     procedure HideMenu;
+    procedure EnableTMDBItems(const AEnabled: Boolean);
   end;
 
 var
@@ -546,6 +548,27 @@ begin
   inherited;
   TabController.CreateTab(TfrmTMDBAppSetup);
   HideMenu;
+end;
+
+procedure TfrmTMDBHome.EnableItemsInPanel(const APanel: TPanel; const AEnabled: Boolean);
+begin
+  for var X := 0 to APanel.ControlCount-1 do begin
+    if APanel.Controls[X].Tag = 1 then
+      APanel.Controls[X].Enabled:= AEnabled;
+    if APanel.Controls[X].Tag = 2 then
+      APanel.Controls[X].Enabled:= False;
+  end;
+end;
+
+procedure TfrmTMDBHome.EnableTMDBItems(const AEnabled: Boolean);
+begin
+  //TODO: Assign "Enabled" property for all TMDB-specific items.
+  //  Meant to deactivate anything which cannot be accessed without valid setup or connection.
+  EnableItemsInPanel(pConfig, AEnabled);
+  EnableItemsInPanel(pMisc, AEnabled);
+  EnableItemsInPanel(pMovies, AEnabled);
+  EnableItemsInPanel(pPeople, AEnabled);
+  EnableItemsInPanel(pTV, AEnabled);
 end;
 
 end.
