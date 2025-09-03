@@ -4,7 +4,7 @@ TMDB (The Movie DataBase) API Wrapper for Delphi - Written by Jerry Dodge
 
 ## IMPORTANT NOTE
 
-This library is currently in active develoment, and not guaranteed for use at this time. 
+This library is currently in active develoment, and not guaranteed for use at this time. The base layer in "JD.TMDB.API.pas" is more or less fully functional and can be used, but the rest of the layers are still a work in progress.
 
 ## Delphi Version
 
