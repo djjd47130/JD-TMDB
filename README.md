@@ -38,13 +38,14 @@ A final third-level wrapper is the `TTMDB` component you can install into the De
 
 ## Test Application
 
-There is a test application to demonstrate the usage of the TMDB API wrapper. Note that this app is in very active development at this time, and is far from ready. However, it does feature a few major features, such as:
+**IMPORTANT** - The test application has been moved to a [repository of its own](https://github.com/djjd47130/JD-TestApp).
+
+There is a test application to demonstrate the usage of the TMDB API wrapper (along with many other things). Note that this app is in very active development at this time, and is far from ready. However, it does feature a few major features, such as:
 
 - User Authentication
 - Search (All media types)
 - Movie Detail
 - Genres (Movie and TV)
-- Certifications (Movie and TV)
 - Embedded Edge Browser
 
 ![image](https://github.com/user-attachments/assets/22f6ced9-2386-4646-a316-50fde7eff333)
