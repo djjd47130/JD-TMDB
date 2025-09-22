@@ -48,7 +48,8 @@ There is a test application to demonstrate the usage of the TMDB API wrapper (al
 - Genres (Movie and TV)
 - Embedded Edge Browser
 
-![image](https://github.com/user-attachments/assets/22f6ced9-2386-4646-a316-50fde7eff333)
+<img width="1200" height="800" alt="image" src="https://github.com/user-attachments/assets/081425be-9ac0-40f3-8a8a-da28333ea69b" />
+
 
 ### JDLib
 
