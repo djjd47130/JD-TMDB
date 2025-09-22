@@ -15,6 +15,12 @@
         <Projects Include="dclJDTMDBLib.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\JD-MusicBrainz\JDMusicBrainzLib.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\JD-Discogs\JDDiscogsLib.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Test\TMDBTestApp.dproj">
             <Dependencies/>
         </Projects>
@@ -62,6 +68,24 @@
     <Target Name="dclJDTMDBLib:Make">
         <MSBuild Projects="dclJDTMDBLib.dproj" Targets="Make"/>
     </Target>
+    <Target Name="JDMusicBrainzLib">
+        <MSBuild Projects="..\JD-MusicBrainz\JDMusicBrainzLib.dproj"/>
+    </Target>
+    <Target Name="JDMusicBrainzLib:Clean">
+        <MSBuild Projects="..\JD-MusicBrainz\JDMusicBrainzLib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JDMusicBrainzLib:Make">
+        <MSBuild Projects="..\JD-MusicBrainz\JDMusicBrainzLib.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="JDDiscogsLib">
+        <MSBuild Projects="..\JD-Discogs\JDDiscogsLib.dproj"/>
+    </Target>
+    <Target Name="JDDiscogsLib:Clean">
+        <MSBuild Projects="..\JD-Discogs\JDDiscogsLib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JDDiscogsLib:Make">
+        <MSBuild Projects="..\JD-Discogs\JDDiscogsLib.dproj" Targets="Make"/>
+    </Target>
     <Target Name="TMDBTestApp">
         <MSBuild Projects="Test\TMDBTestApp.dproj"/>
     </Target>
@@ -72,13 +96,13 @@
         <MSBuild Projects="Test\TMDBTestApp.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="JDLibComponents;DclJDLibComponents;JDTMDBLib;dclJDTMDBLib;TMDBTestApp"/>
+        <CallTarget Targets="JDLibComponents;DclJDLibComponents;JDTMDBLib;dclJDTMDBLib;JDMusicBrainzLib;JDDiscogsLib;TMDBTestApp"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JDLibComponents:Clean;DclJDLibComponents:Clean;JDTMDBLib:Clean;dclJDTMDBLib:Clean;TMDBTestApp:Clean"/>
+        <CallTarget Targets="JDLibComponents:Clean;DclJDLibComponents:Clean;JDTMDBLib:Clean;dclJDTMDBLib:Clean;JDMusicBrainzLib:Clean;JDDiscogsLib:Clean;TMDBTestApp:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JDLibComponents:Make;DclJDLibComponents:Make;JDTMDBLib:Make;dclJDTMDBLib:Make;TMDBTestApp:Make"/>
+        <CallTarget Targets="JDLibComponents:Make;DclJDLibComponents:Make;JDTMDBLib:Make;dclJDTMDBLib:Make;JDMusicBrainzLib:Make;JDDiscogsLib:Make;TMDBTestApp:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

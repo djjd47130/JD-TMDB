@@ -16,7 +16,7 @@ unit JD.TMDB.API;
 
   REMARKS:
   - This unit is fully functional at this point, with the exception of a few
-    specific Namespaces and capabilities missing as described above.
+    odds and ends.
   - Many requests are still untested.
   - The "Intf" / "Impl" layer is still a major work in progress, with many
     TMDB specific interfaces and corresponding implementation objects.
@@ -373,10 +373,25 @@ type
     property WithType: WideString read GetWithType write SetWithType;
   end;
 
+  //UNDOCUMENTED AND UNSUPPORTED
+  TTMDBAPIDiscoverPersonReq = record
+  private
+    FObj: ISuperObject;
+    procedure EnsureObj;
+
+  public
+    constructor Create(AObj: ISuperObject);
+
+    function GetParamStr: WideString;
+
+  end;
+
   TTMDBAPIDiscover = class(TTMDBAPINamespace)
   public
     function GetMovie(Params: TTMDBAPIDiscoverMovieReq; const Page: Integer = 1): ISuperObject;
     function GetTV(Params: TTMDBAPIDiscoverTVReq; const Page: Integer = 1): ISuperObject;
+    //UNDOCUMENTED AND UNSUPPORTED - #52
+    function GetPeople(Params: TTMDBAPIDiscoverPersonReq; const Page: Integer = 1): ISuperObject;
   end;
 
   TTMDBAPIFind = class(TTMDBAPINamespace)
@@ -661,15 +676,16 @@ type
   private
     FHTTP: TIdHTTP;
     FSSEIO: TIdSSLIOHandlerSocketOpenSSL;
-    FLastReqMsec: DWORD;
     FAPIKey: String;
     FAPIReadAccessToken: String;
     FAPIAuth: TTMDBAuthMethod;
     FAppUserAgent: String;
-    FRateLimitMsec: DWORD;
     FAuthMethod: TTMDBAuthMethod;
     FAgreedToWatchProviderAttribution: Boolean;
+    //Rate Limiting
     FRateLimiting: Boolean;
+    FRateLimitMsec: DWORD;
+    FLastReqMsec: DWORD;
 
     FImages: TTMDBAPIImages;
 
@@ -711,6 +727,7 @@ type
     procedure SetAgreedToWatchProviderAttribution(const Value: Boolean);
 
     procedure PrepareJSONRequest;
+    procedure PrepareImageRequest;
     function MakeURL(Req, Params: String): String;
 
     //Raw HTTP Commands
@@ -774,7 +791,7 @@ type
 
     property Images: TTMDBAPIImages read FImages;
 
-    //NOTE: Be sure to attribute "JustWatch" if your solution uses watch providers.
+    //IMPORTANT: Be sure to attribute "JustWatch" if your solution uses watch providers.
     property WatchProviders: TTMDBAPIWatchProviders read GetWatchProviders;
   end;
 
@@ -784,6 +801,7 @@ type
   //Hack to be able to call "DELETE" via "DoRequest" and provide a body.
   TIdHTTPAccess = class(TIdHTTP)
   end;
+
 
 { TTMDBAPINamespace }
 
@@ -1213,6 +1231,17 @@ var
 begin
   P:= Params.GetParamStr;
   U:= 'discover/movie';
+  AddParam(P, 'page', IntToStr(Page));
+  Result:= FOwner.GetJSON(U, P);
+end;
+
+function TTMDBAPIDiscover.GetPeople(Params: TTMDBAPIDiscoverPersonReq; const Page: Integer): ISuperObject;
+var
+  P: String;
+  U: String;
+begin
+  P:= Params.GetParamStr;
+  U:= 'discover/person';
   AddParam(P, 'page', IntToStr(Page));
   Result:= FOwner.GetJSON(U, P);
 end;
@@ -2534,9 +2563,11 @@ begin
   FHTTP:= TIdHTTP.Create(nil);
   FAppUserAgent:= TMDB_API_USERAGENT;
 
+  FRateLimiting:= True;
   FRateLimitMsec:= 100;
   FLastReqMsec:= GetTickCount;
 
+  //HTTPS
   FSSEIO := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FSSEIO.SSLOptions.SSLVersions := [sslvTLSv1,sslvTLSv1_1,sslvTLSv1_2];
   FSSEIO.SSLOptions.Mode := sslmClient;
@@ -2612,6 +2643,46 @@ begin
   inherited;
 end;
 
+function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
+begin
+  Result:= FWatchProviders;
+end;
+
+procedure TTMDBAPI.SetAgreedToWatchProviderAttribution(const Value: Boolean);
+begin
+  FAgreedToWatchProviderAttribution := Value;
+end;
+
+procedure TTMDBAPI.SetAPIKey(const Value: String);
+begin
+  FAPIKey := Value;
+end;
+
+procedure TTMDBAPI.SetAPIReadAccessToken(const Value: String);
+begin
+  FAPIReadAccessToken := Value;
+end;
+
+procedure TTMDBAPI.SetAppUserAgent(const Value: String);
+begin
+  FAppUserAgent:= Value;
+end;
+
+procedure TTMDBAPI.SetAuthMethod(const Value: TTMDBAuthMethod);
+begin
+  FAuthMethod := Value;
+end;
+
+procedure TTMDBAPI.SetRateLimitMsec(const Value: DWORD);
+begin
+  FRateLimitMsec := Value;
+end;
+
+procedure TTMDBAPI.SetRateLimiting(const Value: Boolean);
+begin
+  FRateLimiting := Value;
+end;
+
 function TTMDBAPI.GetRateLimitWaitMsec: DWORD;
 var
   Cur, Next: DWORD;
@@ -2634,6 +2705,7 @@ procedure TTMDBAPI.CheckRateLimit;
 var
   Wait: DWORD;
 begin
+  //Perform sleep for however long is required for rate limiting...
   if FRateLimiting then begin
     Wait:= GetRateLimitWaitMsec;
     if Wait > 0 then
@@ -2648,6 +2720,21 @@ begin
   CheckRateLimit;
   //Accept JSON data in response...
   FHTTP.Request.Accept:= 'application/json';
+  //Supply JSON data in request...
+  FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
+  //Assign user agent string...
+  FHTTP.Request.RawHeaders.Values['User-Agent']:= FAppUserAgent;
+  //Supply access token, if applicable...
+  if FAPIAuth = amAccessToken then
+    FHTTP.Request.RawHeaders.Values['AAuthorization']:= 'Bearer '+FAPIReadAccessToken;
+end;
+
+procedure TTMDBAPI.PrepareImageRequest;
+begin
+  //Ensure rate limiting is respected, if applicable...
+  CheckRateLimit;
+  //Accept JSON data in response...
+  FHTTP.Request.Accept:= 'image/jpeg, image/jpg, image/png, image/svg+xml';
   //Supply JSON data in request...
   FHTTP.Request.ContentType:= 'application/json;charset=utf-8';
   //Assign user agent string...
@@ -2701,6 +2788,12 @@ begin
       end;
     end;
   end;
+  //If no TMDB error was detected, then check for HTTP response outside of 2xx...
+  if (FHTTP.Response.ResponseCode < 200) or (FHTTP.Response.ResponseCode > 299) then begin
+    var EC:= 0;
+    var EM:= 'TMDB API responded with HTTP code '+IntToStr(FHTTP.Response.ResponseCode);
+    raise ETMDBException.Create(EM, EC, FHTTP.Response.ResponseCode);
+  end;
 end;
 
 function TTMDBAPI.GetJSON(const Req, Params: String): ISuperObject;
@@ -2712,8 +2805,13 @@ begin
   PrepareJSONRequest;
   U:= MakeURL(Req, Params);
 
-  S:= FHTTP.Get(U);
-  //TODO: Handle HTTP exceptions...
+  try
+    S:= FHTTP.Get(U);
+  except
+    on E: Exception do begin
+      raise ETMDBException.Create(E.Message, 0, FHTTP.ResponseCode)
+    end;
+  end;
 
   Result:= SO(S);
   CheckForError(Result);
@@ -2734,8 +2832,13 @@ begin
     Body.SaveTo(B, True);
     B.Position:= 0;
 
-    S:= FHTTP.Post(U, B);
-    //TODO: Handle HTTP exceptions...
+    try
+      S:= FHTTP.Post(U, B);
+    except
+      on E: Exception do begin
+        raise ETMDBException.Create(E.Message, 0, FHTTP.ResponseCode)
+      end;
+    end;
 
     Result:= SO(S);
   finally
@@ -2760,12 +2863,17 @@ begin
     Body.SaveTo(B, True);
     B.Position:= 0;
 
-    //NOTE: TIdHTTP.Delete does not support request body, so we
-    //  take a shortcut and directly call DoRequest to include a body...
-    TIdHTTPAccess(FHTTP).DoRequest('DELETE', U, B, Res, []);
-    Res.Position:= 0;
-    S:= Res.DataString;
-    //TODO: Handle HTTP exceptions...
+    try
+      //NOTE: TIdHTTP.Delete does not support request body, so we
+      //  take a shortcut and directly call DoRequest to include a body...
+      TIdHTTPAccess(FHTTP).DoRequest('DELETE', U, B, Res, []);
+      Res.Position:= 0;
+      S:= Res.DataString;
+    except
+      on E: Exception do begin
+        raise ETMDBException.Create(E.Message, 0, FHTTP.ResponseCode)
+      end;
+    end;
 
     Result:= SO(S);
   finally
@@ -2773,46 +2881,6 @@ begin
     Res.Free;
   end;
   CheckForError(Result);
-end;
-
-function TTMDBAPI.GetWatchProviders: TTMDBAPIWatchProviders;
-begin
-  Result:= FWatchProviders;
-end;
-
-procedure TTMDBAPI.SetAgreedToWatchProviderAttribution(const Value: Boolean);
-begin
-  FAgreedToWatchProviderAttribution := Value;
-end;
-
-procedure TTMDBAPI.SetAPIKey(const Value: String);
-begin
-  FAPIKey := Value;
-end;
-
-procedure TTMDBAPI.SetAPIReadAccessToken(const Value: String);
-begin
-  FAPIReadAccessToken := Value;
-end;
-
-procedure TTMDBAPI.SetAppUserAgent(const Value: String);
-begin
-  FAppUserAgent:= Value;
-end;
-
-procedure TTMDBAPI.SetAuthMethod(const Value: TTMDBAuthMethod);
-begin
-  FAuthMethod := Value;
-end;
-
-procedure TTMDBAPI.SetRateLimitMsec(const Value: DWORD);
-begin
-  FRateLimitMsec := Value;
-end;
-
-procedure TTMDBAPI.SetRateLimiting(const Value: Boolean);
-begin
-  FRateLimiting := Value;
 end;
 
 { TTMDBAPIDiscoverMovieReq }
@@ -3810,6 +3878,27 @@ begin
   FObj.S['with_watch_providers']:= AValue;
 end;
 
+{ TTMDBAPIDiscoverPersonReq }
+
+constructor TTMDBAPIDiscoverPersonReq.Create(AObj: ISuperObject);
+begin
+  FObj:= AObj;
+  EnsureObj;
+end;
+
+procedure TTMDBAPIDiscoverPersonReq.EnsureObj;
+begin
+  if FObj = nil then
+    FObj:= SO;
+end;
+
+function TTMDBAPIDiscoverPersonReq.GetParamStr: WideString;
+begin
+
+  Result:= ''; //TODO
+
+end;
+
 { TTMDBAPIImages }
 
 constructor TTMDBAPIImages.Create(AOwner: TTMDBAPI);
@@ -3829,7 +3918,9 @@ begin
   U:= GetImageURL(Path, Size);
   S:= TStringStream.Create;
   try
-    //TODO: Setup headers...
+
+    FOwner.PrepareImageRequest;
+
     FOwner.FHTTP.Get(U, S);
     S.Position:= 0;
     Enc:= TBase64Encoding.Create(0);
