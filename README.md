@@ -10,6 +10,12 @@ This library is currently in active develoment, and not guaranteed for use at th
 
 This library is written in Delphi 10.4. While it should work fine on other version of Delphi, there are no guarantees. The older the Delphi version, the less likely this library will be compatible.
 
+## Prerequisites
+
+- Indy 10.6.2.0
+- 32bit OpenSSL Binaries (libeay32.dll / ssleay32.dll)
+- XSuperObject
+
 ## TMDB API Documentation
 
 https://developer.themoviedb.org/reference/intro/getting-started
