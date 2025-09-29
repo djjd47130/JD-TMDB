@@ -81,6 +81,8 @@ type
     procedure ListCountries(AList: TStrings);
     procedure ListPrimaryTranslations(AList: TStrings);
     procedure ListTimeZones(AList: TStrings; const ACountryCode: String);
+    procedure ListMovieGenres(AList: TStrings);
+    procedure ListTVGenres(AList: TStrings);
 
     { Namespaces }
 
@@ -457,6 +459,24 @@ begin
       end;
       Break;
     end;
+  end;
+end;
+
+procedure TTMDB.ListMovieGenres(AList: TStrings);
+begin
+  AList.Clear;
+  for var X := 0 to FTMDB.Cache.MovieGenres.Count-1 do begin
+    var G:= FTMDB.Cache.MovieGenres.Items[X];
+    AList.AddObject(G.GetText, Pointer(G.ID));
+  end;
+end;
+
+procedure TTMDB.ListTVGenres(AList: TStrings);
+begin
+  AList.Clear;
+  for var X := 0 to FTMDB.Cache.TVGenres.Count-1 do begin
+    var G:= FTMDB.Cache.TVGenres.Items[X];
+    AList.AddObject(G.GetText, Pointer(G.ID));
   end;
 end;
 

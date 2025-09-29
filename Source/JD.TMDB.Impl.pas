@@ -223,6 +223,7 @@ type
   protected
     function GetOwner: ITMDBItems; reintroduce; stdcall;
     function GetIndex: Integer; stdcall;
+    function GetID: Integer; stdcall;
   public
     constructor Create(AOwner: ITMDBItems; AObj: ISuperObject;
       const AIndex: Integer; ATMDB: ITMDBClient); virtual;
@@ -231,6 +232,7 @@ type
 
     property Owner: ITMDBItems read GetOwner;
     property Index: Integer read GetIndex;
+    property ID: Integer read GetID;
   end;
 
   TTMDBItems = class(TTMDBInterfacedObject, ITMDBItems)
@@ -3874,6 +3876,11 @@ begin
   FOwner:= nil;
   FObj:= nil;
   inherited;
+end;
+
+function TTMDBItem.GetID: Integer;
+begin
+  Result:= FObj.I['id'];
 end;
 
 function TTMDBItem.GetIndex: Integer;

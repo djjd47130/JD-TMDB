@@ -210,10 +210,12 @@ type
     ['{9909E734-78DB-4CBB-B84D-A8E16315DA4E}']
     function GetOwner: ITMDBItems; stdcall;
     function GetIndex: Integer; stdcall;
-    function GetText: WideString; stdcall; //TODO
+    function GetText: WideString; stdcall;
+    function GetID: Integer; stdcall;
 
     property Owner: ITMDBItems read GetOwner;
     property Index: Integer read GetIndex;
+    property ID: Integer read GetID;
   end;
 
   /// <summary>
